@@ -4,8 +4,8 @@ structure template vo/params/vo.neugrid.eu;
 'account_prefix' ?= 'neusns';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.gnubila.fr',
-          'host', 'voms.gnubila.fr',
+    nlist('name', 'voms.maatg.eu',
+          'host', 'voms.maatg.eu',
           'port', 15001,
           'adminport', 8443,
          ),

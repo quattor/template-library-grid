@@ -1,0 +1,16 @@
+
+structure template vo/params/vo.sbg.in2p3.fr;
+
+"name" ?= 'vo.sbg.in2p3.fr';
+"account_prefix" ?= 'sbg';
+
+"voms_servers" ?= nlist("name", 'grid12.lal.in2p3.fr',
+                        "host", 'grid12.lal.in2p3.fr',
+                        "port", 20006);
+
+"proxy" ?='myproxy.grif.fr';
+"nshosts" ?= 'node04.datagrid.cea.fr:7772';
+"lbhosts" ?= 'node04.datagrid.cea.fr:9000';
+
+"pool_size" ?= 200;
+"base_uid" ?= 30000;
