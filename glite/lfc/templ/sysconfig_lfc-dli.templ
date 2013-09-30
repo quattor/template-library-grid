@@ -1,0 +1,39 @@
+#
+# $Id: lfc-dli.sysconfig,v 1.6 2009/01/25 23:30:55 szamsu Exp $
+#
+# @(#)$RCSfile: lfc-dli.sysconfig,v $ $Revision: 1.6 $ $Date: 2009/01/25 23:30:55 $ CERN/IT/ADC/CA Jean-Damien Durand
+#
+# should the lfc-dli daemon run?
+# any string but "yes" will equivalent to "NO"
+#
+RUN_DLIDAEMON="yes"
+#
+# should we run with another limit on the number of file descriptors than the default?
+# any string will be passed to ulimit -n
+#ULIMIT_N=4096
+#
+###############################################################################################
+# Change and uncomment the variables below if your setup is different than the one by default #
+###############################################################################################
+
+#################
+# LFC variables #
+#################
+
+# - LFC server host : !!!! please change !!!!
+LFC_HOST=<LFC_hostname>
+
+# - LFC DLI log file :
+#DLIDAEMONLOGFILE="/var/log/dli/log"
+
+####################
+# Globus variables #
+####################
+
+# - gridmapdir location
+#GRIDMAPDIR=/etc/grid-security/gridmapdir
+
+# - grid-mafile location
+#GRIDMAP=/etc/grid-security/grid-mapfile
+
+export GLOBUS_THREAD_MODEL="pthread"

@@ -1,0 +1,67 @@
+structure template vo/params/vo.ipnl.in2p3.fr;
+
+'name' ?= 'vo.ipnl.in2p3.fr';
+'account_prefix' ?= 'ipnrjq';
+
+'voms_servers' ?= list(
+    nlist('name', 'cclcgvomsli01.in2p3.fr',
+          'host', 'cclcgvomsli01.in2p3.fr',
+          'port', 15004,
+          'adminport', 8443,
+         ),
+);
+
+'voms_mappings' ?= list(
+#    nlist('description', '',
+#          'fqan', '/vo.ipnl.in2p3.fr/Role=phabio',
+#          'suffix', 'rtrjq',
+#          'suffix2', 'cpnjion',
+#         ),
+#    nlist('description', '',
+#          'fqan', '/vo.ipnl.in2p3.fr/Role=theorie',
+#          'suffix', 'rurjq',
+#          'suffix2', 'bvyclyk',
+#         ),
+#    nlist('description', '',
+#          'fqan', '/vo.ipnl.in2p3.fr/Role=cas',
+#          'suffix', 'rqrjq',
+#          'suffix2', 'salvnlx',
+#         ),
+#    nlist('description', '',
+#          'fqan', '/vo.ipnl.in2p3.fr/Role=informatique',
+#          'suffix', 'rzrjq',
+#          'suffix2', 'bqouvpe',
+#         ),
+#    nlist('description', '',
+#          'fqan', '/vo.ipnl.in2p3.fr/Role=ace',
+#          'suffix', 'umrjq',
+#          'suffix2', 'salvlrv',
+#         ),
+#    nlist('description', '',
+#          'fqan', '/vo.ipnl.in2p3.fr/Role=manoir',
+#          'suffix', 'uprjq',
+#          'suffix2', 'ciueqlu',
+#         ),
+#    nlist('description', '',
+#          'fqan', '/vo.ipnl.in2p3.fr/Role=ilc',
+#          'suffix', 'yirjq',
+#          'suffix2', 'salwwle',
+#         ),
+#    nlist('description', '',
+#          'fqan', '/vo.ipnl.in2p3.fr/Role=ebcmos',
+#          'suffix', 'ylrjq',
+#          'suffix2', 'boogltr',
+#         ),
+#    nlist('description', '',
+#          'fqan', '/vo.ipnl.in2p3.fr/Role=matnuc',
+#          'suffix', 'chrjq',
+#          'suffix2', 'ciuouyk',
+#         ),
+    nlist('description', 'SW manager',
+          'fqan', '/vo.ipnl.in2p3.fr/Role=VO-Admin',
+          'suffix', 's',
+          'suffix2', 's',
+         ),
+);
+
+'base_uid' ?= 1170000;
