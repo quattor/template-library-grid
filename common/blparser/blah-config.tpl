@@ -101,6 +101,16 @@ variable BLAH_CONFIG_FILE_RESTART = if ( FULL_HOSTNAME == BLPARSER_HOST ) {
         )
   );
 
+#manage accountinr dir == don't loose data
+include { 'components/dirperm/config' };
+'/software/components/dirperm/paths' = 
+  push(nlist('path',BLAH_LOG_DIR,
+             'owner','root:tomcat' ,
+             'perm','0770',
+             'type','d'
+       )
+  );
+
 include { 'components/profile/config' };
 '/software/components/profile' = component_profile_add_env(GLITE_GRID_ENV_PROFILE, nlist('BLAH_CONFIG_LOCATION',BLAH_CONF_FILE));
 
