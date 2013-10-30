@@ -38,7 +38,7 @@ include { 'common/gip/base' };
     append(escape(GIP_PROVIDER_DIR + '/glite-info-provider-site-entry-glue2'));
 };
 
-# Create DNs for subsite entries
+# Create DNs for site entry
 '/software/components/gip2/stubs' ?= nlist();
 '/software/components/gip2/stubs' = {
     if (!is_nlist(SELF)) {
@@ -53,6 +53,7 @@ include { 'common/gip/base' };
         'objectclass', list('MDS'),
         'mds-vo-name', list(SITE_NAME),
     );
+    # Create DNs for subsite entries
     if ( is_nlist(BDII_URLS_SITE) ) {
         foreach(k; v; BDII_URLS_SITE) {
             dnlist = split('[=,]', v);
@@ -89,10 +90,16 @@ include { 'common/gip/base' };
     urls = '';
     # BDII_URLS_SITE defines the subsite BDIIs consolidated by a site BDII.
     # Default is null as this feature is not used by standard sites.
-    if ( is_defined(BDII_URLS_SITE) ) {
-      foreach (name; url; BDII_URLS_SITE) {
-          urls = urls + name + ' ' + url + "\n";
-      };
+    if (is_nlist(BDII_URLS_SITE)) {
+        foreach (name; url; BDII_URLS_SITE) {
+            urls = urls + name + ' ' + url + "\n";
+        };
+    } else {
+        if (is_nlist(BDII_URLS)) {
+            foreach (name; url; BDII_URLS) {
+                urls = urls + name + ' ' + url + "\n";
+            };
+        };
     };
     SELF[escape(GIP_SCRIPTS_CONF_DIR + '/site-urls.conf')] = urls;
     SELF;        

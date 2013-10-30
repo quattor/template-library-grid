@@ -37,7 +37,7 @@ include {'common/gip/bdii'};
 
 # Configure GIP for BDII_subsite
 include {
-    if ( match(BDII_TYPE,'combined|site') && ((length(BDII_SUBSITE) != 0) || BDII_SUBSITE_ONLY) ) {
+    if ( match(BDII_TYPE,'combined|site') && (length(BDII_SUBSITE) != 0) ) {
         'common/gip/subsite';
     };
 };

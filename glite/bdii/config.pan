@@ -37,14 +37,7 @@ variable BDII_SUBSITE ?= '';
 
 # When BDII_SUBSITE_ONLY is false, a subsite BDII is configured to act both
 # as subsite and site BDII.
-variable BDII_SUBSITE_ONLY = {
-    if ( exists(BDII_SUBSITE_ONLY) && is_defined(BDII_SUBSITE_ONLY) ) {
-        BDII_SUBSITE_ONLY;
-    } else {
-        true;
-    };
-};
-
+variable BDII_SUBSITE_ONLY ?= true;
 
 # ----------------------------------------------------------------------------
 # Define BDII config defaults depending on BDII type.
