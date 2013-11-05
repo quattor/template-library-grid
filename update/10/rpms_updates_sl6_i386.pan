@@ -1,6 +1,6 @@
 # Template to add update RPMs to base configuration
 
-template update/09/rpms_updates_sl6_i386;
+template update/10/rpms_updates_sl6_i386;
 
 '/software/packages'=pkg_ronly('bdii','5.2.22-1.el6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('canl-c','2.1.1-1.el6','i386', '', '', 'emi');
@@ -13,7 +13,7 @@ template update/09/rpms_updates_sl6_i386;
 '/software/packages'=pkg_ronly('canl-c-examples','2.1.2-1.el6','i686', '', '', 'emi');
 '/software/packages'=pkg_ronly('canl-java','1.2.0-0.sl6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('canl-java-javadoc','1.2.0-0.sl6','noarch', '', '', 'emi');
-'/software/packages'=pkg_ronly('dpm-yaim','4.2.16-1.el6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('dpm-yaim','4.2.17-1.el6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('emi-lb','1.0.3-1.el6','i686', '', '', 'emi');
 '/software/packages'=pkg_ronly('emi-lb-nagios-plugins','1.2.12-1.el6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('emi-px','1.0.3-1.el6','i386', '', '', 'emi');
