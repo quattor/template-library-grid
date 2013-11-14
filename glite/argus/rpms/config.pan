@@ -1,8 +1,8 @@
 unique template glite/argus/rpms/config;
 
 # RPMS for ARGUS 
-include  { 'glite/argus/rpms/' + PKG_ARCH_GLITE + '/config' };
+include  { 'glite/argus/rpms/' + OS_VERSION_PARAMS['major'] + '/' + PKG_ARCH_GLITE + '/config' };
 
-# Add OS RPMs specific to ARGUS
-include { 'config/emi/'+EMI_VERSION+'/argus' };
+# OS specific dependencies
+include { 'config/emi/' + EMI_VERSION + '/argus' };
 
