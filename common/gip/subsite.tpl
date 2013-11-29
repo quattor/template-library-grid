@@ -48,9 +48,12 @@ include { 'components/gip2/config' };
 '/software/components/gip2' = {
     SELF['provider']['glite-info-provider-subsite'] =
         '#!/bin/sh' + "\n\n" +
-        'GLITE_HOME=${GLITE_HOME:-/opt/glite}' + "\n" +
         'CONFIG=' + GIP_SCRIPTS_CONF_DIR + '/subsite-urls.conf' + "\n" +
-        'SCRIPT=${GLITE_HOME}/libexec/glite-info-provider-ldap' + "\n\n" +
+        'if [ -x /usr/libexec/glite-info-provider-ldap ]; then' + "\n" +
+        '    SCRIPT=/usr/libexec/glite-info-provider-ldap' + "\n" +
+        'else' + "\n" +
+        '    SCRIPT=/opt/glite/libexec/glite-info-provider-ldap' + "\n" +
+        'fi' + "\n\n" +
         '# Check for the existence of the configuration file.' + "\n" +
         'if [ ! -f ${CONFIG} ]; then' + "\n" +
         '    echo "Error: The configuration file ${CONFIG} does not exist." 1>&2' + "\n" +
@@ -65,9 +68,12 @@ include { 'components/gip2/config' };
     # Create Glue v2 subsite provider
     SELF['provider']['glite-info-provider-subsite-glue2'] =
         '#!/bin/sh' + "\n\n" +
-        'GLITE_HOME=${GLITE_HOME:-/opt/glite}' + "\n" +
         'CONFIG=' + GIP_SCRIPTS_CONF_DIR + '/subsite-urls.conf' + "\n" +
-        'SCRIPT=${GLITE_HOME}/libexec/glite-info-provider-ldap' + "\n\n" +
+        'if [ -x /usr/libexec/glite-info-provider-ldap ]; then' + "\n" +
+        '    SCRIPT=/usr/libexec/glite-info-provider-ldap' + "\n" +
+        'else' + "\n" +
+        '    SCRIPT=/opt/glite/libexec/glite-info-provider-ldap' + "\n" +
+        'fi' + "\n\n" +
         '# Check for the existence of the configuration file.' + "\n" +
         'if [ ! -f ${CONFIG} ]; then' + "\n" +
         '    echo "Error: The configuration file ${CONFIG} does not exist." 1>&2' + "\n" +

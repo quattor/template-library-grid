@@ -15,9 +15,13 @@ unique template glite/bdii/rpms/sl5/x86_64/config;
         pkg_repl('openldap2.4', '2.4.22-1.el5', 'x86_64');
         pkg_repl('openldap2.4-extra-schemas', '1.3-10.el5', 'noarch');
         pkg_repl('openldap2.4-servers', '2.4.22-1.el5', 'x86_64');
+        if (EMI_UPDATE_VERSION >= '18') {
+            pkg_repl('openldap2.4-clients', '2.4.22-1.el5', 'x86_64');
+        };
     };
     SELF;
 };
+
 
 '/software/packages' = {
     if (BDII_TYPE == 'site' || BDII_TYPE == 'combined') {
