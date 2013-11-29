@@ -5,7 +5,7 @@ unique template glite/wms/rpms/sl6/x86_64/config;
 '/software/packages'=pkg_repl('argus-pep-api-c','2.2.0-1.el6','x86_64');
 '/software/packages'=pkg_repl('bdii','5.2.22-1.el6','noarch');
 '/software/packages'=pkg_repl('canl-c','2.1.2-1.el6','x86_64');
-'/software/packages'=pkg_repl('condor-emi','7.8.7-7.sl6','x86_64');
+'/software/packages'=pkg_repl('condor-emi','7.8.7-7','x86_64');
 '/software/packages'=pkg_repl('emi-lb','1.0.3-1.el6','x86_64');
 '/software/packages'=pkg_repl('emi-version','3.5.0-5.sl6','x86_64');
 '/software/packages'=pkg_repl('emi-wms','3.5.0-5.sl6','noarch');

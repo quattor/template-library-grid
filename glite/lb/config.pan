@@ -5,16 +5,7 @@ include { 'glite/lb/variables' };
 # Add site specific configuration, if any
 include { return(LB_CONFIG_SITE) };
 
-
-# Add c-ares library path
-include { 'components/ldconf/config' };
-"/software/components/ldconf/paths" = push("/opt/c-ares/lib");
-"/software/components/ldconf/paths" = push("/opt/log4c/lib64");
-"/software/components/ldconf/paths" = push("/opt/classads/lib64");
-
-# Define some required environment variables and configure WMS services.
-# Use full name for working directories in LB to avoid messing up WMS configuration.
-
+# Define some required environment variables and configure services.
 include { 'components/wmslb/config' };
 '/software/components/wmslb/dependencies/pre' = push('accounts','profile');
 '/software/components/wmslb/confFile' = WMS_LOCATION_ETC + '/glite_wms.conf';
@@ -48,6 +39,8 @@ include { 'components/profile/config' };
     'JAVA_HOME',JAVA_LOCATION,
     'GLITE_HOST_CERT','/home/glite/.certs/hostcert.pem',
     'GLITE_HOST_KEY','/home/glite/.certs/hostkey.pem',
+    'GLITE_LB_EXPORT_PURGE_ARGS',GLITE_LB_EXPORT_PURGE_ARGS,
+    'GLITE_LB_EXPORT_ENABLED',GLITE_LB_EXPORT_ENABLED,
     )
   );
 
@@ -93,7 +86,15 @@ include { 'components/dirperm/config' };
     'perm', '0775',
     'type', 'd'
   ),
+);
 
+'/software/components/dirperm/paths' = push(
+  nlist(
+    'path', EMI_LOCATION_VAR + '/run/glite',
+    'owner', GLITE_USER+':'+GLITE_GROUP,
+    'perm', '0755',
+    'type', 'd'
+  ),
 );
 
 # Configure Messaging
@@ -125,150 +126,81 @@ include { 'components/mysql/config' };
   SELF;
 };
 
-#
-
-
-# Create LB super users file
-include { 'components/filecopy/config' };
-'/software/components/filecopy/dependencies/post' = push('glitestartup');
-'/software/components/filecopy/services' = {
-  super_users = '';
-  foreach (i;user;LB_TRUSTED_WMS) {
-    super_users = super_users + user + "\n";
-  };
-  foreach (i;user;LB_SUPER_USERS) {
-    super_users = super_users + user + "\n";
-  };
-  SELF[escape(LB_SUPER_USERS_FILE)] = nlist('config', super_users,
-                                            'owner', 'root:root',
-                                            'perms', '0644',
-                                           );
-  return(SELF);  
-};
 
 # Create etc/glite-lb/glite-lb-authz.conf file
 '/software/components/filecopy/services' = {
-  admin_users = '';
-  read_users = '';
-  status_users = '';
-  general_events_users = '';
-  register_users = '';
-  purge_users = '';
-  statistic_users = '';
-  wms_events_users = '';
-  ce_events_users = '';
-  foreach (i;user;LB_ADMIN_ACCESS) {
-   admin_users = admin_users + "subject=\"" + user + "\"\n";
+  contents = 'resource "LB" {' + "\n";
+  contents = contents + '  action "ADMIN_ACCESS" {'+ "\n";
+  foreach (i; user; LB_ADMIN_ACCESS) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
   };
-  foreach (i;user;LB_READ_ALL) {
-   read_users = read_users + "subject=\"" + user + "\"\n";
+  contents = contents + '  }' + "\n";
+  contents = contents + '  action "STATUS_FOR_MONITORING" {'+ "\n";
+  foreach (i; user; LB_STATUS_FOR_MONITORING) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
   };
-  foreach (i;user;LB_STATUS_FOR_MONITORING) {
-   status_users = status_users + "subject=\"" + user + "\"\n";
+  contents = contents + '  }' + "\n";
+  contents = contents + '  action "GET_STATISTICS" {'+ "\n";
+  foreach (i; user; LB_GET_STATISTICS) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
   };
-  foreach (i;user;LB_GENERAL_EVENTS) {
-   general_events_users = general_events_users + "subject=\"" + user + "\"\n";
+  contents = contents + '  }' + "\n";
+  contents = contents + '  action "REGISTER_JOBS" {'+ "\n";
+  foreach (i; user; LB_REGISTER_JOBS) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
   };
-  foreach (i;user;LB_REGISTER_JOBS) {
-   register_users = register_users + "subject=\"" + user + "\"\n";
+  contents = contents + '  }' + "\n";
+  contents = contents + '  action "READ_ALL" {'+ "\n";
+  foreach (i; user; LB_READ_ALL) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
   };
-  foreach (i;user;LB_PURGE) {
-   purge_users = purge_users + "subject=\"" + user + "\"\n";
+  contents = contents + '  }' + "\n";
+  contents = contents + '  action "PURGE" {'+ "\n";
+  foreach (i; user; LB_PURGE) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
   };
-  foreach (i;user;LB_GET_STATISTICS) {
-   statistic_users = statistic_users + "subject=\"" + user + "\"\n";
+  contents = contents + '  }' + "\n";
+  contents = contents + '  action "GRANT_OWNERSHIP" {'+ "\n";
+  foreach (i; user; LB_GRANT_OWNERSHIP) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
   };
-  foreach (i;user;LB_LOG_WMS_EVENTS) {
-   wms_events_users = wms_events_users + "subject=\"" + user + "\"\n";
+  contents = contents + '  }' + "\n";
+  contents = contents + '  action "LOG_WMS_EVENTS" {'+ "\n";
+  foreach (i; user; LB_LOG_WMS_EVENTS) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
   };
-  foreach (i;user;LB_LOG_CE_EVENTS) {
-   ce_events_users = ce_events_users + "subject=\"" + user + "\"\n";
+  contents = contents + '  }' + "\n";
+  contents = contents + '  action "LOG_CE_EVENTS" {'+ "\n";
+  foreach (i; user; LB_LOG_CE_EVENTS) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
   };
-
-  contents = 'resource "LB" {'+"\n";
-  contents = if (length(admin_users) > 0) {
-	contents +
-                'action "ADMIN_ACCESS" {'+ "\n" +
-                  'rule permit {'+ "\n"+
-                               admin_users + 
-                "}\n}\n";
-	} else {
-	contents;
-	};
-  contents = if (length(read_users) > 0) {
-	contents +
-                'action "READ_ALL" {'+ "\n"+
-                  'rule permit {'+ "\n"+
-                                   read_users + 
-                "}\n}\n";
-	} else {
-	contents;
-	};
-  contents = if (length(status_users) > 0) {
-	contents +
-		'action "STATUS_FOR_MONITORING" {' + "\n" +
-                  'rule permit {'+ "\n"+
-				status_users +
-                "}\n}\n";
-	} else {
-	contents;
-	};
-  contents = if (length(purge_users) > 0) {
-	contents +
-		'action "PURGE" {' + "\n" +
-                  'rule permit {'+ "\n"+
-				purge_users +
-                "}\n}\n";
-	} else {
-	contents;
-	};
-  contents = if (length(statistic_users) > 0) {
-	contents +
-		'action "GET_STATISTICS" {' + "\n" +
-                  'rule permit {'+ "\n"+
-				statistic_users +
-                "}\n}\n";
-	} else {
-	contents;
-	};
-  contents = if (length(register_users) > 0) {
-	contents +
-		'action "REGISTER_JOBS" {' + "\n" +
-                  'rule permit {'+ "\n"+
-				register_users +
-                "}\n}\n";
-	} else {
-	contents;
-	};
-  contents = if (length(wms_events_users) > 0) {
-	contents +
-		'action "LOG_WMS_EVENTS" {' + "\n" +
-                  'rule permit {'+ "\n"+
-				wms_events_users +
-                "}\n}\n";
-	} else {
-	contents;
-	};
-  contents = if (length(ce_events_users) > 0) {
-	contents +
-		'action "LOG_CE_EVENTS" {' + "\n" +
-                  'rule permit {'+ "\n"+
-			ce_events_users +
-                "}\n}\n";
-	} else {
-	contents;
-	};
-  contents = if (length(general_events_users) > 0) {
-	contents +
-		'action "LOG_GENERAL_EVENTS" {' + "\n" +
-                  'rule permit {'+ "\n"+
-				general_events_users +
-                "}\n}\n";
-	} else {
-	contents;
-	};
-  contents = contents +
-"}\n";
+  contents = contents + '  }' + "\n";
+  contents = contents + '  action "LOG_GENERAL_EVENTS" {'+ "\n";
+  foreach (i; user; LB_LOG_GENERAL_EVENTS) {
+    contents = contents + '    rule permit {' + "\n"
+                        + '      subject = "' + user + '"' + "\n"
+                        + '    }' + "\n";
+  };
+  contents = contents + '  }' + "\n";
+  contents = contents + '}' + "\n";
 
 
   SELF[escape(LB_AUTHZ_FILE)] = nlist('config', contents,
