@@ -1,6 +1,6 @@
 # Template to add update RPMs to base configuration
 
-template update/09/rpms_epel_sl5_x86_64-fix;
+template update/10/rpms_epel_sl5_x86_64-fix;
 
 '/software/packages'=pkg_ronly('dpm','1.8.7-3.el5','x86_64', '', '', 'epel');
 '/software/packages'=pkg_ronly('dpm-copy-server-mysql','1.8.7-3.el5','x86_64', '', '', 'epel');
