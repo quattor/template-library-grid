@@ -1,0 +1,44 @@
+# Template to add update RPMs to base configuration
+
+template update/10/rpms_thirdparty_sl6_x86_64;
+
+'/software/packages'=pkg_ronly('SAGA.lsu-cpp.engine','1.6.0-1.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('activemq','5.4.2-1.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('activemq-cpp-library','3.2.5-3.el6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('activemq-cpp-library-debuginfo','3.2.5-3.el6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('ant1.8','1.8.1-1.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('apr-util1.3-devel','1.3.10-1static.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('apr1.4-devel','1.4.2-1static.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('axis1.4','1.4-1.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('axis2','1.6.1-1.emi','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('bouncycastle-mail','1.46-1.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('c-check','0.9.8-1.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('condor','7.4.2-1','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('condor-emi','7.8.7-7','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('condor-lcg','1.2.0-1','i386', '', '', 'emi');
+'/software/packages'=pkg_ronly('cx_Oracle','5.1.2-1.slc6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('editline','2.9-1.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('emi-pkgconfig-compat','1.0.1-2.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('emi-trustmanager','3.1.4-1.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('emi-trustmanager-axis','2.0.2-1.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('emi-trustmanager-axis2','1.0.1-1.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('emi-trustmanager-test','2.0.2-2.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('emi-trustmanager-tomcat','3.0.1-1.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('glite-service-discovery-api-c','2.2.3-1.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('glite-service-discovery-bdii-c','2.2.0-1.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('gsoap2.7-devel','2.7.6b-3.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('gwt-lib','1.7.1-1emi.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('jclassads','2.4.0-3.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('jug','1.1-1.el6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('lcas-lcmaps-gt4-interface','0.2.6-1.el6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('libcurl-openssl','7.21.7-72.2.slc6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('libcurl-openssl-devel','7.21.7-72.2.slc6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('maui','3.3-4.el6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('maui-client','3.3-4.el6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('maui-devel','3.3-4.el6','i386', '', '', 'emi');
+'/software/packages'=pkg_ronly('maui-devel','3.3-4.el6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('maui-server','3.3-4.el6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('maven','2.2.1-1emi.sl6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('mongo-10gen','2.0.4-mongodb_1','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('mongo-10gen-server','2.0.4-mongodb_1','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('vomsxrd','0.2.0-1.el6','x86_64', '', '', 'emi');
