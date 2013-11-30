@@ -1,6 +1,6 @@
 # Template to add update RPMs to base configuration
 
-template update/10/rpms_thirdparty_sl6_x86_64;
+template update/08/rpms_thirdparty_sl6_x86_64;
 
 '/software/packages'=pkg_ronly('SAGA.lsu-cpp.engine','1.6.0-1.sl6','x86_64', '', '', 'emi');
 '/software/packages'=pkg_ronly('activemq','5.4.2-1.sl6','x86_64', '', '', 'emi');

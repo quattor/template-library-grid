@@ -1,6 +1,6 @@
 # Template to add update RPMs to base configuration
 
-template update/10/rpms_epel_sl6_x86_64-fix;
+template update/09/rpms_epel_sl6_x86_64-fix;
 
 '/software/packages'=pkg_ronly('dpm','1.8.7-3.el6','x86_64', '', '', 'epel');
 '/software/packages'=pkg_ronly('dpm-devel','1.8.7-3.el6','i686', '', '', 'epel');

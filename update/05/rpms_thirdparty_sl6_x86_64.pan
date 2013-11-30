@@ -1,6 +1,6 @@
 # Template to add update RPMs to base configuration
 
-template update/10/rpms_thirdparty_sl6_x86_64;
+template update/05/rpms_thirdparty_sl6_x86_64;
 
 '/software/packages'=pkg_ronly('SAGA.lsu-cpp.engine','1.6.0-1.sl6','x86_64', '', '', 'emi');
 '/software/packages'=pkg_ronly('activemq','5.4.2-1.sl6','x86_64', '', '', 'emi');
@@ -39,4 +39,3 @@ template update/10/rpms_thirdparty_sl6_x86_64;
 '/software/packages'=pkg_ronly('maven','2.2.1-1emi.sl6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('mongo-10gen','2.0.4-mongodb_1','x86_64', '', '', 'emi');
 '/software/packages'=pkg_ronly('mongo-10gen-server','2.0.4-mongodb_1','x86_64', '', '', 'emi');
-'/software/packages'=pkg_ronly('vomsxrd','0.2.0-1.el6','x86_64', '', '', 'emi');

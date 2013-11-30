@@ -1,6 +1,6 @@
 # Template to add update RPMs to base configuration
 
-template update/10/rpms_base_sl6_x86_64;
+template update/05/rpms_base_sl6_x86_64;
 
 '/software/packages'=pkg_ronly('CGSI-gSOAP','1.3.5-2.el6','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('CGSI-gSOAP','1.3.5-2.el6','x86_64', '', '', 'emi');

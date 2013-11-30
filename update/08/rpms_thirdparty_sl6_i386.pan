@@ -1,6 +1,6 @@
 # Template to add update RPMs to base configuration
 
-template update/10/rpms_thirdparty_sl6_i386;
+template update/08/rpms_thirdparty_sl6_i386;
 
 '/software/packages'=pkg_ronly('activemq-cpp-library','3.2.5-3.el6','i686', '', '', 'emi');
 '/software/packages'=pkg_ronly('activemq-cpp-library-debuginfo','3.2.5-3.el6','i686', '', '', 'emi');

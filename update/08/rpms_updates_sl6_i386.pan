@@ -1,6 +1,6 @@
 # Template to add update RPMs to base configuration
 
-template update/10/rpms_updates_sl6_i386;
+template update/08/rpms_updates_sl6_i386;
 
 '/software/packages'=pkg_ronly('bdii','5.2.22-1.el6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('canl-c','2.1.1-1.el6','i386', '', '', 'emi');
@@ -13,7 +13,7 @@ template update/10/rpms_updates_sl6_i386;
 '/software/packages'=pkg_ronly('canl-c-examples','2.1.2-1.el6','i686', '', '', 'emi');
 '/software/packages'=pkg_ronly('canl-java','1.2.0-0.sl6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('canl-java-javadoc','1.2.0-0.sl6','noarch', '', '', 'emi');
-'/software/packages'=pkg_ronly('dpm-yaim','4.2.17-1.el6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('dpm-yaim','4.2.16-1.el6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('emi-lb','1.0.3-1.el6','i686', '', '', 'emi');
 '/software/packages'=pkg_ronly('emi-lb-nagios-plugins','1.2.12-1.el6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('emi-px','1.0.3-1.el6','i386', '', '', 'emi');
@@ -37,8 +37,7 @@ template update/10/rpms_updates_sl6_i386;
 '/software/packages'=pkg_ronly('gfal2-transfer','2.2.0-1.el6','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('gfal2-utils','0.0.14-0.1.alpha.el6','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('gfalFS','1.0.1-0.el6','i386', '', '', 'emi');
-'/software/packages'=pkg_ronly('glite-info-plugin-delayed-delete-status','1.0.1-1.el6','noarch', '', '', 'emi');
-'/software/packages'=pkg_ronly('glite-info-provider-ldap','1.4.8-1.el6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('glite-info-provider-ldap','1.4.6-1.el6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('glite-jobid-api-c','2.2.8-1.el6','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('glite-jobid-api-c','2.2.10-1.el6','i686', '', '', 'emi');
 '/software/packages'=pkg_ronly('glite-jobid-api-c-debuginfo','2.2.10-1.el6','i686', '', '', 'emi');
@@ -146,7 +145,7 @@ template update/10/rpms_updates_sl6_i386;
 '/software/packages'=pkg_ronly('glite-px-proxyrenewal-libs','1.3.34-1.el6','i686', '', '', 'emi');
 '/software/packages'=pkg_ronly('glite-px-proxyrenewal-progs','1.3.32-1.el6','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('glite-px-proxyrenewal-progs','1.3.34-1.el6','i686', '', '', 'emi');
-'/software/packages'=pkg_ronly('glue-validator','2.0.20-0.el6','noarch', '', '', 'emi');
+'/software/packages'=pkg_ronly('glue-validator','2.0.19-0.el6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('gridftp-ifce','2.3.1-0.el6','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('gridftp-ifce-devel','2.3.1-0.el6','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('gridsite','2.1.3-1.el6','i686', '', '', 'emi');
