@@ -1,7 +1,7 @@
 unique template common/gridftp/service;
 
 # Include RPMs
-include { 'common/gridftp/rpms/' + PKG_ARCH_GLITE + '/config' };
+include { 'common/gridftp/rpms/' + OS_VERSION_PARAMS['major'] + '/' + PKG_ARCH_GLITE + '/config' };
 
 # Modify the loadable library path.
 include { 'common/ldconf/config' };

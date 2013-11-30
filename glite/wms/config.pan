@@ -24,9 +24,13 @@ variable WMS_MYSQL_SERVER ?= FULL_HOSTNAME;
 variable WMS_LBPROXY_DB_NAME ?= 'lbserver20';
 variable WMS_DB_PWD ?= '';
 variable WMS_DB_USER ?= 'lbserver';
-variable WMS_LBPROXY_DB_INIT_SCRIPT ?= '/etc/glite-lb/glite-lb-dbsetup.sql';
+variable WMS_LBPROXY_DB_INIT_SCRIPT ?= '/usr/share/glite/glite-lb-dbsetup.sql';
 variable WMS_SERVICES = list('wmproxy','wm','lm','jc','ice');
-variable WMS_AUX_SERVICES = list('proxy-renewald','lb-bkserverd');
+variable WMS_AUX_SERVICES = list('proxy-renewald');
+
+# LB: default 'server'
+# WMS: default 'proxy'
+# WMS & LB: default 'both'
 variable GLITE_LB_TYPE ?= 'proxy';
 
 # WMProxy GACL File
@@ -240,6 +244,7 @@ variable WMS_MAX_INPUT_SANDBOX_SIZE ?= 10000000;
 #-----------------------------------------------------------------------------
 
 variable WMS_WMPROXY_LOG_LEVEL ?= WMS_LOG_LEVEL_DEFAULT;
+# Apache LogLevel: emerg, alert, crit, error, warn, notice, info, debug 
 variable WMS_WMPROXY_APACHE_LOG_LEVEL ?= if ( WMS_WMPROXY_LOG_LEVEL <= 5 ) {
                                            'warn';
                                          } else {
@@ -275,6 +280,7 @@ variable WMS_LOAD_MONITOR_GRIDFTP_MAX ?= 150;
   escape(WMS_CONFIG_DIR+'/glite_wms_wmproxy_httpd.conf'), nlist('template','wmproxy_httpd.conf.template'),
 );
 #'/software/components/wmslb/services/wmproxy/drained' = WMS_DRAINED;
+'/software/components/wmslb/services/wmproxy/options/ApacheLogLevel' = WMS_WMPROXY_APACHE_LOG_LEVEL;
 '/software/components/wmslb/services/wmproxy/options/MaxServedRequests' = WMS_WMPROXY_MAX_SERVED_REQUESTS;
 '/software/components/wmslb/services/wmproxy/LoadMonitorScript/name' = WMS_LOAD_MONITOR_SCRIPT_NAME;
 #'/software/components/wmslb/services/wmproxy/options/ApacheLogLevel' = WMS_WMPROXY_APACHE_LOG_LEVEL;
@@ -457,16 +463,18 @@ variable WMS_DIRECTORIES = list(
   WMS_LOCATION_VAR + "/jobcontrol/condorio",
   WMS_LOCATION_VAR + "/jobcontrol/jobdir",
   WMS_LOCATION_VAR + "/jobcontrol/submit",
+  WMS_LOCATION_VAR + "/lib/glite",
+  WMS_LOCATION_VAR + "/lib/glite/dump",
+  WMS_LOCATION_VAR + "/lib/glite/purge",
   WMS_LOCATION_VAR + "/logging",
   WMS_LOCATION_VAR + "/logmonitor",
   WMS_LOCATION_VAR + "/logmonitor/CondorG.log",
   WMS_LOCATION_VAR + "/logmonitor/CondorG.log/recycle",
   WMS_LOCATION_VAR + "/logmonitor/internal",
-  WMS_LOCATION_VAR + "/networkserver",
-  WMS_LOCATION_VAR + "/wmproxy",
+  WMS_LOCATION_VAR + "/run/glite",
+  WMS_LOCATION_VAR + "/spool/glite",
   WMS_LOCATION_VAR + "/workload_manager",
   WMS_LOCATION_VAR + "/workload_manager/jobdir",
-  GLITE_LOCATION_VAR + "/wmproxy",
 );
 
 include { 'components/dirperm/config' };
@@ -489,13 +497,13 @@ include { 'components/dirperm/config' };
   SELF[length(SELF)] = nlist(
     'path', WMS_SANDBOX_DIR,
     'owner', GLITE_USER+':'+GLITE_GROUP,
-    'perm', '0773',
+    'perm', '1773',
     'type', 'd'
   );
   # hardcoded in the init script
   SELF[length(SELF)] = nlist(
-    'path', "/var/glite/spool/glite-renewd",
-    'owner', GLITE_USER+':'+GLITE_GROUP,
+    'path', "/var/spool/glite-renewd",
+    'owner', GLITE_USER+':'+GLITE_USER,
     'perm', '0773',
     'type', 'd'
   );
@@ -648,11 +656,11 @@ include { 'common/wms/crons' };
 #include { WMS_PURGE_STORAGE_FIX_INCLUDE };
 
 # Temporary fix
-"/software/components/symlink/links" = {
-  SELF[length(SELF)] =   nlist("name", WMS_LOCATION_VAR + "/spool/glite-renewd",
-                               "target", "/var/glite/spool/glite-renewd",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF;
-};
+#"/software/components/symlink/links" = {
+#  SELF[length(SELF)] =   nlist("name", WMS_LOCATION_VAR + "/spool/glite-renewd",
+#                               "target", "/var/glite/spool/glite-renewd",
+#                               "replace", nlist("all","yes"),
+#                              );
+#  SELF;
+#};
 
