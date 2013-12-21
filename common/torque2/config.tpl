@@ -16,6 +16,9 @@ variable TORQUE_SERVER_PRIV_HOST ?= if ( exists(CE_PRIV_HOST) ) {
 # Directory where configuration/working directories are located
 variable TORQUE_CONFIG_DIR ?= '/var/torque';
 
+# Define the Torque RPM provider
+variable TORQUE_PROVIDER ?= 'lal';
+
 # ----------------------------------------------------------------------------
 # etcservices
 # ----------------------------------------------------------------------------
