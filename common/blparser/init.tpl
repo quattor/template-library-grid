@@ -13,6 +13,9 @@ variable BLPARSER_LOG_LEVEL = {
   SELF;
 };
 
+# BLAHPD_LOCATION is required by /etc/init.d/glite-ce-check-blparser
+variable BLAHPD_LOCATION ?= '/usr';
+
 # blparser log directory
 variable BLPARSER_LOG_DIR ?= GLITE_LOCATION_LOG;
 
