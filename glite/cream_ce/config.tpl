@@ -304,13 +304,6 @@ include { if ( CEMON_ENABLED ) 'glite/cream_ce/cemonitor' };
 #------------------------------------------------------------------------------
 
 "/software/components/symlink/links" = {
-  # WAR (Web Archive) files
-  SELF[length(SELF)] =   nlist("name", CATALINA_HOME+"/webapps/ce-cream.war",
-                               "target", GLITE_LOCATION+"/share/webapps/ce-cream.war",
-                               "replace", nlist("all","yes"),
-                               "exists", true,
-                              );
-
   # CREAM web service dependencies
   SELF[length(SELF)] =   nlist("name", CATALINA_HOME+"/common/lib/mysql-connector-java.jar",
                                "target", "/usr/share/java/mysql-connector-java.jar",
