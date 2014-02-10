@@ -15,7 +15,8 @@ variable XROOT_CLIENT_ENABLED ?= true;
 # CGSI
 "/software/packages"=pkg_repl("CGSI-gSOAP","1.3.5-2.el6","x86_64");
 "/software/packages"=pkg_repl("CGSI-gSOAP","1.3.5-2.el6","i386");
-"/software/packages"=pkg_repl("gsoap","2.7.16-3.el6","x86_64");
+"/software/packages"=pkg_repl("gsoap","2.7.16-4.el6","x86_64");
+"/software/packages"=pkg_repl("gsoap","2.7.16-4.el6","i686");
 
 ##############
 # DPM Client #
@@ -169,7 +170,7 @@ variable XROOT_CLIENT_ENABLED ?= true;
 ########
 "/software/packages"=pkg_repl("dcap","2.47.7-1.el6","x86_64");
 "/software/packages"=pkg_repl("dcap-libs","2.47.7-1.el6","x86_64");
-"/software/packages"=pkg_repl("dcap-libs","2.47.6-1.el6","i686");
+"/software/packages"=pkg_repl("dcap-libs","2.47.7-1.el6","i686");
 "/software/packages"=pkg_repl("dcap-devel","2.47.7-1.el6","x86_64");
 "/software/packages"=pkg_repl("dcap-tunnel-telnet","2.47.7-1.el6","x86_64");
 "/software/packages"=pkg_repl("dcap-tunnel-ssl","2.47.7-1.el6","x86_64");

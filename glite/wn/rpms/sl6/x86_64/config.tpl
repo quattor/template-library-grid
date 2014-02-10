@@ -45,8 +45,8 @@ unique template glite/wn/rpms/sl6/x86_64/config;
 #CGSI
 "/software/packages"=pkg_repl("CGSI-gSOAP","1.3.5-2.el6","x86_64");
 "/software/packages"=pkg_repl("CGSI-gSOAP","1.3.5-2.el6","i386");
-"/software/packages"=pkg_repl("gsoap","2.7.16-3.el6","x86_64");
-"/software/packages"=pkg_repl("gsoap","2.7.16-3.el6","i686");
+"/software/packages"=pkg_repl("gsoap","2.7.16-4.el6","x86_64");
+"/software/packages"=pkg_repl("gsoap","2.7.16-4.el6","i686");
 
 #GFAL/DPM/LFC
 "/software/packages"=pkg_repl("gfal","1.14.0-1.el6","x86_64");
@@ -95,7 +95,7 @@ unique template glite/wn/rpms/sl6/x86_64/config;
 
 #VOMS
 "/software/packages"=pkg_repl("voms","2.0.9-1.el6","x86_64");
-"/software/packages"=pkg_repl("vomsjapi","2.0.2-1.el6","x86_64");
+#"/software/packages"=pkg_repl("vomsjapi","2.0.2-1.el6","x86_64");
 "/software/packages"=pkg_repl("voms-clients","2.0.9-1.el6","x86_64");
 "/software/packages"=pkg_repl("voms-devel","2.0.9-1.el6","x86_64");
 "/software/packages"=pkg_repl("voms","2.0.9-1.el6","i386");
@@ -161,6 +161,7 @@ unique template glite/wn/rpms/sl6/x86_64/config;
 "/software/packages"=pkg_repl("globus-xio-gsi-driver","2.3-1.el6","i686");
 "/software/packages"=pkg_repl("globus-callout","2.2-1.el6","i686");
 "/software/packages"=pkg_repl("globus-gsi-proxy-ssl","4.1-2.el6","i686");
+
 
 "/software/packages"=pkg_repl("globus-proxy-utils","5.0-2.el6","x86_64");
 "/software/packages"=pkg_repl("globus-gridftp-server-progs","6.14-1.el6","x86_64");
