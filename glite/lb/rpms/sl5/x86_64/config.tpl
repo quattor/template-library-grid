@@ -1,12 +1,9 @@
-unique template glite/lb/rpms/x86_64/config;
-
-include { 'config/emi/' + EMI_VERSION + '/lb' };
+unique template glite/lb/rpms/sl5/x86_64/config;
 
 '/software/packages'= {
   pkg_repl('emi-lb','1.0.1-1.el5','x86_64');
   pkg_repl('emi-version','2.4.0-1.sl5','x86_64');
   pkg_repl('glite-jobid-api-c','2.1.2-2.el5','x86_64'); 
-#  pkg_repl('glite-jobid-api-cpp','1.1.2-6.sl5','x86_64'); 
   pkg_repl('glite-jobid-api-java','1.2.0-5.el5','noarch'); 
   pkg_repl('glite-lb-client','5.1.4-2.el5','x86_64'); 
   pkg_repl('glite-lb-client-java','1.2.2-1.el5','x86_64'); 
@@ -75,4 +72,3 @@ include { 'config/emi/' + EMI_VERSION + '/lb' };
   pkg_repl('classpathx-mail','1.1.1-4jpp.2','x86_64');
   pkg_repl('wsdl4j','1.5.2-4jpp.1','x86_64');
 };
-

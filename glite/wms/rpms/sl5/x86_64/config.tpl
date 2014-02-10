@@ -1,7 +1,4 @@
-unique template glite/wms/rpms/x86_64/config;
-
-# Add required RPMs provided by the OS
-include { "config/emi/" + EMI_VERSION + "/wms" };
+unique template glite/wms/rpms/sl5/x86_64/config;
 
 # EMI
 '/software/packages'=pkg_repl('activemq-cpp-library','3.2.5-1.sl5','x86_64');
