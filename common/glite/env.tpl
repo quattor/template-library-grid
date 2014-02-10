@@ -56,8 +56,8 @@ include { 'components/profile/config' };
 "/software/components/profile/env/SITE_NAME" = SITE_NAME;
 
 # Setup variables for d-cache client.
-# Should not be defined anymore, causing a warning when defined.
-#"/software/components/profile/env/SRM_PATH" = DCACHE_LOCATION+"/srm";
+# Should be defined: see https://wiki.italiangrid.it/twiki/bin/view/IGIRelease/Task23322#STORM_command_line_tests.
+"/software/components/profile/env/SRM_PATH" ?= "/usr/share/srm";
 
 # Locations of "optional" machine types.
 "/software/components/profile/env" = {
