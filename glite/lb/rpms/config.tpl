@@ -1,9 +1,7 @@
 unique template glite/lb/rpms/config;
 
 # RPMS for LB
-include  { 'glite/lb/rpms/' + PKG_ARCH_GLITE + '/config' };
+include  { 'glite/lb/rpms/' + OS_VERSION_PARAMS['major'] + '/' + PKG_ARCH_GLITE + '/config' };
 
-# Add OS RPMs specific to LB
-#include { 'config/glite/'+GLITE_VERSION+'/lb' };
-
-
+# OS specific dependencies
+include { 'config/emi/' + EMI_VERSION + '/lb' };

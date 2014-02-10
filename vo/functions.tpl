@@ -1602,6 +1602,11 @@ function vo_get_dir_attrs = {
           debug(mnt_point+' is not a NFS-served FS or is not served by '+FULL_HOSTNAME);
           result['create'] = false;
         };
+      } else if (dir_not_home && is_boolean(CVMFS_CLIENT_ENABLED) && CVMFS_CLIENT_ENABLED && match(e_mnt_point, 'cvmfs')) {
+        debug(mnt_point+' is a CVMFS file system');
+        ok = false;
+        result['shared'] = true;
+        result['create'] = false;
       } else {
         toks = matches(mnt_point, '(.+)/([\w\.\-]+)');
         if ( length(toks) >= 2 ) {

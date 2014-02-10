@@ -44,6 +44,9 @@ variable CE_FLAVOR = {
 # Default static value for several job-related attributes (updated by dynamic info providers)
 variable GLUE_FAKE_JOB_VALUE ?= 4444;
 
+# Default value for the maximum number of slots per job (used by MPI)
+variable GLUE_SLOTS_PER_JOB ?= 0;
+
 # Host publishing GlueCluster and GlueSubCluster information.
 # This is important to ensure this is published once even though
 # several CEs share the same cluster/WNs.
@@ -705,7 +708,7 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'common/gip/mpi' };
                       'GlueCEAccessControlBaseRule', access,
                       'GlueCEPolicyMaxObtainableCPUTime', list('0'),
                       'GlueCEPolicyMaxObtainableWallClockTime', list('0'),
-                      'GlueCEPolicyMaxSlotsPerJob', list('0'),
+                      'GlueCEPolicyMaxSlotsPerJob', list(to_string(GLUE_SLOTS_PER_JOB)),
                       'GlueCEPolicyPreemption', list('0'),
                       'GlueCEPolicyMaxWaitingJobs', list('0'),
                      ),

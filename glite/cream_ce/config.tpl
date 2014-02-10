@@ -304,13 +304,6 @@ include { if ( CEMON_ENABLED ) 'glite/cream_ce/cemonitor' };
 #------------------------------------------------------------------------------
 
 "/software/components/symlink/links" = {
-  # WAR (Web Archive) files
-  SELF[length(SELF)] =   nlist("name", CATALINA_HOME+"/webapps/ce-cream.war",
-                               "target", GLITE_LOCATION+"/share/webapps/ce-cream.war",
-                               "replace", nlist("all","yes"),
-                               "exists", true,
-                              );
-
   # CREAM web service dependencies
   SELF[length(SELF)] =   nlist("name", CATALINA_HOME+"/common/lib/mysql-connector-java.jar",
                                "target", "/usr/share/java/mysql-connector-java.jar",
@@ -596,38 +589,4 @@ variable CREAM_DAILY_RESTART ?= true;
 #------------------------------------------------------------------------------
 include { 'components/spma/config' };
 '/software/components/spma/dependencies/post' = append('dirperm');
-
-include { 'components/symlink/config' };
-
-"/software/components/symlink/links" = {
-  SELF[length(SELF)] =   nlist("name", "/usr/bin/qstat",
-                               "target", "/usr/bin/qstat-torque",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF[length(SELF)] =   nlist("name", "/usr/bin/qsub",                                                                                                                                                                                      
-                               "target", "/usr/bin/qsub-torque",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF[length(SELF)] =   nlist("name", "/usr/bin/qhold",
-                               "target", "/usr/bin/qhold-torque",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF[length(SELF)] =   nlist("name", "/usr/bin/qrls",
-                               "target", "/usr/bin/qrls-torque",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF[length(SELF)] =   nlist("name", "/usr/bin/qalter",
-                               "target", "/usr/bin/qalter-torque",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF[length(SELF)] =   nlist("name", "/usr/bin/qselect",
-                               "target", "/usr/bin/qselect-torque",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF[length(SELF)] =   nlist("name", "/usr/bin/qdel",
-                               "target", "/usr/bin/qdel-torque",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF;
-};
 
