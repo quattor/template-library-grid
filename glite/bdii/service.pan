@@ -20,7 +20,7 @@ variable BDII_TYPE = {
 
 
 # Add BDII rpms
-include { 'glite/bdii/rpms/config' };
+include { 'glite/bdii/rpms/config' + RPMS_SUFFIX };
 
 
 # Configure gLite base environment

@@ -4,7 +4,7 @@ unique template glite/ui/service;
 variable PKG_ARCH_GLITE ?= PKG_ARCH_DEFAULT;
 
 # Add UI RPMs
-include { 'glite/ui/rpms/config' };
+include { 'glite/ui/rpms/config'+RPMS_SUFFIX };
 
 # Modify the loadable library path. 
 include { 'common/ldconf/config' };
@@ -34,9 +34,10 @@ include { 'common/classads/config' };
 include { 'common/wms/client' };
 
 include { 'components/symlink/config' };
+#Force replace since the "glite-wms-ui-commands" puts a default version of this file
 '/software/components/symlink/links'=push(
   nlist('name','/etc/glite_wmsui_cmd_var.conf',
-        'replace', nlist('all','no','link','yes'),
+        'replace', nlist('all','yes','link','yes'),
         'target','/etc/glite-wms/glite_wmsui_cmd_var.conf',)
 );
 
