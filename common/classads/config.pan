@@ -3,7 +3,7 @@
 unique template common/classads/config;
 
 # Add classads RPMs
-include { 'common/classads/rpms/config' };
+include { 'common/classads/rpms/config' + RPMS_SUFFIX };
 
 variable LDCONF_ARCH_DIR = if (PKG_ARCH_GLITE == 'x86_64') {
                              return('lib64');
