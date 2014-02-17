@@ -132,10 +132,16 @@ variable SITE_NAMED_CONFIG_TEMPLATE ?= 'site/named';
 include { SITE_NAMED_CONFIG_TEMPLATE };
 
 
+# 
+# Allow alternate RPM package lists
+#
+variable RPMS_SUFFIX ?= '';
+
+
 #
 # Include OS version dependent RPMs
 #
-include { return(OS_NS_CONFIG_EMI+"base") };
+include { return(OS_NS_CONFIG_EMI+"base" + RPMS_SUFFIX) };
 
 
 #

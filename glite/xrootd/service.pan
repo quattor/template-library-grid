@@ -29,6 +29,6 @@ include { 'glite/xrootd/config' };
 
 
 # Add RPMs (needs variables defined by glite/xrootd/config
-include { 'glite/xrootd/rpms/config' };
+include { 'glite/xrootd/rpms/config' + RPMS_SUFFIX };
 
 
