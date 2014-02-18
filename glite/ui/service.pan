@@ -33,14 +33,6 @@ include { 'common/classads/config' };
 # Configure WMS environment variables and clients
 include { 'common/wms/client' };
 
-include { 'components/symlink/config' };
-#Force replace since the "glite-wms-ui-commands" puts a default version of this file
-'/software/components/symlink/links'=push(
-  nlist('name','/etc/glite_wmsui_cmd_var.conf',
-        'replace', nlist('all','yes','link','yes'),
-        'target','/etc/glite-wms/glite_wmsui_cmd_var.conf',)
-);
-
 # Configure FTS client.
 include { 'common/fts/client/config' };
 
