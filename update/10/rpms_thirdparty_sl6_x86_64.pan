@@ -13,6 +13,8 @@ template update/10/rpms_thirdparty_sl6_x86_64;
 '/software/packages'=pkg_ronly('axis2','1.6.1-1.emi','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('bouncycastle-mail','1.46-1.sl6','noarch', '', '', 'emi');
 '/software/packages'=pkg_ronly('c-check','0.9.8-1.sl6','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('condor','7.4.2-1','x86_64', '', '', 'emi');
+'/software/packages'=pkg_ronly('condor-emi','7.8.7-7','x86_64', '', '', 'emi');
 '/software/packages'=pkg_ronly('condor-lcg','1.2.0-1','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('cx_Oracle','5.1.2-1.slc6','x86_64', '', '', 'emi');
 '/software/packages'=pkg_ronly('editline','2.9-1.sl6','x86_64', '', '', 'emi');
