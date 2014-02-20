@@ -13,6 +13,7 @@ template update/10/rpms_thirdparty_sl5_i386;
 '/software/packages'=pkg_ronly('c-check','0.9.8-1.sl5','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('condor','7.4.2-1','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('condor-lcg','1.2.0-1','i386', '', '', 'emi');
+'/software/packages'=pkg_ronly('cx_Oracle','5.0.3-1','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('editline','2.9-1.sl5','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('gsoap2.7-devel','2.7.6b-3.sl5','i386', '', '', 'emi');
 '/software/packages'=pkg_ronly('jclassads','2.4.0-2.sl5','noarch', '', '', 'emi');
