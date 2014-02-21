@@ -900,6 +900,7 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'common/gip/mpi' };
                 "get_acbr ="+service_acbr_cmd+"\n" +
                 "get_data =  echo -en " + GIP_CE_SERVICE_PARAMS[service]['service_data'] + "\n" +
                 "get_implementationname = echo " + GIP_CE_SERVICE_PARAMS[service]['implementationname'] + "\n" +
+                "get_implementationversion = "+service_version_cmd+"\n" +
                 "get_services = echo\n";
             SELF['provider'][service_provider_wrapper] =
                 "#!/bin/sh\n" + 
@@ -973,3 +974,15 @@ include { 'components/dirperm/config' };
         'perm','0755',
         'type','d')
 );
+
+'/software/components/dirperm/paths' = {
+    if (EMI_UPDATE_VERSION >= '10') {
+        append(nlist(
+            'owner', 'root:root',
+            'path', '/var/tmp/info-dynamic-scheduler-generic',
+            'perm', '0755',
+            'type', 'd',
+        ));
+    };
+    SELF;
+};
