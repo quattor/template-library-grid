@@ -977,3 +977,15 @@ include { 'components/dirperm/config' };
         'perm','0755',
         'type','d')
 );
+
+'/software/components/dirperm/paths' = {
+    if (EMI_UPDATE_VERSION >= '19') {
+        append(nlist(
+            'owner', 'root:root',
+            'path', '/var/tmp/info-dynamic-scheduler-generic',
+            'perm', '0755',
+            'type', 'd',
+        ));
+    };
+    SELF;
+};
