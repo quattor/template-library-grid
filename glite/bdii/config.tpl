@@ -175,6 +175,21 @@ variable BDII_SLAPD ?= {
     };
 };
 
+include { 'components/filecopy/config' };
+variable BDII_SLAPD_CONFIG_FILE ?= '/etc/bdii/bdii-slapd.conf';
+
+'/software/components/filecopy/services' = {
+    if (BDII_SLAPD == "/usr/sbin/slapd2.4" && EMI_UPDATE_VERSION >= '17') {
+      SELF[escape(BDII_SLAPD_CONFIG_FILE)] = nlist(
+        'config',file_contents('glite/bdii/templ/bdii-slapd.templ'),
+        'owner','ldap:ldap',
+        'perms', '0640',
+        'restart','/sbin/service bdii restart',
+      );
+    };
+
+    SELF;
+};
 
 # ----------------------------------------------------------------------------
 # iptables
