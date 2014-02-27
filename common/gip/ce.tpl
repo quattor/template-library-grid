@@ -981,7 +981,7 @@ include { 'components/dirperm/config' };
 '/software/components/dirperm/paths' = {
     if (EMI_UPDATE_VERSION >= '19') {
         append(nlist(
-            'owner', 'root:root',
+            'owner', 'ldap:ldap',
             'path', '/var/tmp/info-dynamic-scheduler-generic',
             'perm', '0755',
             'type', 'd',
