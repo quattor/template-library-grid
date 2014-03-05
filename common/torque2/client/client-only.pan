@@ -14,7 +14,7 @@ variable TORQUE_CLIENT_MOM_ENABLED ?= false;
 variable PBS_MONITORING_TEMPLATE ?= null;
 
 # Add RPMs
-include { 'common/torque2/client/rpms/config' + RPMS_SUFFIX };
+include { 'common/torque2/client/rpms/config' + RPMS_CONFIG_SUFFIX };
 
 
 # include configuration common to client and server

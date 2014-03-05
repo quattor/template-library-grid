@@ -34,12 +34,12 @@ include { 'glite/se_dpm/config' };
 
 
 # Add RPMs (needs variables defined by glite/se_dpm/config
-include { 'glite/se_dpm/rpms/config' + RPMS_SUFFIX };
+include { 'glite/se_dpm/rpms/config' + RPMS_CONFIG_SUFFIX };
 
 
 # Add http server for DPM 1.6.7 and later (gLite 3.1 update 9)
 variable DPM_HTTPD_INCLUDE = if ( HTTPS_ENABLED ) {
-                               OS_NS_CONFIG_EMI+'dpm-httpd' + RPMS_SUFFIX;
+                               OS_NS_CONFIG_EMI+'dpm-httpd' + RPMS_CONFIG_SUFFIX;
                              } else {
                                null;
                              };

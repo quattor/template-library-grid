@@ -7,7 +7,7 @@ variable TORQUE_VERSION ?= if(OS_VERSION_PARAMS['major'] == 'sl5'){
 			   };
 
 # Add RPMs
-include { 'common/torque2/client/rpms/config' + RPMS_SUFFIX };
+include { 'common/torque2/client/rpms/config' + RPMS_CONFIG_SUFFIX };
 
 # Configure Torque client
 include { 'common/torque2/client/config' };

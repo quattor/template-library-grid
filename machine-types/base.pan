@@ -135,14 +135,14 @@ include { SITE_NAMED_CONFIG_TEMPLATE };
 # 
 # Allow alternate RPM package lists
 #
-variable RPMS_SUFFIX ?= '';
+variable RPMS_CONFIG_SUFFIX ?= '';
 
 
 #
 # Include OS version dependent RPMs
 #
-include { return(OS_NS_CONFIG_EMI+"base" + RPMS_SUFFIX) };
-
+include { if_exists(OS_NS_CONFIG_EMI+"base" + RPMS_CONFIG_SUFFIX) };
+include { if_exists('config/core/base') };
 
 #
 # Quattor client software

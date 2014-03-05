@@ -20,7 +20,7 @@ variable CE_TORQUE ?= true;
 
 include {
     if(MPI_USE_MPICH) {
-        return("common/mpi/rpms/mpich"+RPMS_SUFFIX);
+        return("common/mpi/rpms/mpich"+RPMS_CONFIG_SUFFIX);
     } else { 
         return(null); 
     };
@@ -28,7 +28,7 @@ include {
 
 include {
     if(MPI_USE_MPICH2) {
-        return("common/mpi/rpms/mpich2"+RPMS_SUFFIX);
+        return("common/mpi/rpms/mpich2"+RPMS_CONFIG_SUFFIX);
     } else { 
         return(null); 
     };
@@ -37,9 +37,9 @@ include {
 include {
     if(MPI_USE_LAM) {
         if(MPI_LAM_MULTIPLE) {
-            return("common/mpi/rpms/lam-multiple"+RPMS_SUFFIX);
+            return("common/mpi/rpms/lam-multiple"+RPMS_CONFIG_SUFFIX);
         } else {
-            return("common/mpi/rpms/lam"+RPMS_SUFFIX);
+            return("common/mpi/rpms/lam"+RPMS_CONFIG_SUFFIX);
         };
     } else { 
         return(null); 
@@ -48,7 +48,7 @@ include {
 
 include {
     if(MPI_USE_OPENMPI) {
-        return("common/mpi/rpms/openmpi"+RPMS_SUFFIX);
+        return("common/mpi/rpms/openmpi"+RPMS_CONFIG_SUFFIX);
     } else { 
         return(null); 
     };

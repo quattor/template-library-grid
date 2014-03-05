@@ -1,7 +1,7 @@
 unique template common/glexec/wn/service;
 
 # Add RPMs
-include { 'common/glexec/wn/rpms/config' + RPMS_SUFFIX };
+include { 'common/glexec/wn/rpms/config' + RPMS_CONFIG_SUFFIX };
 
 # Modify the loadable library path.
 include { 'common/ldconf/config' };
