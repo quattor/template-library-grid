@@ -36,7 +36,7 @@ variable GLOBUSCFG_FIX_EXE ?= "/usr/sbin/globuscfg_fix";
 #
 # gLite WN configuration
 #
-include { 'glite/wn/rpms/config' + RPMS_SUFFIX };
+include { 'glite/wn/rpms/config' + RPMS_CONFIG_SUFFIX };
 
 variable LRMS_CLIENT_INCLUDE = {
   if ( exists(CE_BATCH_NAME) && is_defined(CE_BATCH_NAME) ) {

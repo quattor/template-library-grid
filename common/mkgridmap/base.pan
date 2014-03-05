@@ -2,7 +2,7 @@
 unique template common/mkgridmap/base;
 
 # Add RPMs
-include { 'common/mkgridmap/rpms' + RPMS_SUFFIX };
+include { 'common/mkgridmap/rpms' + RPMS_CONFIG_SUFFIX };
 
 # Hack to workaround an undefined conf path listen by ncm-mkgridmap
 '/system/edg/config/EDG_LOCATION' = 'Not.used.anymore';

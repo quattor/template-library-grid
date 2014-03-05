@@ -4,5 +4,5 @@ unique template common/glexec/wn/rpms/config;
 include { 'common/glexec/wn/rpms/' + PKG_ARCH_GLITE + '/config' };
 
 # Add OS RPMs specific to GLEXEC_wn 
-include { 'config/emi/'+EMI_VERSION+'/glexec-wn' };
+include { if_exists('config/emi/'+EMI_VERSION+'/glexec-wn') };
 

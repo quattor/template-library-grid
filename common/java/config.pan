@@ -6,6 +6,7 @@ unique template common/java/config;
 include { 'components/profile/config' };
 
 # Setup path with java in it.
+variable JAVA_LOCATION ?= '/usr/java/latest';
 "/software/components/profile/path/PATH/append" = push(JAVA_LOCATION+"/bin");
 
 # ---------------------------------------------------------------------------- 

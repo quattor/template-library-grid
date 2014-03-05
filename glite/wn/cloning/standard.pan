@@ -74,5 +74,5 @@ include { LEMON_AGENT_NODE_SPECIFIC };
 # Do any final configuration needed for some reasons (e.g. : run gLite3.0 on SL4)
 # Should be done at the very end of machine configuration
 #
-include { return(GLITE_OS_POSTCONFIG) };
+include { if_exists(GLITE_OS_POSTCONFIG) };
  

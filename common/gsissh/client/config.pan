@@ -1,6 +1,6 @@
 unique template common/gsissh/client/config;
 
-include { 'common/gsissh/client/rpms/config' + RPMS_SUFFIX };
+include { 'common/gsissh/client/rpms/config' + RPMS_CONFIG_SUFFIX };
 
 # ---------------------------------------------------------------------------- 
 # gsissh
