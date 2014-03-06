@@ -14,4 +14,4 @@ been renamed:
 
 Usually, only the machine-types change should have an impact on site templates.
 
-Note: this branch requires Quattor 14.2.1 (YUM-based deployment only)
+Note: this branch requires Quattor 14.2.1 (YUM-based deployment only) and sl6.x OS templates.
