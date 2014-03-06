@@ -1,0 +1,3 @@
+#!/bin/sh
+export VOMS_HOST=%s
+/usr/bin/glite-info-service-voms-wrapper %s/glite-info-service-voms.conf %s
