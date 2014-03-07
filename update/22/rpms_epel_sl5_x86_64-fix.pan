@@ -1,5 +1,45 @@
 unique template update/22/rpms_epel_sl5_x86_64-fix;
 
+#
+# Remove obsolete packages
+#
+'/software/packages' = {
+  if (exists(SELF[escape('dpm-xrootd-debuginfo')])) {
+    pkg_del('dpm-xrootd-debuginfo');
+  } else {
+    SELF;
+  };
+};
+
+#
+# ATLAS FAX N2N plug-in
+#
+'/software/packages' = pkg_ronly('xrootd-server-atlas-n2n-plugin', '2.0-1.el5', 'x86_64');
+
+#
+# dmlite-libs dependencies
+#
+'/software/packages' = {
+  if (exists(SELF[escape('dmlite-libs')])) {
+    pkg_repl('boost141-regex', '1.41.0-5.el5', 'x86_64');
+    pkg_repl('boost141-thread', '1.41.0-5.el5', 'x86_64');
+  } else {
+    SELF;
+  };
+};
+
+#
+# gfal2-all dependencies
+#
+'/software/packages' = {
+  if (exists(SELF[escape('gfal2-all')])) {
+    pkg_repl('gfal2-plugin-http', '2.4.8-1.el5', 'x86_64');
+    pkg_repl('davix-libs', '0.2.8-2.el5', 'x86_64');
+  } else {
+    SELF;
+  };
+};
+
 '/software/packages'=pkg_ronly('bdii','5.2.22-1.el5','noarch', '', '', 'epel');
 '/software/packages'=pkg_ronly('edg-gridftp-client','1.2.9.2-2.el5','x86_64', '', '', 'epel');
 '/software/packages'=pkg_ronly('edg-mkgridmap','4.0.0-4.el5','noarch', '', '', 'epel');
@@ -324,3 +364,27 @@ unique template update/22/rpms_epel_sl5_x86_64-fix;
 '/software/packages'=pkg_ronly('perl-CDB_File','0.97-1.el5','x86_64', '', '', 'epel');
 '/software/packages'=pkg_ronly('perl-Proc-ProcessTable','0.48-1.el5','x86_64', '', '', 'epel');
 '/software/packages'=pkg_ronly('root-net-globus','5.34.14-2.el5','x86_64', '', '', 'epel');
+
+variable XROOTD_VERSION = '3.3.6-1.el5';
+'/software/packages' = {
+    pkg_ronly('xrootd', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-client', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-client-admin-java', '3.0.5-1.el5', 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-client-admin-perl', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-client-devel', XROOTD_VERSION, 'i386', '', '', 'epel');
+    pkg_ronly('xrootd-client-devel', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-client-libs', XROOTD_VERSION, 'i386', '', '', 'epel');
+    pkg_ronly('xrootd-client-libs', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-devel', XROOTD_VERSION, 'i386', '', '', 'epel');
+    pkg_ronly('xrootd-devel', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-doc', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-fuse', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-libs', XROOTD_VERSION, 'i386', '', '', 'epel');
+    pkg_ronly('xrootd-libs', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-private-devel', XROOTD_VERSION, 'i386', '', '', 'epel');
+    pkg_ronly('xrootd-private-devel', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-server-devel', XROOTD_VERSION, 'i386', '', '', 'epel');
+    pkg_ronly('xrootd-server-devel', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+    pkg_ronly('xrootd-server-libs', XROOTD_VERSION, 'i386', '', '', 'epel');
+    pkg_ronly('xrootd-server-libs', XROOTD_VERSION, 'x86_64', '', '', 'epel');
+};

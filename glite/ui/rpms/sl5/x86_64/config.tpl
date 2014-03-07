@@ -302,6 +302,15 @@ include {  if ( XROOT_CLIENT_ENABLED ) 'glite/xrootd/rpms/' +PKG_ARCH_GLITE+'/cl
 '/software/packages' = pkg_repl('ca_policy_igtf-mics',   '1.54-1','noarch');
 '/software/packages' = pkg_repl('ca_policy_igtf-slcs',   '1.54-1','noarch');
 
+# UPDATE Fix
+'/software/packages' = {
+  if (EMI_UPDATE_VERSION >= '18') {
+    pkg_repl('globus-gsi-cert-utils-progs','8.3-1.el5','x86_64');
+    pkg_repl('globus-common-progs','14.9-1.el5','x86_64');
+  } else {
+    SELF;
+  };
+};
 ############################
 # OS specific dependencies #
 ############################

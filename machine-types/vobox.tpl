@@ -31,13 +31,11 @@ variable VO_GRIDMAPFILE_MAP_VOMS_ROLES ?= true;
 # ensure that only one VO is configured for access to VOBOX services.
 #
 variable NODE_VO_CONFIG = 'glite/vobox/init';
-#cd include { 'machine-types/base' };
-#cd+
 include { 'machine-types/ui' };
 
 
 #
-# LCG-2 CE configuration
+# CE configuration
 # If CE uses Torque, do Torque configuration too
 #
 variable CE_TORQUE = (CE_BATCH_SYS == "pbs") || (CE_BATCH_SYS == "lcgpbs");

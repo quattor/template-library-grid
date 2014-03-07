@@ -9,9 +9,13 @@ variable VOBOX_PROXY_RENEWAL_LOG_ROTATION ?= 12;
 variable VOBOX_TCP_MAX_BUFFER_SIZE ?= 8388608;
 variable VOBOX_TCP_MAX_BACKLOG ?= 250000;
 
+# If set to true, set the proxy key to 1024 bits instead of 512 bits
+# See https://twiki.cern.ch/twiki/bin/view/LCG/WLCGDailyMeetingsWeek140203
+variable KEY_LENGTH_FIX ?= false;
+
 # List of directory to create in VO-specific directory.
 # The following list is the minimum list: add it to site-specific defaults.
-variable VOBOX_VO_DIRS_ROOT ?= INSTALL_ROOT + '/vobox';
+variable VOBOX_VO_DIRS_ROOT ?= '/var/lib/vobox';
 variable VOBOX_VO_DIRECTORIES = {
   if ( !is_defined(SELF) || index('start',SELF) < 0 ) {
     SELF[length(SELF)] = 'start';
@@ -119,6 +123,9 @@ include { 'components/altlogrotate/config' };
       variables = replace('(?m:THEADMIN)',user,variables);
       contents = contents + variables;
       contents = contents + script['final'];
+      if (KEY_LENGTH_FIX) {
+        contents = replace('grid-proxy-init -q -cert','grid-proxy-init -bits 1024 -q -cert',contents);
+      };
       debug("contents = \n"+contents);
       script_name = vo+'-box-proxyrenewal';
       script_path = '/etc/init.d/'+script_name;
