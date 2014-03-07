@@ -3,6 +3,9 @@ unique template personality/ui/service;
 
 variable PKG_ARCH_GLITE ?= PKG_ARCH_DEFAULT;
 
+# Add  some RPMs from the OS
+include { 'rpms/scientific-libraries' };
+
 # Add UI RPMs
 include { 'personality/ui/rpms/config' };
 
