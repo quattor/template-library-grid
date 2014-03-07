@@ -33,6 +33,9 @@ variable GLOBUSCFG_FIX_EXE ?= "/usr/sbin/globuscfg_fix";
 
 ##############################################################################################
 
+# Add  some RPMs from the OS
+include { 'rpms/scientific-libraries' };
+
 #
 # gLite WN configuration
 #
