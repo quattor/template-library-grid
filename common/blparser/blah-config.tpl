@@ -101,7 +101,7 @@ variable BLAH_CONFIG_FILE_RESTART = if ( FULL_HOSTNAME == BLPARSER_HOST ) {
         )
   );
 
-#manage accountinr dir == don't loose data
+# Manage accounting directory (avoid to loose data)
 include { 'components/dirperm/config' };
 '/software/components/dirperm/paths' = 
   push(nlist('path',BLAH_LOG_DIR,
@@ -113,6 +113,7 @@ include { 'components/dirperm/config' };
 
 include { 'components/profile/config' };
 '/software/components/profile' = component_profile_add_env(GLITE_GRID_ENV_PROFILE, nlist('BLAH_CONFIG_LOCATION',BLAH_CONF_FILE));
+'/software/components/profile' = component_profile_add_env(GLITE_GRID_ENV_PROFILE, nlist('BLAHPD_LOCATION',BLAHPD_LOCATION));
 
 
 #------------------------------------------------------------------------------
