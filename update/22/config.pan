@@ -1,5 +1,7 @@
 template update/22/config;
 
+# EMI Update 22 (03.02.2014) - v2.10.6-1
+
 variable update_postfix ?= '_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
 
 include { 'update/22/rpms_base' + update_postfix };
