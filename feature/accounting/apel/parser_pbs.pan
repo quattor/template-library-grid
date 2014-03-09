@@ -8,7 +8,7 @@ include { 'feature/accounting/apel/base' };
 variable APEL_PARSER_TIME_HOUR ?= '1';
 
 # Include APEL PBS parser
-include { 'feature/accounting/apel/rpms/parser_pbs' };
+'/software/packages/{apel-parsers}' = nlist();
 
 # ---------------------------------------------------------------------------- 
 # cron

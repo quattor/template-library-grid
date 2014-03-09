@@ -2,8 +2,7 @@
 unique template feature/mysql/server;
 
 # Include RPMs for MySQL server
-include { 'config/os/mysql' };
-
+'/software/packages/{mysql-server}' = nlist();
 
 # ---------------------------------------------------------------------------- 
 # chkconfig

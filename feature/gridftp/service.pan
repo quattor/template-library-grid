@@ -1,7 +1,7 @@
 unique template feature/gridftp/service;
 
 # Include RPMs
-include { 'feature/gridftp/rpms/' + PKG_ARCH_GLITE + '/config' };
+include { 'feature/gridftp/rpms/config' };
 
 # Modify the loadable library path.
 include { 'feature/ldconf/config' };

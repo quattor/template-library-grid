@@ -71,7 +71,7 @@ include { 'components/sudo/config' };
     nlist ("user", TOMCAT_USER,
            "run_as", "GLEXEC_ACCOUNTS",
            "host", "ALL",
-           "options", "NOPASSWD",
+           "options", "NOPASSWD:",
            "cmd", "GLEXEC_CMDS"),
 );
 
