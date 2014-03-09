@@ -1,7 +1,5 @@
 unique template feature/accounting/apel/base;
 
-include {'repository/config/emi'};
-
 variable APEL_ENABLED ?= true;
 
 variable APEL_DB_PWD_CACHE ?= '/etc/accounting.conf';
