@@ -75,5 +75,10 @@ include { 'common/mkgridmap/standard' };
 include { 'common/gridftp/service' };
 
 # PBS accounting.
-include { 'common/accounting/apel/parser_pbs' };
-
+variable APEL_PARSER_EMI3 ?= false;
+variable APEL_PARSER_TEMPLATE ?= if (APEL_PARSER_EMI3) {
+    'common/accounting/apel/emi-3_parser';
+} else {
+    'common/accounting/apel/parser_pbs';
+};
+include { APEL_PARSER_TEMPLATE };

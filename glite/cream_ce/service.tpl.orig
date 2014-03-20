@@ -127,13 +127,7 @@ include { 'common/gip/base' };
 include { CE_GIP_INCLUDE };
 
 # PBS accounting.
-variable APEL_PARSER_EMI3 ?= false;
-variable APEL_PARSER_TEMPLATE ?= if (APEL_PARSER_EMI3) {
-    'common/accounting/apel/emi-3_parser';
-} else {
-    'common/accounting/apel/parser_blah';
-};
-include { APEL_PARSER_TEMPLATE };
+include { 'common/accounting/apel/parser_blah' };
 
 # Configure gridftp server
 # Must be done after configuring GIP provider
