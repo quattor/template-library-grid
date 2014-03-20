@@ -1,9 +1,13 @@
-
 unique template feature/mkgridmap/standard;
+
 
 include { 'feature/mkgridmap/base' };
 
+
+
 include { 'components/mkgridmap/config' };
+
+
 
 # The command to regenerate the gridmap file. 
 variable MKGRIDMAP_CMD = MKGRIDMAP_BIN+"/edg-mkgridmap --conf=" + MKGRIDMAP_DEF_CONF + " --output="+SITE_DEF_GRIDMAP+" --safe";
@@ -93,3 +97,5 @@ include { 'components/altlogrotate/config' };
 
    SELF;
 };
+
+

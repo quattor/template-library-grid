@@ -130,7 +130,7 @@ include { 'components/mysql/config' };
 
 # Create LB super users file
 include { 'components/filecopy/config' };
-'/software/components/filecopy/dependencies/post' = push('glitestartup');
+#'/software/components/filecopy/dependencies/post' = push('glitestartup');
 '/software/components/filecopy/services' = {
   super_users = '';
   foreach (i;user;LB_TRUSTED_WMS) {

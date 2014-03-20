@@ -1,6 +1,10 @@
 unique template feature/gip/ce;
 
-'/software/components/gip2/staticInfoCmd' = '/opt/glite/sbin/glite-info-static-create';
+prefix '/software/packages';
+'{lcg-info-dynamic-maui}'          = nlist();
+'{lcg-info-dynamic-scheduler-pbs}' = nlist();
+
+'/software/components/gip2/staticInfoCmd' = '/usr/sbin/glite-info-static-create';
 
 "/software/components/symlink/links" = {
   SELF[length(SELF)] =   nlist("name", "/opt/lcg/lib/python",
@@ -10,6 +14,11 @@ unique template feature/gip/ce;
   SELF;
 };
 
+include { 'components/filecopy/config' };
+'/software/components/filecopy/services/{/usr/sbin/glite-info-static-create}'=
+  nlist('config',"#!/bin/bash \n cat $2",
+        'perms' ,'0755',
+        'owner' ,'root');
 
 include { 'components/gip2/config' };
 
@@ -54,6 +63,9 @@ variable GIP_CLUSTER_PUBLISHER_HOST ?= LRMS_SERVER_HOST;
 # Enable/disable its use instead of Torque-based plugin. Default: enabled.
 # Ignored if the LRMS is not pbs.
 variable GIP_CE_USE_MAUI ?= true;
+
+
+variable PKG_ARCH_TORQUE_MAUI ?= PKG_ARCH_GLITE;
 
 # File for caching GIP plugin output when it is run independenly of the GIP. This is particularly useful
 # when running multiple CEs in front of the same cluster. In this case, the GIP plugins are generally run as
@@ -502,20 +514,27 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
     };
   
     entries = nlist();
-    entries[escape('dn: GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST)] = 
+    entries[escape('dn: GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+',Mds-Vo-name=resource,o=grid')] = 
       nlist(
+            "objectClass",               list('GlueClusterTop','GlueCluster','GlueInformationService','GlueKey','GlueSchemaVersion'),
             "GlueClusterName",           list(GIP_CLUSTER_PUBLISHER_HOST),
             "GlueForeignKey",            foreign_keys,
             "GlueClusterService",        queue_endpoints,
             "GlueInformationServiceURL", list(RESOURCE_INFORMATION_URL),
+            "GlueSchemaVersionMajor"   , list("1"),
+            "GlueSchemaVersionMinor"   , list("3"),
            );
   
     # For GlueHostArchitecturePlatformType, assume the same type as CE until we support several subclusters
     # per cluster.
     average_core_num = to_double(CE_CPU_CONFIG['cores']) / CE_CPU_CONFIG['cpus'];
     hepspec06 = 4 * to_double(CE_SI00) / 1000;
-    entries[escape('dn: GlueSubClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+', GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST)] = 
+    entries[escape('dn: GlueSubClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+', GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+',Mds-Vo-name=resource,o=grid')] = 
       nlist(
+            'objectClass',                      list('GlueClusterTop','GlueSubCluster','GlueHostApplicationSoftware','GlueHostArchitecture',
+                                                     'GlueHostBenchmark','GlueHostMainMemory','GlueHostOperatingSystem','GlueHostProcessor',
+                                                     'GlueInformationService','GlueKey','GlueSchemaVersion'),
+            'GlueSubClusterUniqueID',           list(GIP_CLUSTER_PUBLISHER_HOST),
             'GlueChunkKey',                     list('GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST),
             'GlueHostArchitectureSMPSize',      list(CE_SMPSIZE),
             'GlueHostArchitecturePlatformType', list(CE_WN_ARCH),
@@ -540,6 +559,8 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
             'GlueSubClusterWNTmpDir',           list('/tmp'),
             "GlueInformationServiceURL", list(RESOURCE_INFORMATION_URL),
             'GlueHostApplicationSoftwareRunTimeEnvironment', CE_RUNTIMEENV,
+            'GlueSchemaVersionMajor',           list("1"),
+            'GlueSchemaVersionMinor',           list("3"),
             );
   
     hash = nlist();
@@ -653,8 +674,12 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
           #FIXME: use home directory if in a shared area
           shared_data_dir = nlist('GlueCEInfoDataDir', list(CE_DATADIR));
           
-          entries[escape('dn: GlueVOViewLocalID='+vo_name+',GlueCEUniqueID='+unique_id)] =
+          entries[escape('dn: GlueVOViewLocalID='+vo_name+',GlueCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] =
             merge(nlist(
+                        'objecClass', list('GlueCETop','GlueVOView','GlueCEInfo','GlueCEState','GlueCEAccessControlBase','GlueCEPolicy',
+                                           'GlueKey','GlueSchemaVersion'),
+                        'GlueSchemaVersionMajor',           list('1'),
+                        'GlueSchemaVersionMinor',           list('3'),
                         'GlueCEAccessControlBaseRule',      list(rule),
                         'GlueCEStateRunningJobs',           list('0'),
                         'GlueCEStateWaitingJobs',           list(to_string(GLUE_FAKE_JOB_VALUE)),
@@ -670,21 +695,23 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
                  );
         };
     
-        entries[escape('dn: GlueCEUniqueID='+unique_id)] = 
-          merge(nlist(
-                      'GlueCEImplementationName', list(GLUE_CE_IMPLEMENTATION[ce_flavor]),
+        entries[escape('dn: GlueCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] = 
+          merge(nlist('objectClass',              list('GlueCETop','GlueCE','GlueCEAccessControlBase','GlueCEInfo','GlueCEPolicy', 'GlueCEState',
+                                                       'GlueInformationService','GlueKey','GlueSchemaVersion'),
+                      'GlueCEImplementationName',    list(GLUE_CE_IMPLEMENTATION[ce_flavor]),
                       'GlueCEImplementationVersion', list(CREAM_CE_VERSION),
-                      'GlueCEHostingCluster', list(GIP_CLUSTER_PUBLISHER_HOST),
-                      'GlueCEName', list(queue),
-                      'GlueCEInfoGatekeeperPort', list(to_string(CE_PORT[ce_flavor])),
-                      'GlueCEInfoHostName', list(FULL_HOSTNAME),
-                      'GlueCEInfoLRMSType', list(lrms),
-                      'GlueCEInfoLRMSVersion', list('not defined'),
-                      'GlueCEInfoTotalCPUs', list('0'),
-                      'GlueCEInfoJobManager', list(jobmanager),
-                      'GlueCEInfoContactString', list(unique_id),
-                      'GlueCEInfoApplicationDir', list("/home/"),
-                      'GlueCEInfoDataDir', list(CE_DATADIR),
+                      'GlueCEHostingCluster',        list(GIP_CLUSTER_PUBLISHER_HOST),
+                      'GlueCEName',                  list(queue),
+                      'GlueCEUniqueID',              list(unique_id),
+                      'GlueCEInfoGatekeeperPort',    list(to_string(CE_PORT[ce_flavor])),
+                      'GlueCEInfoHostName',          list(FULL_HOSTNAME),
+                      'GlueCEInfoLRMSType',          list(lrms),
+                      'GlueCEInfoLRMSVersion',       list('not defined'),
+                      'GlueCEInfoTotalCPUs',         list('0'),
+                      'GlueCEInfoJobManager',        list(jobmanager),
+                      'GlueCEInfoContactString',     list(unique_id),
+                      'GlueCEInfoApplicationDir',         list("/home/"),
+                      'GlueCEInfoDataDir',                list(CE_DATADIR),
                       'GlueCEStateEstimatedResponseTime', list(to_string(2146660842)),
                       'GlueCEStateFreeCPUs', list('0'),
                       'GlueCEStateRunningJobs', list('0'),
@@ -708,6 +735,8 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
                       'GlueCEPolicyMaxSlotsPerJob', list('0'),
                       'GlueCEPolicyPreemption', list('0'),
                       'GlueCEPolicyMaxWaitingJobs', list('0'),
+                      'GlueSchemaVersionMajor',     list('1'),
+                      'GlueSchemaVersionMinor',     list('3'),
                      ),
                 gluese_info_default_se
                );
@@ -797,9 +826,11 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
     
         # Define list of SEs usable by this queue
         if ( length(queue_close_se_list) > 0 ) {
-          entries[escape('dn: GlueCESEBindGroupCEUniqueID='+unique_id)] = 
-                         nlist(
+          entries[escape('dn: GlueCESEBindGroupCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] = 
+                         nlist('objectClass', list('GlueGeneralTop','GlueCESEBindGroup','GlueSchemaVersion'),
                                'GlueCESEBindGroupSEUniqueID', queue_close_se_list,
+                               'GlueSchemaVersionMajor', list('1'),
+                               'GlueSchemaVersionMinor', list('3'),
                               );
         };
     
@@ -828,8 +859,11 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
             };
           };
           
-          entries[escape('dn: GlueCESEBindSEUniqueID='+se+',GlueCESEBindGroupCEUniqueID='+unique_id)] =  
+          entries[escape('dn: GlueCESEBindSEUniqueID='+se+',GlueCESEBindGroupCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] =  
             nlist(
+                 'objectClass', list('GlueGeneralTop','GlueCESEBind','GlueSchemaVersion'),
+                 'GlueSchemaVersionMajor',      list('1'),
+                 'GlueSchemaVersionMinor',      list('3'),
                  'GlueCESEBindGroupCEUniqueID', list(unique_id),
                  'GlueCESEBindCEAccesspoint',   list(accesspoint),
                  'GlueCESEBindCEUniqueID',      list(unique_id),

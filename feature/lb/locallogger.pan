@@ -26,7 +26,7 @@ include { 'users/glite' };
 
 # Configure glitestartup as a post-dependency for filecopy
 include { 'components/filecopy/config' };
-'/software/components/filecopy/dependencies/post' = push('glitestartup');
+#'/software/components/filecopy/dependencies/post' = push('glitestartup');
 
 # Add locallogger service to the list of gLite enabled services
 include { 'components/glitestartup/config' };

@@ -134,9 +134,7 @@ include { SITE_NAMED_CONFIG_TEMPLATE };
 #
 # Kernel version and CPU architecture
 #
-variable KERNEL_VARIANT ?= '';
 include { 'os/kernel_version_arch' };
-'/system/kernel/version' ?= KERNEL_VERSION + '.' + PKG_ARCH_KERNEL;
 
 
 #
@@ -173,7 +171,9 @@ include { 'defaults/grid/config' };
 
 # Check if NFS server and/or client should be configured on the current system.
 # This template defines variables NFS_xxx_ENABLED used by other templates. 
+# Also include NFS-related packages
 include { 'feature/nfs/init' };
+include { if ( NFS_CLIENT_ENABLED ) 'rpms/nfs-client' };
 
 
 # Configure filesystem layout.

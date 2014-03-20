@@ -7,6 +7,7 @@ template personality/cream_ce/config;
 "/software/components/glitestartup/configFile" = "/etc/gLiteservices";
 "/software/components/glitestartup/restartEnv" = list("/etc/profile.d/env.sh","/etc/profile.d/grid-env.sh");
 "/software/components/glitestartup/scriptPaths" = list("/etc/init.d");
+'/software/components/glitestartup/active'      = false;
 
 variable GLOBUS_GRIDFTP_CFGFILE ?= "/usr/etc/gridftp.conf";
 '/software/components/profile' = component_profile_add_env(
@@ -37,7 +38,7 @@ variable GLOBUS_GRIDFTP_CFGFILE ?= "/usr/etc/gridftp.conf";
 variable CREAM_SANDBOX_DIR ?= error('CREAM_SANDBOX_DIR required but undefined');
 
 # Include some helper functions
-include { 'feature/tomcat5/functions' };
+include { 'feature/tomcat/functions' };
 
 # Check that Tomcat has been configured and define a few variables based on Tomcat configuration
 variable TOMCAT_USER ?= error('Tomcat must be configured before CREAM CE');
@@ -239,7 +240,7 @@ variable CREAM_CE_CONFIG_CONTENTS=replace('CREAM_DB_PASSWORD_VALUE',CREAM_DB_PAS
         nlist("config",CREAM_CE_CONFIG_CONTENTS,
               "owner","root",
               "perms","0644",
-              "restart", "/sbin/service tomcat5 restart",
+              "restart", "/sbin/service "+TOMCAT_SERVICE+" restart",
         )
   );
 
@@ -304,20 +305,18 @@ include { if ( CEMON_ENABLED ) 'personality/cream_ce/cemonitor' };
 #------------------------------------------------------------------------------
 
 "/software/components/symlink/links" = {
-  # WAR (Web Archive) files
-  SELF[length(SELF)] =   nlist("name", CATALINA_HOME+"/webapps/ce-cream.war",
-                               "target", GLITE_LOCATION+"/share/webapps/ce-cream.war",
-                               "replace", nlist("all","yes"),
-                               "exists", true,
-                              );
-
   # CREAM web service dependencies
   SELF[length(SELF)] =   nlist("name", CATALINA_HOME+"/common/lib/mysql-connector-java.jar",
                                "target", "/usr/share/java/mysql-connector-java.jar",
                                "replace", nlist("all","yes"),
                                "exists", true,
                               );
-
+  SELF[length(SELF)] =  nlist(
+                               "name",    CATALINA_HOME+"/lib/glite-lb-client-java.jar",
+                               "target",  "/usr/lib/java/glite-lb-client-java.jar",
+                               "replace", nlist("all","yes"),
+                               "exists",  true,
+                             );
   SELF;
 };
 
@@ -327,7 +326,7 @@ include { if ( CEMON_ENABLED ) 'personality/cream_ce/cemonitor' };
   SELF;
 };
 
-variable TOMCAT_GLEXEC_WRAPPER_FILE = '/usr/share/tomcat5/glexec-wrapper.sh';
+variable TOMCAT_GLEXEC_WRAPPER_FILE = '/usr/share/'+TOMCAT_SERVICE+'/glexec-wrapper.sh';
 variable TOMCAT_GLEXEC_WRAPPER_CONTENTS = {
   contents = "#!/bin/sh\n";
   contents = contents + "/usr/sbin/glexec $@\n";
@@ -352,8 +351,8 @@ variable CREAM_TRUSTMANAGER_CONFIG = CREAM_TRUSTMANAGER_CONFIG + 'trustmanager-t
 include {'components/filecopy/config'};
 "/software/components/filecopy/services" = npush(
 
-  escape(EMI_LOCATION+"/var/lib/trustmanager-tomcat/config.properties"), nlist("config",    CREAM_TRUSTMANAGER_CONFIG,
-                                           "restart","/var/lib/trustmanager-tomcat/configure.sh /usr; /sbin/service "+TOMCAT_SERVICE+" restart"),  
+  escape("/var/lib/trustmanager-tomcat/config.properties"), nlist("config",    CREAM_TRUSTMANAGER_CONFIG,
+                                           "restart","/var/lib/trustmanager-tomcat/configure.sh /; /sbin/service "+TOMCAT_SERVICE+" restart"),  
 );
 
 # Ensure Tomcat5 server.xml is matching the one needed for the CREAM CE
@@ -366,7 +365,7 @@ include {'components/filecopy/config'};
 
 
 '/software/components/filecopy/services' = npush(
-	escape('/etc/tomcat5/server.xml'), nlist('source','/var/lib/trustmanager-tomcat/server.xml',
+	escape('/etc/'+TOMCAT_SERVICE+'/server.xml'), nlist('source','/var/lib/trustmanager-tomcat/server.xml',
                                                  'owner', TOMCAT_USER+':root',
                                                  'perms','0644',
                                                  "restart","/var/lib/trustmanager-tomcat/configure.sh /usr; /sbin/service "+TOMCAT_SERVICE+" restart",
@@ -433,7 +432,7 @@ include { 'components/filecopy/config' };
 
 
 variable CREAM_TRUSTMANAGER_LOG4J_CONF = {
-  root_logger = create('feature/tomcat5/root-logger');
+  root_logger = create('feature/tomcat/root-logger');
   app_logger = create('personality/cream_ce/trustmanager-logger');
   app_logger['conf'] = replace('%%LOGFILE%%',
                                CREAM_LOG_DIR+'/trustmanager-tomcat.log',
@@ -451,7 +450,7 @@ variable CREAM_TRUSTMANAGER_LOG4J_CONF = {
 };
 
 variable CREAM_CREAM_LOG4J_CONF = {
-  root_logger = create('feature/tomcat5/root-logger');
+  root_logger = create('feature/tomcat/root-logger');
   app_logger = create('personality/cream_ce/ce-cream-logger');
   app_logger['conf'] = replace('%%LOGFILE%%',
                                CREAM_LOG_DIR+'/glite-ce-cream.log',
@@ -516,8 +515,9 @@ variable CREAM_DAILY_RESTART ?= false;
 #------------------------------------------------------------------------------
 # glexec fails if permissions are wrong, always run dirperm after spma
 #------------------------------------------------------------------------------
-include { 'components/spma/config' };
-'/software/components/spma/dependencies/post' = append('dirperm');
+# Chicken / Egg problem w/ SPMA if dirperm is a dependency
+#include { 'components/spma/config' };
+#'/software/components/spma/dependencies/post' = append('dirperm');
 
 variable TORQUE_COMMAND_LINKS ?= false;
 include { 'components/symlink/config' };

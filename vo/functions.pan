@@ -15,7 +15,7 @@ variable VO_FQAN_POOL_ACCOUNTS_USE_FQAN_GROUP ?= false;
 #
 # FQAN is not primary group but groupmapfile refere to FQAN
 #
-variable LCMAPS_ADD_GIDS_FROM_MAPPED_ACCOUNTS ?= false;
+variable LCMAPS_ADD_GIDS_FROM_MAPPED_ACCOUNTS ?= true;
 
 function add_vo_infos = {
 

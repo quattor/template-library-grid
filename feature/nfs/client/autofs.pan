@@ -11,6 +11,9 @@ unique template feature/nfs/client/autofs;
 include { 'components/autofs/config' };
 include { 'components/symlink/config' };
 
+# Add autofs rpm
+include { 'rpms/nfs-client' };
+
 variable NFS_MAP_MOUNT_POINT ?= "/grid_mnt";
 
 "/software/components/autofs/maps/grid/mapname" = "/etc/auto.grid";

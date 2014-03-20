@@ -10,8 +10,6 @@ variable TORQUE_VERSION ?= if(OS_VERSION_PARAMS['major'] == 'sl5'){
 
 variable TORQUE_PBSWEBMON_ENABLED ?= false;
 
-include { 'feature/torque2/server/rpms/config' };
-
 include { 'feature/torque2/server/config' };
 
 # This should eventually be split out to allow users to choose different

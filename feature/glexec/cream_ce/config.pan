@@ -57,3 +57,41 @@ variable GLEXEC_CONF_CONTENTS = {
         )
   );
 
+include { 'components/metaconfig/config' };
+
+type glexec_main = {
+  "linger"                           : string = "no"
+
+  "lcmaps_db_file"                   : string = "/etc/lcmaps/lcmaps.db.glexec"
+  "lcmaps_log_file"                  : string = "/var/log/glexec/lcas_lcmaps.log"
+  "lcmaps_debug_level"               : long   = 0
+  "lcmaps_log_level"                 : long   = 1
+
+  "lcas_db_file"                     : string = "/etc/lcas/lcas-glexec.db"
+  "lcas_log_file"                    : string = "/var/log/glexec/lcas_lcmaps.log"
+  "lcas_debug_level"                 : long   = 0
+  "lcas_log_level"                   : long   = 1
+
+  "log_level"                        : long   = 1
+  "create_target_proxy"              : string = "no"
+  "user_identity_switch_by"          : string = "lcmaps"
+  "user_white_list"                  : string = "tomcat"
+  "ommission_private_key_white_list" : string = "tomcat"
+  "preserve_env_variables"           : string = ""
+  "silent_logging"                   : string = "no"
+  "log_destination"                  : string = "file"
+  "log_file"                         : string = "/var/log/glexec/glexec.log"
+};
+
+type glexec = {
+  "glexec" : glexec_main
+};
+
+bind '/software/components/metaconfig/services/{/etc/glexec.conf.metaconfig}/contents' = glexec;
+
+prefix '/software/components/metaconfig/services/{/etc/glexec.conf.metaconfig}';
+
+'contents' = nlist('glexec',nlist());
+'module'   = 'tiny';
+
+'/software/packages/{perl-Config-Tiny}' = nlist();

@@ -3,8 +3,6 @@
 
 unique template feature/torque2/config;
 
-
-
 variable TORQUE_CLIENT_MOM_ENABLED ?= true;
 variable TORQUE_SERVER_HOST ?= LRMS_SERVER_HOST;
 variable TORQUE_SERVER_PRIV_HOST ?= if ( exists(CE_PRIV_HOST) ) {

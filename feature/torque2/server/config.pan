@@ -2,6 +2,8 @@
 
 unique template feature/torque2/server/config;
 
+include { 'feature/torque2/server/rpms/config' };
+
 # Assume 1 CPU per machine by default
 variable WN_CPUS_DEF ?= 1;
 # Assume 2 jobs per CPU by default (normal job + 1 MAUI SR)
@@ -130,10 +132,12 @@ include { 'components/iptables/config' };
 # ----------------------------------------------------------------------------
 include { 'components/chkconfig/config' };
 
-"/software/components/chkconfig/service/pbs_mom/off" = "";
-"/software/components/chkconfig/service/pbs_mom/startstop" = true;
-"/software/components/chkconfig/service/pbs_server/on" = "";            
-"/software/components/chkconfig/service/pbs_server/startstop" = true;
+prefix '/software/components/chkconfig/service';
+'pbs_server/on'        = '';
+'pbs_server/startstop' = true;
+
+'pbs_mom/off'          = '';
+'pbs_mom/startstop'    = true;
 
 
 # ----------------------------------------------------------------------------
@@ -169,7 +173,7 @@ include { 'components/altlogrotate/config' };
 # ---------------------------------------------------------------------------- 
 include { 'components/pbsserver/config' }; 
 
-"/software/components/pbsserver/pbsroot" = "/var/torque";
+"/software/components/pbsserver/pbsroot" = TORQUE_CONFIG_DIR;
 
 "/software/components/pbsserver/env/PATH" = "/bin:/usr/bin";
 "/software/components/pbsserver/env/LANG" = "C";

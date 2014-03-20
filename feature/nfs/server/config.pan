@@ -11,6 +11,11 @@ variable NFS_V4_EXPORT_OPTS ?='nohide,'+NFS_V4_EXPORT_COMMON_OPTS;
 variable NFS_VIRTUAL_ROOT_EXPORT_HOST ?= '*';
 variable NFS_VIRTUAL_ROOT_EXPORT_OPTS ?= 'fsid=0,'+NFS_V4_EXPORT_COMMON_OPTS;
 
+#
+# NFS server need nfs-utils packages
+#
+'/software/packages/{nfs-utils}' = nlist();
+
 # NFS_DEFAULT_RIGHTS must contain a DEFAULT entry and may contain one entry per
 # file system (escaped) specifying the default to apply to this particular file system.
 # By default, enable root squashing on all file systems, except home directory parents
