@@ -13,7 +13,7 @@ variable MPI_LAM_RELEASE  ?= "2.gp";
 variable MPI_LAM_VERSION_FULL = MPI_LAM_VERSION+'-'+MPI_LAM_RELEASE;
 
 variable PKG_ARCH_MPI_MPICH ?= PKG_ARCH_MPI;
-variable MPI_USE_MPICH ?= true;
+variable MPI_USE_MPICH ?= false;
 variable MPI_MPICH_VERSION ?= "1.2.7";
 variable MPI_MPICH_EXTRAVERSION ?= "p1";
 variable MPI_MPICH_RELEASE ?= "1.sl3.cl.1";

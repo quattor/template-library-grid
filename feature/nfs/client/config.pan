@@ -1,5 +1,8 @@
 unique template feature/nfs/client/config;
 
+# Install nfs-utils
+'/software/packages/{nfs-utils}' = nlist();
+
 # For backward compatibility, this variable is generally defined to false in gLite default parameters
 # but autofs is really the recommended method...
 variable NFS_AUTOFS ?= true;

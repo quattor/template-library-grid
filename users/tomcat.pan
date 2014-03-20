@@ -1,9 +1,10 @@
 
 unique template users/tomcat;
 
-variable TOMCAT_USER ?= 'tomcat';
-variable TOMCAT_GROUP ?= 'tomcat';
-variable TOMCAT_HOME ?= '/usr/share/tomcat5';
+variable TOMCAT_USER    ?= 'tomcat';
+variable TOMCAT_GROUP   ?= 'tomcat';
+variable TOMCAT_VERSION ?= '6';
+variable TOMCAT_HOME    ?= '/usr/share/tomcat'+TOMCAT_VERSION;
 
 # -----------------------------------------------------------------------------
 # accounts

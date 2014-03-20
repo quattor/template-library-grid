@@ -105,7 +105,7 @@ include { 'feature/lcmaps/base' };
 include { 'feature/lcas/base' };
 
 # Configure Tomcat.
-include { 'feature/tomcat5/config' };
+include { 'feature/tomcat/config' };
 
 # Configure lb-locallogger
 include { 'feature/lb/locallogger' };

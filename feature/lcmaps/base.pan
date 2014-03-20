@@ -15,7 +15,7 @@ variable LCMAPS_LOG_LEVEL ?= 1;
 variable GLITE_GRID_ENV_PROFILE ?= '/etc/profile.d/grid-env.sh';
 
 # Disable Fix some flip/floop account when change role
-variable LCMAPS_ADD_GIDS_FROM_MAPPED_ACCOUNTS ?= false;
+variable LCMAPS_ADD_GIDS_FROM_MAPPED_ACCOUNTS ?= true;
 
 # ---------------------------------------------------------------------------- 
 # First, build LCMAPS configuration in variables

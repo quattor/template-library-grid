@@ -4,14 +4,6 @@ include { 'feature/mpi/vars' };
 
 variable CE_TORQUE ?= true;
 
-# mpiexec for torque/mpich which uses TM libraries
-'/software/packages' = {
-    if (CE_TORQUE) {
-        SELF['mpiexec'] = nlist();
-    };
-    SELF;
-};
-
 include {
     if(MPI_USE_MPICH) {
         "feature/mpi/rpms/mpich";
