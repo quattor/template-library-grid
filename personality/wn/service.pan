@@ -2,6 +2,10 @@
 
 unique template personality/wn/service;
 
+# This is a requirement at WLCG sites and they are the main users of Quattor...
+# Sites not interested can define the variable to false
+variable GLEXEC_WN_ENABLED ?= true;
+
 include { 'components/filecopy/config' };
 
 # TO_BE_FIXED: workaround by Fred for globuscfg component failure in EMI (some features are now useless)
@@ -50,14 +54,8 @@ variable LRMS_CLIENT_INCLUDE = {
 };
 include { LRMS_CLIENT_INCLUDE };
 
-variable GLEXEC_WN_INCLUDE = {
-  if ( exists(GLEXEC_WN_ENABLED) && GLEXEC_WN_ENABLED ) {
-    "feature/glexec/wn/service";
-  } else {
-    null;
-  };
-};
-include { GLEXEC_WN_INCLUDE };
+# Configure glexec if needed
+include { if ( GLEXEC_WN_ENABLED ) "feature/glexec/wn/service" };
 
 # WN specific configuration
 include { 'personality/wn/config' };
