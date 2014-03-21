@@ -14,7 +14,9 @@ variable EMI_REPOSITORY_LIST ?= {
   SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_base';
   SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_third_party';
   SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_updates';
-  SELF[length(SELF)] = 'wlcg_x86_64';
+  if (OS_VERSION_PARAMS['major'] == 'sl6') {
+    SELF[length(SELF)] = 'wlcg_x86_64';
+  };
   SELF[length(SELF)] = 'mpi';
   if ( !is_defined(YUM_SNAPSHOT_DATE) ) {
     SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_external';
