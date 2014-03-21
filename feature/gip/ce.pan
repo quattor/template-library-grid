@@ -134,7 +134,7 @@ variable GIP_PROVIDER_SUBSERVICE ?= nlist(
 variable GIP_CE_SERVICE_PARAMS = nlist(
   'creamce',      nlist('type', 'org.glite.ce.CREAM',
                         'endpoint', 'https://${CREAM_HOST}:${CREAM_PORT}/ce-cream/services',
-                        'service', 'tomcat5',
+                        'service', TOMCAT_SERVICE,
                         'service_status_name', 'CREAM',
                         'version_rpm', 'glite-ce-cream',
                         'pid_file', '$ENV{CREAM_PID_FILE}',
@@ -145,7 +145,7 @@ variable GIP_CE_SERVICE_PARAMS = nlist(
                        ),
   'cemon',        nlist('type', 'org.glite.ce.Monitor',
                         'endpoint', 'https://${CREAM_HOST}:${CREAM_PORT}/ce-monitor/services/CEMonitor',
-                        'service', 'tomcat5',
+                        'service', TOMCAT_SERVICE,
                         'service_status_name', 'CEMON',
                         'version_rpm', 'glite-ce-monitor',
                         'pid_file', '$ENV{CREAM_PID_FILE}',

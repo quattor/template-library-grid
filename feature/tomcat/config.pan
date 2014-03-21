@@ -46,6 +46,10 @@ prefix '/software/components/sysconfig';
 "/software/components/profile" = component_profile_add_env(CATALINA_HOME+'/bin/setenv.sh',
                                                            value('/software/components/sysconfig/files/'+TOMCAT_SERVICE),
                                                           );
+
+# Change pid file location for tomcat6
+'/software/components/profile/env/CREAM_PID_FILE' = '/var/run/'+TOMCAT_SERVICE+'.pid';
+
 # Ensure catalina.out is owned by Tomcat user.
 # If created by the startup scipt, it is owned by root (tomcat 5.5.23).
 '/software/components/dirperm/paths' = {
