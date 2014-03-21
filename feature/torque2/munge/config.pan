@@ -7,6 +7,9 @@ variable MUNGE_KEY_SOURCE ?= undef;
 
 include { 'users/munge' };
 
+# Install munge rpm
+'/software/packages/{munge}' = nlist();
+
 # Configure munge key
 variable MUNGE_KEY_TEMPLATE = if ( is_defined(MUNGE_KEY_FILE) ) {
                                 'feature/torque2/munge/key_file';
