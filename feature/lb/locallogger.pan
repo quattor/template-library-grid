@@ -23,15 +23,29 @@ include { 'users/glite' };
   SELF;
 };
 
+# Add glite-lb-locallogger to chkconfig
 
-# Configure glitestartup as a post-dependency for filecopy
-include { 'components/filecopy/config' };
-#'/software/components/filecopy/dependencies/post' = push('glitestartup');
+include { 'components/chkconfig/config' };
 
-# Add locallogger service to the list of gLite enabled services
-include { 'components/glitestartup/config' };
+prefix '/software/components/chkconfig';
 
-'/software/components/glitestartup/restartServices' = true;
-'/software/components/glitestartup/createProxy' = true;
-'/software/components/glitestartup/services' = glitestartup_mod_service(LOCALLOGGER_SERVICE);
+'service' = {
+  SELF[LOCALLOGGER_SERVICE] = nlist('on','',
+                                   'startstop',true);
+  SELF;
+};
 
+# Fix /var/run/glite ownership
+
+include { 'components/dirperm/config' };
+
+prefix '/software/components/dirperm';
+
+'paths' = append(
+  nlist(
+    'owner','glite:glite',
+    'path', '/var/run/glite',
+    'perm', '0755',
+    'type', 'd',
+  )
+);
