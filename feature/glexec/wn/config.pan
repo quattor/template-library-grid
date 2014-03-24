@@ -2,30 +2,29 @@
 
 unique template feature/glexec/wn/config;
 
+variable GLEXEC_WN_ENABLED ?= true;
+variable GLEXEC_OPMODE ?= 'setuid';
+variable GLEXEC_ARGUS_ENABLED ?= true;
+variable GLEXEC_SCAS_ENABLED ?= false;
+
+variable DEBUG = {
+  debug(OBJECT+': GLEXEC_WN_ENABLED='+to_string(GLEXEC_WN_ENABLED)+', GLEXEC_OPMODE='+to_string(GLEXEC_OPMODE));
+  debug(OBJECT+': GLEXEC_ARGUS_ENABLED='+to_string(GLEXEC_ARGUS_ENABLED)+', GLEXEC_SCAS_ENABLED='+to_string(GLEXEC_SCAS_ENABLED));
+};
+
+variable GLEXEC_ARGUS_PEPD_ENDPOINTS ?= if ( GLEXEC_ARGUS_ENABLED ) {
+                                          error('No ARGUS PEPD endpoint (GLEXEC_ARGUS_PEPD_ENDPOINTS) defined whilst GLEXEC_ARGUS_ENABLED=true');
+                                        } else {
+                                          undef;
+                                        };
 # Include configuration common to each glexec type
 include { 'feature/glexec/base' };
-
-# Set the variable to true if glexec work against a SCAS server.
-variable GLEXEC_SCAS_ENABLED ?= false;
 
 # Define the list of SCAS endpoints if glexec is a SCAS client
 # e.g. list('https://scas1.example.com:8443').
 variable GLEXEC_SCAS_ENDPOINTS ?= {
   if (GLEXEC_SCAS_ENABLED) {
     error('SCAS is enabled, but no endpoints are configured');
-  } else {
-    undef;
-  };
-};
-
-# Set the variable to true if glexec is a PEP client.
-variable GLEXEC_ARGUS_ENABLED ?= false;
-
-# Define the list of PEPD endpoints if glexec is a PEP client
-# e.g. list('http://argus1.example.com:8154/authz').
-variable GLEXEC_ARGUS_PEPD_ENDPOINTS ?= {
-  if (GLEXEC_ARGUS_ENABLED) {
-    error('ARGUS is enabled, but no endpoints are configured');
   } else {
     undef;
   };
