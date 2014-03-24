@@ -1,4 +1,5 @@
 # This template defines the LCMAPS configuration required for glexec_wn.
+# Most variables controlling the configuration are defined as part of the glexec configuration.
 # Based on CREAM CE configuration for glexec.
 # It doesn't replace the standard LCMAPS configuration used by other services,
 # which is included if not already done.
