@@ -85,7 +85,12 @@ variable NFS_MOUNT_POINTS = {
                                "replace", nlist("all","yes"),
                               );
   };
-  SELF;
+  if ( is_defined(SELF) ) {
+    SELF;
+  } else {
+    debug(OBJECT+': no NFS client mount point defined');
+    null;
+  };
 };
 
 
