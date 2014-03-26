@@ -6,7 +6,7 @@ variable GRIDFTP_PORT = 2811;
 # Use this variable to limit the number of simultaneous connections
 variable GRIDFTP_MAX_CONNECTIONS ?= 150;
 
-
+include { 'feature/gridftp/rpms/config' };
 # ---------------------------------------------------------------------------- 
 # chkconfig
 # ---------------------------------------------------------------------------- 

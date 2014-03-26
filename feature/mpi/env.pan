@@ -57,7 +57,7 @@ include { 'components/profile/config' };
     
     if(MPI_USE_OPENMPI) {
         SELF['MPI_OPENMPI_VERSION'] = MPI_OPENMPI_VERSION;
-        SELF['MPI_OPENMPI_PATH'] = '/opt/openmpi/'+MPI_OPENMPI_VERSION+MPI_OPENMPI_EXTRAVERSION;
+        SELF['MPI_OPENMPI_PATH'] =  MPI_OPENMPI_PATH;
     };
 
     if(MPI_USE_MPICH) {
