@@ -15,13 +15,13 @@ variable SSL_SESSION_CACHE_TIMEOUT ?= 7200;
 #
 # Configure dmlite
 #
-variable DMLITE_ENABLED ?= true;
 include {'personality/se_dpm/config_dmlite'};
 
 #
 # Consistency check
 #
 variable check = if (DPM_DAV_ENABLED && ! DMLITE_ENABLED) error ("LCGDM HTTP / WebDAV requires DMLite");
+variable DEBUG = debug(OBJECT+': DPM_DAV_ENABLED='+to_string(DPM_DAV_ENABLED)+', DMLITE_ENABLED='+to_string(DMLITE_ENABLED));
 
 #
 # Enable httpd service

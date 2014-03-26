@@ -3,6 +3,9 @@
 
 unique template feature/blparser/config;
 
+# Install glite-ce-blparser
+'/software/packages/{glite-ce-blahp}' = nlist();
+
 # Should have been defined before, for example by service.tpl
 variable BLPARSER_HOST ?= error('BLPARSER_HOST is not defined');
 
@@ -81,8 +84,8 @@ variable BLPARSER_CONF_CONTENTS = {
 
 
 "/software/components/chkconfig/dependencies/pre" = push("symlink");
-"/software/components/chkconfig/service/glite-ce-blparser/on" = "";
-"/software/components/chkconfig/service/glite-ce-blparser/startstop" = true;
+"/software/components/chkconfig/service/glite-ce-blah-parser/on" = "";
+"/software/components/chkconfig/service/glite-ce-blah-parser/startstop" = true;
 
 #-----------------------------------------------------------------------------
 # Logrotate

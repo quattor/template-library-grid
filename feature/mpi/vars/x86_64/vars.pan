@@ -26,6 +26,7 @@ variable MPI_OPENMPI_VERSION ?= "1.6.3";
 variable MPI_OPENMPI_EXTRAVERSION ?= "";
 variable MPI_OPENMPI_RELEASE ?= "torque.2.5.9";
 variable MPI_OPENMPI_VERSION_FULL = MPI_OPENMPI_VERSION+MPI_OPENMPI_EXTRAVERSION+'-'+MPI_OPENMPI_RELEASE;
+variable MPI_OPENMPI_PATH    ?= '/usr/lib64/openmpi';
 variable MPI_OPENMPI_MPIEXEC ?= "/usr/bin/mpiexec";
 
 variable PKG_ARCH_MPI_MPICH2 ?= PKG_ARCH_MPI;
@@ -34,7 +35,7 @@ variable MPI_MPICH2_VERSION ?= "1.0.4";
 variable MPI_MPICH2_EXTRAVERSION ?= "";
 variable MPI_MPICH2_RELEASE ?= "2.sharedlibs.1";
 variable MPI_MPICH2_VERSION_FULL = MPI_MPICH2_VERSION+MPI_MPICH2_EXTRAVERSION+'-'+MPI_MPICH2_RELEASE;
-variable MPI_MPICH2_PATH ?= '/opt/mpich2-'+MPI_MPICH2_VERSION+MPI_MPICH2_EXTRAVERSION;
+variable MPI_MPICH2_PATH ?= '/usr/lib64/mpich2';
 variable MPI_MPICH2_MPIEXEC ?= "/usr/bin/mpiexec";
 
 variable PKG_ARCH_MPI_MPIEXEC ?= PKG_ARCH_MPI;

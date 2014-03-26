@@ -23,6 +23,7 @@ include { MUNGE_KEY_TEMPLATE };
 # Enable munge service
 include { 'components/chkconfig/config' };
 "/software/components/chkconfig/service/munge/on" = "";
+"/software/components/chkconfig/service/munge/startstop" = true;
 
 # Configure owner/perms for various munge directories and files
 

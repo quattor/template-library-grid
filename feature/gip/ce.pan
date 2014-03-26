@@ -3,6 +3,7 @@ unique template feature/gip/ce;
 prefix '/software/packages';
 '{lcg-info-dynamic-maui}'          = nlist();
 '{lcg-info-dynamic-scheduler-pbs}' = nlist();
+'{bdii}'                           = nlist();
 
 '/software/components/gip2/staticInfoCmd' = '/usr/sbin/glite-info-static-create';
 
@@ -114,6 +115,9 @@ variable GLUE_CE_IMPLEMENTATION = nlist(
   'cream',    'CREAM',
   'lcg',      'LCG-CE',
 );
+
+# Which version of tomcat
+variable TOMCAT_SERVICE ?= 'tomcat6';
 
 # GIP service provider configuration.
 # The value of GIP_PROVIDER_SERVICE_CONF_BASE is used as the base file name for the config file.
@@ -767,7 +771,7 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
       conf_file = "lcg-info-static-all-ce-"+lrms+".conf";
       SELF[conf_file] = nlist();
       SELF[conf_file]['template'] = GIP_GLUE_TEMPLATES_DIR + "/GlueCE.template";
-      SELF[conf_file]['ldifFile'] = GIP_VAR_DIR+"/static-file-all-CE-"+lrms+".ldif";
+      SELF[conf_file]['ldifFile'] = "static-file-all-CE-"+lrms+".ldif";
       SELF[conf_file]['entries'] = entries;
     };
 
