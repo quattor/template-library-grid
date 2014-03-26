@@ -3,6 +3,7 @@
 
 unique template personality/se_dpm/server/config;
 
+variable DMLITE_ENABLED ?= false;
 variable GIP_SCRIPT_DPM_DYNAMIC_CONFIG ?= null;
 variable SEDPM_DB_TYPE = 'mysql';
 
@@ -142,6 +143,10 @@ include { 'components/mysql/config' };
     SELF;
   };
 };
+
+# dmlite configuration specific to head node if needed
+variable DEBUG = debug(OBJECT+': DMLITE_ENABLED='+to_string(DMLITE_ENABLED));
+include { if ( DMLITE_ENABLED ) 'personality/se_dpm/server/config_dmlite' };
 
 
 # Check if a site specific version of GIP DPM plugin is used and configure it if needed 
