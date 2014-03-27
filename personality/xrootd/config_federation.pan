@@ -128,7 +128,7 @@ include { 'personality/xrootd/env_federation' };
   foreach (i;federation;XROOTD_FEDERATION_LIST) {
     if ( is_defined(XROOTD_FEDERATION_PARAMS[federation]['n2n_packages']) ) {
       foreach(j;package;XROOTD_FEDERATION_PARAMS[federation]['n2n_packages'] ) {
-        pkg_repl(package['name'],package['version'],package['arch']);
+        SELF[package] = nlist();
       };
     };
   };
