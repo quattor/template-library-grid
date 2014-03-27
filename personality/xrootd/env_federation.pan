@@ -29,8 +29,8 @@ variable XROOTD_FEDERATION_PARAMS_DEFAULT = {
                         'xrd_mgr_port', 1094,
                         'n2n_library', 'libXrdCmsTfc.so',
                         'n2n_options', 'file:/etc/xrootd/storage.xml?protocol=direct',
-#                        'n2n_packages', list('xrootd-cmstfc', 
-#                                            ),
+                        'n2n_packages', list('xrootd-cmstfc', 
+                                            ),
                         'valid_path_prefix', '/store/',
                         'vo', 'cms',
                        );
