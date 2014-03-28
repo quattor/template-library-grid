@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<service id="CREAM service (core2)"
+         cream_description="CREAM 2"
+         cream_interface_version="2.1"
+         creamdb_database_version="CREAM_DB_VERSION_VALUE"
+         delegationdb_database_version="CREAM_DB_VERSION_VALUE"
+         cream_scratch_dir="CREAM_VAR_DIR_VALUE"
+         cream_sandbox_dir="CREAM_SANDBOX_DIR_VALUE"
+         command_executor_dir="CATALINA_HOME_VALUE/webapps/ce-cream/WEB-INF/lib"
+         cream_concurrency_level="50"
+         cream_command_queue_shared="false"
+         delegation_storage="/var/proxies"
+         delegation_key_size="2048"
+         delegation_factory="org.glite.ce.cream.ws.delegation.storage.CREAMGrDPDatabaseStorageFactory"
+         delegation_purge_rate="CREAM_DELEGATION_PURGE_RATE_VALUE"
+         cemon_url="CEMON_URL_VALUE" >
+
+  <commandexecutor id="Delegation executor"
+                   category="DELEGATION"
+                   commandqueuesize="500"
+                   commandqueueshared="false"
+                   commandworkerpoolsize="0"
+                   filename="/usr/share/java/glite-ce-cream-delegationExecutor.jar">
+      <parameter name="CREAM_COPY_PROXY_TO_SANDBOX_BIN_PATH" value="/usr/bin/glite-cream-copyProxyToSandboxDir.sh" />
+      <parameter name="CREAM_SANDBOX_DIR" value="CREAM_SANDBOX_DIR_VALUE" />
+      <parameter name="DELEGATION_PURGE_RATE" value="CREAM_DELEGATION_PURGE_RATE_VALUE" /> <!-- minutes -->
+  </commandexecutor>
+
+
+  <commandexecutor id="BLAH executor"
+                   category="JOB_MANAGEMENT"
+                   filename="CATALINA_HOME_VALUE/webapps/ce-cream/WEB-INF/lib/glite-ce-cream-blahExecutor.jar">
+    <parameter name="BLAHP_BIN_PATH" value="/usr/bin/blahpd" />
+    <parameter name="CREAM_PURGE_SANDBOX_BIN_PATH" value="/usr/bin/glite-ce-cream-purge-sandbox" />
+    <parameter name="CREAM_CREATE_SANDBOX_BIN_PATH" value="/usr/bin/glite-cream-createsandboxdir" />
+    <parameter name="GLEXEC_BIN_PATH" value="/usr/sbin/glexec" />
+    <parameter name="BLAH_JOBID_PREFIX" value="BLAH_JOBID_PREFIX_VALUE" />
+    <parameter name="BLAH_COMMAND_TIMEOUT" value="300"/>
+    <parameter name="LRMS_EVENT_LISTENER_PORT" value="9091" />
+    <parameter name="BLPARSER_RETRY_COUNT" value="100" />
+    <parameter name="BLPARSER_RETRY_DELAY" value="60000" />
+    <parameter name="JOB_WRAPPER_DELEGATION_TIME_SLOT" value="3600" />
+    <parameter name="JOB_WRAPPER_COPY_RETRY_COUNT" value="5" />
+    <parameter name="JOB_WRAPPER_COPY_RETRY_WAIT" value="30" />
+    <parameter name="GLEXEC_CAT_CMD_PATH" value="/bin/cat" />
+    <parameter name="CREAM_SANDBOX_DIR" value="CREAM_SANDBOX_DIR_VALUE" />
+    <parameter name="JOBS_SCRATCH_DIR" value="/var/tmp" />
+    <parameter name="CREAM_COPY_PROXY_TO_SANDBOX_BIN_PATH" value="/usr/bin/glite-cream-copyProxyToSandboxDir.sh" />
+    <parameter name="CREAM_PURGE_PROXY_FROM_SANDBOX_BIN_PATH" value="/usr/bin/glite-ce-cream-purge-proxy" />
+    <parameter name="JOB_SUBMISSION_MANAGER_ENABLE" value="true" />
+    <parameter name="JOB_SUBMISSION_MANAGER_SCRIPT_PATH" value="/usr/bin/glite_cream_load_monitor /etc/glite-ce-cream-utils/glite_cream_load_monitor.conf" />
+    CEMON_ENABLED_PART	
+    <parameter name="MAX_LEASE_TIME" value="36000" />
+    <parameter name="JOB_PURGE_RATE" value="CREAM_JOB_PURGE_RATE_VALUE" />
+    <parameter name="JOB_PURGE_POLICY" value="ABORTED CREAM_JOB_PURGE_POLICY_ABORTED_VALUE days; CANCELLED CREAM_JOB_PURGE_POLICY_CANCELED_VALUE days; DONE-OK CREAM_JOB_PURGE_POLICY_DONEOK_VALUE days; DONE-FAILED CREAM_JOB_PURGE_POLICY_DONEFAILED_VALUE days; REGISTERED CREAM_JOB_PURGE_POLICY_REGISTERED_VALUE days;" />
+
+  </commandexecutor>
+
+
+  <dataSource name="datasource_creamdb"
+              type="javax.sql.DataSource"
+              factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+              driverClassName="org.gjt.mm.mysql.Driver"
+              username="CREAM_DB_USER_VALUE" password="CREAM_DB_PASSWORD_VALUE"
+              maxActive="200"
+              maxIdle="30"
+              maxWait="10000"
+              url="jdbc:mysql://localhost:3306/creamdb?autoReconnect=true"
+              validationQuery="SELECT 1"
+              testOnBorrow="true"
+              testWhileIdle="true"
+              timeBetweenEvictionRunsMillis="20000"
+              minEvictableIdleTimeMillis="90000"
+              logAbandoned="false"
+              removeAbandoned="true"
+              removeAbandonedTimeout="30"
+  />
+
+  <dataSource name="datasource_delegationdb"
+              type="javax.sql.DataSource"
+              factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+              driverClassName="org.gjt.mm.mysql.Driver"
+              username="CREAM_DB_USER_VALUE" password="CREAM_DB_PASSWORD_VALUE"
+              maxActive="200"
+              maxIdle="30"
+              maxWait="10000"
+              url="jdbc:mysql://localhost:3306/delegationcreamdb?autoReconnect=true"
+              validationQuery="SELECT 1"
+              testOnBorrow="true"
+              testWhileIdle="true"
+              timeBetweenEvictionRunsMillis="20000"
+              minEvictableIdleTimeMillis="90000"
+              logAbandoned="false"
+              removeAbandoned="true"
+              removeAbandonedTimeout="30"
+  />
+
+  <authzchain name="chain-1">
+    <plugin name="localuserpip"
+            classname="org.glite.ce.commonj.authz.gjaf.LocalUserPIP">
+      <parameter name="glexec_bin_path"
+                 value="/usr/sbin/glexec" />
+      <parameter name="glexec_probe_cmd"
+                 value="/usr/bin/id" />
+      <parameter name="methods"
+                 value="JobRegister, putProxy, getProxyReq, renewProxyReq, getTerminationTime, destroy" />
+    </plugin>
+    <plugin name="bannerpdp"
+            classname="org.glite.ce.commonj.authz.gjaf.BlackListServicePDP">
+      <parameter name="blackListFile"
+                 value="/etc/lcas/ban_users.db" />
+    </plugin>
+    <plugin name="admincheckpip"
+            classname="org.glite.ce.commonj.authz.gjaf.AdminCheckerPIP">
+      <parameter name="adminList"
+                 value="/etc/grid-security/admin-list" />
+    </plugin>
+    <plugin name="gridmappdp"
+            classname="org.glite.ce.commonj.authz.gjaf.GridMapServicePDP">
+      <parameter name="gridMapFile"
+                 value="/etc/grid-security/grid-mapfile" />
+    </plugin>
+    <plugin name="vomspdp"
+            classname="org.glite.ce.commonj.authz.gjaf.VomsServicePDP">
+      <parameter name="gridMapFile"
+                 value="/etc/grid-security/grid-mapfile" />
+    </plugin>
+  </authzchain>
+</service>
