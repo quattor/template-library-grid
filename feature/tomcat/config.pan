@@ -37,12 +37,14 @@ prefix '/software/components/chkconfig';
 # script and in $CATALINA_HOME/bin/setenv.sh for Tomcat itself.
 include { 'components/sysconfig/config' };
 prefix '/software/components/sysconfig';
-'files'=nlist(TOMCAT_SERVICE,nlist('JAVA_HOME'    ,JAVA_LOCATION,
-                                   'JRE_HOME'     ,JAVA_LOCATION,
-                                   'JAVA_LIBDIR'  ,'/usr/share/java',
-                                   'JNI_LIBDIR'   ,'/usr/share/java',
-                                   'CATALINA_OPTS', CATALINA_OPTS)
-              );
+'files'= {
+  SELF[TOMCAT_SERVICE]=nlist('JAVA_HOME'    ,JAVA_LOCATION,
+                             'JRE_HOME'     ,JAVA_LOCATION,
+                             'JAVA_LIBDIR'  ,'/usr/share/java',
+                             'JNI_LIBDIR'   ,'/usr/share/java',
+                             'CATALINA_OPTS', CATALINA_OPTS);
+  SELF;
+};
 "/software/components/profile" = component_profile_add_env(CATALINA_HOME+'/bin/setenv.sh',
                                                            value('/software/components/sysconfig/files/'+TOMCAT_SERVICE),
                                                           );
