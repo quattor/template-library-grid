@@ -1,5 +1,8 @@
 unique template personality/argus/pap;
 
+# List of external PAPS
+variable PAPS ?= nlist();
+
 # Unique identifier for the PAP
 variable PAP_ENTITY_ID ?= "http://" + PAP_HOST + "/pap";
 
@@ -11,6 +14,7 @@ variable PAP_POLL_INTERVAL ?= 14400;
 
 # Space separated list of PAP aliases.
 variable PAP_ORDERING ?= 'default';
+variable PAP_ORDERING_LIST ?= list('default');
 
 # Forces a consistency check of the repository at startup
 variable PAP_CONSISTENCY_CHECK ?= 'false';
@@ -42,6 +46,18 @@ variable PAP_CONFIG_FILE = PAP_HOME + '/conf/pap_configuration.ini';
 variable PAP_CONFIG_CONTENTS = {
   contents = "#\n";
   contents = contents + '# PAP configuration' + "\n";
+  ok = first(PAPS,name,properties);
+  while (ok) {
+    contents = contents + name + '.type = '    + properties['type']               + "\n";
+    contents = contents + name + '.enabled = ' + to_string(properties['enabled']) + "\n";
+    contents = contents + name + '.dn = '      + properties['dn']                 + "\n";
+    contents = contents + name + '.hostname = '+ properties['hostname']           + "\n";
+    contents = contents + name + '.port = '    + to_string(properties['port'])    + "\n";
+    contents = contents + name + '.path = '    + properties['path']               + "\n";
+    contents = contents + name + '.protocol = '+ properties['protocol']           + "\n";
+    contents = contents + name + '.public = '  + to_string(properties['public'])  + "\n";
+    ok = next(PAPS,name,properties);
+  };
   contents = contents + '# ' + "\n";
   contents = contents + '# Documentation: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthZPAPConfig' + "\n";
   contents = contents + '# ' + "\n";
@@ -78,10 +94,56 @@ variable PAP_CONFIG_CONTENTS = {
         nlist('config', PAP_CONFIG_CONTENTS,
               'owner', 'root',
               'perms', '0640',
-              'restart', '/sbin/service pap-standalone restart',
+              'restart', '/sbin/service argus-pap restart',
        )
   );
 
+include { 'components/metaconfig/config' };
+#include { 'personality/argus/schema-pap' };
+
+#bind '/software/components/metaconfig/services/{/etc/argus/pap/pap_configuration.ini}/contents' = pap_configuration;
+prefix '/software/components/metaconfig/services/{/etc/argus/pap/pap_configuration.ini.metaconfig}';
+'module'   = 'tiny';
+'mode'     = 0644;
+'owner'    = 'root';
+'group'    = 'root';
+'contents/paps' = {
+  paps_config = nlist();
+  ok = first(PAPS,name,properties);
+  while (ok) {
+    paps_config[name+".type"]     = properties['type'];
+    paps_config[name+".enabled"]  = properties['enabled'];
+    paps_config[name+".dn"]       = properties['dn'];
+    paps_config[name+".hostname"] = properties['hostname'];
+    paps_config[name+".port"]     = properties['port'];
+    paps_config[name+".path"]     = properties['path'];
+    paps_config[name+".protocol"] = properties['protocol'];
+    paps_config[name+".public"]   = properties['public'];
+    ok = next(PAPS,name,properties);
+  };
+  paps_config;
+};
+
+'contents/{paps:properties}/pool_interval' = PAP_POLL_INTERVAL;
+'contents/{paps:properties}/ordering' = PAP_ORDERING;
+
+'contents/repository/location'                 = PAP_REPO_LOCATION;
+'contents/repository/consistency_check'        = PAP_CONSISTENCY_CHECK;
+'contents/repository/consistency_check.repair' = PAP_CONSISTENCY_CHECK_REPAIR;
+
+'contents/security/certificate'                = SITE_DEF_HOST_CERT;
+'contents/security/private_key'                = SITE_DEF_HOST_KEY;
+
+'contents/standalone-service/entity_id'        = PAP_ENTITY_ID;
+'contents/standalone-service/hostname'         = PAP_HOST;
+'contents/standalone-service/port'             = PAP_PORT;
+'contents/standalone-service/shutdown_port'    = PAP_SHUTDOWN_PORT;
+'contents/standalone-service' = {
+  if (is_defined(PAP_SHUTDOWN_COMMAND)) {
+    SELF['shutdown_command'] = PAP_SHUTDOWN_COMMAND;
+  };
+  SELF;
+};
 
 #-----------------------------------------------------------------------------
 # PAP Authorization
