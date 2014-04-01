@@ -46,6 +46,11 @@ variable PAP_CONFIG_FILE = PAP_HOME + '/conf/pap_configuration.ini';
 variable PAP_CONFIG_CONTENTS = {
   contents = "#\n";
   contents = contents + '# PAP configuration' + "\n";
+  contents = contents + '# ' + "\n";
+  contents = contents + '# Documentation: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthZPAPConfig' + "\n";
+  contents = contents + '# ' + "\n";
+  contents = contents + '[paps]' + "\n";
+  contents = contents + '## Trusted PAPs will be listed here' + "\n";
   ok = first(PAPS,name,properties);
   while (ok) {
     contents = contents + name + '.type = '    + properties['type']               + "\n";
@@ -58,11 +63,6 @@ variable PAP_CONFIG_CONTENTS = {
     contents = contents + name + '.public = '  + to_string(properties['public'])  + "\n";
     ok = next(PAPS,name,properties);
   };
-  contents = contents + '# ' + "\n";
-  contents = contents + '# Documentation: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthZPAPConfig' + "\n";
-  contents = contents + '# ' + "\n";
-  contents = contents + '[paps]' + "\n";
-  contents = contents + '## Trusted PAPs will be listed here' + "\n";
   contents = contents + "\n";
   contents = contents + '[paps:properties]' + "\n";
   contents = contents + 'poll_interval = ' + to_string(PAP_POLL_INTERVAL) + "\n";
