@@ -157,7 +157,7 @@ variable BDII_RAM_DISK ?= {
 # ----------------------------------------------------------------------------
 variable BDII_DELETE_DELAY ?= {
     if ( BDII_TYPE == 'top' ) {
-        43200;
+        345600;
     } else {
         0;
     };
