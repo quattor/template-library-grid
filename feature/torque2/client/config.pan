@@ -299,7 +299,8 @@ include { 'components/altlogrotate/config' };
 
 variable TORQUE_COMMAND_LINKS ?= false;
 include { 'components/symlink/config' };
-"/software/components/symlink/links" = if (TORQUE_COMMAND_LINKS) {
+"/software/components/symlink/links" = {
+  if (TORQUE_COMMAND_LINKS) {
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qstat",
         "target", "/usr/bin/qstat-torque",
@@ -341,8 +342,11 @@ include { 'components/symlink/config' };
         "target", "/usr/bin/qdel-torque",
         "replace", nlist("link","yes"),
         "exists", true,                       
-    );  
+    );
+  };  
+  if ( is_defined(SELF) ) {
     SELF;
-} else {
-    SELF;
+  } else {
+    null;
+  };
 };
