@@ -3,7 +3,7 @@
 # and a gsiftp server to handle software tag management.
 #
 # Note that conversely to most high-level services, there is no config.tpl or rpms.tpl for the Torque server
-# as it relies on services configured as low-level services (in common/).
+# as it relies on services configured as low-level services (in feature/).
 
 template personality/torque_server/service;
 
