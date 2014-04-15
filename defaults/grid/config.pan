@@ -932,25 +932,24 @@ variable NFS_CLIENT_HOSTS = {
 # By default, enable root squashing on all file systems, except home directory parents
 # (required for account configuration).
 # These defaults don't apply to hosts with specific rights defined, like CE. 
-# Default value for this variable is defined in NFS server configuration (common/nfs/server/config)
+# Default value for this variable is defined in NFS server configuration (feature/nfs/server/config)
 
 # NFS_DEFAULT_RIGHTS must contain a DEFAULT entry and may contain one entry per
 # file system (escaped) specifying the default to apply to this particular file system.
 # By default, enable root squashing on all file systems, except home directory parents
 # (required for account configuration).
 # These defaults don't apply to hosts with specific rights defined, like CE. 
-# Default value for this variable is defined in NFS server configuration (common/nfs/server/config)
+# Default value for this variable is defined in NFS server configuration (feature/nfs/server/config)
 
 
 # Build SITE_NFS_ACL as a nlist with one entry per file system (escaped).
 # Value is the export list for the file system.
-# Default value for this variable is defined in NFS server configuration (common/nfs/server/config)
+# Default value for this variable is defined in NFS server configuration (feature/nfs/server/config)
 
 # When NFS_AUTOFS is true, autofs is used to mount NFS filesystems
 # rather than fstab. It is recommended to use autofs to avoid startup
 # synchronization nightmares between NFS servers and clients...
-# Default is false for backward compatibility
-variable NFS_AUTOFS ?= false;
+# Default value for this variable is defined in NFS client configuration (feature/nfs/client/config)
 
 
 # Variable NFS_THREADS is used to configure a non default number of NFS
@@ -978,7 +977,7 @@ variable WN_NFS_WL_SCRATCH ?= false;
 # In NFS_CLIENT_DEFAULT_VERSION, the key is either 'DEFAULT' or a an escaped regexp that
 # will matched again the host name of the current machine.
 # If no 'DEFAULT' entry is defined and no other entry matches,  NFS_DEFAULT_VERSION is used.
-# See common/nfs/init.tpl for more information
+# See feature/nfs/init.tpl for more information
 
 # Default mount options used on NFS clients (hard always added)
 variable NFS_DEFAULT_MOUNT_OPTIONS ?= "rw,noatime";
