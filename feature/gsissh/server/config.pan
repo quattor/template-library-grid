@@ -2,7 +2,7 @@ unique template feature/gsissh/server/config;
 
 variable GSISSH_PORT ?= 1975;
 
-include { 'feature/gsissh/server/rpms/config' };
+include { 'feature/gsissh/server/rpms' };
 
 # ---------------------------------------------------------------------------- 
 # chkconfig
@@ -40,26 +40,24 @@ include { 'components/etcservices/config' };
     push("gsisshd "+to_string(GSISSH_PORT)+"/tcp"
 );
 
+include { 'components/metaconfig/config' };
 
-# ---------------------------------------------------------------------------- 
-# gsissh
-# ---------------------------------------------------------------------------- 
-include { 'components/gsissh/config' };
-"/software/components/gsissh/globus_location" = GLOBUS_LOCATION;
-"/software/components/gsissh/gpt_location" = INSTALL_ROOT+"/gpt";
+prefix '/software/components/metaconfig/services/{/etc/gsissh/sshd_config}';
+'mode'     = 0644;
+'owner'    = 'root';
+'group'    = 'root';
+'module'   = 'general';
+'contents/Port'                            = GSISSH_PORT;
+'contents/PermitRootLogin'                 = 'no';
+'contents/RSAAuthentication'               = 'no';
+'contents/PubkeyAuthentication'            = 'no';
+'contents/PasswordAuthentication'          = 'no';
+'contents/ChallengeResponseAuthentication' = 'no';
 
-# Configuration for the server.
-"/software/components/gsissh/server/port" = GSISSH_PORT;
-"/software/components/gsissh/server/options" = nlist(
-    "PermitRootLogin", "no",
-    "RSAAuthentication", "no",
-    "PubkeyAuthentication", "no",
-    "PasswordAuthentication", "no",
-    "ChallengeResponseAuthentication", "no",
-    "Port", to_string(GSISSH_PORT),
-    "GSSAPIAuthentication", "yes",
-    "GSSAPICleanupCredentials", "yes",
-    "Subsystem", "sftp    "+GLOBUS_LOCATION+"/libexec/sftp-server",
-    "X11Forwarding", "yes",
-    "LogLevel", "VERBOSE",
-);
+prefix '/software/components/metaconfig/services/{/etc/grid-security/gsi-authz.conf}';
+
+'mode'   = 0644;
+'owner'  = 'root';
+'group'  = 'root';
+'module' = 'general';
+'contents/globus_mapping' = '/usr/lib64/liblcas_lcmaps_gt4_mapping_.so lcmaps_callout';

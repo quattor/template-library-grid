@@ -26,6 +26,10 @@ variable LCAS_LOG_LEVEL ?= 1;
 
 # Script sourced by gLite services to define environment
 variable GLITE_GRID_ENV_PROFILE ?= '/etc/profile.d/grid-env.sh';
+
+# Include LCAS RPMs
+include { 'feature/lcas/rpms' };
+
  
 # ---------------------------------------------------------------------------- 
 # First, build LCAS configuration in variables
