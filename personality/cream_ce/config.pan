@@ -24,11 +24,16 @@ variable GLOBUS_GRIDFTP_CFGFILE ?= "/usr/etc/gridftp.conf";
                                "target", "/var/lib/trustmanager-tomcat",
                                "replace", nlist("all","yes"),
                               );
+  SELF[length(SELF)] =   nlist("name", "/usr/share/tomcat6/lib/canl.jar",
+                               "target", "/usr/share/java/canl.jar",
+                               "replace", nlist("all","yes"),
+                              );
   SELF;
 };
 
 
-#TO_BE_FIXED: there are problems in the conf of the bdii which I cannot fix.. this just avoids that the component causes damages
+# Required by ncm-lcgbdii after change of GLITE_LOCATION in EMI
+# FIXME: to be reviewed
 "/software/components/lcgbdii/dir" = "/opt/glite";
 
 ############################################################################
@@ -174,18 +179,19 @@ include { 'components/mysql/config' };
 include { 'personality/cream_ce/upgrade_db' };
 
 
-# If home directories are not shared with a LCG CE, install LCG CE cron
-# job to do account home directory cleanup (see https://savannah.cern.ch/bugs/?73283)
-variable CREAM_HOMEDIR_CLEANUP ?= if ( is_defined(CE_HOSTS_LCG) &&
-                                       (length(CE_HOSTS_LCG) > 0 ) &&
-                                       CE_SHARED_HOMES ) {
-                                    false;
-                                  } else {
+@{
+desc =  if true, configure a cron job to do the home directory cleanup of grid pool accounts
+values = true or false
+default = true if home directories are shared with WNs, else false
+required = no
+}
+variable CREAM_HOMEDIR_CLEANUP ?= if ( CE_SHARED_HOMES ) {
                                     true;
+                                  } else {
+                                    false;
  
                                  };
-#TO_BE_FIXED: just commented. To be checked later
-#include { if ( CREAM_HOMEDIR_CLEANUP ) 'lcg/ce/cleanup-accounts' };
+include { if ( CREAM_HOMEDIR_CLEANUP ) 'personality/cream_ce/cleanup-accounts' };
 
 
 #------------------------------------------------------------------------------
