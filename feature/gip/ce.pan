@@ -674,8 +674,9 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
           
           entries[escape('dn: GlueVOViewLocalID='+vo_name+',GlueCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] =
             merge(nlist(
-                        'objecClass', list('GlueCETop','GlueVOView','GlueCEInfo','GlueCEState','GlueCEAccessControlBase','GlueCEPolicy',
+                        'objectClass', list('GlueCETop','GlueVOView','GlueCEInfo','GlueCEState','GlueCEAccessControlBase','GlueCEPolicy',
                                            'GlueKey','GlueSchemaVersion'),
+                        'GlueVOViewLocalId',                list(vo_name),
                         'GlueSchemaVersionMajor',           list('1'),
                         'GlueSchemaVersionMinor',           list('3'),
                         'GlueCEAccessControlBaseRule',      list(rule),
