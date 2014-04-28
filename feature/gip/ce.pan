@@ -35,18 +35,15 @@ variable CREAM_CE_VERSION ?= '1.14.0';
 
 
 variable CE_HOSTS_CREAM ?= list();
-variable CE_HOSTS_LCG ?= list();
 
 variable CE_FLAVOR ?= if ( is_defined(CE_HOSTS_CREAM) && (index(FULL_HOSTNAME,CE_HOSTS_CREAM) >= 0) ) {
                         'cream';
-                      } else if ( is_defined(CE_HOSTS_LCG) && (index(FULL_HOSTNAME,CE_HOSTS_LCG) >= 0) ) {
-                        'lcg';
                       } else {
                         undef;
                       };
 variable CE_FLAVOR = {
-  if ( is_defined(CE_FLAVOR) && !match(CE_FLAVOR,'cream|lcg') ) {
-    error("Invalid value for CE_FLAVOR ("+CE_FLAVOR+"). Must be 'lcg' or 'cream'.");
+  if ( is_defined(CE_FLAVOR) && !match(CE_FLAVOR,'cream') ) {
+    error("Invalid value for CE_FLAVOR ("+CE_FLAVOR+"). Must be 'cream'.");
   };
   SELF;
 };
@@ -103,7 +100,6 @@ variable CE_CLOSE_SE_LIST ?= undef;
 # CE port for each CE flavor
 variable CE_PORT = nlist(
   'cream', 8443,
-  'lcg', 2119,
 );
 
 # For GlueHostArchitecturePlatformType, assume the same type as CE until we support several subclusters
@@ -113,7 +109,6 @@ variable CE_WN_ARCH ?= PKG_ARCH_DEFAULT;
 # CE implementation for each flavor
 variable GLUE_CE_IMPLEMENTATION = nlist(
   'cream',    'CREAM',
-  'lcg',      'LCG-CE',
 );
 
 # Which version of tomcat
@@ -126,7 +121,6 @@ variable TOMCAT_SERVICE ?= 'tomcat6';
 variable GIP_PROVIDER_SERVICE_CONF_BASE ?= GIP_SCRIPTS_CONF_DIR + '/glite-info-service';
 variable GIP_CE_SERVICES = nlist(
   'cream',    list('creamce','cemon'),
-  'lcg',      list('gatekeeper'),
 );
 variable GIP_PROVIDER_SUBSERVICE ?= nlist(
   'creamce',    GIP_SCRIPTS_DIR + '/glite-info-service-cream',
@@ -502,7 +496,7 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
         if ( index(ce,CE_HOSTS_CREAM) >= 0 ) {
           ce_flavor = 'cream';
         } else {
-          ce_flavor = 'lcg';
+          error(format('Non CREAM CE found (%s): only CREAM CE are supported',ce));
         };
         
         if ( ce_flavor == 'cream' ) {
