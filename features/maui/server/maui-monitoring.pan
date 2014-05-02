@@ -1,7 +1,7 @@
 # Script to configure a cron job to check MAUI is running properly and restart it
 # if necessary.
 
-unique template feature/maui/server/maui-monitoring;
+unique template features/maui/server/maui-monitoring;
 
 # File for caching information about reservations if enabled.
 variable GIP_CE_CACHE_FILE ?= if ( GIP_CE_USE_CACHE ) {

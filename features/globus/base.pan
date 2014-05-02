@@ -1,5 +1,5 @@
 
-unique template feature/globus/base;
+unique template features/globus/base;
 
 # ----------------------------------------------------------------------------
 # globuscfg

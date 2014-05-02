@@ -1,4 +1,4 @@
-unique template feature/nfs/client/fstab;
+unique template features/nfs/client/fstab;
 
 
 # ---------------------------------------------------------------------------- 

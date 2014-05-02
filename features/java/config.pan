@@ -1,4 +1,4 @@
-unique template feature/java/config;
+unique template features/java/config;
 
 # ---------------------------------------------------------------------------- 
 # profile

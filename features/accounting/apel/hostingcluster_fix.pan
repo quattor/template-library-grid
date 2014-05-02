@@ -1,6 +1,6 @@
-unique template feature/accounting/apel/hostingcluster_fix;
+unique template features/accounting/apel/hostingcluster_fix;
 
-include { 'feature/accounting/apel/base' };
+include { 'features/accounting/apel/base' };
 
 #need to know the MONBOX HOST
 variable MON_HOST ?= error("Error : in order to fix the MON Box database, we need to know what is the host hosting this database...\n"

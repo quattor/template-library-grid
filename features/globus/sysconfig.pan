@@ -1,8 +1,8 @@
 
-unique template feature/globus/sysconfig;
+unique template features/globus/sysconfig;
 
 # Also define environment variables
-include { 'feature/globus/env' };
+include { 'features/globus/env' };
 
 
 # ----------------------------------------------------------------------------

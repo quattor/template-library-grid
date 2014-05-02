@@ -1,7 +1,7 @@
 # Template doing configuration common to Torque client and server,
 # mainly pbsknownhosts and ssh config.
 
-unique template feature/torque2/config;
+unique template features/torque2/config;
 
 variable TORQUE_CLIENT_MOM_ENABLED ?= true;
 variable TORQUE_SERVER_HOST ?= LRMS_SERVER_HOST;
@@ -42,7 +42,7 @@ include { 'components/pbsclient/config' };
 # ----------------------------------------------------------------------------
 # Configure ssh for communication between CE and WNs
 # ----------------------------------------------------------------------------
-include { if ( TORQUE_CLIENT_MOM_ENABLED ) 'feature/ssh/ce' };
+include { if ( TORQUE_CLIENT_MOM_ENABLED ) 'features/ssh/ce' };
 
 
 # ----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ include { if ( TORQUE_CLIENT_MOM_ENABLED ) 'feature/ssh/ce' };
 variable PBS_MONITORING_TEMPLATE ?= if ( is_null(PBS_MONITORING_TEMPLATE) ) {
                                       null;
                                     } else {
-                                      'feature/torque2/pbs-monitoring';
+                                      'features/torque2/pbs-monitoring';
                                     };
 variable DEBUG = debug('PBS_MONITORING_TEMPLATE='+to_string(PBS_MONITORING_TEMPLATE));
 include { PBS_MONITORING_TEMPLATE };

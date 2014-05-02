@@ -1,4 +1,4 @@
-unique template feature/fts/client/config;
+unique template features/fts/client/config;
 
 variable GLITE_LOCATION ?= "/opt/glite";
 

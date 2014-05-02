@@ -1,6 +1,6 @@
 # Template to configure ssh and sshd on CE and WNs
 
-unique template feature/ssh/ce;
+unique template features/ssh/ce;
 
 variable CE_PBS_KNOWNHOSTS ?= INSTALL_ROOT+'/etc/edg-pbs-knownhosts.conf';
 

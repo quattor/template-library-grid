@@ -1,6 +1,6 @@
 # Template for the configuration of glexec common to CE and WN
 
-unique template feature/glexec/base;
+unique template features/glexec/base;
 
 # glexec working directory
 variable GLEXEC_VAR_DIR ?= '/var/glexec';

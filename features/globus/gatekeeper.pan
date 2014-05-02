@@ -1,5 +1,5 @@
 
-unique template feature/globus/gatekeeper;
+unique template features/globus/gatekeeper;
 
 variable GK_PORT ?= 2119;
 
@@ -71,7 +71,7 @@ include { 'components/altlogrotate/config' };
 # ---------------------------------------------------------------------------- 
 include { 'components/globuscfg/config' };
 
-include { 'feature/globus/base' };
+include { 'features/globus/base' };
 
 # Ensure that the gatekeeper is restarted when necessary. 
 "/software/components/globuscfg/services" = push("globus-gatekeeper");

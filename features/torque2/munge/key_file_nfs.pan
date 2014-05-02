@@ -1,4 +1,4 @@
-unique template feature/torque2/munge/key_file_nfs;
+unique template features/torque2/munge/key_file_nfs;
 
 #
 #Configuring mountpoint for exporting the Munge key

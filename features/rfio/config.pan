@@ -1,5 +1,5 @@
 
-unique template feature/rfio/config;
+unique template features/rfio/config;
 
 variable RFIO_ENABLED ?= false;
 variable RFIO_PORT ?= 5001;

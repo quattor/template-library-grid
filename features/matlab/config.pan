@@ -1,6 +1,6 @@
 # This template does configuration related to use of MatLab on WNs
 
-unique template feature/matlab/config;
+unique template features/matlab/config;
 
 variable MATLAB_INSTALL_DIR ?= error('MatLab installation path must be defined with variable MATLAB_INSTALL_DIR');
 

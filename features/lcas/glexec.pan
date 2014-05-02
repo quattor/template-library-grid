@@ -2,7 +2,7 @@
 # This creates an additionnal LCAS db, in addition to the standard one.
 # If the standard one has not yet been configured, it will be done.
 
-unique template feature/lcas/glexec;
+unique template features/lcas/glexec;
 
 variable LCAS_GLEXEC_DB_FILE ?= LCAS_CONFIG_DIR + '/lcas-glexec.db';
 
@@ -31,7 +31,7 @@ variable LCAS_GLEXEC_ALLOWED_EXEC ?= list('/bin/cat',
 # ---------------------------------------------------------------------------- 
 # Include LCAS standard configuration
 # ---------------------------------------------------------------------------- 
-include { 'feature/lcas/base' };
+include { 'features/lcas/base' };
  
 # ---------------------------------------------------------------------------- 
 # First, build glexec LCAS configuration in variables

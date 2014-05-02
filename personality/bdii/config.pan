@@ -1,7 +1,7 @@
 unique template personality/bdii/config;
 
 # Include base configuration for GIP
-include { 'feature/gip/env' };
+include { 'features/gip/env' };
 
 # Port used by BDII
 variable BDII_PORT ?= 2170;

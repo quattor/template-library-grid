@@ -1,5 +1,5 @@
 
-unique template feature/globus/env;
+unique template features/globus/env;
 
 # Default port ranges
 # SITE_GLOBUS_xxx_RANGE is kept for backward compatibility.

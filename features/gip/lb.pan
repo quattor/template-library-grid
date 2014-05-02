@@ -1,4 +1,4 @@
-unique template feature/gip/lb;
+unique template features/gip/lb;
 
 variable GIP_PROVIDER_SERVICE_TYPE_LB ?= 'org.glite.lb.Server';
 variable GIP_PROVIDER_SERVICE_INIT_LB ?= GIP_SCRIPTS_DIR + '/glite-info-service-lbserver';
@@ -46,4 +46,4 @@ variable GIP_PROVIDER_WRAPPER_LB ?= 'glite-info-service-lbserver';
 };
 
 # Configure provider to return gLite version used by the service
-include { 'feature/gip/glite-version' };
+include { 'features/gip/glite-version' };

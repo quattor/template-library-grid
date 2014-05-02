@@ -1,6 +1,6 @@
 # Template for the configuration of glexec.
 
-unique template feature/glexec/wn/config;
+unique template features/glexec/wn/config;
 
 variable GLEXEC_WN_ENABLED ?= true;
 variable GLEXEC_OPMODE ?= 'setuid';
@@ -18,7 +18,7 @@ variable GLEXEC_ARGUS_PEPD_ENDPOINTS ?= if ( GLEXEC_ARGUS_ENABLED ) {
                                           undef;
                                         };
 # Include configuration common to each glexec type
-include { 'feature/glexec/base' };
+include { 'features/glexec/base' };
 
 # Define the list of SCAS endpoints if glexec is a SCAS client
 # e.g. list('https://scas1.example.com:8443').
@@ -111,13 +111,13 @@ variable GLEXEC_INPUT_LOCK ?= {
 # glexec lcmaps configuration
 #-----------------------------------------------------------------------------
 
-include { 'feature/lcmaps/glexec_wn' };
+include { 'features/lcmaps/glexec_wn' };
 
 
 #-----------------------------------------------------------------------------
 # glexec lcas db file 
 #-----------------------------------------------------------------------------
-include { 'feature/lcas/glexec_wn' };
+include { 'features/lcas/glexec_wn' };
 
 
 #-----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # Configure GIP on a top BDII.
 
-unique template feature/gip/top;
+unique template features/gip/top;
 
 # Allow to define the hostname to use in the published endpoint for site and top BDII.
 # This is useful to publish the DNS alias associated with the service, if any, rather
@@ -10,7 +10,7 @@ variable BDII_ALIAS_TOP ?= FULL_HOSTNAME;
 include { 'components/gip2/config' };
 
 # Define GIP base configuration
-include { 'feature/gip/base' };
+include { 'features/gip/base' };
 
 # Default FCR URL
 variable BDII_FCR_URL ?= 'http://lcg-fcr.cern.ch:8083/fcr-data/exclude.ldif';

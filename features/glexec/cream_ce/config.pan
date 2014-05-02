@@ -1,20 +1,20 @@
 # Template for the configuration of glexec.
 
-unique template feature/glexec/cream_ce/config;
+unique template features/glexec/cream_ce/config;
 
 # Include configuration common to each glexec type
-include { 'feature/glexec/base' };
+include { 'features/glexec/base' };
 
 #-----------------------------------------------------------------------------
 # glexec lcmaps configuration
 #-----------------------------------------------------------------------------
-include { 'feature/lcmaps/glexec' };
+include { 'features/lcmaps/glexec' };
 
 
 #-----------------------------------------------------------------------------
 # glexec lcas db file 
 #-----------------------------------------------------------------------------
-include { 'feature/lcas/glexec' };
+include { 'features/lcas/glexec' };
 
 
 #-----------------------------------------------------------------------------

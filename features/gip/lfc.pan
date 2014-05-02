@@ -1,4 +1,4 @@
-unique template feature/gip/lfc;
+unique template features/gip/lfc;
 
 # ---------------------------------------------------------------------------- 
 # gip2
@@ -93,5 +93,5 @@ variable LFC_LOCAL_VOS_OPTION = {
 
 
 # Configure provider to return gLite version used by the service
-include { 'feature/gip/glite-version' };
+include { 'features/gip/glite-version' };
 

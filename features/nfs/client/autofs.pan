@@ -1,4 +1,4 @@
-unique template feature/nfs/client/autofs;
+unique template features/nfs/client/autofs;
 
 
 # ---------------------------------------------------------------------------- 

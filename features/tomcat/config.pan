@@ -1,6 +1,6 @@
 # Template to do base configuration of tomcat5
 
-unique template feature/tomcat/config;
+unique template features/tomcat/config;
 
 # Configure tomcat user.
 # Define CATALINA_HOME based on TOMCAT_HOME: do not change default as
@@ -70,7 +70,7 @@ include { 'components/filecopy/config' };
 # because of inappropriate log file permissions.
 '/software/components/filecopy/dependencies/pre' = push('dirperm');
 variable TOMCAT_LOG4J_CONF = {
-  root_logger = create('feature/tomcat/root-logger');
+  root_logger = create('features/tomcat/root-logger');
   root_logger['conf'];
 };
 variable TOMCAT_LOG4J_CONF_FILE = CATALINA_HOME + '/common/classes/log4j.properties';

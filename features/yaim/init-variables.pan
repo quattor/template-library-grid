@@ -3,7 +3,7 @@
 #                       This will keep the mapping function cleaner because there is
 #                       no need to test for the existence of variables
 #
-declaration template feature/yaim/init-variables;
+declaration template features/yaim/init-variables;
 
 variable CREAM_CE_STATE ?= null;
 variable YAIM_SITE_INFO_DEF_FILE ?= null;

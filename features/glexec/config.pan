@@ -1,6 +1,6 @@
 # Template for the configuration of glexec.
 
-unique template feature/glexec/config;
+unique template features/glexec/config;
 
 # glexec working directory
 variable GLEXEC_VAR_DIR ?= '/var/glexec';
@@ -28,13 +28,13 @@ include { 'users/glexec' };
 #-----------------------------------------------------------------------------
 # glexec lcmaps configuration
 #-----------------------------------------------------------------------------
-include { 'feature/lcmaps/glexec' };
+include { 'features/lcmaps/glexec' };
 
 
 #-----------------------------------------------------------------------------
 # glexec lcas db file 
 #-----------------------------------------------------------------------------
-include { 'feature/lcas/glexec' };
+include { 'features/lcas/glexec' };
 
 
 #-----------------------------------------------------------------------------

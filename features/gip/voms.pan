@@ -1,4 +1,4 @@
-unique template feature/gip/voms;
+unique template features/gip/voms;
 
 include { 'components/gip2/config' };
 
@@ -35,13 +35,13 @@ get_data = cat /etc/voms/*/voms.conf | grep [\-]-vo | cut -d= -f2 | xargs -i ech
 get_services = echo
 EOF
 
-'provider/glite-info-service-voms'=format(file_contents('feature/gip/files/provider.voms'),
+'provider/glite-info-service-voms'=format(file_contents('features/gip/files/provider.voms'),
   FULL_HOSTNAME,
   "/etc/bdii/gip/",
   SITE_NAME,
 );
 
-'provider/glite-info-service-voms-admin'=format(file_contents('feature/gip/files/provider.voms-admin'),
+'provider/glite-info-service-voms-admin'=format(file_contents('features/gip/files/provider.voms-admin'),
   FULL_HOSTNAME,
   "/etc/bdii/gip/",
   SITE_NAME,

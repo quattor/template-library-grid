@@ -1,34 +1,34 @@
-unique template feature/mpi/rpms/config;
+unique template features/mpi/rpms/config;
 
-include { 'feature/mpi/vars' };
+include { 'features/mpi/vars' };
 
 variable CE_TORQUE ?= true;
 
 include {
     if(MPI_USE_MPICH) {
-        "feature/mpi/rpms/mpich";
+        "features/mpi/rpms/mpich";
     };
 };
 
 include {
     if(MPI_USE_MPICH2) {
-        "feature/mpi/rpms/mpich2";
+        "features/mpi/rpms/mpich2";
     };
 };
 
 include {
     if(MPI_USE_LAM) {
         if(MPI_LAM_MULTIPLE) {
-            "feature/mpi/rpms/lam-multiple";
+            "features/mpi/rpms/lam-multiple";
         } else {
-            "feature/mpi/rpms/lam";
+            "features/mpi/rpms/lam";
         };
     };
 };
 
 include {
     if(MPI_USE_OPENMPI) {
-        "feature/mpi/rpms/openmpi";
+        "features/mpi/rpms/openmpi";
     };
 };
 

@@ -1,7 +1,7 @@
 # Template to configure the BLAH environment
 # Used by blparser startup script and by CREAM submission
 
-unique template feature/blparser/blah-config;
+unique template features/blparser/blah-config;
 
 # Should have been defined before, for example by service.tpl
 variable BLPARSER_HOST ?= error('BLPARSER_HOST is not defined');
@@ -30,7 +30,7 @@ variable BLAH_TORQUE_MULTIPLE_STAGING_DIRECTIVE_BUG = {
 
 
 # Include blparser parameters for the supported lrms
-include { 'feature/blparser/init' };
+include { 'features/blparser/init' };
 
 
 # blparser configuration file

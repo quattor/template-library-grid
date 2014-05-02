@@ -1,4 +1,4 @@
-unique template feature/mpi/rpms/openmpi;
+unique template features/mpi/rpms/openmpi;
 
 # MPI-2 implementation (descendent of LAM)
 prefix '/software/packages';

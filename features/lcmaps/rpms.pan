@@ -1,4 +1,4 @@
-unique template feature/lcmaps/rpms;
+unique template features/lcmaps/rpms;
 
 prefix '/software/packages';
 

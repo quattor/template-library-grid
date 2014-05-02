@@ -1,4 +1,4 @@
-unique template feature/mpi/vars/x86_64/vars;
+unique template features/mpi/vars/x86_64/vars;
 # We're using x86_64 MPI : we need to change compilation options
 variable MPI_MPICC_OPTS ?= '-m64' ;
 

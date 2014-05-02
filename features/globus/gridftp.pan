@@ -1,7 +1,7 @@
 # Wrapper for backward compatibility
 
-unique template feature/globus/gridftp;
+unique template features/globus/gridftp;
 
-include { 'feature/gridftp/service' };
+include { 'features/gridftp/service' };
 
 

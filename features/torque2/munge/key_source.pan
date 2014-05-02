@@ -1,4 +1,4 @@
-unique template feature/torque2/munge/key_source;
+unique template features/torque2/munge/key_source;
 
 variable MUNGE_KEY_SOURCE ?= undef;
 

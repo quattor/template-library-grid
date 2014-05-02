@@ -1,8 +1,8 @@
 
-unique template feature/grid/sysconfig;
+unique template features/grid/sysconfig;
 
 
-include { 'feature/grid/base' };
+include { 'features/grid/base' };
 
 # ---------------------------------------------------------------------------- 
 # sysconfig

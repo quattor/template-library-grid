@@ -1,5 +1,5 @@
 # This template configure gLite WMS clients
-unique template feature/wms/client;
+unique template features/wms/client;
 
 # Default is not to define output storage
 variable WMS_OUTPUT_STORAGE_DEFAULT ?= null;

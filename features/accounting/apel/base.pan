@@ -1,4 +1,4 @@
-unique template feature/accounting/apel/base;
+unique template features/accounting/apel/base;
 
 variable APEL_ENABLED ?= true;
 

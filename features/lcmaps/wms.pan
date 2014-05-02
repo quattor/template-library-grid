@@ -4,9 +4,9 @@
 # Note that the standard lcmaps configuration must also be installed for
 # GridFTP... 
 
-unique template feature/lcmaps/wms;
+unique template features/lcmaps/wms;
 
-include { 'feature/lcmaps/base' };
+include { 'features/lcmaps/base' };
 
 # ---------------------------------------------------------------------------- 
 # Build LCMAPS configuration in variables

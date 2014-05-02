@@ -1,4 +1,4 @@
-unique template feature/gip/glite-version;
+unique template features/gip/glite-version;
 
 # ---------------------------------------------------------------------------- 
 # gip2

@@ -1,1 +1,1 @@
-unique template feature/classads/rpms/config;
+unique template features/classads/rpms/config;

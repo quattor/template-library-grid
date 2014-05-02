@@ -1,8 +1,8 @@
 
-unique template feature/mpi/env;
+unique template features/mpi/env;
 
 # Include some variable definitions for MPI library versions.
-include { 'feature/mpi/vars' };
+include { 'features/mpi/vars' };
 
 # Setup the MPI environment here.  The various locations are related
 # to which version of the MPI rpms are installed.  Make sure to keep

@@ -1,7 +1,7 @@
-unique template feature/mkgridmap/standard;
+unique template features/mkgridmap/standard;
 
 
-include { 'feature/mkgridmap/base' };
+include { 'features/mkgridmap/base' };
 
 
 

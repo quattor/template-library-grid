@@ -1,8 +1,8 @@
 # Template to configure mkgridmap for lcgdm format (used mainly by LFC and DPM)
 
-unique template feature/mkgridmap/lcgdm;
+unique template features/mkgridmap/lcgdm;
 
-include { 'feature/mkgridmap/base' };
+include { 'features/mkgridmap/base' };
 
 include { 'components/mkgridmap/config' };
 

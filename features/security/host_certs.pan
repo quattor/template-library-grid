@@ -1,5 +1,5 @@
 
-unique template feature/security/host_certs;
+unique template features/security/host_certs;
 
 # ---------------------------------------------------------------------------- 
 # dirperm

@@ -2,7 +2,7 @@
 # configuring pbs_mom. It is intended to be used on machines needing
 # access to Torque config without being a WN, like VO boxes.
 
-unique template feature/torque2/client/client-only;
+unique template features/torque2/client/client-only;
 
 variable TORQUE_VERSION ?= if(OS_VERSION_PARAMS['major'] == 'sl5'){
                                 '2.5.9-1.cri';
@@ -14,17 +14,17 @@ variable TORQUE_CLIENT_MOM_ENABLED ?= false;
 variable PBS_MONITORING_TEMPLATE ?= null;
 
 # Add RPMs
-include { 'feature/torque2/client/rpms/config' };
+include { 'features/torque2/client/rpms/config' };
 
 
 # include configuration common to client and server
-include { 'feature/torque2/config' };
+include { 'features/torque2/config' };
 
 # ----------------------------------------------------------------------------
 # Configuring munge
 # ----------------------------------------------------------------------------
 
-include { 'feature/torque2/munge/config' };
+include { 'features/torque2/munge/config' };
 
 # ---------------------------------------------------------------------------- 
 # pbsclient

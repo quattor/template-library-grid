@@ -1,7 +1,7 @@
 
 # MAUI configuration
 
-unique template feature/maui/server/config;
+unique template features/maui/server/config;
 
 # Directory where MAUI configuration and related scripts are located.
 variable MAUI_CONFIG_DIR ?= '/var/spool/maui';
@@ -163,7 +163,7 @@ include { 'components/chkconfig/config' };
 # ---------------------------------------------------------------------------- 
 # accounts
 # ---------------------------------------------------------------------------- 
-#include { 'feature/maui/server/user' };
+#include { 'features/maui/server/user' };
 
 
 # ---------------------------------------------------------------------------- 
@@ -484,7 +484,7 @@ variable MAUI_MONITORING_TEMPLATE ?= if ( is_defined(MAUI_MONITORING_TEMPLATE) |
                                           is_null(MAUI_MONITORING_TEMPLATE) ) {
                                       MAUI_MONITORING_TEMPLATE;
                                     } else {
-                                      'feature/maui/server/maui-monitoring';
+                                      'features/maui/server/maui-monitoring';
                                     };
 include { if ( ! MAUI_MONITORING_POSTPONED ) MAUI_MONITORING_TEMPLATE };
 

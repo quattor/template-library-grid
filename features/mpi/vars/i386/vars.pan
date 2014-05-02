@@ -1,4 +1,4 @@
-unique template feature/mpi/vars/i386/vars;
+unique template features/mpi/vars/i386/vars;
 
 # Default arch for MPI packages if not set.
 variable PKG_ARCH_MPI ?= "i386";

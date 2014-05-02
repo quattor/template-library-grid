@@ -1,7 +1,7 @@
 
-unique template feature/accounting/apel/publisher;
+unique template features/accounting/apel/publisher;
 
-include { 'feature/accounting/apel/base' };
+include { 'features/accounting/apel/base' };
 
 variable APEL_ENABLED ?= true;
 variable APEL_PUBLISHER_TIME_HOUR ?= '3';
@@ -109,7 +109,7 @@ include {
   if (ACCOUNTING_HOST == FULL_HOSTNAME) {
     null;
   } else {
-    'feature/accounting/apel/hostingcluster_fix';
+    'features/accounting/apel/hostingcluster_fix';
   };
 };
 

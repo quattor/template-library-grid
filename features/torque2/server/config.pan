@@ -1,8 +1,8 @@
 # Torque server configuration
 
-unique template feature/torque2/server/config;
+unique template features/torque2/server/config;
 
-include { 'feature/torque2/server/rpms/config' };
+include { 'features/torque2/server/rpms/config' };
 
 # Assume 1 CPU per machine by default
 variable WN_CPUS_DEF ?= 1;
@@ -10,7 +10,7 @@ variable WN_CPUS_DEF ?= 1;
 variable WN_CPU_SLOTS ?= 2;
 
 # include configuration common to client and server
-include { 'feature/torque2/config' };
+include { 'features/torque2/config' };
 
 # Queues to configure but not to export on the CE
 variable CE_LOCAL_QUEUES ?= undef;
@@ -211,7 +211,7 @@ include { 'components/pbsserver/config' };
 #
 # Build queue names
 #
-include { 'feature/torque2/server/build-queue-list' };
+include { 'features/torque2/server/build-queue-list' };
 
 
 #
@@ -585,7 +585,7 @@ EOF
 # ---------------------------------------------------------------------------- 
 variable BLPARSER_INCLUDE = if ( is_defined(BLPARSER_HOST)  && (BLPARSER_HOST == FULL_HOSTNAME) ) {
                                 debug('Configuring blparser');
-                                'feature/blparser/service';
+                                'features/blparser/service';
                             } else {
                                 null;
                             };
@@ -595,7 +595,7 @@ include { BLPARSER_INCLUDE };
 # Configuring munge
 # ----------------------------------------------------------------------------
 
-include { 'feature/torque2/munge/config' };
+include { 'features/torque2/munge/config' };
 
 # ---------------------------------------------------------------------------- 
 # Define a cron job to ensure that PBS server is running properly.

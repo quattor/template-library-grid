@@ -1,6 +1,6 @@
 # Configure LB environment variables and add them to the appropriate script
 
-unique template feature/lb/env;
+unique template features/lb/env;
 
 variable LB_PROFILE_SCRIPT ?= GLITE_LOCATION + '/etc/lb.conf';
 

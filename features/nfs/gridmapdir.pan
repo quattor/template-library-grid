@@ -1,8 +1,8 @@
 # Template to configure NFS sharing of gridmapdir directory through NFS.
-# This template must be called after feature/nfs/init and before common/nfs/[client|server] config.
-# It is typically called from feature/mkgridmap/base.
+# This template must be called after features/nfs/init and before common/nfs/[client|server] config.
+# It is typically called from features/mkgridmap/base.
 
-unique template feature/nfs/gridmapdir;
+unique template features/nfs/gridmapdir;
 
 variable GRIDMAPDIR_SHARED_PATH ?= error('Internal error: attempt to configure a shared gridmapdir but GRIDMAPDIR_SHARED_PATH is undefined');
 variable GRIDMAPDIR_SHARED_SERVER ?= error('GRIDMAPDIR_SHARED_SERVER variable must defined for configuring NFS-shared gridmapdir');

@@ -1,7 +1,7 @@
 # This template install a script that can be used to check pbs_server or pbs_mom
 # is running properly and restart it if not.
 
-unique template feature/torque2/pbs-monitoring;
+unique template features/torque2/pbs-monitoring;
 
 include { 'components/filecopy/config' };
 

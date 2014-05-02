@@ -3,7 +3,7 @@
 # It doesn't replace the standard LCMAPS configuration used by other services,
 # which is included if not already done.
 
-unique template feature/lcmaps/glexec;
+unique template features/lcmaps/glexec;
 
 # ---------------------------------------------------------------------------- 
 # Include standard LCMAPS configuration file after redefining
@@ -11,7 +11,7 @@ unique template feature/lcmaps/glexec;
 # ---------------------------------------------------------------------------- 
 
 
-include { 'feature/lcmaps/base' };
+include { 'features/lcmaps/base' };
 
 
 # ---------------------------------------------------------------------------- 

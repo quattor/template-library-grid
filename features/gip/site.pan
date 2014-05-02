@@ -1,4 +1,4 @@
-unique template feature/gip/site;
+unique template features/gip/site;
 
 variable SITE_DESC ?= 'EGI Site';
 variable SITE_SECURITY_EMAIL ?= SITE_EMAIL;
@@ -22,7 +22,7 @@ variable SITE_COUNTRY ?= 'unknown';
 include { 'components/gip2/config' };
 
 # Define GIP base configuration
-include { 'feature/gip/base' };
+include { 'features/gip/base' };
 
 # List trusted (RPM provided) scripts
 '/software/components/gip2/external' ?= list();

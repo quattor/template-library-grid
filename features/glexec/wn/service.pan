@@ -1,16 +1,16 @@
-unique template feature/glexec/wn/service;
+unique template features/glexec/wn/service;
 
 # Add RPMs
-include { 'feature/glexec/wn/rpms/config' };
+include { 'features/glexec/wn/rpms/config' };
 
 # Modify the loadable library path.
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # Configuration for LCMAPS.
-include { 'feature/lcmaps/base' };
+include { 'features/lcmaps/base' };
 
 # Configuration for LCAS.
-include { 'feature/lcas/base' };
+include { 'features/lcas/base' };
 
 # Configure glexec WN
-include { 'feature/glexec/wn/config' };
+include { 'features/glexec/wn/config' };

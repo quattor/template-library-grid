@@ -24,7 +24,7 @@ include { 'personality/bdii/rpms/config' };
 
 
 # Configure gLite base environment
-include { 'feature/grid/env' };
+include { 'features/grid/env' };
 
 
 # Configure BDII service
@@ -32,13 +32,13 @@ include { 'personality/bdii/config' };
 
 
 # Configure GIP for BDII
-include {'feature/gip/bdii'};
+include {'features/gip/bdii'};
 
 
 # Configure GIP for BDII_subsite
 include {
     if ( match(BDII_TYPE,'combined|site') && (length(BDII_SUBSITE) != 0) ) {
-        'feature/gip/subsite';
+        'features/gip/subsite';
     };
 };
 
@@ -46,7 +46,7 @@ include {
 # Configure GIP for BDII_site
 include {
     if ( match(BDII_TYPE,'combined|site') && ((length(BDII_SUBSITE) == 0) || !BDII_SUBSITE_ONLY) ) {
-        'feature/gip/site';
+        'features/gip/site';
     };
 };
 
@@ -54,7 +54,7 @@ include {
 # Configure GIP for BDII_top
 include {
     if ( BDII_TYPE == 'top' ) {
-        'feature/gip/top';
+        'features/gip/top';
     };
 };
 

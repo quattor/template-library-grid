@@ -1,7 +1,7 @@
 
 # Maui server configuration
 
-unique template feature/maui/server/service;
+unique template features/maui/server/service;
 
-include { 'feature/maui/server/config' };
+include { 'features/maui/server/config' };
 

@@ -1,9 +1,9 @@
 # Minimal EDG sysconfig for lcg-tags (gridftp server side)  and edg-mkgridmap to run successfully
 
-unique template feature/edg/sysconfig;
+unique template features/edg/sysconfig;
 
 # Also define environment variables
-include { 'feature/edg/env' };
+include { 'features/edg/env' };
 
 variable DEBUG = debug(FULL_HOSTNAME+": defining EDG sysconfig");
 

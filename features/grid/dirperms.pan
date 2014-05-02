@@ -1,6 +1,6 @@
 # Template setting appropriate permissions on some key directories used by gLite services
 
-unique template feature/grid/dirperms;
+unique template features/grid/dirperms;
 
 # Add glite user
 include { 'users/glite' };

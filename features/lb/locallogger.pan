@@ -1,11 +1,11 @@
 
-unique template feature/lb/locallogger;
+unique template features/lb/locallogger;
 
 variable LOCALLOGGER_SERVICE ?= 'glite-lb-locallogger';
 
 
 # Define environment variables required by LB
-include { 'feature/lb/env' };
+include { 'features/lb/env' };
 
 # Add gLite user
 include { 'users/glite' };

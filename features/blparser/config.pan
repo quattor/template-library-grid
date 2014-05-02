@@ -1,7 +1,7 @@
 # The blparser must be installed on a machine where the batch system log
 # files are available.
 
-unique template feature/blparser/config;
+unique template features/blparser/config;
 
 # Install glite-ce-blparser
 '/software/packages/{glite-ce-blahp}' = nlist();
@@ -33,7 +33,7 @@ variable BLAH_TORQUE_MULTIPLE_STAGING_DIRECTIVE_BUG = {
 
 
 # Create BLParser environment config file
-include { 'feature/blparser/blah-config' };
+include { 'features/blparser/blah-config' };
 
 
 # blparser configuration file

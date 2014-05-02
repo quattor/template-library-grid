@@ -9,28 +9,28 @@ include { 'personality/ui/service' };
 
 # Configure Globus sysconfig variables
 # TODO : check if EDG/LCG sysconfig really needed on a UI...
-include { 'feature/globus/sysconfig' };
+include { 'features/globus/sysconfig' };
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Modify the loadable library path.
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # Authorization via grid mapfile.
-include { 'feature/mkgridmap/standard' };
+include { 'features/mkgridmap/standard' };
 
 # Configuration for LCMAPS.
-include { 'feature/lcmaps/base' };
+include { 'features/lcmaps/base' };
 
 # Configuration for LCAS.
-include { 'feature/lcas/base' };
+include { 'features/lcas/base' };
 
 #
 # Include gsissh server
 #
 include { 'components/iptables/config' };
-include { 'feature/gsissh/server/config' };
+include { 'features/gsissh/server/config' };
 
 # Do base configuration for gsissh
 include { 'personality/ui_gsissh/config' };

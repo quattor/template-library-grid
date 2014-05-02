@@ -1,4 +1,4 @@
-declaration template feature/yaim/functions;
+declaration template features/yaim/functions;
 
 include { 'functions/text' };
 

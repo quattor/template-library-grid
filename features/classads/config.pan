@@ -1,9 +1,9 @@
 # Configure classads library
 
-unique template feature/classads/config;
+unique template features/classads/config;
 
 # Add classads RPMs
-include { 'feature/classads/rpms/config' };
+include { 'features/classads/rpms/config' };
 
 variable LDCONF_ARCH_DIR = if (PKG_ARCH_GLITE == 'x86_64') {
                              return('lib64');

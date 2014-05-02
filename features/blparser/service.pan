@@ -1,8 +1,8 @@
-unique template feature/blparser/service;
+unique template features/blparser/service;
 
 # Configure classads
-include { 'feature/classads/config' };
+include { 'features/classads/config' };
 
 # Configure blparser
-include { 'feature/blparser/config' };
+include { 'features/blparser/config' };
 

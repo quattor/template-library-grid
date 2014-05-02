@@ -5,7 +5,7 @@
 # truncate after removing 'vo.' prefix if any.
 # Also convert '-' to '_' in queue names to work around a GIP plugin restriction.
 
-unique template feature/torque2/server/build-queue-list;
+unique template features/torque2/server/build-queue-list;
 
 variable TEST = debug(OBJECT+': executing '+TEMPLATE);
 

@@ -1,4 +1,4 @@
-unique template feature/gip/wms;
+unique template features/gip/wms;
 
 variable GIP_PROVIDER_SERVICE_TYPE_WMS ?= 'org.glite.wms.WMProxy';
 variable GIP_PROVIDER_SERVICE_INIT_WMS ?= GIP_SCRIPTS_DIR + '/glite-info-service-wmproxy';
@@ -48,4 +48,4 @@ variable GIP_PROVIDER_WRAPPER_WMS ?= 'glite-info-service-wmproxy';
 
 
 # Configure provider to return gLite version used by the service
-include { 'feature/gip/glite-version' };
+include { 'features/gip/glite-version' };

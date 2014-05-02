@@ -1,12 +1,12 @@
 
-unique template feature/gridftp/config;
+unique template features/gridftp/config;
 
 variable GRIDFTP_PORT = 2811;
 
 # Use this variable to limit the number of simultaneous connections
 variable GRIDFTP_MAX_CONNECTIONS ?= 150;
 
-include { 'feature/gridftp/rpms/config' };
+include { 'features/gridftp/rpms/config' };
 # ---------------------------------------------------------------------------- 
 # chkconfig
 # ---------------------------------------------------------------------------- 
@@ -76,7 +76,7 @@ include { 'components/etcservices/config' };
 # ---------------------------------------------------------------------------- 
 include { 'components/globuscfg/config' };
 
-include { 'feature/globus/base' };
+include { 'features/globus/base' };
 
 "/software/components/globuscfg/gridftp/log"= "/var/log/globus-gridftp.log";
 "/software/components/globuscfg/gridftp/maxConnections" = {

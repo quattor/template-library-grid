@@ -1,4 +1,4 @@
-unique template feature/gip/ce;
+unique template features/gip/ce;
 
 prefix '/software/packages';
 '{lcg-info-dynamic-maui}'          = nlist();
@@ -472,7 +472,7 @@ variable GIP_CE_VOMAP ?= {
 # ---------------------------------------------------------------------
 
 # MPI-related SW tags
-include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' };
+include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'features/gip/mpi' };
 
 "/software/components/gip2/ldif" = {
   if ( is_defined(SELF) && !is_nlist(SELF) ) {
@@ -951,19 +951,19 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'feature/gip/mpi' }
 include { 'components/filecopy/config' };
 
 '/software/components/filecopy/services/{/etc/glite/info/service/GlueCE.template}'= nlist(
-  'config',file_contents('feature/gip/GlueCE.template'),
+  'config',file_contents('features/gip/GlueCE.template'),
   'owner','root',
   'perms','0755',
 );
 
 '/software/components/filecopy/services/{/etc/glite/info/service/GlueCESEBind.template}'= nlist(
-  'config',file_contents('feature/gip/GlueCESEBind.template'),
+  'config',file_contents('features/gip/GlueCESEBind.template'),
   'owner','root',
   'perms','0755',
 );
 
 '/software/components/filecopy/services/{/etc/glite/info/service/GlueCluster.template}'= nlist(
-  'config',file_contents('feature/gip/GlueCluster.template'),
+  'config',file_contents('features/gip/GlueCluster.template'),
   'owner','root',
   'perms','0755',
 );

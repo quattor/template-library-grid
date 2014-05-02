@@ -1,4 +1,4 @@
-unique template feature/nfs/client/config;
+unique template features/nfs/client/config;
 
 # Install nfs-utils
 '/software/packages/{nfs-utils}' = nlist();
@@ -10,9 +10,9 @@ variable NFS_AUTOFS ?= true;
 # Configure NFS client and mount poins.
 # Both autofs and hard mounting in fastab are supported.
 variable NFS_CLIENT_TEMPLATE = if ( NFS_AUTOFS ) {
-                                 return("feature/nfs/client/autofs");
+                                 return("features/nfs/client/autofs");
                                } else {
-                                 return("feature/nfs/client/fstab");
+                                 return("features/nfs/client/fstab");
                                };                               
 include { NFS_CLIENT_TEMPLATE };
 

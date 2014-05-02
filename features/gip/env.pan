@@ -1,7 +1,7 @@
 # Template defining GIP environment (directory layout).
 # Used by other GIP configuration templates to limit dependencies between templates
 
-unique template feature/gip/env;
+unique template features/gip/env;
 
 # glite GIP FLAVOR is the only supported flavor
 variable GIP_FLAVOR ?= 'glite';

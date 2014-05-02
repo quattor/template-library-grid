@@ -1,4 +1,4 @@
-unique template feature/torque2/munge/config;
+unique template features/torque2/munge/config;
 
 variable MUNGE_KEY_FILE ?= undef;
 variable MUNGE_KEY_SOURCE ?= undef;
@@ -12,11 +12,11 @@ include { 'users/munge' };
 
 # Configure munge key
 variable MUNGE_KEY_TEMPLATE = if ( is_defined(MUNGE_KEY_FILE) ) {
-                                'feature/torque2/munge/key_file';
+                                'features/torque2/munge/key_file';
                               } else if ( is_defined(MUNGE_KEY_SOURCE) ) {
-                                'feature/torque2/munge/key_source';
+                                'features/torque2/munge/key_source';
                               } else {
-                                'feature/torque2/munge/key_file_nfs';
+                                'features/torque2/munge/key_file_nfs';
                               };
 include { MUNGE_KEY_TEMPLATE };
 

@@ -1,6 +1,6 @@
-unique template feature/gsissh/client/config;
+unique template features/gsissh/client/config;
 
-include { 'feature/gsissh/client/rpms/config' };
+include { 'features/gsissh/client/rpms/config' };
 
 # ---------------------------------------------------------------------------- 
 # gsissh

@@ -1,4 +1,4 @@
-unique template feature/yaim/config;
+unique template features/yaim/config;
 
 include { 'components/yaim/config' };
 
@@ -15,7 +15,7 @@ include { 'components/yaim/config' };
 
 # poor man's attempt to define all variables that are used
 # in the Yaim mapping function
-include { 'feature/yaim/init-variables' };
+include { 'features/yaim/init-variables' };
 
 # Contents of config files; needs the locations defined above
 variable YAIM_CONFIG_SITE ?= null;
@@ -24,7 +24,7 @@ include { return(YAIM_CONFIG_SITE); };
 variable YAIM_VERSION ?= "4.0";
 variable YAIM_FUNCTIONS_DIR ?= "/opt/glite/yaim/functions";
 
-include { 'feature/yaim/mapping_functions' };
+include { 'features/yaim/mapping_functions' };
 
 #
 # load Yaim configuration

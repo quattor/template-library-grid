@@ -1,3 +1,3 @@
-unique template feature/mkgridmap/rpms;
+unique template features/mkgridmap/rpms;
 
 '/software/packages/{edg-mkgridmap}' ?= nlist();

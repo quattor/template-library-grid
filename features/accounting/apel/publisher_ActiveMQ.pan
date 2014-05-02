@@ -1,9 +1,9 @@
 
-unique template feature/accounting/apel/publisher_ActiveMQ;
+unique template features/accounting/apel/publisher_ActiveMQ;
 
 include { 'security/cas' }; # Add accepted CAs certificates
 include { 'features/fetch-crl/config' }; # Update the certificate revocation lists.
-include { 'feature/accounting/apel/base' };
+include { 'features/accounting/apel/base' };
 
 #rpms
 include { "rpms/ruby"};
@@ -103,7 +103,7 @@ include { 'components/apel/config' };
 # Update : apel publisher is now correctly handling things, just leave this for reference.
 # ----------------------------------------------------------------------------
 variable APEL_HOSTINGCLUSTER_FIX ?= false;
-include { if(APEL_HOSTINGCLUSTER_FIX){ 'feature/accounting/apel/hostingcluster_fix' } else { null } ; };
+include { if(APEL_HOSTINGCLUSTER_FIX){ 'features/accounting/apel/hostingcluster_fix' } else { null } ; };
 
 #
 # EMI addendums

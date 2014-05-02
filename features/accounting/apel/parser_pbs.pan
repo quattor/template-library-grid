@@ -1,6 +1,6 @@
-unique template feature/accounting/apel/parser_pbs;
+unique template features/accounting/apel/parser_pbs;
 
-include { 'feature/accounting/apel/base' };
+include { 'features/accounting/apel/base' };
 
 # Install apel-parser
 

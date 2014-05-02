@@ -8,7 +8,7 @@ include { 'personality/se_dpm/server/config' };
 
 # Configure and enable MySQL server
 variable DPM_MYSQL_INCLUDE = if ( SEDPM_DB_TYPE == 'mysql' ) {
-                               'feature/mysql/server';
+                               'features/mysql/server';
                              } else {
                                null;
                              };
@@ -26,5 +26,5 @@ include { 'personality/se_dpm/server/info_user_proxy' };
 
 # Configure the information provider.
 # Do it after configuring BDII to avoid creation of unneeded edginfo account
-include { 'feature/gip/se' };
+include { 'features/gip/se' };
 

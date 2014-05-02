@@ -1,4 +1,4 @@
-unique template feature/gip/subsite;
+unique template features/gip/subsite;
 
 # For convenience. Test must be done on BDII_SUBSITE.
 variable BDII_SUBSITE_FULL ?= SITE_NAME + '-' + BDII_SUBSITE;

@@ -1,7 +1,7 @@
 # Template configuring Torque client.
 # It should not be executed on Torque server
 
-unique template feature/torque2/client/config;
+unique template features/torque2/client/config;
 
 # This variable is normally defined as part of VO configuration
 variable CE_SHARED_HOMES ?= false;
@@ -19,7 +19,7 @@ variable PBS_MONITORING_INTERVAL_MINUTE ?= "*/15";
 
 
 # include configuration common to client and server
-include { 'feature/torque2/config' };
+include { 'features/torque2/config' };
 
 # ----------------------------------------------------------------------------
 # chkconfig
@@ -59,7 +59,7 @@ variable TORQUE_TMPDIR = if ( exists(TORQUE_TMPDIR) &&
 # Configuring munge
 # ----------------------------------------------------------------------------
 
-include { 'feature/torque2/munge/config' };
+include { 'features/torque2/munge/config' };
 
 # ----------------------------------------------------------------------------
 # Configure NFS mount points for CREAM CE sandbox directory if requested.
@@ -69,7 +69,7 @@ include { 'feature/torque2/munge/config' };
 # Sharing is disabled if variable CREAM_SANDBOX_SHARED_FS is defined with a
 # value different than 'nfs[34]'.
 # ----------------------------------------------------------------------------
-include { 'feature/nfs/cream-sandbox' };
+include { 'features/nfs/cream-sandbox' };
 
 
 

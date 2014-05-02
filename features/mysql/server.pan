@@ -1,5 +1,5 @@
 
-unique template feature/mysql/server;
+unique template features/mysql/server;
 
 # Include RPMs for MySQL server
 '/software/packages/{mysql-server}' = nlist();

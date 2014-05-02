@@ -1,4 +1,4 @@
-unique template feature/lcmaps/base;
+unique template features/lcmaps/base;
 
 variable LCMAPS_CONFIG_DIR ?= GLITE_LOCATION_ETC + '/lcmaps';
 variable LCMAPS_LIB_DIR ?= if ( PKG_ARCH_GLITE == 'x86_64' ) {
@@ -18,7 +18,7 @@ variable GLITE_GRID_ENV_PROFILE ?= '/etc/profile.d/grid-env.sh';
 variable LCMAPS_ADD_GIDS_FROM_MAPPED_ACCOUNTS ?= true;
 
 # Include LCMAPS RPMs
-include { 'feature/lcmaps/rpms' };
+include { 'features/lcmaps/rpms' };
 
 
 # ---------------------------------------------------------------------------- 

@@ -1,4 +1,4 @@
-unique template feature/accounting/dgas/gatekeeper;
+unique template features/accounting/dgas/gatekeeper;
 
 #include requirements
 include { 'components/dirperm/config' };	
@@ -69,7 +69,7 @@ include { 'components/profile/config' };
     "command", '(echo "===" ; date ; echo "===" ; find ' + GATEKEEPER_DGAS_DIR + '/jobs/ -mtime +7 -ls -exec rm {} \; ) >> /var/log/cleanup-job-records.log 2>&1' ));
 
 # define APEL accounting processor, and undefine the GKLogProcessor (which becomes obsolete)
-include { 'feature/accounting/apel/parser_pbs' };
+include { 'features/accounting/apel/parser_pbs' };
 "/software/components/apel/configFiles" = {
 	conf=SELF;
 	blah_cfg= nlist (

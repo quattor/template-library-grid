@@ -1,4 +1,4 @@
-unique template feature/gip/se;
+unique template features/gip/se;
 
 # List of VOs to configure for DPM
 variable SEDPM_VOS ?= VOS;
@@ -74,7 +74,7 @@ variable GIP_PROVIDER_SRM_CONFIG ?= nlist(
   'SE_castor',         undef,
   'SE_dcache',         undef,
   # Distributed as part of gridpp-dpm-tools
-  #'SE_dpm',            'feature/gip/dpm-listspaces',
+  #'SE_dpm',            'features/gip/dpm-listspaces',
   'SE_dpm',            undef,
 );
 
@@ -298,5 +298,5 @@ include { GIP_DYNAMIC_SE_PROVIDER_TEMPLATE };
 
 
 # Configure provider to return gLite version used by the service
-include { 'feature/gip/glite-version' };
+include { 'features/gip/glite-version' };
 

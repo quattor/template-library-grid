@@ -1,4 +1,4 @@
-unique template feature/security/vomsclient;
+unique template features/security/vomsclient;
 
 include { 'components/vomsclient/config' };
 

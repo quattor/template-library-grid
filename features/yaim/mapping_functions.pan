@@ -1,6 +1,6 @@
-declaration template feature/yaim/mapping_functions;
+declaration template features/yaim/mapping_functions;
 
-include { 'feature/yaim/functions' };
+include { 'features/yaim/functions' };
 
 #
 # yaim_mapping:     Map a predefined set of variables to Yaim's config

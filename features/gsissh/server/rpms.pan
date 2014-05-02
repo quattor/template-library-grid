@@ -1,4 +1,4 @@
-unique template feature/gsissh/server/rpms;
+unique template features/gsissh/server/rpms;
 
 prefix '/software/packages';
 '{gsi-openssh-server}'          ?= nlist();

@@ -1,6 +1,6 @@
 # Helper functions to build Tomcat configuration
 
-declaration template feature/tomcat/functions;
+declaration template features/tomcat/functions;
 
 # Function to convert a value to a valid XML string.
 # It accepts any value type that can be represented as a string (with to_string())

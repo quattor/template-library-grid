@@ -1,8 +1,8 @@
 
-unique template feature/mkgridmap/base;
+unique template features/mkgridmap/base;
 
 # Add RPMs
-include { 'feature/mkgridmap/rpms' };
+include { 'features/mkgridmap/rpms' };
 
 # Hack to workaround an undefined conf path listen by ncm-mkgridmap
 '/system/edg/config/EDG_LOCATION' = 'Not.used.anymore';
@@ -57,7 +57,7 @@ include { 'components/gridmapdir/config' };
 
 variable GRIDMAPDIR_SHARED_NFS_INCLUDE = {
   if ( is_defined(GRIDMAPDIR_SHARED_PATH) && match(to_lowercase(GRIDMAPDIR_SHARED_PROTOCOL), '^nfs') ) {
-    'feature/nfs/gridmapdir';
+    'features/nfs/gridmapdir';
   } else {
     undef;
   };

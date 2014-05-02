@@ -52,8 +52,8 @@ include { WN_CONFIG_NODE };
 #
 # Configure NFS if necessary
 #
-include { if ( NFS_SERVER_ENABLED ) 'feature/nfs/server/config' };
-include { if ( NFS_CLIENT_ENABLED ) 'feature/nfs/client/config' };
+include { if ( NFS_SERVER_ENABLED ) 'features/nfs/server/config' };
+include { if ( NFS_CLIENT_ENABLED ) 'features/nfs/client/config' };
 
 #
 # middleware updates

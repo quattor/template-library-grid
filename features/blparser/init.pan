@@ -2,7 +2,7 @@
 # systems that can be used with BLParser.
 # It can be included by other services which may need to access this information (like CREAM CE).
 
-unique template feature/blparser/init;
+unique template features/blparser/init;
 
 # Define default log level (normal=1,debug=2).
 # It is possible to define one specific level per parser and a default

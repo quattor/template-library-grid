@@ -1,3 +1,3 @@
-unique template feature/glexec/wn/rpms/config;
+unique template features/glexec/wn/rpms/config;
 
 '/software/packages/{glexec-wn}' ?= nlist();

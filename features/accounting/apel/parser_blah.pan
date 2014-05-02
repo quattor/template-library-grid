@@ -1,6 +1,6 @@
-unique template feature/accounting/apel/parser_blah;
+unique template features/accounting/apel/parser_blah;
 
-include { 'feature/accounting/apel/base' };
+include { 'features/accounting/apel/base' };
 
 #
 # Allow user to customize cron startup hour

@@ -1,4 +1,4 @@
-unique template feature/torque2/client/service;
+unique template features/torque2/client/service;
 
 variable TORQUE_VERSION ?= if(OS_VERSION_PARAMS['major'] == 'sl5'){
 				'2.5.9-1.cri';
@@ -7,10 +7,10 @@ variable TORQUE_VERSION ?= if(OS_VERSION_PARAMS['major'] == 'sl5'){
 			   };
 
 # Add RPMs
-include { 'feature/torque2/client/rpms/config' };
+include { 'features/torque2/client/rpms/config' };
 
 # Configure Torque client
-include { 'feature/torque2/client/config' };
+include { 'features/torque2/client/config' };
 
 # Force a service restart if specified.
 # This is done by checking if a restart timestamp is defined. In fact this can

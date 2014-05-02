@@ -4,14 +4,14 @@
 # It doesn't replace the standard LCMAPS configuration used by other services,
 # which is included if not already done.
 
-unique template feature/lcmaps/glexec_wn;
+unique template features/lcmaps/glexec_wn;
 
 # ---------------------------------------------------------------------------- 
 # Include standard LCMAPS configuration file after redefining
 # policy order to match glexec-specific LCMAPS configuration file order
 # ---------------------------------------------------------------------------- 
 
-include { 'feature/lcmaps/base' };
+include { 'features/lcmaps/base' };
 
 
 # ---------------------------------------------------------------------------- 

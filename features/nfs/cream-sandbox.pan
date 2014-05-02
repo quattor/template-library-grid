@@ -1,14 +1,14 @@
 # Template to configure NFS sharing of CREAM CE sandbox directory through NFS.
-# This template must be called after feature/nfs/init and before common/nfs/[client|server] config.
+# This template must be called after features/nfs/init and before common/nfs/[client|server] config.
 # It is typically called from LRMS configuration.
 
-unique template feature/nfs/cream-sandbox;
+unique template features/nfs/cream-sandbox;
 
 # Configure NFS mount points for CREAM CE sandbox directory if requested.
 # NFS sharing of CREAM CE sandbox directory is enabled with variable CREAM_SANDBOX_MPOINTS which
 # contains one entry per CE host sharing its sandbox directory with WNs.
 # Sharing is disabled if variable CREAM_SANDBOX_SHARED_FS is defined with a value different than 'nfs[34]'.
-# Code for defining mount points largely borrowed from feature/nfs/init.tpl.
+# Code for defining mount points largely borrowed from features/nfs/init.tpl.
 
 # First build a list of NFS mount points related to CREAM sandboxes.
 variable SANDBOX_MOUNT_POINTS = {

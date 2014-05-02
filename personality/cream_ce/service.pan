@@ -37,16 +37,16 @@ include { 'personality/cream_ce/rpms/config' };
 
 # Add glite user/group, set permissions on key directories and add BDII_USER to glite group
 include { 'users/glite' };
-include { 'feature/grid/dirperms' };
+include { 'features/grid/dirperms' };
 
 # Configure resource BDII.
 include { 'personality/bdii/service' };
 
 # Configure classads library
-include { 'feature/classads/config' };
+include { 'features/classads/config' };
 
 # Add MySQL server.
-include { 'feature/mysql/server' };
+include { 'features/mysql/server' };
 
 # Configure LRMS if one specified and LRMS server is running on the CE.
 # When using MAUI, postpone configuration of maui-monitoring after GIP configuration.
@@ -54,13 +54,13 @@ variable MAUI_MONITORING_POSTPONED = true;
 variable LRMS_SERVER_INCLUDE = {
   if ( is_defined(CE_BATCH_NAME) ) {
     if ( LRMS_SERVER_HOST == FULL_HOSTNAME ) {
-      "feature/"+CE_BATCH_NAME+"/server/service";
+      "features/"+CE_BATCH_NAME+"/server/service";
     } else {
-      client_include = if_exists("feature/"+CE_BATCH_NAME+"/client/client-only");
+      client_include = if_exists("features/"+CE_BATCH_NAME+"/client/client-only");
       if ( is_defined(client_include) ) {
         client_include;
       } else {
-        "feature/"+CE_BATCH_NAME+"/client/service"
+        "features/"+CE_BATCH_NAME+"/client/service"
       };
     };
   } else {
@@ -70,18 +70,18 @@ variable LRMS_SERVER_INCLUDE = {
 include { LRMS_SERVER_INCLUDE };
 
 # Also build queue names (required by CE GIP configuration) if not done as part of the client configuration
-include { if ( LRMS_SERVER_HOST != FULL_HOSTNAME ) if_exists("feature/"+CE_BATCH_NAME+"/server/build-queue-list") };
+include { if ( LRMS_SERVER_HOST != FULL_HOSTNAME ) if_exists("features/"+CE_BATCH_NAME+"/server/build-queue-list") };
 
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Modify the loadable library path.
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # LCG and Globus sysconfig and environment variables
-include { 'feature/globus/sysconfig' };
-include { 'feature/edg/sysconfig' };  
+include { 'features/globus/sysconfig' };
+include { 'features/edg/sysconfig' };  
 
 # Add accepted CAs
 include { 'security/cas' };
@@ -90,25 +90,25 @@ include { 'security/cas' };
 include { 'features/fetch-crl/config' };
 
 # Authorization via grid mapfile.
-include { 'feature/mkgridmap/standard' };
+include { 'features/mkgridmap/standard' };
 
 # MPI-CH configuration.
-include { 'feature/mpi/config' };
+include { 'features/mpi/config' };
 
 # Configure java.
-include { 'feature/java/config' };
+include { 'features/java/config' };
 
 # Configuration for LCMAPS.
-include { 'feature/lcmaps/base' };
+include { 'features/lcmaps/base' };
 
 # Configuration for LCAS.
-include { 'feature/lcas/base' };
+include { 'features/lcas/base' };
 
 # Configure Tomcat.
-include { 'feature/tomcat/config' };
+include { 'features/tomcat/config' };
 
 # Configure lb-locallogger
-include { 'feature/lb/locallogger' };
+include { 'features/lb/locallogger' };
 
 # CREAM CE specific tasks
 include { 'personality/cream_ce/config' };
@@ -116,21 +116,21 @@ include { 'personality/cream_ce/config' };
 # Configure the information provider.
 # Do it after configuring BDII to avoid creation of unneeded edginfo account
 variable CE_GIP_INCLUDE = if ( exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(CE_BATCH_SYS, 'condor|lsf|lcgpbs|pbs|torque') ) {
-                              'feature/gip/ce';
+                              'features/gip/ce';
                           } else {
                               null;
                           };
 
-include { 'feature/gip/base' };
+include { 'features/gip/base' };
 
 include { CE_GIP_INCLUDE };
 
 # PBS accounting.
-include { 'feature/accounting/apel/parser_blah' };
+include { 'features/accounting/apel/parser_blah' };
 
 # Configure gridftp server
 # Must be done after configuring GIP provider
-include { 'feature/gridftp/service' };
+include { 'features/gridftp/service' };
 
 
 # ----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ include { 'feature/gridftp/service' };
 # Sharing is disabled if variable CREAM_SANDBOX_SHARED_FS is defined with a
 # value different than 'nfs[34]'.
 # ----------------------------------------------------------------------------
-include { 'feature/nfs/cream-sandbox' };
+include { 'features/nfs/cream-sandbox' };
 
 
 # Configure MAUI monitoring, also used to optionally implement a GIP plugin cache.

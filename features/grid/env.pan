@@ -1,4 +1,4 @@
-unique template feature/grid/env;
+unique template features/grid/env;
 
 variable GLITE_ARCH_LIB ?= if ( PKG_ARCH_GLITE == 'x86_64' ) {
                              '/lib64';
@@ -6,7 +6,7 @@ variable GLITE_ARCH_LIB ?= if ( PKG_ARCH_GLITE == 'x86_64' ) {
                              '/lib';
                            };
 
-include { 'feature/grid/base' };
+include { 'features/grid/base' };
 
 
 # ---------------------------------------------------------------------------- 

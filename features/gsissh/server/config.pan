@@ -1,8 +1,8 @@
-unique template feature/gsissh/server/config;
+unique template features/gsissh/server/config;
 
 variable GSISSH_PORT ?= 1975;
 
-include { 'feature/gsissh/server/rpms' };
+include { 'features/gsissh/server/rpms' };
 
 # ---------------------------------------------------------------------------- 
 # chkconfig

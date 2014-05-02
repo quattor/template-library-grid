@@ -1,11 +1,11 @@
 # Configure GIP for a resource BDII
 
-unique template feature/gip/bdii;
+unique template features/gip/bdii;
 
 include { 'components/gip2/config' };
 
 # Define GIP base configuration
-include { 'feature/gip/base' };
+include { 'features/gip/base' };
 
 # List trusted (RPM provided) files
 '/software/components/gip2/external' ?= list();

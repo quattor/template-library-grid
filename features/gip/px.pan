@@ -1,9 +1,9 @@
-unique template feature/gip/px;
+unique template features/gip/px;
 
 variable PX_HOST ?= FULL_HOSTNAME;
 
 # Configure GIP provider for services
-include { 'feature/gip/base' };
+include { 'features/gip/base' };
 include { 'components/gip2/config' };
 '/software/components/gip2/provider/glite-info-provider-service-myproxy-wrapper' = 
     "#!/bin/sh\n" + 

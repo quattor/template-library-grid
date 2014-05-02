@@ -1,7 +1,7 @@
 # Template to install a cron job to monitor ISM updates because of a bug that may require
 # a service restart (GGUS #42999)
 
-unique template feature/wms/ism_monitoring;
+unique template features/wms/ism_monitoring;
 
 variable WMS_MONITOR_ISM_SCRIPT ?= GLITE_LOCATION + '/etc/glite-wms-ism-monitoring';
 

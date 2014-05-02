@@ -1,4 +1,4 @@
-unique template feature/torque2/client/rpms/config;
+unique template features/torque2/client/rpms/config;
 
 variable PKG_ARCH_TORQUE_MAUI ?= PKG_ARCH_GLITE;
 variable TORQUE_CLIENT_MOM_ENABLED ?= true;

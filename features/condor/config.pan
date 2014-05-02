@@ -1,6 +1,6 @@
 # This template defines Condor config for use by Resource Broker and gLite WMS
 
-unique template feature/condor/config;
+unique template features/condor/config;
 
 variable CONDOR_VERSION ?= null;
 
@@ -105,8 +105,8 @@ include { 'components/sysconfig/config' };
 
 # Flavor specific configuration
 variable WMS_FLAVOR_INCLUDE = if ( WMS_FLAVOR == 'glite' ) {
-                                return('feature/condor/wms');
+                                return('features/condor/wms');
                               } else {
-                                return('feature/condor/rb');
+                                return('features/condor/rb');
                               };
 include { WMS_FLAVOR_INCLUDE };

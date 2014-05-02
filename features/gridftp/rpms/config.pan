@@ -1,4 +1,4 @@
-unique template feature/gridftp/rpms/config;
+unique template features/gridftp/rpms/config;
 
 prefix '/software/packages';
 

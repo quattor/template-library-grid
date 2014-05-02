@@ -1,4 +1,4 @@
-unique template feature/torque2/munge/key_file;
+unique template features/torque2/munge/key_file;
 
 include { 'components/filecopy/config' };
 

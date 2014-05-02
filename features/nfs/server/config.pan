@@ -3,7 +3,7 @@
 # as a NFS server for any filesystem in NFS_MOUNT_POINTS['servedFS']. If it is not, this
 # template does nothing to the current configuration.
 
-unique template feature/nfs/server/config;
+unique template features/nfs/server/config;
 
 variable NFS_VIRTUAL_ROOT ?= '/export';
 variable NFS_V4_EXPORT_COMMON_OPTS ?= 'insecure,no_subtree_check';

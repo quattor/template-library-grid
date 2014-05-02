@@ -15,13 +15,13 @@ variable NODE_USE_RESOURCE_BDII = true;
 include { 'personality/lfc/config' };
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # EDG, LCG, and Globus sysconfig files. 
-include { 'feature/globus/sysconfig' };
+include { 'features/globus/sysconfig' };
 
 
 # Add accepted CAs certificates
@@ -31,14 +31,14 @@ include { 'security/cas' };
 include { 'features/fetch-crl/config' };
 
 # Authorization via grid mapfile. 
-include { 'feature/mkgridmap/lcgdm' };
+include { 'features/mkgridmap/lcgdm' };
 
 # Configure BDII or GRIS, whatever is appropriate
 include { 'personality/bdii/service' };
 
 # Configure the information provider.
-include { 'feature/gip/base' };
-include { 'feature/gip/lfc' };
+include { 'features/gip/base' };
+include { 'features/gip/lfc' };
 
 # Configure MySQL server
-include { 'feature/mysql/server' };
+include { 'features/mysql/server' };

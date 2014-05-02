@@ -1,4 +1,4 @@
-unique template feature/lcas/base;
+unique template features/lcas/base;
 
 # Variables to tweak module configurations.
 # Content of the following variables is added to the relevant module configuration.
@@ -28,7 +28,7 @@ variable LCAS_LOG_LEVEL ?= 1;
 variable GLITE_GRID_ENV_PROFILE ?= '/etc/profile.d/grid-env.sh';
 
 # Include LCAS RPMs
-include { 'feature/lcas/rpms' };
+include { 'features/lcas/rpms' };
 
  
 # ---------------------------------------------------------------------------- 

@@ -271,7 +271,7 @@ include { WLCONFIG_INCLUDE };
                                                 
 # Configure VOMS client
 variable VOMSCLIENT_CONFIG = if ( NODE_VO_VOMSCLIENT ) { 
-                               "feature/security/vomsclient";
+                               "features/security/vomsclient";
                              } else {
                                null;
                              };

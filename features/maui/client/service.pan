@@ -1,5 +1,5 @@
 
-unique template feature/maui/client/service;
+unique template features/maui/client/service;
 
 # Configure maui client
-include { 'feature/maui/client/config' };
+include { 'features/maui/client/config' };

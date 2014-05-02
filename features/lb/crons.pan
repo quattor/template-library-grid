@@ -1,5 +1,5 @@
 
-unique template feature/lb/crons;
+unique template features/lb/crons;
 
 variable LB_PROFILE_SCRIPT ?= '/etc/profile.d/grid-env.sh';
 

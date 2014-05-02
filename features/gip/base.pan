@@ -1,7 +1,7 @@
-unique template feature/gip/base;
+unique template features/gip/base;
 
 # Define GIP directory layout
-include { 'feature/gip/env' };
+include { 'features/gip/env' };
 
 # Define user/group used to run GIP scripts
 variable GIP_USER ?= 'ldap';

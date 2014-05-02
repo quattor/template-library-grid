@@ -1,6 +1,6 @@
 # This template does configuration related to use of CUDA on WNs
 
-unique template feature/cuda/config;
+unique template features/cuda/config;
 
 variable CUDA_INSTALL_DIR ?= error('CUDA installation path must be defined with variable CUDA_INSTALL_DIR');
 

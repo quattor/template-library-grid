@@ -1,5 +1,5 @@
 
-unique template feature/wms/crons;
+unique template features/wms/crons;
 
 variable WMS_CREATEPROXY_LOG ?= 'glite-wms-create-host-proxy.log';
 variable WMS_PURGER_LOG ?= 'glite-wms-purger.log';

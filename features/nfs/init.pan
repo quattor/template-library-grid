@@ -9,7 +9,7 @@
 # /home when it is NFS mounted and VO_HOMES_NFS_ROOT is defined.
 # ---------------------------------------------------------------------------------------------
 
-unique template feature/nfs/init;
+unique template features/nfs/init;
 
 variable NFS_DEFAULT_MOUNT_OPTIONS ?= "rw,noatime";
 variable NFS_DEFAULT_VERSION ?= '3';

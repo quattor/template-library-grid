@@ -5,7 +5,7 @@ include { 'personality/voms/variables' };
 include { 'personality/voms/tomcat' };
 include { 'personality/voms/mysql' };
 include { 'personality/voms/vos' };
-include { 'feature/gip/base' };
+include { 'features/gip/base' };
 
 include { 'components/filecopy/config' };
 

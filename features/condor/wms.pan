@@ -1,6 +1,6 @@
 # Configuration specific to gLite WMS
 
-unique template feature/condor/wms;
+unique template features/condor/wms;
 
 variable WMS_CONDORC_LOG_DIR ?= '/var/tmp';
 

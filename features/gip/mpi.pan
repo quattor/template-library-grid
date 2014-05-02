@@ -1,8 +1,8 @@
 # Publish software tags related to MPI
 
-unique template feature/gip/mpi;
+unique template features/gip/mpi;
 
-include { 'feature/mpi/vars' };
+include { 'features/mpi/vars' };
 
 variable MPI_RUNTIMEENV = {
   # Currently required to flag the CE as supporting MPI.  This is necessary

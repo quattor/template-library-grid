@@ -2,7 +2,7 @@
 # This is a structure template to allow to reuse this template for
 # application specific loggers.
 
-structure template feature/tomcat/root-logger;
+structure template features/tomcat/root-logger;
 
 'conf' = <<EOF;
 # Possible levels: debug, info, warn, error, fatal.

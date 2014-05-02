@@ -1,9 +1,9 @@
-unique template feature/torque2/server/pbswebmon/config;
+unique template features/torque2/server/pbswebmon/config;
 
 variable TORQUE_PBSWEBMON_TRANSLATE_DN ?= true;
 
 # Include RPMs
-include { 'feature/torque2/server/pbswebmon/rpms' };
+include { 'features/torque2/server/pbswebmon/rpms' };
 
 # Build config file
 include { 'components/filecopy/config' };
