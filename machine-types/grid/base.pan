@@ -172,7 +172,7 @@ include { 'defaults/grid/config' };
 # Check if NFS server and/or client should be configured on the current system.
 # This template defines variables NFS_xxx_ENABLED used by other templates. 
 # Also include NFS-related packages
-include { 'feature/nfs/init' };
+include { 'features/nfs/init' };
 include { if ( NFS_CLIENT_ENABLED ) 'rpms/nfs-client' };
 
 
@@ -213,8 +213,8 @@ include { if ( CONFIGURE_VOS ) {
 #
 # Configure NFS if necessary
 #
-include { if ( NFS_SERVER_ENABLED && !OS_POSTPONE_NFS_CONFIG ) 'feature/nfs/server/config' };
-include { if ( NFS_CLIENT_ENABLED && !OS_POSTPONE_NFS_CONFIG ) 'feature/nfs/client/config' };
+include { if ( NFS_SERVER_ENABLED && !OS_POSTPONE_NFS_CONFIG ) 'features/nfs/server/config' };
+include { if ( NFS_CLIENT_ENABLED && !OS_POSTPONE_NFS_CONFIG ) 'features/nfs/client/config' };
 
 
 #

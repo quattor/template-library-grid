@@ -24,17 +24,17 @@ include { VOMS_CONFIG_SITE };
 include { 'users/glite' };
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # Include standard environmental variables.
-include { 'feature/grid/env' };
-include { 'feature/globus/env' };
+include { 'features/grid/env' };
+include { 'features/globus/env' };
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Configure basic permissions for gLite
-include { 'feature/grid/dirperms' };
+include { 'features/grid/dirperms' };
 
 # Add accepted CAs certificates
 include { 'security/cas' };
@@ -43,14 +43,14 @@ include { 'security/cas' };
 include { 'features/fetch-crl/config' };
 
 # Configure paths for java.
-include { 'feature/java/config' };
+include { 'features/java/config' };
 
 # General globus configuration.
-include { 'feature/globus/base' };
+include { 'features/globus/base' };
 
 # Configure the information provider.
-include { 'feature/gip/base' };
-include { 'feature/gip/voms' };
+include { 'features/gip/base' };
+include { 'features/gip/voms' };
 
 #
 # Include VOMS service base configuration

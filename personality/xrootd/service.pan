@@ -3,13 +3,13 @@ unique template personality/xrootd/service;
 variable XROOTD_CONFIG_SITE ?= null;
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # Globus sysconfig files and environment variables
-include { 'feature/globus/sysconfig' };
+include { 'features/globus/sysconfig' };
 
 
 # Add accepted CAs certificates
@@ -20,7 +20,7 @@ include { 'features/fetch-crl/config' };
 
 
 # Authorization via grid mapfile. 
-include { 'feature/mkgridmap/standard' };
+include { 'features/mkgridmap/standard' };
 
 
 # Configure Xrootd services.

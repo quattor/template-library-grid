@@ -8,14 +8,14 @@ variable MYPROXY_SERVER_DAEMON_NAME ?= 'myproxy-server';
 include { 'personality/px/rpms/config' };
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # gLite and Globus sysconfig and environment variables.
-include { 'feature/globus/sysconfig' };
-include { 'feature/globus/env' };
+include { 'features/globus/sysconfig' };
+include { 'features/globus/env' };
 
 # Add accepted CAs
 include { 'security/cas' };
@@ -24,7 +24,7 @@ include { 'security/cas' };
 include { 'features/fetch-crl/config' };
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Configure BDII + information provider
 variable NODE_USE_RESOURCE_BDII = true;
@@ -32,11 +32,11 @@ variable BDII_TYPE ?= 'resource';
 include { 'personality/bdii/service' };
 
 # Configure Globus
-include { 'feature/globus/base' };
+include { 'features/globus/base' };
 
 # Include the proxy configuration. 
 include { 'personality/px/config' };
 
 # Configure the information provider.
-include { 'feature/gip/base' };
-include { 'feature/gip/px' };
+include { 'features/gip/base' };
+include { 'features/gip/px' };

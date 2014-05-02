@@ -363,7 +363,7 @@ include { 'components/chkconfig/config' };
 "/software/components/chkconfig/service/globus-gridftp/on" = ""; 
 "/software/components/chkconfig/service/globus-gridftp/startstop" = true; 
 
-include { 'feature/globus/sysconfig' };
+include { 'features/globus/sysconfig' };
 #"/software/components/sysconfig/files/globus/LCMAPS_DB_FILE" = "/etc/lcmaps/lcmaps.db.gridftp";
 '/software/components/sysconfig/files/globus/epilogue' = {
   epilogue = '';
@@ -623,14 +623,14 @@ include { 'components/gacl/config' };
 #
 #
 # Configure WMS cron jobs
-include { 'feature/wms/crons' };
+include { 'features/wms/crons' };
 
 
 ## Script to monitor ISM updates because of a bug that may require a service restart (GGUS #42999)
 ## FIXME: remove when bug is fixed.
 #variable WMS_MONITOR_ISM ?= true;
 #variable WMS_MONITOR_ISM_INCLUDE ?= if ( WMS_MONITOR_ISM ) {
-#                                      if_exists('feature/wms/ism_monitoring');
+#                                      if_exists('features/wms/ism_monitoring');
 #                                    } else {
 #                                      undef;
 #                                    };
@@ -641,7 +641,7 @@ include { 'feature/wms/crons' };
 ## FIXME: remove when bug is fixed.
 #variable WMS_PURGE_STORAGE_FIX ?= true;
 #variable WMS_PURGE_STORAGE_FIX_INCLUDE ?= if ( WMS_PURGE_STORAGE_FIX ) {
-#                                      if_exists('feature/wms/fix_purge_storage');
+#                                      if_exists('features/wms/fix_purge_storage');
 #                                    } else {
 #                                      undef;
 #                                    };

@@ -5,14 +5,14 @@ unique template personality/argus/service;
 include { 'personality/argus/rpms/config' };
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # LCG and Globus sysconfig files. 
-include { 'feature/globus/sysconfig' };
-#include { 'feature/lcg/sysconfig' };
+include { 'features/globus/sysconfig' };
+#include { 'features/lcg/sysconfig' };
 
 # Add accepted CAs certificates
 include { 'security/cas' };
@@ -21,13 +21,13 @@ include { 'security/cas' };
 include { 'features/fetch-crl/config' };
 
 # Authorization via grid mapfile.
-include { 'feature/mkgridmap/standard' };
+include { 'features/mkgridmap/standard' };
 
 # Configure java.
-include { 'feature/java/config' };
+include { 'features/java/config' };
 
 # Configuration for LCMAPS.
-include { 'feature/lcmaps/base' };
+include { 'features/lcmaps/base' };
 
 # Configure MON-specific services
 include { 'personality/argus/config' };

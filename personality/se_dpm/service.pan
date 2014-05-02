@@ -6,14 +6,14 @@ variable DPM_CONFIG_SITE ?= SEDPM_CONFIG_SITE;
 
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # EDG, LCG, and Globus sysconfig files and environment variables
-include { 'feature/globus/sysconfig' };
-include { 'feature/grid/env' };
+include { 'features/globus/sysconfig' };
+include { 'features/grid/env' };
 
 
 # Add accepted CAs certificates
@@ -24,8 +24,8 @@ include { 'features/fetch-crl/config' };
 
 
 # Authorization via grid mapfile. 
-include { 'feature/mkgridmap/standard' };
-include { 'feature/mkgridmap/lcgdm' };
+include { 'features/mkgridmap/standard' };
+include { 'features/mkgridmap/lcgdm' };
 
 
 # Configure DPM services.

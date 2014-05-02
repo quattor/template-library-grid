@@ -23,19 +23,19 @@ include { 'personality/lb/rpms/config' };
 include { 'users/glite' };
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # gLite, and Globus sysconfig and environment variables. 
-include { 'feature/globus/sysconfig' };
-include { 'feature/globus/env' };
-include { 'feature/grid/sysconfig' };
-include { 'feature/grid/env' };
+include { 'features/globus/sysconfig' };
+include { 'features/globus/env' };
+include { 'features/grid/sysconfig' };
+include { 'features/grid/env' };
 
 # globuscfg
-include { 'feature/globus/base' };
+include { 'features/globus/base' };
 
 
 # Add accepted CAs
@@ -49,36 +49,36 @@ variable NODE_USE_RESOURCE_BDII = true;
 include { 'personality/bdii/service' };
 
 # Configure basic permissions for gLite
-include { 'feature/grid/dirperms' };
+include { 'features/grid/dirperms' };
 
 # Authorization via grid mapfile. 
-include { 'feature/mkgridmap/standard' };
+include { 'features/mkgridmap/standard' };
 
 # Configure the information provider.
-include { 'feature/gip/base' };
-include { 'feature/gip/lb' };
+include { 'features/gip/base' };
+include { 'features/gip/lb' };
 
 # Configure R-GMA client.
-include { 'feature/java/config' };
-#include { 'feature/rgma/client' };
+include { 'features/java/config' };
+#include { 'features/rgma/client' };
 
 # Configuration for LCMAPS.
-#include { 'feature/security/lcmaps' };
-include { 'feature/lcmaps/base' };
+#include { 'features/security/lcmaps' };
+include { 'features/lcmaps/base' };
 
 # Configuration for LCAS.
-#include { 'feature/security/lcas' };
-include { 'feature/lcas/base' };
+#include { 'features/security/lcas' };
+include { 'features/lcas/base' };
 
 # Configure the FMON agent and gridice.
-#include { 'feature/gridice/base' };
-#include { 'feature/fmon/agent' };
+#include { 'features/gridice/base' };
+#include { 'features/fmon/agent' };
 
 # Configure WMS environment variables. 
-include { 'feature/wms/client' };
+include { 'features/wms/client' };
 
 # Configure mysql.
-include { 'feature/mysql/server' };
+include { 'features/mysql/server' };
 
 # Add WMSLB server configuration
 include { 'personality/lb/config' };

@@ -43,7 +43,7 @@ variable GLOBUS_GRIDFTP_CFGFILE ?= "/usr/etc/gridftp.conf";
 variable CREAM_SANDBOX_DIR ?= error('CREAM_SANDBOX_DIR required but undefined');
 
 # Include some helper functions
-include { 'feature/tomcat/functions' };
+include { 'features/tomcat/functions' };
 
 # Check that Tomcat has been configured and define a few variables based on Tomcat configuration
 variable TOMCAT_USER ?= error('Tomcat must be configured before CREAM CE');
@@ -128,12 +128,12 @@ variable CREAM_CREAM_LOG4J_CONF_FILE = EMI_LOCATION + '/etc/glite-ce-cream/log4j
 variable CREAM_DATA_SOURCE_FACTORY_CLASS ?= 'org.apache.commons.dbcp.BasicDataSourceFactory';
 
 # Create BLParser environment config file (used by CREAM submission)
-include { 'feature/blparser/blah-config' };
+include { 'features/blparser/blah-config' };
 
 #-----------------------------------------------------------------------------
 # Configuration for GLEXEC.
 #-----------------------------------------------------------------------------
-include { 'feature/glexec/cream_ce/config' };
+include { 'features/glexec/cream_ce/config' };
 
 #-----------------------------------------------------------------------------
 # Configuration for CREAM monitoring
@@ -442,7 +442,7 @@ include { 'components/filecopy/config' };
 
 
 variable CREAM_TRUSTMANAGER_LOG4J_CONF = {
-  root_logger = create('feature/tomcat/root-logger');
+  root_logger = create('features/tomcat/root-logger');
   app_logger = create('personality/cream_ce/trustmanager-logger');
   app_logger['conf'] = replace('%%LOGFILE%%',
                                CREAM_LOG_DIR+'/trustmanager-tomcat.log',
@@ -460,7 +460,7 @@ variable CREAM_TRUSTMANAGER_LOG4J_CONF = {
 };
 
 variable CREAM_CREAM_LOG4J_CONF = {
-  root_logger = create('feature/tomcat/root-logger');
+  root_logger = create('features/tomcat/root-logger');
   app_logger = create('personality/cream_ce/ce-cream-logger');
   app_logger['conf'] = replace('%%LOGFILE%%',
                                CREAM_LOG_DIR+'/glite-ce-cream.log',

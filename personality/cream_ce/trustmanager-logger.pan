@@ -1,6 +1,6 @@
 # Template to configure the log4j glite-security-trustmanager logger.
 # This configuration must be combined with the configuration of a root
-# loggeri (eg. feature/tomcat5/logger) to build a valid configuration.
+# loggeri (eg. features/tomcat5/logger) to build a valid configuration.
 
 structure template personality/cream_ce/trustmanager-logger;
 

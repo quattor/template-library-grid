@@ -10,11 +10,11 @@ include { 'rpms/scientific-libraries' };
 include { 'personality/ui/rpms/config' };
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # Include standard environmental variables.
-include { 'feature/grid/env' };
-include { 'feature/globus/env' };
+include { 'features/grid/env' };
+include { 'features/globus/env' };
 
 # Add accepted CAs certificates
 include { 'security/cas' };
@@ -23,18 +23,18 @@ include { 'security/cas' };
 include { 'features/fetch-crl/config' };
 
 # General globus configuration.
-include { 'feature/globus/base' };
-include { 'feature/globus/sysconfig' };
+include { 'features/globus/base' };
+include { 'features/globus/sysconfig' };
 
 # Configure Java.
-include { 'feature/java/config' };
+include { 'features/java/config' };
 
 # Configure classads library
 #NOTE: this seems not to be there anymore
-include { 'feature/classads/config' };
+include { 'features/classads/config' };
 
 # Configure WMS environment variables and clients
-include { 'feature/wms/client' };
+include { 'features/wms/client' };
 
 include { 'components/symlink/config' };
 #Force replace since the "glite-wms-ui-commands" puts a default version of this file
@@ -45,10 +45,10 @@ include { 'components/symlink/config' };
 );
 
 # Configure FTS client.
-include { 'feature/fts/client/config' };
+include { 'features/fts/client/config' };
 
 # Configure gsisshclient.
-include { 'feature/gsissh/client/config' };
+include { 'features/gsissh/client/config' };
 
 # Configure MPI.
-include { 'feature/mpi/config' };
+include { 'features/mpi/config' };

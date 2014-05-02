@@ -23,7 +23,7 @@ include { 'components/wmslb/config' };
 '/software/components/wmslb/envScript' = null;
  
 # Define environment variables required by LB
-include { 'feature/lb/env' };
+include { 'features/lb/env' };
 
 # Reset WMS configuration not to use LB proxy if LB is on the same machine
 # if it has been defined previously.
@@ -280,4 +280,4 @@ include { 'components/filecopy/config' };
 
 
 # Add LB cron jobs
-include { 'feature/lb/crons' };
+include { 'features/lb/crons' };

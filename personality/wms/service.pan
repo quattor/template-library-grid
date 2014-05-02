@@ -34,13 +34,13 @@ include { 'security/cas' };
 include { 'features/fetch-crl/config' };
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # gLite and Globus sysconfig and environment variables.
-include { 'feature/grid/sysconfig' };
-include { 'feature/grid/env' };
-include { 'feature/globus/sysconfig' };
-include { 'feature/globus/env' };
+include { 'features/grid/sysconfig' };
+include { 'features/grid/env' };
+include { 'features/globus/sysconfig' };
+include { 'features/globus/env' };
 
 # Configure glite user
 include { 'users/glite' };
@@ -51,13 +51,13 @@ include { 'users/edginfo' };
 
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # LCMAPS : we need a different lcmaps config file for WMS and GridFTP...
-include { 'feature/lcmaps/wms' }; 
+include { 'features/lcmaps/wms' }; 
 
 # Configuration for LCAS.
-include { 'feature/lcas/base' };
+include { 'features/lcas/base' };
 
 #*** 11
 # Configure gridftp server
@@ -66,7 +66,7 @@ include { 'feature/lcas/base' };
 # AND after lcmaps, because config is now the same (?).
 # problem is that gridftp/service #includes lcmaps config before we have a chnace to change it.
 
-include { 'feature/gridftp/service' };
+include { 'features/gridftp/service' };
 
 
 # LCG installation directory
@@ -80,26 +80,26 @@ variable BDII_TYPE ?= "resource";
 include { 'personality/bdii/service' };
 
 # Add MySQL server.
-include { 'feature/mysql/server' };
+include { 'features/mysql/server' };
 
 # Configure basic permissions for gLite
-include { 'feature/grid/dirperms' };
+include { 'features/grid/dirperms' };
 
 # Authorization via grid mapfile. 
-include { 'feature/mkgridmap/standard' };
+include { 'features/mkgridmap/standard' };
 
 # Configure the information provider.
-include { 'feature/gip/base' };
-include { 'feature/gip/wms' };
+include { 'features/gip/base' };
+include { 'features/gip/wms' };
 
 # Configure java
-include { 'feature/java/config' };
+include { 'features/java/config' };
 
 # Configure Condor
-include { 'feature/condor/config' };
+include { 'features/condor/config' };
 
 # Configure WMS environment variables. 
-include { 'feature/wms/client' };
+include { 'features/wms/client' };
 
 # Add WMS server configuration
 include { 'personality/wms/config' };

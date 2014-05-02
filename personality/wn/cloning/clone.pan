@@ -117,7 +117,7 @@ include { FILESYSTEM_CONFIG_SITE };
 
 # Check if NFS server and/or client should be configured on the current system.
 # This template defines variables NFS_xxx_ENABLED used by other templates. 
-include { 'feature/nfs/init' };
+include { 'features/nfs/init' };
 
 
 #
@@ -145,8 +145,8 @@ variable NODE_VO_ACCOUNTS = if ( NFS_SERVER_ENABLED ) {
 #
 # Reconfigure NFS if necessary
 #
-include { if ( NFS_SERVER_ENABLED ) 'feature/nfs/server/config' };
-include { if ( NFS_CLIENT_ENABLED ) 'feature/nfs/client/config' };
+include { if ( NFS_SERVER_ENABLED ) 'features/nfs/server/config' };
+include { if ( NFS_CLIENT_ENABLED ) 'features/nfs/client/config' };
 
 
 #
