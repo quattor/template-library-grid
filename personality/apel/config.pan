@@ -6,11 +6,11 @@ variable APEL_HOST ?= FULL_HOSTNAME;
 # APEL DB admin username and password
 variable APEL_MYSQL_ADMINUSER ?= 'root';
 variable APEL_MYSQL_ADMINPWD ?= error('APEL_MYSQL_ADMINPWD required but not specified');
-variable APEL_DB_USER ?= 'accounting';
+variable APEL_DB_USER ?= 'apel';
 variable APEL_DB_PWD ?= error('APEL_DB_PASSWORD required but not specified');
 
 # Database used by APEL and its init script
-variable APEL_DB_NAME ?= 'accounting';
+variable APEL_DB_NAME ?= 'apelclient';
 variable APEL_DB_INIT_SCRIPT ?= GLITE_LOCATION+'/share/glite-apel-core/scripts/apel-schema.sql';
 
 #-----------------------------------------------------------------------------
