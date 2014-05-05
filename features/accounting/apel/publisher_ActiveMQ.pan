@@ -5,8 +5,8 @@ include { 'security/cas' }; # Add accepted CAs certificates
 include { 'features/fetch-crl/config' }; # Update the certificate revocation lists.
 include { 'features/accounting/apel/base' };
 
-#rpms
-include { "rpms/ruby"};
+# Add Ruby
+'/software/packages/{ruby}' ?= nlist();
 
 variable APEL_ENABLED ?= true;
 variable APEL_PUBLISHER_TIME_HOUR ?= '3';
