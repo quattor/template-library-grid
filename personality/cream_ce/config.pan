@@ -52,12 +52,14 @@ variable TOMCAT_HOST_KEY ?= TOMCAT_CERT_DIR + '/hostkey.pem';
 variable TOMCAT_HOST_CERT ?= TOMCAT_CERT_DIR + '/hostcert.pem';
 
 # Redefine batch system name if defined as 'lcgpbs' (LCG CE specific variant of 'pbs')
-variable CREAM_BATCH_SYS ?= if ( CE_BATCH_SYS == 'lcgpbs' ) {
-                              'pbs';
-                            } else {
-                              CE_BATCH_SYS;
-                            };
-                            
+variable CREAM_BATCH_SYS ?= {
+    if ( CE_BATCH_SYS == 'lcgpbs' ) {
+        'pbs';
+    } else {
+        CE_BATCH_SYS;
+    };
+};
+
 
 # Specific CREAM CE variables
 
@@ -185,12 +187,7 @@ values = true or false
 default = true if home directories are shared with WNs, else false
 required = no
 }
-variable CREAM_HOMEDIR_CLEANUP ?= if ( CE_SHARED_HOMES ) {
-                                    true;
-                                  } else {
-                                    false;
- 
-                                 };
+variable CREAM_HOMEDIR_CLEANUP ?= CE_SHARED_HOMES;
 include { if ( CREAM_HOMEDIR_CLEANUP ) 'personality/cream_ce/cleanup-accounts' };
 
 
@@ -254,7 +251,6 @@ variable CREAM_CE_CONFIG_CONTENTS=replace('CREAM_DB_PASSWORD_VALUE',CREAM_DB_PAS
 #------------------------------------------------------------------------------
 # CEMonitor configuration file
 #------------------------------------------------------------------------------
-
 include { if ( CEMON_ENABLED ) 'personality/cream_ce/cemonitor' };
 
 
@@ -263,47 +259,51 @@ include { if ( CEMON_ENABLED ) 'personality/cream_ce/cemonitor' };
 #------------------------------------------------------------------------------
 
 '/software/components/dirperm/paths' = {
-  # root
-  SELF[length(SELF)] = nlist('path', '/etc/grid-security/admin-list',
-                             'owner', 'root:root',
-                             'perm', '0644',
-                             'type', 'f',
-                            );
+    # root
+    append(nlist(
+        'path', '/etc/grid-security/admin-list',
+        'owner', 'root:root',
+        'perm', '0644',
+        'type', 'f',
+    ));
+    append(nlist(
+        'path', GLITE_LOCATION + '/sbin/JobDBAdminPurger.sh',
+        'owner', 'root:root',
+        'perm', '0700',
+        'type', 'f',
+    ));
 
-    SELF[length(SELF)] = nlist('path', GLITE_LOCATION + '/sbin/JobDBAdminPurger.sh',
-                               'owner', 'root:root',
-                               'perm', '0700',
-                               'type', 'f',
-                              );
-
-  # Tomcat
-  SELF[length(SELF)] = nlist('path',  CREAM_VAR_DIR,
-                             'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
-                             'perm', '0700',
-                             'type', 'd',
-                            );
-  SELF[length(SELF)] = nlist('path', CREAM_SANDBOX_DIR,
-                             'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
-                             'perm', '0755',
-                             'type', 'd',
-                            );
-  SELF[length(SELF)] = nlist('path', '/var/proxies',
-                             'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
-                             'perm', '0755',
-                             'type', 'd',
-                            );
-  SELF[length(SELF)] = nlist('path', CREAM_LOG_DIR,
-                             'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
-                             'perm', '0755',
-                             'type', 'd',
-                            );
-    SELF[length(SELF)] = nlist('path', GLITE_LOCATION + '/bin/glite_cream_load_monitor',
-                               'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
-                               'perm', '0700',
-                               'type', 'f',
-                              );
-
-  SELF;
+    # Tomcat
+    append(nlist(
+        'path',  CREAM_VAR_DIR,
+        'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
+        'perm', '0700',
+        'type', 'd',
+    ));
+    append(nlist(
+        'path', CREAM_SANDBOX_DIR,
+        'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
+        'perm', '0755',
+        'type', 'd',
+    ));
+    append(nlist(
+        'path', '/var/proxies',
+        'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
+        'perm', '0755',
+        'type', 'd',
+    ));
+    append(nlist(
+        'path', CREAM_LOG_DIR,
+        'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
+        'perm', '0755',
+        'type', 'd',
+    ));
+    append(nlist(
+        'path', GLITE_LOCATION + '/bin/glite_cream_load_monitor',
+        'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
+        'perm', '0700',
+        'type', 'f',
+    ));
 };
 
 
@@ -312,26 +312,21 @@ include { if ( CEMON_ENABLED ) 'personality/cream_ce/cemonitor' };
 #------------------------------------------------------------------------------
 
 "/software/components/symlink/links" = {
-  # CREAM web service dependencies
-  SELF[length(SELF)] =   nlist("name", CATALINA_HOME+"/common/lib/mysql-connector-java.jar",
-                               "target", "/usr/share/java/mysql-connector-java.jar",
-                               "replace", nlist("all","yes"),
-                               "exists", true,
-                              );
-  SELF[length(SELF)] =  nlist(
-                               "name",    CATALINA_HOME+"/lib/glite-lb-client-java.jar",
-                               "target",  "/usr/lib/java/glite-lb-client-java.jar",
-                               "replace", nlist("all","yes"),
-                               "exists",  true,
-                             );
-  SELF;
+    # CREAM web service dependencies
+    append(nlist(
+        "name", CATALINA_HOME+"/common/lib/mysql-connector-java.jar",
+        "target", "/usr/share/java/mysql-connector-java.jar",
+        "replace", nlist("all","yes"),
+        "exists", true,
+    ));
+    append(nlist(
+        "name",    CATALINA_HOME+"/lib/glite-lb-client-java.jar",
+        "target",  "/usr/lib/java/glite-lb-client-java.jar",
+        "replace", nlist("all","yes"),
+        "exists",  true,
+    ));
 };
 
-
-# Add tomcat user to glexec group
-"/software/components/accounts/users" = {
-  SELF;
-};
 
 variable TOMCAT_GLEXEC_WRAPPER_FILE = '/usr/share/'+TOMCAT_SERVICE+'/glexec-wrapper.sh';
 variable TOMCAT_GLEXEC_WRAPPER_CONTENTS = {
@@ -384,11 +379,6 @@ include {'components/filecopy/config'};
 # ownership.
 # With CREAM 1.6 and later, the top level directory must be created
 # as part of the configuration.
-
-"/software/components/accounts/users" = {
-  SELF;
-};
-
 "/software/components/dirperm/paths" = {
     foreach(k;vo;VOS) {
         append(nlist(
@@ -487,93 +477,54 @@ variable CREAM_CREAM_LOG4J_CONF = {
 variable SUDOERS_INCLUDE = "personality/cream_ce/sudoers";
 include { SUDOERS_INCLUDE };
 
-
-#------------------------------------------------------------------------------
-# Add a cron job to restart Tomcat everyday to ensure it is using the last CRL.
-#------------------------------------------------------------------------------
-variable CREAM_DAILY_RESTART ?= false;
-"/software/components/cron/entries" = {
-    if (is_boolean(CREAM_DAILY_RESTART) && CREAM_DAILY_RESTART) {
-        push(nlist(
-            "name","tomcat-restart",
-            "user","root",
-            "frequency", "AUTO 2 * * *",
-            "command", "PATH=/sbin:/bin:/usr/sbin:/usr/bin; " + '/sbin/service '+TOMCAT_SERVICE+' restart',
-        ));
-    } else {
-        SELF;
-    };
-};
-
-"/software/components/altlogrotate/entries" = {
-    if (is_boolean(CREAM_DAILY_RESTART) && CREAM_DAILY_RESTART) {
-        SELF['tomcat-restart'] = nlist(
-            "pattern", "/var/log/tomcat-restart.ncm-cron.log",
-            "compress", true,
-            "missingok", true,
-            "frequency", "monthly",
-            "create", true,
-            "ifempty", true,
-            "rotate", 1,
-        );
-    };
-    SELF;
-};
-
-
-#------------------------------------------------------------------------------
-# glexec fails if permissions are wrong, always run dirperm after spma
-#------------------------------------------------------------------------------
-# Chicken / Egg problem w/ SPMA if dirperm is a dependency
-#include { 'components/spma/config' };
-#'/software/components/spma/dependencies/post' = append('dirperm');
-
+#
+# Torque symlinks
+#
 variable TORQUE_COMMAND_LINKS ?= false;
 include { 'components/symlink/config' };
 "/software/components/symlink/links" = if (TORQUE_COMMAND_LINKS) {
-    SELF[length(SELF)] = nlist(
+    append(nlist(
         "name", "/usr/bin/qstat",
         "target", "/usr/bin/qstat-torque",
-        "replace", nlist("link","yes"),				
-        "exists", true,		
-    );
-    SELF[length(SELF)] = nlist(
+        "replace", nlist("link","yes"),
+        "exists", true,
+    ));
+    append(nlist(
         "name", "/usr/bin/qsub",
         "target", "/usr/bin/qsub-torque",
         "replace", nlist("link","yes"),
-        "exists", true,					
-    );
-    SELF[length(SELF)] = nlist(
+        "exists", true,
+    ));
+    append(nlist(
         "name", "/usr/bin/qhold",
         "target", "/usr/bin/qhold-torque",
         "replace", nlist("link","yes"),
-        "exists", true,		
-    );
-    SELF[length(SELF)] = nlist(
+        "exists", true,
+    ));
+    append(nlist(
         "name", "/usr/bin/qrls",
         "target", "/usr/bin/qrls-torque",
         "replace", nlist("link","yes"),
-        "exists", true,						
-    );
-    SELF[length(SELF)] = nlist(
+        "exists", true,
+    ));
+    append(nlist(
         "name", "/usr/bin/qalter",
         "target", "/usr/bin/qalter-torque",
         "replace", nlist("link","yes"),
-        "exists", true,						
-    );
-    SELF[length(SELF)] = nlist(
+        "exists", true,
+    ));
+    append(nlist(
         "name", "/usr/bin/qselect",
         "target", "/usr/bin/qselect-torque",
         "replace", nlist("link","yes"),
-        "exists", true,						
-    );
-    SELF[length(SELF)] = nlist(
+        "exists", true,
+    ));
+    append(nlist(
         "name", "/usr/bin/qdel",
         "target", "/usr/bin/qdel-torque",
         "replace", nlist("link","yes"),
-        "exists", true,						
-    );
-    SELF;
+        "exists", true,
+    ));
 } else {
     SELF;
 };
