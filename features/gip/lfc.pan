@@ -90,8 +90,3 @@ variable LFC_LOCAL_VOS_OPTION = {
 
   SELF;
 };
-
-
-# Configure provider to return gLite version used by the service
-include { 'features/gip/glite-version' };
-
