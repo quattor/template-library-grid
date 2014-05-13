@@ -7,16 +7,16 @@ template personality/cream_ce/config;
 "/software/components/glitestartup/configFile" = "/etc/gLiteservices";
 "/software/components/glitestartup/restartEnv" = list("/etc/profile.d/env.sh","/etc/profile.d/grid-env.sh");
 "/software/components/glitestartup/scriptPaths" = list("/etc/init.d");
-'/software/components/glitestartup/active'      = false;
+'/software/components/glitestartup/active' = false;
 
 variable GLOBUS_GRIDFTP_CFGFILE ?= "/usr/etc/gridftp.conf";
 '/software/components/profile' = component_profile_add_env(
-  GLITE_GRID_ENV_PROFILE, nlist(
-    'GLITE_USER', 'glite',
-    'GLITE_HOST_CERT', '/home/glite/.certs/hostcert.pem',
-    'GLITE_HOST_KEY', '/home/glite/.certs/hostkey.pem',
-));
-
+    GLITE_GRID_ENV_PROFILE, nlist(
+        'GLITE_USER', 'glite',
+        'GLITE_HOST_CERT', '/home/glite/.certs/hostcert.pem',
+        'GLITE_HOST_KEY', '/home/glite/.certs/hostkey.pem',
+    ),
+);
 
 
 "/software/components/symlink/links" = {
@@ -148,31 +148,31 @@ include { 'components/mysql/config' };
 
 # Configure MySQL databases for CREAM CE
 '/software/components/mysql/servers/' = {
-  SELF[CREAM_MYSQL_SERVER]['adminuser'] = CREAM_MYSQL_ADMINUSER;
-  SELF[CREAM_MYSQL_SERVER]['adminpwd'] = CREAM_MYSQL_ADMINPWD;
-  SELF;
+    SELF[CREAM_MYSQL_SERVER]['adminuser'] = CREAM_MYSQL_ADMINUSER;
+    SELF[CREAM_MYSQL_SERVER]['adminpwd'] = CREAM_MYSQL_ADMINPWD;
+    SELF;
 };
 
 '/software/components/mysql/databases/' = {
-  SELF[CREAM_DB_NAME]['server'] = CREAM_MYSQL_SERVER;
-  SELF[CREAM_DB_NAME]['initScript']['file'] = CREAM_DB_INIT_SCRIPT;
-  SELF[CREAM_DB_NAME]['initOnce'] = true;
-  SELF[CREAM_DB_NAME]['users'][CREAM_DB_USER] = nlist('password', CREAM_DB_PASSWORD,
-                                                'rights', list('ALL PRIVILEGES'),
-                                               );
-
-  SELF;
+    SELF[CREAM_DB_NAME]['server'] = CREAM_MYSQL_SERVER;
+    SELF[CREAM_DB_NAME]['initScript']['file'] = CREAM_DB_INIT_SCRIPT;
+    SELF[CREAM_DB_NAME]['initOnce'] = true;
+    SELF[CREAM_DB_NAME]['users'][CREAM_DB_USER] = nlist(
+        'password', CREAM_DB_PASSWORD,
+        'rights', list('ALL PRIVILEGES'),
+    );
+    SELF;
 };
 
 '/software/components/mysql/databases/' = {
-  SELF[DLG_DB_NAME]['server'] = CREAM_MYSQL_SERVER;
-  SELF[DLG_DB_NAME]['initScript']['file'] = DLG_DB_INIT_SCRIPT;
-  SELF[DLG_DB_NAME]['initOnce'] = true;
-  SELF[DLG_DB_NAME]['users'][CREAM_DB_USER] = nlist('password', CREAM_DB_PASSWORD,
-                                                'rights', list('ALL PRIVILEGES'),
-                                               );
-
-  SELF;
+    SELF[DLG_DB_NAME]['server'] = CREAM_MYSQL_SERVER;
+    SELF[DLG_DB_NAME]['initScript']['file'] = DLG_DB_INIT_SCRIPT;
+    SELF[DLG_DB_NAME]['initOnce'] = true;
+    SELF[DLG_DB_NAME]['users'][CREAM_DB_USER] = nlist(
+        'password', CREAM_DB_PASSWORD,
+        'rights', list('ALL PRIVILEGES'),
+    );
+    SELF;
 };
 
 # Add a script for updating the database if necessary
@@ -202,32 +202,30 @@ variable CREAM_CE_CONFIG = '/etc/glite-ce-cream/cream-config.xml';
 
 variable CREAM_CE_CONFIG_CONTENTS=file_contents('personality/cream_ce/templates/cream-config.templ');
 
-variable CEMON_URL={
-	if( CEMON_ENABLED )
-	{
-		return("https://' + to_string(CEMON_HOST) + ':' + to_string(CEMON_PORT) + '/ce-monitor/services/CEMonitor");
-	}else{
-	return("NA");
-	};
+variable CEMON_URL = {
+    if (CEMON_ENABLED) {
+        "https://' + to_string(CEMON_HOST) + ':' + to_string(CEMON_PORT) + '/ce-monitor/services/CEMonitor";
+    } else {
+        "NA";
+    };
 };
 
 variable CREAM_CE_CONFIG_CONTENTS=replace('CEMON_URL_VALUE',CEMON_URL,CREAM_CE_CONFIG_CONTENTS);
 
-variable CEMON_ENABLED_PART={
-	    contents = '    <parameter name="CREAM_JOB_SENSOR_HOST" value="' + to_string(CEMON_HOST) + '" />' + "\n";
-	    contents = contents + '    <parameter name="CREAM_JOB_SENSOR_PORT" value="9909" />' + "\n";
-	    return(contents);
+variable CEMON_ENABLED_PART = {
+    contents = '    <parameter name="CREAM_JOB_SENSOR_HOST" value="' + to_string(CEMON_HOST) + '" />' + "\n";
+    contents = contents + '    <parameter name="CREAM_JOB_SENSOR_PORT" value="9909" />' + "\n";
+    contents;
 };
 
-variable CREAM_CE_CONFIG_CONTENTS={
-	if( CEMON_ENABLED )
-        {
-		replace('CEMON_ENABLED_PART',CEMON_ENABLED_PART,CREAM_CE_CONFIG_CONTENTS);
-	}else{
-		replace('CEMON_ENABLED_PART','',CREAM_CE_CONFIG_CONTENTS);
-	};	
+variable CREAM_CE_CONFIG_CONTENTS = {
+    if (CEMON_ENABLED) {
+        replace('CEMON_ENABLED_PART',CEMON_ENABLED_PART,CREAM_CE_CONFIG_CONTENTS);
+    } else {
+        replace('CEMON_ENABLED_PART','',CREAM_CE_CONFIG_CONTENTS);
+    };
 };
-		
+
 variable CREAM_CE_CONFIG_CONTENTS=replace('CREAM_DB_VERSION_VALUE',CREAM_DB_VERSION,CREAM_CE_CONFIG_CONTENTS);
 variable CREAM_CE_CONFIG_CONTENTS=replace('CREAM_VAR_DIR_VALUE',CREAM_VAR_DIR,CREAM_CE_CONFIG_CONTENTS);
 variable CREAM_CE_CONFIG_CONTENTS=replace('CREAM_SANDBOX_DIR_VALUE',CREAM_SANDBOX_DIR,CREAM_CE_CONFIG_CONTENTS);
@@ -244,15 +242,14 @@ variable CREAM_CE_CONFIG_CONTENTS=replace('CREAM_DB_USER_VALUE',CREAM_DB_USER,CR
 variable CREAM_CE_CONFIG_CONTENTS=replace('CREAM_DB_PASSWORD_VALUE',CREAM_DB_PASSWORD,CREAM_CE_CONFIG_CONTENTS);
 
 
-
-"/software/components/filecopy/services" =
-  npush(escape(CREAM_CE_CONFIG),
-        nlist("config",CREAM_CE_CONFIG_CONTENTS,
-              "owner","root",
-              "perms","0644",
-              "restart", "/sbin/service "+TOMCAT_SERVICE+" restart",
-        )
-  );
+"/software/components/filecopy/services" = npush(
+    escape(CREAM_CE_CONFIG), nlist(
+        "config",CREAM_CE_CONFIG_CONTENTS,
+        "owner","root",
+        "perms","0644",
+        "restart", "/sbin/service "+TOMCAT_SERVICE+" restart",
+    ),
+);
 
 #------------------------------------------------------------------------------
 # CEMonitor configuration file
@@ -338,10 +335,9 @@ include { if ( CEMON_ENABLED ) 'personality/cream_ce/cemonitor' };
 
 variable TOMCAT_GLEXEC_WRAPPER_FILE = '/usr/share/'+TOMCAT_SERVICE+'/glexec-wrapper.sh';
 variable TOMCAT_GLEXEC_WRAPPER_CONTENTS = {
-  contents = "#!/bin/sh\n";
-  contents = contents + "/usr/sbin/glexec $@\n";
-
-  contents;
+    contents = "#!/bin/sh\n";
+    contents = contents + "/usr/sbin/glexec $@\n";
+    contents;
 };
 
 "/software/components/filecopy/services" =
@@ -395,42 +391,46 @@ include {'components/filecopy/config'};
 
 "/software/components/dirperm/paths" = {
     foreach(k;vo;VOS) {
-      SELF[length(SELF)] = nlist('path',CREAM_SANDBOX_DIR+'/'+vo,
-                                 'owner',TOMCAT_USER+':'+VO_INFO[vo]['group'],
-                                 'perm','0770',
-                                 'type','d'
-                                );
+        append(nlist(
+            'path',CREAM_SANDBOX_DIR+'/'+vo,
+            'owner',TOMCAT_USER+':'+VO_INFO[vo]['group'],
+            'perm','0770',
+            'type','d'
+        ));
     };
     #create secondary groups sandbox dir, if those groups are used as primary  groups
-    if(is_defined(VO_FQAN_POOL_ACCOUNTS_USE_FQAN_GROUP) && VO_FQAN_POOL_ACCOUNTS_USE_FQAN_GROUP) {
-    	foreach(k;vo;VOS) {
-    		if(is_defined(VO_INFO[vo]['accounts']['groups'])) {
-	    		foreach(group;gid;VO_INFO[vo]['accounts']['groups']) {
-	      			SELF[length(SELF)] = nlist('path',CREAM_SANDBOX_DIR+'/'+group,
-	                                 'owner',TOMCAT_USER+':'+group,
-	                                 'perm','0770',
-	                                 'type','d'
-	                                );
-				};
-			};
-    	};	
+    if (is_defined(VO_FQAN_POOL_ACCOUNTS_USE_FQAN_GROUP) && VO_FQAN_POOL_ACCOUNTS_USE_FQAN_GROUP) {
+        foreach(k;vo;VOS) {
+            if (is_defined(VO_INFO[vo]['accounts']['groups'])) {
+                foreach(group;gid;VO_INFO[vo]['accounts']['groups']) {
+                    append(nlist(
+                        'path',CREAM_SANDBOX_DIR+'/'+group,
+                        'owner',TOMCAT_USER+':'+group,
+                        'perm','0770',
+                        'type','d'
+                    ));
+                };
+            };
+        };
     };
-  SELF;
+    SELF;
 };
 
 # Do a copy of machine cert/key for Tomcat usage
 '/software/components/filecopy/services' = {
-  SELF[escape(TOMCAT_HOST_KEY)] = nlist('source', SITE_DEF_HOST_KEY,
-                                        'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
-                                        'perms', '0400',
-                                        'restart', '/sbin/service '+TOMCAT_SERVICE+' restart',
-                                       );
-  SELF[escape(TOMCAT_HOST_CERT)] = nlist('source', SITE_DEF_HOST_CERT,
-                                         'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
-                                         'perms', '0400',
-                                         'restart', '/sbin/service '+TOMCAT_SERVICE+' restart',
-                                        );
-  SELF;
+    SELF[escape(TOMCAT_HOST_KEY)] = nlist(
+        'source', SITE_DEF_HOST_KEY,
+        'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
+        'perms', '0400',
+        'restart', '/sbin/service '+TOMCAT_SERVICE+' restart',
+    );
+    SELF[escape(TOMCAT_HOST_CERT)] = nlist(
+        'source', SITE_DEF_HOST_CERT,
+        'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
+        'perms', '0400',
+        'restart', '/sbin/service '+TOMCAT_SERVICE+' restart',
+    );
+    SELF;
 };
 
 
@@ -460,32 +460,31 @@ variable CREAM_TRUSTMANAGER_LOG4J_CONF = {
 };
 
 variable CREAM_CREAM_LOG4J_CONF = {
-  root_logger = create('features/tomcat/root-logger');
-  app_logger = create('personality/cream_ce/ce-cream-logger');
-  app_logger['conf'] = replace('%%LOGFILE%%',
-                               CREAM_LOG_DIR+'/glite-ce-cream.log',
-                               app_logger['conf']
-                              );
-  config = root_logger['conf'] + "\n" + app_logger['conf'];
-  config;
+    root_logger = create('features/tomcat/root-logger');
+    app_logger = create('personality/cream_ce/ce-cream-logger');
+    app_logger['conf'] = replace(
+        '%%LOGFILE%%',
+        CREAM_LOG_DIR+'/glite-ce-cream.log',
+        app_logger['conf']
+    );
+    config = root_logger['conf'] + "\n" + app_logger['conf'];
+    config;
 };
 '/software/components/filecopy/services' = {
-  SELF[escape(CREAM_CREAM_LOG4J_CONF_FILE)] = nlist('config', CREAM_CREAM_LOG4J_CONF,
-                                                      'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
-                                                      'restart', '/sbin/service '+TOMCAT_SERVICE+' restart',
-                                                     );
-  SELF;
+    SELF[escape(CREAM_CREAM_LOG4J_CONF_FILE)] = nlist(
+        'config', CREAM_CREAM_LOG4J_CONF,
+        'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
+        'restart', '/sbin/service '+TOMCAT_SERVICE+' restart',
+    );
+    SELF;
 };
 
 
 #------------------------------------------------------------------------------
-# Configure sudo 
+# Configure sudo
 #------------------------------------------------------------------------------
 
-variable SUDOERS_INCLUDE = {
-    "personality/cream_ce/sudoers";
-};
-
+variable SUDOERS_INCLUDE = "personality/cream_ce/sudoers";
 include { SUDOERS_INCLUDE };
 
 
