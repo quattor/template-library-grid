@@ -20,15 +20,22 @@ variable GLOBUS_GRIDFTP_CFGFILE ?= "/usr/etc/gridftp.conf";
 
 
 "/software/components/symlink/links" = {
-  SELF[length(SELF)] =   nlist("name", "/usr/var/lib/trustmanager-tomcat",
-                               "target", "/var/lib/trustmanager-tomcat",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF[length(SELF)] =   nlist("name", "/usr/share/tomcat6/lib/canl.jar",
-                               "target", "/usr/share/java/canl.jar",
-                               "replace", nlist("all","yes"),
-                              );
-  SELF;
+    append(nlist(
+        "name", "/usr/share/tomcat6/lib/canl.jar",
+        "target", "/usr/share/java/canl.jar",
+        "replace", nlist("all", "yes"),
+    ));
+    append(nlist(
+        "name", "/usr/share/tomcat6/lib/canl-java-tomcat.jar",
+        "target", "/usr/share/java/canl-java-tomcat.jar",
+        "replace", nlist("all", "yes"),
+    ));
+    append(nlist(
+        "name", "/usr/share/tomcat6/lib/commons-io.jar",
+        "target", "/usr/share/java/commons-io.jar",
+        "replace", nlist("all", "yes"),
+    ));
+    SELF;
 };
 
 
@@ -121,11 +128,8 @@ variable CREAM_DELEGATION_PURGE_RATE ?= 720;
 variable CREAM_CREAM_APP_NAME ?= 'ce-cream';
 
 # log4j configuration files.
-# Use a non standard name for Trustmanager to avoid conflict with the
-# standard one (incomplete)
-variable CREAM_TRUSTMANAGER_LOG4J_CONF_FILE = '/var/lib/trustmanager-tomcat/log4j-trustmanager.properties'; 
-variable CREAM_CREAM_LOG4J_CONF_FILE = EMI_LOCATION + '/etc/glite-ce-cream/log4j.properties';               
- 
+variable CREAM_CREAM_LOG4J_CONF_FILE = EMI_LOCATION + '/etc/glite-ce-cream/log4j.properties';
+
 # BasicDataSourceFactory class name
 variable CREAM_DATA_SOURCE_FACTORY_CLASS ?= 'org.apache.commons.dbcp.BasicDataSourceFactory';
 
@@ -335,43 +339,49 @@ variable TOMCAT_GLEXEC_WRAPPER_CONTENTS = {
     contents;
 };
 
-"/software/components/filecopy/services" =
-  npush(escape(TOMCAT_GLEXEC_WRAPPER_FILE),
-        nlist("config",TOMCAT_GLEXEC_WRAPPER_CONTENTS,
-              "owner","root",
-              "perms","0644",
-       )
-  );
-
-variable CREAM_TRUSTMANAGER_CONFIG = 'trustmanager-tomcat.SSLTRUSTDIR = '+SITE_DEF_CERTDIR+"\n";
-variable CREAM_TRUSTMANAGER_CONFIG = CREAM_TRUSTMANAGER_CONFIG + 'trustmanager-tomcat.SSLKEY = '+TOMCAT_HOST_KEY+"\n";
-variable CREAM_TRUSTMANAGER_CONFIG = CREAM_TRUSTMANAGER_CONFIG + 'trustmanager-tomcat.SSLCERTFILE = '+TOMCAT_HOST_CERT+"\n";
-variable CREAM_TRUSTMANAGER_CONFIG = CREAM_TRUSTMANAGER_CONFIG + 'trustmanager-tomcat.LOG4JCONF = '+
-                                                                               CREAM_TRUSTMANAGER_LOG4J_CONF_FILE+"\n";
-variable CREAM_TRUSTMANAGER_CONFIG = CREAM_TRUSTMANAGER_CONFIG + 'trustmanager-tomcat.PORT = '+to_string(CEMON_PORT)+"\n";
-include {'components/filecopy/config'};
 "/software/components/filecopy/services" = npush(
-
-  escape("/var/lib/trustmanager-tomcat/config.properties"), nlist("config",    CREAM_TRUSTMANAGER_CONFIG,
-                                           "restart","/var/lib/trustmanager-tomcat/configure.sh /; /sbin/service "+TOMCAT_SERVICE+" restart"),  
+    escape(TOMCAT_GLEXEC_WRAPPER_FILE), nlist(
+        "config",TOMCAT_GLEXEC_WRAPPER_CONTENTS,
+        "owner","root",
+        "perms","0644",
+    )
 );
 
-# Ensure Tomcat5 server.xml is matching the one needed for the CREAM CE
-# as it may be overwritten by a RPM update. It is originally created by
-# configure.sh that is run only if config.properties is modified. Rerun
-# the same command if it not matching the expected one. Be sure to use
-# the same command to execute it once whatever the number of modified
-# files.
 
-
-
-'/software/components/filecopy/services' = npush(
-	escape('/etc/'+TOMCAT_SERVICE+'/server.xml'), nlist('source','/var/lib/trustmanager-tomcat/server.xml',
-                                                 'owner', TOMCAT_USER+':root',
-                                                 'perms','0644',
-                                                 "restart","/var/lib/trustmanager-tomcat/configure.sh /usr; /sbin/service "+TOMCAT_SERVICE+" restart",
-         )
+# Configure /etc/tomcat6/server.xml
+variable CRL_UPDATE_MILLIS ?= '3600000';
+'/software/components/filecopy/services/{/etc/tomcat6/server.xml}' = {
+    contents = <<EOT;
+<Server port="8005" shutdown="SHUTDOWN">
+  <Service name="Catalina">
+    <Connector port="8443" SSLEnabled="true"
+               maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+               enableLookups="false" disableUploadTimeout="true"
+               acceptCount="100" debug="0" scheme="https" secure="true"
+               sSLImplementation="eu.emi.security.canl.tomcat.CANLSSLImplementation"
+               truststore="X509_CERT_DIR"
+               hostcert="TOMCAT_HOSTCERT_LOCATION"
+               hostkey="TOMCAT_HOSTKEY_LOCATION"
+               updateinterval="CRL_UPDATE_MILLIS"
+               clientAuth="true" sslProtocol="TLS" 
+               crlcheckingmode="require"/>
+    <Engine name="Catalina" defaultHost="localhost">
+      <Host name="localhost" appBase="webapps" />
+    </Engine>
+  </Service>
+</Server>
+EOT
+    contents = replace('X509_CERT_DIR', SITE_DEF_CERTDIR, contents);
+    contents = replace('TOMCAT_HOSTCERT_LOCATION', TOMCAT_HOST_CERT, contents);
+    contents = replace('TOMCAT_HOSTKEY_LOCATION', TOMCAT_HOST_KEY, contents);
+    contents = replace('CRL_UPDATE_MILLIS', CRL_UPDATE_MILLIS, contents);
+    nlist(
+        'config', contents,
+        'owner', TOMCAT_USER+':root',
+        'perms', '0644',
+        "restart", "/sbin/service " + TOMCAT_SERVICE + " restart",
     );
+};
 
 # Configure per-VO sandbox directories.
 # Prior to CREAM 1.6, directory is created by the CE and thus tomcat
@@ -423,31 +433,6 @@ include {'components/filecopy/config'};
     SELF;
 };
 
-
-# Define log4j configuration for CREAM CE (default one is invalid).
-# This includes glite-security-trustmanager
-# Define log4j main logger configuration.
-# Ignored if log4j is not used.
-include { 'components/filecopy/config' };
-
-
-variable CREAM_TRUSTMANAGER_LOG4J_CONF = {
-  root_logger = create('features/tomcat/root-logger');
-  app_logger = create('personality/cream_ce/trustmanager-logger');
-  app_logger['conf'] = replace('%%LOGFILE%%',
-                               CREAM_LOG_DIR+'/trustmanager-tomcat.log',
-                               app_logger['conf']
-                              );
-  config = root_logger['conf'] + "\n" + app_logger['conf'];
-  config;
-};
-'/software/components/filecopy/services' = {
-  SELF[escape(CREAM_TRUSTMANAGER_LOG4J_CONF_FILE)] = nlist('config', CREAM_TRUSTMANAGER_LOG4J_CONF,
-                                                             'owner', TOMCAT_USER+':'+TOMCAT_GROUP,
-                                                             'restart', '/sbin/service '+TOMCAT_SERVICE+' restart',
-                                                            );
-  SELF;
-};
 
 variable CREAM_CREAM_LOG4J_CONF = {
     root_logger = create('features/tomcat/root-logger');
