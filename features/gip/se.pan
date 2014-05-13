@@ -295,8 +295,3 @@ include { GIP_DYNAMIC_SE_PROVIDER_TEMPLATE };
 
   SELF;
 };
-
-
-# Configure provider to return gLite version used by the service
-include { 'features/gip/glite-version' };
-

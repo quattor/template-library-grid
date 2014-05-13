@@ -44,6 +44,3 @@ variable GIP_PROVIDER_WRAPPER_LB ?= 'glite-info-service-lbserver';
 
     SELF;
 };
-
-# Configure provider to return gLite version used by the service
-include { 'features/gip/glite-version' };
