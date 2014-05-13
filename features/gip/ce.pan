@@ -1,19 +1,13 @@
 unique template features/gip/ce;
 
 prefix '/software/packages';
-'{lcg-info-dynamic-maui}'          = nlist();
-'{lcg-info-dynamic-scheduler-pbs}' = nlist();
-'{bdii}'                           = nlist();
+'{bdii}' ?= nlist();
+'{glite-ce-cream-utils}' ?= nlist();
+'{glite-info-provider-service}' ?= nlist();
+'{lcg-info-dynamic-maui}' ?= nlist();
+'{lcg-info-dynamic-scheduler-pbs}' ?= nlist();
 
 '/software/components/gip2/staticInfoCmd' = '/usr/sbin/glite-info-static-create';
-
-"/software/components/symlink/links" = {
-  SELF[length(SELF)] =   nlist("name", "/opt/lcg/lib/python",
-                               "target", "/usr/lib/python",
-                               "replace", nlist("all","yes"),
-                              );  
-  SELF;
-};
 
 include { 'components/filecopy/config' };
 '/software/components/filecopy/services/{/usr/sbin/glite-info-static-create}'=
@@ -340,7 +334,7 @@ variable GIP_CE_PLUGIN_COMMAND = {
             if ( is_defined(LRMS_SERVER_HOST) ) {
                 contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-pbs " + GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif "+LRMS_SERVER_HOST+"\n";
             } else {
-      	        contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-pbs " + GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif "+CE_HOST+"\n";  
+                contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-pbs " + GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif "+CE_HOST+"\n";  
             };
         };
       } else {
@@ -409,7 +403,7 @@ variable GIP_CE_VOMAP ?= {
           ldif_file_glue2 = GIP_VAR_DIR + "/static-file-all-CE-pbs-glue2.ldif\n";
         } else {
           ldif_file = GIP_LDIF_DIR + "/static-file-CE-pbs.ldif\n";
-          ldif_file_glue2 = GIP_VAR_DIR + "/static-file-CE-pbs-glue2.ldif\n";
+          ldif_file_glue2 = GIP_LDIF_DIR + "/static-file-CE-pbs-glue2.ldif\n";
         };
         contents = 
           "[Main]\n" + 
@@ -456,11 +450,13 @@ variable GIP_CE_VOMAP ?= {
 
 # Plugin for software tags.
 "/software/components/gip2/plugin" = {
-  SELF['lcg-info-dynamic-software-wrapper'] = "#!/bin/sh\n" + 
-                                              LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-software "+
-                                              GIP_LDIF_DIR + "/static-file-Cluster.ldif\n";
-
-  SELF;
+    if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {
+        this = "#!/bin/sh\n";
+        this = this + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-software ";
+        this = this + GIP_LDIF_DIR + "/static-file-Cluster.ldif\n";
+        SELF['lcg-info-dynamic-software-wrapper'] = this;
+    };
+    SELF;
 };
 
 
@@ -676,7 +672,7 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'features/gip/mpi' 
             merge(nlist(
                         'objectClass', list('GlueCETop','GlueVOView','GlueCEInfo','GlueCEState','GlueCEAccessControlBase','GlueCEPolicy',
                                            'GlueKey','GlueSchemaVersion'),
-                        'GlueVOViewLocalId',                list(vo_name),
+                        'GlueVOViewLocalID',                list(vo_name),
                         'GlueSchemaVersionMajor',           list('1'),
                         'GlueSchemaVersionMinor',           list('3'),
                         'GlueCEAccessControlBaseRule',      list(rule),
@@ -756,18 +752,18 @@ include { if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) 'features/gip/mpi' 
                  
     # Create all needed LDIF files
     foreach (lrms;entries;host_entries) {
-      conf_file = "lcg-info-static-ce-"+lrms+".conf";
-      SELF[conf_file] = nlist();
-      SELF[conf_file]['template'] = GIP_GLUE_TEMPLATES_DIR + "/GlueCE.template";
-      SELF[conf_file]['ldifFile'] = "static-file-CE-"+lrms+".ldif";
-      SELF[conf_file]['entries'] = entries;
+        conf_file = "lcg-info-static-ce-"+lrms+".conf";
+        SELF[conf_file] = nlist();
+        SELF[conf_file]['template'] = GIP_GLUE_TEMPLATES_DIR + "/GlueCE.template";
+        SELF[conf_file]['ldifFile'] = "static-file-CE-"+lrms+".ldif";
+        SELF[conf_file]['entries'] = entries;
     };
     foreach (lrms;entries;all_ce_entries) {
-      conf_file = "lcg-info-static-all-ce-"+lrms+".conf";
-      SELF[conf_file] = nlist();
-      SELF[conf_file]['template'] = GIP_GLUE_TEMPLATES_DIR + "/GlueCE.template";
-      SELF[conf_file]['ldifFile'] = "static-file-all-CE-"+lrms+".ldif";
-      SELF[conf_file]['entries'] = entries;
+        conf_file = "lcg-info-static-all-CE-"+lrms+".conf";
+        SELF[conf_file] = nlist();
+        SELF[conf_file]['template'] = GIP_GLUE_TEMPLATES_DIR + "/GlueCE.template";
+        SELF[conf_file]['ldifFile'] = "static-file-all-CE-"+lrms+".ldif";
+        SELF[conf_file]['entries'] = entries;
     };
 
   };
@@ -982,35 +978,51 @@ include { 'components/filecopy/config' };
 
 
 include { 'components/symlink/config' };
-
-'/software/components/symlink/links'=push(
-  nlist(
-    "name", "/opt/glite/var/info/"+LRMS_SERVER_HOST,
-    "target", "/var/glite/info",
-    "replace",  nlist("all","yes","link", "yes")
-  )
-);
+'/software/components/symlink/links' = {
+    append(nlist(
+        "name", "/opt/lcg/lib/python",
+        "target", "/usr/lib/python",
+        "replace", nlist("all", "yes"),
+    ));
+    append(nlist(
+        "name", "/opt/glite/var/info/"+LRMS_SERVER_HOST,
+        "target", "/var/glite/info",
+        "replace",  nlist("all","yes","link", "yes")
+    ));
+    if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST  && GIP_CE_USE_CACHE ) {
+        append(nlist(
+            "name", GIP_VAR_DIR + '/static-file-all-CE-pbs.ldif',
+            "target", GIP_LDIF_DIR + '/static-file-all-CE-pbs.ldif',
+            "replace", nlist("all", "yes"),
+        ));
+    };
+    SELF;
+};
 
 include { 'components/dirperm/config' };
-
-'/software/components/dirperm/paths' = push(
-  nlist('owner','ldap:ldap',
+'/software/components/dirperm/paths' = {
+    append(nlist(
+        'owner','ldap:ldap',
         'path', '/var/lib/bdii/db/grid',
         'perm', '0755',
-        'type','d'),
-  nlist('owner','ldap:ldap',
+        'type', 'd',
+    ));
+    append(nlist(
+        'owner','ldap:ldap',
         'path', '/var/lib/bdii/db/glue',
         'perm','0755',
-        'type','d'),
-  nlist('owner','ldap:ldap',
+        'type','d',
+    ));
+    append(nlist(
+        'owner','ldap:ldap',
         'path','/var/lib/bdii/db/stats',
         'perm','0755',
-        'type','d')
-);
-
-'/software/components/dirperm/paths' = append(nlist(
-    'owner', 'root:root',
-    'path', '/var/tmp/info-dynamic-scheduler-generic',
-    'perm', '0755',
-    'type', 'd',
-));
+        'type','d',
+    ));
+    append(nlist(
+        'owner', 'root:root',
+        'path', '/var/tmp/info-dynamic-scheduler-generic',
+        'perm', '0755',
+        'type', 'd',
+    ));
+};
