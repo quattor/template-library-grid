@@ -45,7 +45,3 @@ variable GIP_PROVIDER_WRAPPER_WMS ?= 'glite-info-service-wmproxy';
 
     SELF;
 };
-
-
-# Configure provider to return gLite version used by the service
-include { 'features/gip/glite-version' };
