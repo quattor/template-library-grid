@@ -23,29 +23,35 @@ include { 'users/glite' };
   SELF;
 };
 
-# Add glite-lb-locallogger to chkconfig
 
-include { 'components/chkconfig/config' };
+# Configure glitestartup as a post-dependency for filecopy
+include { 'components/filecopy/config' };
+'/software/components/filecopy/dependencies/post' = push('glitestartup');
 
-prefix '/software/components/chkconfig';
+# Add locallogger service to the list of gLite enabled services
+include { 'components/glitestartup/config' };
 
-'service' = {
-  SELF[LOCALLOGGER_SERVICE] = nlist('on','',
-                                   'startstop',true);
-  SELF;
-};
+'/software/components/glitestartup/restartServices' = true;
+'/software/components/glitestartup/createProxy' = true;
+'/software/components/glitestartup/services' = glitestartup_mod_service(LOCALLOGGER_SERVICE);
 
-# Fix /var/run/glite ownership
 
-include { 'components/dirperm/config' };
+# Workaround for bug 22389
+include { 'components/cron/config' };
+"/software/components/cron/entries" =
+  push(nlist(
+    "name", "localloger",
+    "user", "root",
+    "frequency", "0 */6 * * *",
+    "command", "touch " + GLITE_USER_HOME + "/.certs/hostcert.pem",
+  ));
 
-prefix '/software/components/dirperm';
-
-'paths' = append(
-  nlist(
-    'owner','glite:glite',
-    'path', '/var/run/glite',
-    'perm', '0755',
-    'type', 'd',
-  )
-);
+include { 'components/altlogrotate/config' };
+"/software/components/altlogrotate/entries/locallogger" =
+  nlist("pattern", "/var/log/localloger.ncm-cron.log",
+        "compress", true,
+        "missingok", true,
+        "frequency", "weekly",
+        "create", true,
+        "ifempty", true,
+        "rotate", 4);

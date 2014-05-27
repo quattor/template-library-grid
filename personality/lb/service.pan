@@ -4,7 +4,6 @@ unique template personality/lb/service;
 variable CONDOR_VERSION ?= "6.8.4";
 variable GLITE_VO_STYLE = true;
 variable LCMAPS_FLAVOR = 'glite';
-variable WMS_FLAVOR = 'glite';
 
 
 # Add site specific configuration, if any

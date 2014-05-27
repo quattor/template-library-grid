@@ -18,7 +18,7 @@ variable VOMS_LSC_FILE ?= true;
 
 #
 # Virtual organization configuration options.
-# Must be done before calling machine-types/grid/base
+# Must be done before calling machine-types/base
 #
 variable CONFIGURE_VOS = true;
 variable NODE_VO_ACCOUNTS =true;
@@ -26,7 +26,7 @@ variable CREATE_HOME = false;
 variable NODE_VO_GRIDMAPDIR_CONFIG ?= true;
 
 #
-# Include base configuration of a LCG2 node
+# Include base configuration
 #
 include { 'machine-types/grid/base' };
 
@@ -38,12 +38,13 @@ include { 'personality/wms/service' };
 
 
 #
-# middleware updates
+# gLite updates
 #
 include { if_exists('update/config') };
 
 
-# Do any final configuration needed for some reasons (e.g. : run gLite4 on SL4)
+# Do any final configuration needed for some reasons
 # Should be done at the very end of machine configuration
 #
-include { if_exists(GLITE_OS_POSTCONFIG) };
+include { return(GLITE_OS_POSTCONFIG) };
+

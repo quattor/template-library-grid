@@ -22,7 +22,7 @@ variable CREATE_HOME = false;
 variable NODE_VO_GRIDMAPDIR_CONFIG ?= true;
 
 #
-# Include base configuration of a LCG2 node
+# Include base configuration of a grid node
 #
 include { 'machine-types/grid/base' };
 
@@ -39,7 +39,7 @@ include { 'personality/lb/service' };
 include { if_exists('update/config') };
 
 
-# Do any final configuration needed for some reasons (e.g. : run gLite4 on SL4)
+# Do any final configuration needed for some reasons
 # Should be done at the very end of machine configuration
 #
 include { if_exists(GLITE_OS_POSTCONFIG) };
