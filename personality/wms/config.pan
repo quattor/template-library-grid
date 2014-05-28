@@ -525,12 +525,12 @@ include { 'components/dirperm/config' };
 # Fix some issues with hard-coded repositories
 include { 'components/symlink/config' };
 "/software/components/symlink/links" = {
-  SELF[length(SELF)] =   nlist("name", "/var/wmproxy",
-                               "target", "/var/glite/wmproxy",
+  SELF[length(SELF)] =   nlist("name", "/var/glite/wmproxy",
+                               "target", "/var/wmproxy",
                                "replace", nlist("all","yes"),
                               );
-  SELF[length(SELF)] =   nlist("name", "/var/spool/glite-renewd",
-                               "target", "/var/glite/spool/glite-renewd",
+  SELF[length(SELF)] =   nlist("name", "/var/glite/spool/glite-renewd",
+                               "target", "/var/spool/glite-renewd",
                                "replace", nlist("all","yes"),
                               );
   SELF;
