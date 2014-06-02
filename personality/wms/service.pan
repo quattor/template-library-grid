@@ -6,7 +6,6 @@ variable EMI_GROUP ?= "glite";
 
 variable EMI_VO_STYLE = true;
 variable LCMAPS_FLAVOR = 'glite';
-variable WMS_FLAVOR = 'glite';
 
 # Use Google TCMalloc instead of standard Malloc in WM.
 # Default is true as with standard malloc WM easily reach the 4 GB VSZ limit.
@@ -20,12 +19,8 @@ variable WMS_CONFIG_SITE ?= null;
 include { return(WMS_CONFIG_SITE) };
 
 
-# Include gLite WMS rpms
+# Include WMS rpms
 include { 'personality/wms/rpms/config' };
-
-# Condor is now installed in the standard path
-variable CONDOR_INSTALL_PATH ?= "/usr"; 
-variable CONDOR_CONFIG_FILE ?= "/etc/condor/condor_config";
 
 # Add accepted CAs
 include { 'security/cas' };

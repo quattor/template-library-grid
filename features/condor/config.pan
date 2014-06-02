@@ -1,41 +1,43 @@
-# This template defines Condor config for use by Resource Broker and gLite WMS
+# This template defines Condor config for use by the EMI WMS
 
 unique template features/condor/config;
 
 variable CONDOR_VERSION ?= null;
-
-
-# Define some variables according to WMS/RB flavor
-variable CONDOR_USER ?= if ( WMS_FLAVOR == 'glite' ) {
-                          return('glite');
-                        } else {
-                          return('edguser');
-                        };
-variable CONDOR_GROUP ?= CONDOR_USER;
+variable CONDOR_USER ?= GLITE_USER;
+variable CONDOR_GROUP ?= GLITE_GROUP;
 
 
 # Define Condor related paths
-variable CONDOR_INSTALL_PATH ?= if ( exists(CONDOR_INSTALL_PATH) && is_defined(CONDOR_INSTALL_PATH) ) {
-                                  return(SELF);
-                                } else if ( exists(CONDOR_VERSION) && is_defined(CONDOR_VERSION) ) {
-                                  return(INSTALL_ROOT+"/condor-"+CONDOR_VERSION);
-                                } else {
-                                  return(INSTALL_ROOT+"/condor");
-                                };
-variable CONDOR_CONFIG_FILE ?= CONDOR_INSTALL_PATH+"/etc/condor_config";
 variable CONDOR_VAR_DIR ?= "/var/condor";
+variable CONDOR_CONFIG_FILE ?= '/etc/condor/condor_config';
+variable CONDOR_LOCAL_CONFIG_FILE ?= '/var/condor/condor_config.local';
+variable CONDOR_INSTALL_PATH ?= '/usr';
+variable CONDOR_ADMIN ?= SITE_EMAIL;
 
+variable CONDOR_CONFIG_CONTENTS = file_contents('features/condor/templ/condor_config.templ');
+variable CONDOR_CONFIG_CONTENTS = replace('<%LOCAL_DIR%>',CONDOR_VAR_DIR,CONDOR_CONFIG_CONTENTS);
+variable CONDOR_LOCAL_CONFIG_CONTENTS = file_contents('features/condor/templ/condor_config.local.templ');
+variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%HOSTNAME%>',FULL_HOSTNAME,CONDOR_LOCAL_CONFIG_CONTENTS);
+variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%CONDOR_ADMIN%>',CONDOR_ADMIN,CONDOR_LOCAL_CONFIG_CONTENTS);
+variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%LOCAL_DIR%>',CONDOR_VAR_DIR,CONDOR_LOCAL_CONFIG_CONTENTS);
+variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%PORT_MIN%>',GLOBUS_TCP_PORT_RANGE_MIN,CONDOR_LOCAL_CONFIG_CONTENTS);
+variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%PORT_MAX%>',GLOBUS_TCP_PORT_RANGE_MAX,CONDOR_LOCAL_CONFIG_CONTENTS);
 
-# ---------------------------------------------------------------------------- 
-# condorconfig
-# ---------------------------------------------------------------------------- 
-include { 'components/condorconfig/config' };
+'/software/components/filecopy/services' =
+  npush(escape(CONDOR_LOCAL_CONFIG_FILE),
+        nlist("config", CONDOR_LOCAL_CONFIG_CONTENTS,
+              "owner", "root",
+              "perms", "0644",
+        )
+  );
 
-"/software/components/condorconfig/configFile" = CONDOR_CONFIG_FILE;
-"/software/components/condorconfig/RELEASE_DIR" = CONDOR_INSTALL_PATH;
-"/software/components/condorconfig/user" = CONDOR_USER;
-"/software/components/condorconfig/CONDOR_ADMIN" = SITE_EMAIL;
-"/software/components/condorconfig/LOCAL_DIR" = CONDOR_VAR_DIR;
+'/software/components/filecopy/services' =
+  npush(escape(CONDOR_CONFIG_FILE),
+        nlist("config", CONDOR_CONFIG_CONTENTS,
+              "owner", "root",
+              "perms", "0644",
+        )
+  );
 
 
 # ---------------------------------------------------------------------------- 
@@ -67,46 +69,38 @@ include { 'components/dirperm/config' };
 
 };
 
-"/software/components/dirperm/paths" =
-  push(
-    nlist(
-      "path", CONDOR_VAR_DIR+"/log",
-      "owner", CONDOR_USER+":"+CONDOR_GROUP,
-      "perm", "0755",
-      "type", "d")
-  );
+# Set permissions for Condor specific directories
+variable CONDOR_DIRECTORIES = list(
+  CONDOR_VAR_DIR + '/config',
+  CONDOR_VAR_DIR + '/lib',
+  CONDOR_VAR_DIR + '/lib/condor',
+  CONDOR_VAR_DIR + '/lib/condor/spool',
+  CONDOR_VAR_DIR + '/lock',
+  CONDOR_VAR_DIR + '/lock/condor',
+  CONDOR_VAR_DIR + '/log',
+  CONDOR_VAR_DIR + '/log/condor',
+  CONDOR_VAR_DIR + '/run',
+  CONDOR_VAR_DIR + '/run/condor',
+  CONDOR_VAR_DIR + '/spool',
+);
 
-"/software/components/dirperm/paths" =
-  push(
-    nlist(
-      "path", CONDOR_VAR_DIR+"/log/GridLogs",
-      "owner", CONDOR_USER+":"+CONDOR_GROUP,
-      "perm", "0755",
-      "type", "d")
-  );
+'/software/components/dirperm/paths' = {
+  foreach(k;directory;CONDOR_DIRECTORIES) {
+    SELF[length(SELF)] = nlist(
+      'path', directory,
+      'owner' , CONDOR_USER+':'+CONDOR_GROUP,
+      'perm', '0755',
+      'type', 'd',
+    );
+  };
 
-"/software/components/dirperm/paths" =
-  push(
-    nlist(
-      "path", CONDOR_VAR_DIR+"/spool",
-      "owner", CONDOR_USER+":"+CONDOR_GROUP,
-      "perm", "0755",
-      "type", "d")
-  );
+  SELF[length(SELF)] = nlist('path', CONDOR_VAR_DIR + '/execute',
+                             'owner', CONDOR_USER+':'+CONDOR_GROUP,
+                             'perm', '1777',
+                             'type', 'd');
 
+  SELF;
+};
 
-# ----------------------------------------------------------------------------
-# sysconfig
-# ----------------------------------------------------------------------------
-include { 'components/sysconfig/config' };
-'/software/components/sysconfig/files/globus/CONDORG_INSTALL_PATH' = CONDOR_INSTALL_PATH;
-'/software/components/sysconfig/files/globus/CONDOR_CONFIG'         = CONDOR_CONFIG_FILE;
-
-
-# Flavor specific configuration
-variable WMS_FLAVOR_INCLUDE = if ( WMS_FLAVOR == 'glite' ) {
-                                return('features/condor/wms');
-                              } else {
-                                return('features/condor/rb');
-                              };
-include { WMS_FLAVOR_INCLUDE };
+# Include Condor Configuration
+include { 'features/condor/wms' };
