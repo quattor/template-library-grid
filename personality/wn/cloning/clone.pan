@@ -95,6 +95,9 @@ include { 'defaults/grid/version' };
 include { 'os/version' };
 include { 'os/kernel_version_arch' };
 
+# Redo network configuration
+include { 'site/config/network' };
+
 # variable indicating if namespaces must be used to access OS templates.
 # Always true with gLite >= 3.1, defined for backward compatibility.
 variable OS_TEMPLATE_NAMESPACE = true;
