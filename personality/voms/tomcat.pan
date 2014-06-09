@@ -1,9 +1,5 @@
 unique template personality/voms/tomcat;
 
-# Configure Tomcat user
-variable TOMCAT_USER ?= VOMS_TOMCAT_USER;
-include { 'users/tomcat' };
-
 include { 'components/symlink/config' };
 prefix '/software/components/symlink';
 
@@ -37,35 +33,6 @@ include { 'components/filecopy/config' };
 
 prefix '/software/components/filecopy';
 
-'services/{/etc/tomcat5/tomcat5.conf}'=
-  nlist(
-    'config',format(file_contents('personality/voms/files/tomcat5.conf'),
-                     VOMS_TOMCAT_HOME,
-                     VOMS_TOMCAT_HOME,
-                     VOMS_TOMCAT_HOME,
-                     VOMS_TOMCAT_HOME,
-                     VOMS_TOMCAT_USER,
-                     VOMS_TOMCAT_MX,
-                     VOMS_TOMCAT_MAXPERMSIZE,
-             ),
-    'owner', 'tomcat:tomcat',
-    'perms', '0755',
-);
-
-'services/{/etc/tomcat5/server.xml}'=
-  nlist(
-    'config',file_contents('personality/voms/files/server.xml'),
-    'owner', 'tomcat:tomcat',
-    'perms', '0755',
-);
-
-'services/{/etc/tomcat5/log4j-trustmanager.properties}'=
-  nlist(
-    'config', file_contents('personality/voms/files/log4j-trustmanager.properties'),
-    'owner' , 'tomcat:tomcat',
-    'perms' , '0755',
-);
-
 'services/{/var/run/quattor/certificate-copy.sh}'=
   nlist(
     'config', format(file_contents('personality/voms/files/certificate-copy.sh'),
@@ -96,8 +63,3 @@ variable CONTENTS = CONTENTS + VOMS_TOMCAT_USER + " hard nofile 65536\n";
   };
   SELF;
 };
-
-include { 'components/chkconfig/config' };
-
- "/software/components/chkconfig/service/tomcat5/on" = "";
- "/software/components/chkconfig/service/tomcat5/startstop" = true;

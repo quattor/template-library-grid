@@ -9,7 +9,7 @@ variable VOMS_DB_SERVER ?= FULL_HOSTNAME;
 
 
 # Include VOMS rpms.
-include { 'personality/voms/rpms/config' };
+'/software/packages/{emi-voms-mysql}' ?= nlist();
 
 # Add site specific configuration (mandatory)
 variable VOMS_CONFIG_SITE = if ( exists(VOMS_CONFIG_SITE) && is_defined(VOMS_CONFIG_SITE) ) {
