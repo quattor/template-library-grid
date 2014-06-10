@@ -148,8 +148,3 @@ include { GIP_SCRIPT_DPM_DYNAMIC_CONFIG };
   SELF;
 };
     
-prefix '/software/components/filecopy/services/{/usr/bin/dpm-listspaces-fix}';
-'config'= file_contents('personality/se_dpm/server/dpm-listspaces-fix');
-'owner' = 'root:root';
-'perms' = '0755';
-
