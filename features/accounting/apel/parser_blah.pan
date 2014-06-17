@@ -17,10 +17,6 @@ include { 'components/cron/config' };
         'user', 'root',
         'frequency', 'AUTO ' + APEL_PARSER_TIME_HOUR + ' * * *',
         'command', '/usr/bin/apelparser',
-        'env', nlist(
-            'RGMA_HOME', '/',
-            'APEL_HOME', '/',
-        ),
         'log', nlist('mode', '0644'),
     ));
 };

@@ -11,7 +11,7 @@ variable APEL_DB_PWD ?= error('APEL_DB_PASSWORD required but not specified');
 
 # Database used by APEL and its init script
 variable APEL_DB_NAME ?= 'apelclient';
-variable APEL_DB_INIT_SCRIPT ?= GLITE_LOCATION+'/share/glite-apel-core/scripts/apel-schema.sql';
+variable APEL_DB_INIT_SCRIPT ?= '/usr/share/apel/client.sql';
 
 #-----------------------------------------------------------------------------
 # MySQL Database Configuration

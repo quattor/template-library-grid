@@ -1,11 +1,11 @@
 
-unique template features/accounting/apel/publisher;
+unique template features/accounting/apel/client;
 
 include { 'features/accounting/apel/base' };
 
 variable APEL_ENABLED ?= true;
-variable APEL_PUBLISHER_TIME_HOUR ?= '3';
-variable APEL_PUBLISHER_TIME_MINUTE ?= '30';
+variable APEL_CLIENT_TIME_HOUR ?= '3';
+variable APEL_CLIENT_TIME_MINUTE ?= '30';
 
 # ---------------------------------------------------------------------------- 
 # Cron entry for APEL publisher
@@ -15,19 +15,16 @@ include { 'components/altlogrotate/config' };
 
 "/software/components/cron/entries" =
   push_if(APEL_ENABLED,nlist(
-    "name","apel-publisher",
+    "name","apelclient",
     "user","root",
-	"frequency", "AUTO " + APEL_PUBLISHER_TIME_HOUR + " * * *",
-    "command", "env "+
-               "RGMA_HOME="+GLITE_LOCATION+" "+
-               "APEL_HOME="+GLITE_LOCATION+" "+
-               GLITE_LOCATION+"/bin/apel-publisher -f "+ APEL_PUBLISHER_CONFIG,
+	"frequency", "AUTO " + APEL_CLIENT_TIME_HOUR + " * * *",
+    "command", "/usr/bin/apelclient",
 	"log", nlist("mode","0644")
 	)
 );
 
-"/software/components/altlogrotate/entries/apel-publisher" = 
-  nlist("pattern", "/var/log/apel-publisher.ncm-cron.log",
+"/software/components/altlogrotate/entries/apelclient" = 
+  nlist("pattern", "/var/log/apelclient.ncm-cron.log",
         "compress", true,
         "missingok", true,
         "frequency", "weekly",
@@ -78,38 +75,51 @@ variable ACCOUNTING_HOST ?= {
     };
 };
 
-"/software/components/apel/configFiles" = {
-
-  # Create the configuration.
-  data = nlist(
-    "enableDebugLogging", "yes",
-    "DBURL", "jdbc:mysql://"+ACCOUNTING_HOST+":3306/"+APEL_DB_NAME+"?jdbcCompliantTruncation=false",
-    "DBUsername", APEL_DB_USER,
-    "DBPassword", APEL_DB_PWD,
-    "SiteName", SITE_NAME,
-
-    "JoinProcessor", nlist("publishGlobalUserName",APEL_PUBLISH_USER_DN,
-                           "Republish", APEL_REPUBLISH),
-  );
-  
-  data['publishLimit'] = APEL_PUBLISH_LIMIT;
-
-  SELF[escape(APEL_PUBLISHER_CONFIG)] = data;
-
-  SELF;
-};
 
 
-# ---------------------------------------------------------------------------- 
-# Fix APEL SPECRECORDS table for CEs using an external cluster
-# To be removed when properly handled by APEL.
-# ---------------------------------------------------------------------------- 
 
-include {
-  if (ACCOUNTING_HOST == FULL_HOSTNAME) {
-    null;
-  } else {
-    'features/accounting/apel/hostingcluster_fix';
-  };
-};
+#Configuration file
+
+include {'components/metaconfig/config'};
+'/software/components/metaconfig/services/{/etc/apel/client.cfg}' = nlist(
+    'mode', 0600,
+    'owner', 'root',
+    'group', 'root',
+    'module', 'tiny',
+    'contents', nlist(
+        'db', nlist(
+            'hostname', MON_HOST,
+            'port', 3306,
+            'name', APEL_DB_NAME,
+            'username', APEL_DB_USER,
+            'password', APEL_DB_PWD,
+        ),
+       'spec_updater' ,nlist(
+            'enabled', true,
+            'site_name', SITE_NAME,
+            'ldap_host', 'lcg-bdii.cern.ch',
+            'ldap_port', 2170,
+        ),
+        'joiner', nlist(
+            'enabled', true, 
+            'local_jobs', false,
+        ),
+        'unloader', nlist(
+            'enabled', true,
+            'dir_location', '/var/spool/apel/',
+            'send_summaries',true,
+            'withhold_dns',false,
+            'interval', 'latest',
+            'send_ur', false,
+         ),
+         'ssm', nlist(
+         	'enabled', true,
+         ), 
+        'logging', nlist(
+            'logfile', '/var/log/apel/client.log',
+            'level', 'INFO',
+            'console', 'true',
+        ),
+    ),
+);
 
