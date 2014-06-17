@@ -40,6 +40,13 @@ include { DPM_CONFIG_SITE };
 variable SEDPM_MONITORING_ENABLED ?= false;
 variable DPM_DAV_ENABLED ?= false;
 
+@{
+desc =  define the maximum duration that DPM requests are kept before being purged. Define to null\
+ to disable request purging (strongly discouraged).
+values =  a number followed by suffix 'd' for days, 'm' for months, 'y' for years
+default = 6m
+required = no
+}
 # Configure default request lifetime, used for request table purging.
 # Set to null to disable request purging.
 variable DPM_REQUEST_MAX_LIFETIME ?= if ( is_null(SELF) ) {
@@ -48,6 +55,33 @@ variable DPM_REQUEST_MAX_LIFETIME ?= if ( is_null(SELF) ) {
                                        '6m';
                                      };
 
+@{
+desc =  define the max number of DPM threads for "fast" operations.\
+ This variable is ignored if fastThreads is defined in DPM_SERVICE_PARAMS.\
+ Define to null to use built-in default.
+values = a number (>=60 recommended)
+default = 60
+required = no
+}
+variable DPM_FAST_THREADS ?= if ( is_null(SELF) ) {
+                                       null;
+                                     } else {
+                                       60;
+                                     };
+
+@{
+desc =  define the max number of DPM threads for "slow" operations (like DB access).\
+ This variable is ignored if slowThreads is defined in DPM_SERVICE_PARAMS.\
+ Define to null to use built-in default.
+values = a number (>=20 recommended)
+default = 20
+required = no
+}
+variable DPM_SLOW_THREADS ?= if ( is_null(SELF) ) {
+                                       null;
+                                     } else {
+                                       20;
+                                     };
 
 # Add account dpmmgr
 # User running DPM deamons
@@ -94,10 +128,18 @@ include { 'components/dpmlfc/config' };
             } else {
               host_params = nlist();
             };
-            # In addition to DPM_SERVICE_PARAMS, DPM request max lifetime can be defined
-            # with DPM_REQUEST_MAX_LIFETIME. DPM_SERVICE_PARAMS takes precedence.
-            if ( (service == 'dpm') && !is_defined(host_params['requestMaxAge']) ) {
-              host_params['requestMaxAge'] = DPM_REQUEST_MAX_LIFETIME;
+            # In addition to DPM_SERVICE_PARAMS, a few DPM daemon parameters can be
+            # specified through variables. DPM_SERVICE_PARAMS takes precedence.
+            if (service == 'dpm') {
+              if ( !is_defined(host_params['requestMaxAge']) ) {
+                host_params['requestMaxAge'] = DPM_REQUEST_MAX_LIFETIME;
+              };
+              if ( !is_defined(host_params['fastThreads']) ) {
+                host_params['fastThreads'] = DPM_FAST_THREADS;
+              };
+              if ( !is_defined(host_params['slowThreads']) ) {
+                host_params['slowThreads'] = DPM_SLOW_THREADS;
+              };
             };
             SELF[service][host] = host_params;
           };
@@ -289,31 +331,6 @@ include { DPM_IPTABLES_INCLUDE };
 
 '/software/components/gridmapdir/group' = DPM_GROUP;
 '/software/components/gridmapdir/perms' = '0775';
-
-# ----------------------------------------------------------------------------
-# Sysconfig file for dpm-gsiftp is not installed by the RPM in /etc/sysconfig,
-# as of DPM 1.8.5.
-# This works around the problem until it is fixed (ihttps://ggus.eu/tech/ticket_show.php?ticket=90641).
-# Initial version of configuration file is created from template provided in RPM.
-# Create a template from the provided template and when it is modified, update the actual file: this
-# trick is used to prevent a modification loop between filecopy and dpmlfc.
-# ----------------------------------------------------------------------------
-
-variable DPM_GSIFTP_SYSCONFIG_FILE = '/etc/sysconfig/dpm-gsiftp';
-variable DPM_GSIFTP_SYSCONFIG_TEMPLATE = '/usr/share/dpm-dsi/dpm-gsiftp.sysconfig';
-'/software/components/filecopy/dependencies/post' = push('dpmlfc');
-include { 'components/filecopy/config' };
-'/software/components/dpmlfc/dependencies/pre' = push('filecopy');
-'/software/components/filecopy/services' = {
-  if ( GSIFTP_ENABLED && (index(FULL_HOSTNAME,DPM_HOSTS['disk']) >= 0) ) {
-    SELF[escape(DPM_GSIFTP_SYSCONFIG_FILE+'.templ-quattor')] = nlist('source', DPM_GSIFTP_SYSCONFIG_TEMPLATE,
-                                                                     'owner', 'root:root',
-                                                                     'perms', '0644',
-                                                                     'restart', 'cp '+DPM_GSIFTP_SYSCONFIG_FILE+'.templ-quattor '+DPM_GSIFTP_SYSCONFIG_FILE,
-                                                                    );
-  };
-  SELF;
-};
 
 
 # ----------------------------------------------------------------------------
