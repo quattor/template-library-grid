@@ -15,10 +15,8 @@ variable DPM_MYSQL_ADMINUSER_DEFAULT = 'root';
 
 variable DPM_DB_USER ?= DPM_USER;
 variable DPM_DB_NAME ?= 'dpm_db';
-variable DPM_DB_INIT_SCRIPT ?= '/usr/share/DPM/create_dpm_tables_mysql.sql';
 
 variable DPNS_DB_NAME ?= 'cns_db';
-variable DPNS_DB_INIT_SCRIPT ?= '/usr/share/DPM/create_dpns_tables_mysql.sql';
 
 variable DPM_DB_CONFIG_FILE_DEFAULT ?= '/etc/DPMCONFIG';
 
@@ -148,3 +146,10 @@ include { GIP_SCRIPT_DPM_DYNAMIC_CONFIG };
   SELF;
 };
     
+
+=======
+prefix '/software/components/filecopy/services/{/usr/bin/dpm-listspaces-fix}';
+'config'= file_contents('personality/se_dpm/server/dpm-listspaces-fix');
+'owner' = 'root:root';
+'perms' = '0755';
+

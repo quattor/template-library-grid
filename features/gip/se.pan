@@ -60,11 +60,12 @@ variable GIP_PROVIDER_SUBSERVICE ?= nlist(
 );
 variable GIP_STATIC_SE_BASE ?= 'glite-info-static-se';
 variable GIP_STATIC_SE_TEMPLATE ?= GIP_GLUE_TEMPLATES_DIR + '/GlueSE.template';
+variable GIP_PROVIDER_DPM_LOCATION ?= '/usr/bin/dpm-listspaces';
 variable GIP_PROVIDER_SRM ?= nlist(
   'SE_castor',         undef,
   'SE_dcache',         undef,
   'SE_dpm',            'export X509_USER_PROXY='+DPM_HOSTPROXY_FILE+"\n"+
-                           GLITE_LOCATION + '/bin/dpm-listspaces --gip --glue2 --protocols --site ' + SITE_NAME,
+                           GIP_PROVIDER_DPM_LOCATION + ' --gip --glue2 --protocols --site ' + SITE_NAME,
 );
 # This variable allows to install a non standard version of the provider.
 # Its value must be a template doing what is necessary to install it.
