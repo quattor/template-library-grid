@@ -1,5 +1,8 @@
 unique template personality/se_dpm/config_dmlite;
 
+# Define to 1.8.7 is you are not running 1.8 or later
+variable DPM_VERSION ?= '1.8.8';
+
 #
 # DMLite defaults
 #
@@ -51,8 +54,13 @@ include { 'components/dirperm/config' };
 # /etc/dmlite.conf.d/adapter.conf
 #
 variable contents = {
+    if ( match(DPM_VERSION,'^1.8.7') ) {
+      plugin_fs_io = 'plugin_fs_io';
+    } else {
+      plugin_fs_io = 'plugin_fs_rfio';
+    };
     this = "LoadPlugin plugin_adapter_dpm /usr/" + library + "/dmlite/plugin_adapter.so\n";
-    this = this + "LoadPlugin plugin_fs_io /usr/" + library + "/dmlite/plugin_adapter.so\n";
+    this = this + "LoadPlugin " + plugin_fs_io + " /usr/" + library + "/dmlite/plugin_adapter.so\n";
     if (FULL_HOSTNAME == DPM_HOST) {
         this = this + "LoadPlugin plugin_fs_pooldriver /usr/" + library + "/dmlite/plugin_adapter.so\n";
     };
