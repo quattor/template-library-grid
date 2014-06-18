@@ -47,6 +47,12 @@ variable SEDPM_MACHINE_CONFIG = {
 };
 include { SEDPM_MACHINE_CONFIG };
 
+
+# Configure dmlite
+variable DEBUG = debug(OBJECT+': DMLITE_ENABLED='+to_string(DMLITE_ENABLED));
+include { if ( DMLITE_ENABLED ) 'personality/se_dpm/config_dmlite'};
+
+
 # Configure Xrootd services if needed
 # Must be done AFTER the DPM configuration is complete
 include { if ( XROOT_ENABLED ) 'personality/xrootd/service' };

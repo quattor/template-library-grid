@@ -25,6 +25,7 @@ include { 'components/filecopy/config' };
         'group', DPM_GROUP,
         'perms', '0640',
         'backup', false,
+        'restart', '/sbin/service dpm-all-daemons restart',
     );
     SELF;
 } else {

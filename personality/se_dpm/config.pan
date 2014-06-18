@@ -173,6 +173,7 @@ variable SEDPM_IS_HEAD_NODE = {
 #  - Use of SURL with RFIO requires a RFIO daemon on the head node even though
 #    this is not a disk server. 
 variable DPM_ACCESS_PROTOCOLS ?= list('gsiftp','rfio');
+variable TEST = if ( length(DPM_ACCESS_PROTOCOLS) == 0 ) error('No access protocol configured in DPM configuration');
 "/software/components/dpmlfc/options/dpm/accessProtocols" ?= DPM_ACCESS_PROTOCOLS;
 "/software/components/dpmlfc/" = {
   if ( is_list(DPM_HOSTS['disk']) && (length(DPM_HOSTS['disk']) > 0) ) {
@@ -206,6 +207,16 @@ variable DPM_ACCESS_PROTOCOLS ?= list('gsiftp','rfio');
   SELF;
 };
 
+
+# Define if dmlite must be configured: it is almost required except if the only access
+# protocol configured is rfio
+variable DMLITE_ENABLED = {
+  if ( (length(DPM_ACCESS_PROTOCOLS) == 1) && (DPM_ACCESS_PROTOCOLS[0] == 'rfio') ) {
+    false;
+  } else {
+    true;
+  }; 
+};
 
 # Define variables for main protocols to help with GIP configuration in particular.
 
