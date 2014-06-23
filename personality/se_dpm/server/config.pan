@@ -3,7 +3,6 @@
 
 unique template personality/se_dpm/server/config;
 
-variable DMLITE_ENABLED ?= false;
 variable GIP_SCRIPT_DPM_DYNAMIC_CONFIG ?= null;
 variable SEDPM_DB_TYPE = 'mysql';
 
@@ -125,10 +124,6 @@ include { if (DPM_MYSQL_SERVER == FULL_HOSTNAME) {
   };
 };
 
-# dmlite configuration specific to head node if needed
-variable DEBUG = debug(OBJECT+': DMLITE_ENABLED='+to_string(DMLITE_ENABLED));
-include { if ( DMLITE_ENABLED ) 'personality/se_dpm/server/config_dmlite' };
-
 
 # Check if a site specific version of GIP DPM plugin is used and configure it if needed 
 
@@ -146,8 +141,6 @@ include { GIP_SCRIPT_DPM_DYNAMIC_CONFIG };
   SELF;
 };
     
-
-=======
 prefix '/software/components/filecopy/services/{/usr/bin/dpm-listspaces-fix}';
 'config'= file_contents('personality/se_dpm/server/dpm-listspaces-fix');
 'owner' = 'root:root';

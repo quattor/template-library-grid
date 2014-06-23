@@ -1,5 +1,8 @@
 unique template personality/se_dpm/config_dmlite;
 
+# Define to 1.8.7 is you are not running 1.8 or later
+variable DPM_VERSION ?= '1.8.8';
+
 #
 # DMLite defaults
 #
@@ -49,13 +52,26 @@ include { 'components/dirperm/config' };
 
 #
 # /etc/dmlite.conf.d/adapter.conf
+# Note: plugin order is important. If a plugin is a superset of another one, it must be
+#       loaded after the other plugin. When using, several configuration files, alphabetical
+#       order of the configuration file must be used to ensure the appropriate load order.
+#       This configuration file is normally loaded first.
 #
 variable contents = {
-    this = "LoadPlugin plugin_adapter_dpm /usr/" + library + "/dmlite/plugin_adapter.so\n";
-    this = this + "LoadPlugin plugin_fs_io /usr/" + library + "/dmlite/plugin_adapter.so\n";
-    if (FULL_HOSTNAME == DPM_HOST) {
-        this = this + "LoadPlugin plugin_fs_pooldriver /usr/" + library + "/dmlite/plugin_adapter.so\n";
+    this = '';
+    if ( match(DPM_VERSION,'^1.8.7') ) {
+      plugin_fs_io = 'plugin_fs_io';
+    } else {
+      plugin_fs_io = 'plugin_fs_rfio';
     };
+    if ( (FULL_HOSTNAME == DPM_HOST) && (SEDPM_DB_TYPE == 'mysql') ) {
+        # Needed by plugin_mysql_dpm loaded in mysql.conf
+        this = this + "LoadPlugin plugin_fs_pooldriver /usr/" + library + "/dmlite/plugin_adapter.so\n";
+    } else {
+        # Required if plugin_mysql_dpm is not loaded
+        this = this + "LoadPlugin plugin_adapter_dpm /usr/" + library + "/dmlite/plugin_adapter.so\n";
+    };
+    this = this + "LoadPlugin " + plugin_fs_io + " /usr/" + library + "/dmlite/plugin_adapter.so\n";
     this = this + "DpmHost " + DPM_HOST + "\n";
     this = this + "TokenPassword " + DMLITE_TOKEN_PASSWORD + "\n";
     this = this + "TokenId " + DMLITE_TOKEN_ID + "\n";
@@ -70,6 +86,21 @@ include { 'components/filecopy/config' };
         'group', DPM_GROUP,
         'perms', '0640',
         'backup', false,
+        'restart', '/sbin/service dpm-all-daemons restart',
     );
     SELF;
 };
+'/software/components/dpmlfc/dependencies/pre' = {
+  if ( index('filecopy',SELF) == -1 ) {
+    append('filecopy');
+  };
+  SELF;
+}; 
+
+
+# dmlite configuration specific to head node if needed
+# Be sure to use the same condition as the one used to select which plugin to load in adapter.conf
+include { if ( (FULL_HOSTNAME == DPM_HOST) && (SEDPM_DB_TYPE == 'mysql') ) 'personality/se_dpm/server/config_dmlite' };
+
+
+

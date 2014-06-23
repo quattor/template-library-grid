@@ -12,16 +12,11 @@ variable DPM_DAV_SECURE_REDIRECT ?= "On";
 variable SSL_SESSION_CACHE ?= 1024000;
 variable SSL_SESSION_CACHE_TIMEOUT ?= 7200;
 
-#
-# Configure dmlite
-#
-include {'personality/se_dpm/config_dmlite'};
 
 #
 # Consistency check
 #
-variable check = if (DPM_DAV_ENABLED && ! DMLITE_ENABLED) error ("LCGDM HTTP / WebDAV requires DMLite");
-variable DEBUG = debug(OBJECT+': DPM_DAV_ENABLED='+to_string(DPM_DAV_ENABLED)+', DMLITE_ENABLED='+to_string(DMLITE_ENABLED));
+variable check = if ( !DMLITE_ENABLED ) error ("LCGDM HTTP / WebDAV requires DMLite");
 
 #
 # Enable httpd service
