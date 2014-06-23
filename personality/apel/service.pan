@@ -8,13 +8,13 @@ include { 'personality/apel/rpms/config' };
 #variable NODE_USE_RESOURCE_BDII = true;
 
 # Ensure that the host certificates have the correct permissions.
-include { 'feature/security/host_certs' };
+include { 'features/security/host_certs' };
 
 # Modify the loadable library path. 
-include { 'feature/ldconf/config' };
+include { 'features/ldconf/config' };
 
 # LCG and Globus sysconfig files. 
-include { 'feature/globus/sysconfig' };
+include { 'features/globus/sysconfig' };
 
 # Add accepted CAs certificates
 include { 'security/cas' };
@@ -23,19 +23,19 @@ include { 'security/cas' };
 include { 'features/fetch-crl/config' };
 
 # Configure paths for java.
-include { 'feature/java/config' };
+include { 'features/java/config' };
 
 # Configure mysql.
-include { 'feature/mysql/server' };
+include { 'features/mysql/server' };
 
 # APEL accounting.
-include { 'feature/accounting/apel/publisher_ActiveMQ' };
+include { 'features/accounting/apel/publisher_ActiveMQ' };
 
 # Configure BDII or GRIS, whatever is appropriate
 #include { 'glite/bdii/service' };
 
 # Configure the information provider.
-#include { 'feature/gip/base' };
+#include { 'features/gip/base' };
 
 # Configure MON-specific services
 include { 'personality/apel/config' };
