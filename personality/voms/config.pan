@@ -2,16 +2,26 @@ unique template personality/voms/config;
 
 include { 'personality/voms/variables' };
 
-include { 'personality/voms/tomcat' };
 include { 'personality/voms/mysql' };
 include { 'personality/voms/vos' };
 include { 'features/gip/base' };
 
 include { 'components/filecopy/config' };
-
-'/software/components/filecopy/services/{/etc/sysconfig/voms}'=
+prefix '/software/components/filecopy/services';
+'{/etc/sysconfig/voms}'=
   nlist(
     'config', file_contents('personality/voms/files/voms.sysconfig'),
+    'owner', 'root:root',
+    'perms', '0644',
+);
+
+'{/etc/sysconfig/voms-admin}' =
+  nlist(
+    'config', format(file_contents('personality/voms/files/voms-admin.sysconfig'),
+                     VOMS_TOMCAT_MS,
+                     VOMS_TOMCAT_MX,
+                     VOMS_TOMCAT_MAXPERMSIZE
+                     ),
     'owner', 'root:root',
     'perms', '0644',
 );
