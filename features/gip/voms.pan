@@ -35,6 +35,12 @@ get_data = cat /etc/voms/*/voms.conf | grep [\-]-vo | cut -d= -f2 | xargs -i ech
 get_services = echo
 EOF
 
+'provider/glite-info-service-voms-glue2'=format(file_contents('features/gip/files/provider.voms-glue2'),
+  FULL_HOSTNAME,
+  "/etc/bdii/gip/",
+  SITE_NAME,
+);
+
 'provider/glite-info-service-voms'=format(file_contents('features/gip/files/provider.voms'),
   FULL_HOSTNAME,
   "/etc/bdii/gip/",
