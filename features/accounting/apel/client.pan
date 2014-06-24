@@ -41,43 +41,6 @@ include { 'components/altlogrotate/config' };
 # APEL configuration
 # ---------------------------------------------------------------------------- 
 
-include { 'components/apel/config' };
-
-# If "yes" encrypt UserDNs with a 1024-bit RSA key
-# If "no", UserDNs are not published (default)
-# TODO: add a publicKeyLocation variable (if we want to use an external key
-# for encryption.
-variable APEL_PUBLISH_USER_DN ?= "no" ;
-
-# Number of records that APEL will select in one go.
-# The value of should be adjusted according to the memory 
-# assigned to the Java VM. In general, for 512Mb the number 
-# of records should be 150000 and for 1024Mb around 300000.
-# The default value that is included in the APEL code is 
-# 300000, as the default memory is 1024Mb. 
-variable APEL_PUBLISH_LIMIT ?= 300000;
-
-# If "missing" publish missing data only
-# If "all" publish ALL accounting data in the database
-# TODO: If "gap" publish data in a specified interval 
-variable APEL_REPUBLISH = 'missing';
-
-# Timeout for waiting for consumer in milliseconds
-variable APEL_CONSUMER_TIMEOUT ?= "1800000";
-
-variable ACCOUNTING_HOST ?= {
-    if (is_defined(APEL_HOST)) {
-      APEL_HOST;
-    } else if (is_defined(MON_HOST)) {
-      MON_HOST;
-    } else {
-      error('APEL_HOST and MON_HOST required but not specified');
-    };
-};
-
-
-
-
 #Configuration file
 
 include {'components/metaconfig/config'};
