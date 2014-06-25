@@ -5,7 +5,7 @@ structure template personality/xrootd/templates/redir_config;
 
 # Installation specific
 set xrdlibdir = $XRDLIBDIR
-# set dpmhost = grid05.lal.in2p3.fr
+# set dpmhost = <to_bet_set>
 # set xrootfedlport1 = $XROOT_FED_LOCAL_PORT_ATLAS
 # set xrootfedlport2...
 # setenv DPNS_HOST = $dpmhost
@@ -19,6 +19,7 @@ all.pidpath /var/run/xrootd
 xrd.network nodnr
 xrootd.seclib libXrdSec.so
 sec.protocol /usr/$(xrdlibdir) gsi -crl:3 -key:/etc/grid-security/dpmmgr/dpmkey.pem -cert:/etc/grid-security/dpmmgr/dpmcert.pem -md:sha256:sha1 -ca:2 -gmapopt:10 -vomsat:0
+#sec.protocol /usr/$(xrdlibdir) gsi -crl:3 -key:/etc/grid-security/dpmmgr/dpmkey.pem -cert:/etc/grid-security/dpmmgr/dpmcert.pem -md:sha256:sha1 -ca:2 -gmapopt:10 -vomsfun:/usr/lib64/libXrdSecgsiVOMS.so
 sec.protocol /usr/$(xrdlibdir) unix
 
 ofs.cmslib libXrdDPMFinder.so.3
@@ -62,12 +63,19 @@ ofs.authlib libXrdDPMRedirAcc.so.3
 #
 # setenv TTOKENAUTHZ_AUTHORIZATIONFILE=/etc/xrd.authz.cnf
 ofs.authlib libXrdDPMRedirAcc.so.3
+
 # dpm.replacementprefix /alice /dpm/example.com/home/alice
 # dpm.fixedidrestrict /dpm/example.com/home/alice
 #
 # User must be listed in lcgdm-mapfile
 # dpm.principal alicetoken
 # dpm.fqan /alice
+
+dpm.mmreqhost localhost
+
+# vomsxrd: dpm.nohv1 else dpm.vomlist
+dpm.listvoms
+#dpm.nohv1
 
 #xrootd.monitor all rbuff 32k auth flush 30s  window 5s dest files info user io redir atl-prod05.slac.stanford.edu:9930
 #xrd.report atl-prod05.slac.stanford.edu:9931 every 60s all -buff -poll sync

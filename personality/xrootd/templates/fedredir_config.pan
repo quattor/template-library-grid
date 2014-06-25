@@ -4,16 +4,16 @@ structure template personality/xrootd/templates/fedredir_config;
 #>>>>>>>>>>>>> Variable declarations
 
 # Installation specific
-set xrootfedxrdmanager = $XROOT_FED_REMOTE_XRD_MANAGER_ATLAS
-set xrootfedcmsdmanager = $XROOT_FED_REMOTE_CMSD_MANAGER_ATLAS
-set xrootfedlport = $XROOT_FED_LOCAL_PORT_ATLAS
+#set xrootfedxrdmanager = <to_be_set>
+#set xrootfedcmsdmanager = <to_be_set>
+#set xrootfedlport = <to_be_set>
 set xrdlibdir = $XRDLIBDIR
 
 #>>>>>>>>>>>>>
 
 all.adminpath /var/spool/xrootd
 all.pidpath /var/run/xrootd
-all.export /atlas/
+#all.export <to_bet_set>
 
 xrd.network nodnr
 
@@ -26,6 +26,7 @@ oss.trace all
 if exec xrootd
 xrootd.seclib libXrdSec.so
 sec.protocol /usr/$(xrdlibdir) gsi -crl:3 -key:/etc/grid-security/dpmmgr/dpmkey.pem -cert:/etc/grid-security/dpmmgr/dpmcert.pem -md:sha256:sha1 -ca:2 -gmapopt:10 -vomsat:0
+#sec.protocol /usr/$(xrdlibdir) gsi -crl:3 -key:/etc/grid-security/dpmmgr/dpmkey.pem -cert:/etc/grid-security/dpmmgr/dpmcert.pem -md:sha256:sha1 -ca:2 -gmapopt:10 -vomsfun:/usr/lib64/libXrdSecgsiVOMS.so
 sec.protocol /usr/$(xrdlibdir) unix
 
 ofs.cmslib libXrdDPMFinder.so.3
@@ -43,7 +44,7 @@ ofs.authorize
 setenv LFC_HOST=the_lfc.example.com
 setenv GLOBUS_THREAD_MODEL=pthread
 setenv X509_USER_PROXY=/the/path/my_atlas_proxy
-dpm.namelib XrdOucName2NameLFC.so root=/dpm/example.com/home/atlas match=svr001.example.com
+dpm.namelib <to_be_set>
 dpm.namecheck /dpm/example.com/home/atlas
 #
 # or for simple prefix check/additions or substitutions
@@ -52,6 +53,10 @@ dpm.namecheck /dpm/example.com/home/atlas
 # dpm.defaultprefix /dpm/example.com/home
 
 dpm.xrdserverport 1095
+
+# vomsxrd: dpm.nohv1 else dpm.vomlist
+dpm.listvoms
+#dpm.nohv1
 
 xrd.port $(xrootfedlport)
 xrootd.redirect $(xrootfedxrdmanager) ? /atlas/

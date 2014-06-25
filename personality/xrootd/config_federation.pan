@@ -91,11 +91,34 @@ include { 'personality/xrootd/env_federation' };
             dpm_vo_home = replace('/$','',dpm_vo_home);
             params['n2n_options'] = replace('%%DPM_VO_HOME%%',dpm_vo_home,params['n2n_options']);
           };
+          if ( is_defined(params['siteName']) ) {
+            params['n2n_options'] = replace('%%ATLAS_SITENAME%%',params['siteName'],params['n2n_options']);
+          };
           SELF[federation]['n2nLibrary'] = SELF[federation]['n2nLibrary'] + ' ' + params['n2n_options'];
         };
         if ( !is_defined(federation['namePrefix']) &&
              is_defined(value('/software/components/xrootd/options/dpm/defaultPrefix')) ) {
           SELF[federation]['namePrefix'] =  value('/software/components/xrootd/options/dpm/defaultPrefix') + '/' + params['vo'];
+        };
+        if ( is_defined(params['n2n_directories']) ) {
+          if ( ! is_defined(SELF[federation]['namePrefix']) ) {
+            error("'namePrefix' must be defined when 'n2n_directories' is specified");
+          };
+          if ( is_defined(params['n2n_prefix_attr']) ) {
+            n2n_prefixes = params['n2n_prefix_attr'];
+          } else {
+            debug(format('%s: no attribute name specified for N2N prefixes',OBJECT));
+            n2n_prefixes = '';
+          };
+          foreach (i;directory;params['n2n_directories']) {
+            directory = replace('^/','',directory);
+            if ( !match(directory,'/$') ) {
+              directory = directory + '/';
+            };
+            n2n_prefixes = n2n_prefixes + format("%s/%s,",SELF[federation]['namePrefix'],directory);
+          };
+          n2n_prefixes = replace(',\s*$','',n2n_prefixes);
+          SELF[federation]['n2nLibrary'] = SELF[federation]['n2nLibrary'] + ' ' + n2n_prefixes;
         };
       };
       SELF[federation]['redirectParams'] = params['fedredir'] + ':' + to_string(params['xrd_mgr_port']) + ' ? ' + SELF[federation]['validPathPrefix'];
@@ -103,6 +126,7 @@ include { 'personality/xrootd/env_federation' };
         SELF[federation]['localRedirectParams'] = value('/software/components/xrootd/options/dpm/dpnsHost') + ':' + 
                                                      to_string(params['local_port']) + ' ' + SELF[federation]['validPathPrefix'];
       };
+
       if ( is_defined(params['lfc_host']) ) {
         SELF[federation]['lfcHost'] = params['lfc_host'];
         foreach (lfc_param;value;XROOTD_LFC_PARAMS) {

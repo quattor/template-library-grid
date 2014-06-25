@@ -19,13 +19,6 @@ variable XROOTD_AUTH_LIBRARY_TOKEN_AUTH ?= 'libXrdAliceTokenAcc.so.0.0.0';
 variable XROOTD_DISK_CONFIG_NAME ?= 'xrootd-dpmdisk.cfg';
 variable XROOTD_REDIR_CONFIG_NAME ?= 'xrootd-dpmredir.cfg';
 
-# Default monitoring options, when enabled
-variable XROOTD_MONITORING_OPTIONS ?= 'all rbuff 32k auth flush 30s  window 5s dest files info user io redir';
-variable XROOTD_REPORTING_OPTIONS ?= 'every 60s all -buff -poll sync';
-# Monitoring destinations: both must be lists
-variable XROOTD_MONITORING_DESTINATIONS ?= undef;
-variable XROOTD_REPORTING_DESTINATIONS ?= undef;
-
 # Default instances
 variable XROOTD_XROOTD_INSTANCES = {
   # At least one disk and one redir instances are needed
@@ -110,6 +103,10 @@ variable XROOTD_TOKEN_AUTH_PARAMS = {
   };
   if ( !is_defined(SELF['daemonGroup']) ) {
     error("XROOTD_PARAMS['daemonGroup'] undefined: no default value");
+  };
+
+  if ( !is_defined(SELF['siteName']) && is_defined(XROOTD_SITE_NAME) ) {
+    SELF['siteName'] = XROOTD_SITE_NAME;
   };
 
   if ( XROOTD_AUTH_USE_TOKEN ) {
