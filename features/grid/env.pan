@@ -6,6 +6,12 @@ variable GLITE_ARCH_LIB ?= if ( PKG_ARCH_GLITE == 'x86_64' ) {
                              '/lib';
                            };
 
+variable DEFAULT_DPM_HOST ?= if ( is_defined(DPM_HOST) ) {
+                               DPM_HOST;
+                             } else {
+                               undef;
+                             };
+
 include { 'features/grid/base' };
 
 
@@ -64,9 +70,9 @@ include { 'components/profile/config' };
   if (exists(GSSKLOG_SERVER)) {
     SELF["GSSKLOG_SERVER"] = GSSKLOG_SERVER;
   };
-  if (exists(DPM_HOST)) {
-    SELF["DPM_HOST"] = DPM_HOST;
-    SELF["DPNS_HOST"] = DPM_HOST;
+  if ( is_defined(DEFAULT_DPM_HOST) ) {
+    SELF["DPM_HOST"] = DEFAULT_DPM_HOST;
+    SELF["DPNS_HOST"] = DEFAULT_DPM_HOST;
   };
   SELF;
 };
