@@ -6,5 +6,5 @@ unique template personality/se_dpm/rpms/head;
 
 include { if (XROOT_ENABLED) 'personality/se_dpm/rpms/xrootd' };
 include { if (SEDPM_MONITORING_ENABLED) 'personality/se_dpm/rpms/monitoring' };
-include { if (DPM_DAV_ENABLED) 'personality/se_dpm/rpms/dav' };
+include { if (HTTPS_ENABLED) 'personality/se_dpm/rpms/dav' };
 
