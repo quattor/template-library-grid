@@ -38,7 +38,6 @@ include { DPM_CONFIG_SITE };
 
 # Other initialization after site configuration has been loaded
 variable SEDPM_MONITORING_ENABLED ?= false;
-variable DPM_DAV_ENABLED ?= false;
 
 @{
 desc =  define the maximum duration that DPM requests are kept before being purged. Define to null\

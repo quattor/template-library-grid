@@ -64,7 +64,7 @@ variable contents = {
     } else {
       plugin_fs_io = 'plugin_fs_rfio';
     };
-    if ( (FULL_HOSTNAME == DPM_HOST) && (SEDPM_DB_TYPE == 'mysql') ) {
+    if ( SEDPM_IS_HEAD_NODE && (SEDPM_DB_TYPE == 'mysql') ) {
         # Needed by plugin_mysql_dpm loaded in mysql.conf
         this = this + "LoadPlugin plugin_fs_pooldriver /usr/" + library + "/dmlite/plugin_adapter.so\n";
     } else {
@@ -72,7 +72,7 @@ variable contents = {
         this = this + "LoadPlugin plugin_adapter_dpm /usr/" + library + "/dmlite/plugin_adapter.so\n";
     };
     this = this + "LoadPlugin " + plugin_fs_io + " /usr/" + library + "/dmlite/plugin_adapter.so\n";
-    this = this + "DpmHost " + DPM_HOST + "\n";
+    this = this + "DpmHost " + DPM_HOSTS['dpns'][0] + "\n";
     this = this + "TokenPassword " + DMLITE_TOKEN_PASSWORD + "\n";
     this = this + "TokenId " + DMLITE_TOKEN_ID + "\n";
     this = this + "TokenLife " + DMLITE_TOKEN_LIFE + "\n";
@@ -100,7 +100,7 @@ include { 'components/filecopy/config' };
 
 # dmlite configuration specific to head node if needed
 # Be sure to use the same condition as the one used to select which plugin to load in adapter.conf
-include { if ( (FULL_HOSTNAME == DPM_HOST) && (SEDPM_DB_TYPE == 'mysql') ) 'personality/se_dpm/server/config_dmlite' };
+include { if ( SEDPM_IS_HEAD_NODE && (SEDPM_DB_TYPE == 'mysql') ) 'personality/se_dpm/server/config_dmlite' };
 
 
 
