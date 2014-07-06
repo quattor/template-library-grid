@@ -47,7 +47,7 @@ variable XROOTD_XROOTD_INSTANCES = {
                          'logFile', XROOTD_LOG_FILE,
                         );
   };
-  if ( !disk_instance_found ) {
+  if ( !redir_instance_found ) {
     SELF['redir'] = nlist('type', 'redir',
                           'configFile', XROOTD_CONFIG_DIR+'/xrootd-dpmredir.cfg',
                           'logFile', XROOTD_LOG_FILE,
