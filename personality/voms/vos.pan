@@ -51,7 +51,7 @@ include { 'components/filecopy/config' };
     'config', CONTENTS,
     'owner', 'root:root',
     'perms', '0755',
-    'restart', '/var/run/quattor/create-voms.sh',
+    'restart', if (VOMS_TOMCAT_RESTART_CONFIG) { '/var/run/quattor/create-voms.sh'; } else { null; }    
 );
 
 #/usr/sbin/voms-admin-configure install --dbtype mysql \ 
