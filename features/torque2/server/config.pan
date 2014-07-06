@@ -66,7 +66,7 @@ variable TORQUE_USE_HW_CONFIG ?= true;
 
 '/software/components/pbsserver/dependencies/post'=push('filecopy');
 
-variable PBS_AUTHORIZED_USERS_SCRIPT = {
+variable PBS_AUTHORIZED_USERS_SCRIPT ?= {
   command="qmgr -c 'set server authorized_users =*@";
   command_add="qmgr -c 'set server authorized_users +=*@";
   tmp_cmd="";
