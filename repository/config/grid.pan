@@ -2,17 +2,43 @@ unique template repository/config/grid;
  
 include { 'quattor/functions/repository' };
 
-variable REPOSITORY_GRID_PREFIX ?= 'emi_3_0_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
+@{
+desc = defines the variant of the grid RPM repository to use (typically emi or umd).\
+ The full repository template name will be built appending the version, os, arch. 
+values = any string
+default = emi
+required = no
+}
+variable REPOSITORY_GRID_VARIANT ?= 'emi';
+@{
+desc = defines the variant of the grid repository to use for third party RPMs (typically emi or umd).\
+ This is controlled by a variable distinct from other grid repositories: default should be appropriate.\
+ The full repository template name will be built appending the version, os, arch. 
+values = any string
+default = emi
+required = no
+}
+variable REPOSITORY_GRID_THIRD_PARTY_VARIANT ?= 'emi';
+variable REPOSITORY_GRID_PREFIX ?= REPOSITORY_GRID_VARIANT + '_3_0_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
+variable REPOSITORY_GRID_THIRD_PARTY_PREFIX ?= REPOSITORY_GRID_THIRD_PARTY_VARIANT + '_3_0_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
 
 
 variable YUM_SNAPSHOT_NS ?= 'repository/snapshot';
 variable YUM_EMI_SNAPSHOT_NS ?= YUM_SNAPSHOT_NS;
 
+variable YUM_EMI_SNAPSHOT_DATE ?= if ( is_null(YUM_EMI_SNAPSHOT_DATE) ) {
+  SELF;
+} else if ( is_defined(YUM_SNAPSHOT_DATE) ) {
+  YUM_SNAPSHOT_DATE;
+} else {
+  undef;
+};
+
 include { 'repository/config/quattor' };
 
 variable EMI_REPOSITORY_LIST ?= {
   SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_base';
-  SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_third_party';
+  SELF[length(SELF)] = REPOSITORY_GRID_THIRD_PARTY_PREFIX + '_third_party';
   SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_updates';
   if (OS_VERSION_PARAMS['major'] == 'sl6') {
     SELF[length(SELF)] = 'wlcg_x86_64';
