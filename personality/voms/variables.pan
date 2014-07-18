@@ -16,3 +16,4 @@ variable VOMS_TOMCAT_MX ?= '750M';
 variable VOMS_TOMCAT_MAXPERMSIZE ?= '1125m';
 variable VOMS_TOMCAT_MANAGE_LIMITS_FILE ?= true;
 
+variable VOMS_TOMCAT_RESTART_CONFIG ?= false;
