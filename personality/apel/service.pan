@@ -22,14 +22,11 @@ include { 'security/cas' };
 # Update the certificate revocation lists.
 include { 'features/fetch-crl/config' };
 
-# Configure paths for java.
-include { 'features/java/config' };
-
 # Configure mysql.
 include { 'features/mysql/server' };
 
 # APEL accounting.
-include { 'features/accounting/apel/publisher_ActiveMQ' };
+include { 'features/accounting/apel/client' };
 
 # Configure BDII or GRIS, whatever is appropriate
 #include { 'glite/bdii/service' };
