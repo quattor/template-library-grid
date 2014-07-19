@@ -18,6 +18,20 @@ include { 'features/lcas/glexec' };
 
 
 #-----------------------------------------------------------------------------
+# /usr/sbin/glexec mode -> yaim/functions/config_cream_glexec
+#-----------------------------------------------------------------------------
+'/software/components/dirperm/paths' = {
+  SELF[length(SELF)] = nlist('path', GLITE_LOCATION+'/sbin/glexec',
+                             'owner', 'root:'+GLEXEC_GROUP,
+                             'perm', '6555',
+                             'type', 'f',
+                            );
+
+  SELF;
+};
+
+
+#-----------------------------------------------------------------------------
 # glexec configuration file
 #-----------------------------------------------------------------------------
 variable GLEXEC_CONF_FILE = EMI_LOCATION + '/etc/glexec.conf';
