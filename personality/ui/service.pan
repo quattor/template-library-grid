@@ -52,3 +52,7 @@ include { 'features/gsissh/client/config' };
 
 # Configure MPI.
 include { 'features/mpi/config' };
+
+# UI specific tasks
+include { 'personality/ui/config' };
+
