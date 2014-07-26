@@ -188,3 +188,21 @@ variable GLEXEC_FILE_PERMS = {
              'type', 'f',
             )
       );
+
+'/software/components/dirperm/paths' = {
+  if (GLEXEC_OPMODE=="setuid") {
+    SELF[length(SELF)] = nlist('path', GLITE_LOCATION+'/sbin/glexec',
+                               'owner', 'root:'+GLEXEC_GROUP,
+                               'perm', '6111',
+                               'type', 'f',
+                              );
+  } else {
+    SELF[length(SELF)] = nlist('path', GLITE_LOCATION+'/sbin/glexec',
+                               'owner', 'root:'+GLEXEC_GROUP,
+                               'perm', '0555',
+                               'type', 'f',
+                             );
+  };
+
+  SELF;
+};

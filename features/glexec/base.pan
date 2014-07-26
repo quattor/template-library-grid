@@ -39,10 +39,5 @@ include { 'users/glexec' };
                              'perm', '0755',
                              'type', 'd',
                             );
-  SELF[length(SELF)] = nlist('path', GLITE_LOCATION+'/sbin/glexec',
-                             'owner', 'root:'+GLEXEC_GROUP,
-                             'perm', '6555',
-                             'type', 'f',
-                            );
   SELF;
 };
