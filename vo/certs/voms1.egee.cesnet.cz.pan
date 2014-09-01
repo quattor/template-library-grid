@@ -1,6 +1,6 @@
 structure template vo/certs/voms1.egee.cesnet.cz;
 
-'cert' ?= <<EOF; 
+'cert' ?= <<EOF;
 -----BEGIN CERTIFICATE-----
 MIIE4DCCA8igAwIBAgIRAN92O7Ao4+IOzpOk7dYCk7MwDQYJKoZIhvcNAQEFBQAwPzELMAkGA1UE
 BhMCTkwxDzANBgNVBAoTBlRFUkVOQTEfMB0GA1UEAxMWVEVSRU5BIGVTY2llbmNlIFNTTCBDQTAe
@@ -26,5 +26,4 @@ O22TQ6hbCKPieArtzwKlJupXmPFkyZnPZEeZRtdlxXNqhNcxJmoOh8/e93RqAMp3Hpat1ze7sqzM
 5fcYCYP4PfzBnxxstWTDT8ForRFUcAkypwxmDkIWzfsxm1MH4asSdEnOYeQDQ1MWnpCRJ7ghKA==
 -----END CERTIFICATE-----
 EOF
-
 
