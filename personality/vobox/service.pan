@@ -1,3 +1,6 @@
+# Reference configuration information for WLCG VOBOX can be found at
+# https://twiki.cern.ch/twiki/bin/view/LCG/WLCGvoboxDeployment
+
 unique template personality/vobox/service;
 
 # Include RPMs for VOBOX
@@ -22,9 +25,6 @@ include { 'features/fetch-crl/config' };
 
 # Authorization via grid mapfile. 
 include { 'features/mkgridmap/standard' };
-
-# Configure resource BDII.
-include { 'personality/bdii/service' };
 
 # Configure classads library
 include { 'features/classads/config' };

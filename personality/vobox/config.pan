@@ -11,7 +11,7 @@ variable VOBOX_TCP_MAX_BACKLOG ?= 250000;
 
 # List of directory to create in VO-specific directory.
 # The following list is the minimum list: add it to site-specific defaults.
-variable VOBOX_VO_DIRS_ROOT ?= INSTALL_ROOT + '/vobox';
+variable VOBOX_VO_DIRS_ROOT ?= EMI_LOCATION_VAR + '/lib/vobox';
 variable VOBOX_VO_DIRECTORIES = {
   if ( !is_defined(SELF) || index('start',SELF) < 0 ) {
     SELF[length(SELF)] = 'start';
