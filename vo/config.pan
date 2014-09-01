@@ -233,6 +233,7 @@ variable GRIDMAPDIR_INCLUDE = if ( NODE_VO_GRIDMAPDIR_CONFIG ) {
                             };
 include { GRIDMAPDIR_INCLUDE };
 '/software/components/gridmapdir' = if ( NODE_VO_GRIDMAPDIR_CONFIG ) {
+                                       debug(format('%s: configuring gridmapdir for account list %s',OBJECT,to_string(NODE_VO_ACCOUNT_LIST)));
                                        combine_gridmapdir_poolaccounts(NODE_VO_ACCOUNT_LIST);
                                     } else {
                                        null;

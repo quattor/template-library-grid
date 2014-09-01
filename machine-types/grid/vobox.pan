@@ -16,6 +16,7 @@ variable NODE_VO_INFO_DIR ?= true;
 variable NODE_VO_GRIDMAPDIR_CONFIG ?= true;
 variable NODE_VO_PROFILE_ENV ?= true;
 variable VO_GRIDMAPFILE_MAP_VOMS_ROLES ?= true;
+variable GSISSH_SERVER_ENABLED ?= true;
 
 #
 # Include base configuration of a gLite node.
