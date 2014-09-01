@@ -1,4 +1,4 @@
-unique template personality/vobox/rpms/config;
+unique template personality/vobox/rpms;
 
 prefix '/software/packages';
 

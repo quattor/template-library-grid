@@ -4,7 +4,7 @@
 unique template personality/vobox/service;
 
 # Include RPMs for VOBOX
-include { 'personality/vobox/rpms/config' };
+include { 'personality/vobox/rpms' };
 
 # Ensure that the host certificates have the correct permissions.
 include { 'features/security/host_certs' };
