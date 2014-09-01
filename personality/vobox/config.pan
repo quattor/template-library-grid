@@ -74,7 +74,85 @@ include { 'components/dirperm/config' };
 };
 
 
-# TODO (1/9/2014): configure proxy renewal script supplied by lcg-vobox RPM
+# Create proxy renewal script for each supported VO (normally only one)
+# and configure related cron and logrotate.
+# TODO: when filecopy will have been improved to support regexp-based
+# editing of a source file already installed, this will be better to use
+# the proxy renewal script installed by the RPM for easier
+# synchronisation. But in lcg-vobox 1.0.4-4, the script is so buggy that
+# it is unusable as is...
+
+include { 'components/filecopy/config' };
+include { 'components/chkconfig/config' };
+include { 'components/cron/config' };
+include { 'components/altlogrotate/config' };
+'/software/components' = {
+  if ( !is_defined(SELF['filecopy']['services']) ) {
+    SELF['filecopy']['services'] = nlist();
+  };
+  if ( !is_defined(SELF['chkconfig']['service']) ) {
+    SELF['chkconfig']['service'] = nlist();
+  };
+  if ( !is_defined(SELF['cron']['entries']) ) {
+    SELF['cron']['entries'] = list();
+  };
+  if ( !is_defined(SELF['cron']['allow']) ) {
+    SELF['cron']['allow'] = list();
+  };
+  if ( index('root',SELF['cron']['allow']) < 0 ) {
+    SELF['cron']['allow'][length(SELF['cron']['allow'])] = 'root';
+  };
+  if ( !is_defined(SELF['altlogrotate']['entries']) ) {
+    SELF['altlogrotate']['entries'] = nlist();
+  };
+  if ( index('filecopy',SELF['chkconfig']['dependencies']['pre']) < 0 ) {
+    SELF['chkconfig']['dependencies']['pre'][length(SELF['chkconfig']['dependencies']['pre'])] = 'filecopy';
+  };
+  if ( index('filecopy',SELF['cron']['dependencies']['pre']) < 0 ) {
+    SELF['cron']['dependencies']['pre'][length(SELF['cron']['dependencies']['pre'])] = 'filecopy';
+  };
+  if ( is_defined(VOBOX_ENABLED_VOS_USER) ) {
+    foreach (vo;user;VOBOX_ENABLED_VOS_USER) {
+      contents = file_contents('personality/vobox/voname-box-proxyrenewal.template');
+      variables = replace('(?m:THEVO)',vo,contents);
+      variables = replace('(?m:THEADMIN)',user,contents);
+      debug("contents = \n"+contents);
+      script_name = vo+'-box-proxyrenewal';
+      script_path = '/etc/init.d/'+script_name;
+      # Add script
+      SELF['filecopy']['services'][escape(script_path)] = nlist('config', contents,
+                                                                'perms', '0755',
+                                                                'restart', '/sbin/service '+script_name+' restart',
+                                                               );
+      # Restart already handled by filecopy if needed
+      SELF['chkconfig']['service'][script_name] = nlist('on', '');
+      # Cron entry: also allow the enabled VO user to execute crons.
+      # Do not create a log file for the cron as the script already logs
+      # actions
+      if ( index(user,SELF['cron']['allow']) < 0 ) {
+        SELF['cron']['allow'][length(SELF['cron']['allow'])] = user;
+      };
+      SELF['cron']['entries'][length(SELF['cron']['entries'])] = nlist('name', script_name,
+                                                                       'user', 'root',
+                                                                       'frequency', 'AUTO 2-23/'+to_string(VOBOX_PROXY_RENEWAL_INTERVAL)+' * * *',
+                                                                       'command', '/sbin/service '+script_name+' proxy',
+                                                                       'log', nlist('disabled', true),
+                                                                      );
+      # Logrotate
+      SELF['altlogrotate']['entries'][script_name] = 
+                                     nlist('pattern', VOBOX_VO_DIRS_ROOT+'/'+vo+'/log/events.log',
+                                           'compress', true,
+                                           'missingok', true,
+                                           'frequency', VOBOX_PROXY_RENEWAL_LOG_FREQUENCY,
+                                           'create', true,
+                                           'ifempty', true,
+                                           'rotate', VOBOX_PROXY_RENEWAL_LOG_ROTATION,
+                                          );
+
+    };
+  };
+  SELF;
+};
 
 
 # Recommended settings for TCP/IP to improve performances
