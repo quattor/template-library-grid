@@ -95,6 +95,7 @@ include { 'components/chkconfig/config' };
 '/software/components/chkconfig/service/bdii/startstop'=true;
 
 include { 'components/filecopy/config' };
+'/software/components/gip2/dependencies/pre' = append('filecopy');
 
 variable CONTENTS = <<EOF;
 #!/bin/sh
