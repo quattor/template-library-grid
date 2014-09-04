@@ -8,6 +8,7 @@ variable WMS_OUTPUT_STORAGE_DEFAULT ?= null;
 # wmsclient
 # ---------------------------------------------------------------------------- 
 include { 'components/wmsclient/config' };
+'/software/components/wmsclient/register_change' = append('/system/vo');
 '/software/components/wmsclient/glite/active' = false;
 '/software/components/wmsclient/wmproxy/active' = true;
 '/software/components/wmsclient/wmproxy/configDir' = '/etc/glite-wms';
