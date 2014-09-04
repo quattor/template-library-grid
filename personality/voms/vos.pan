@@ -2,13 +2,6 @@
 
 unique template personality/voms/vos;
 
-include { 'components/symlink/config' };
-
-'/software/components/symlink/links'=push(
-  nlist("name","/usr/lib64/libvomsmysql.so",
-        "target","/usr/lib64/voms/libvomsmysql.so",),
-);
-
 variable VOS = {
   if ( is_defined(VOMS_VOS) && (length(VOMS_VOS) == 0) ) {
 	  foreach (vo;params;VOMS_VOS) {
