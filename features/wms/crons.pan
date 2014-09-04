@@ -6,10 +6,16 @@ variable WMS_PURGER_LOG ?= 'glite-wms-purger.log';
 variable WMS_PURGE_PROXYCACHE_LOG ?= 'glite-wms-wmproxy-purge-proxycache.log';
 variable WMS_PURGE_PROXYCACHE_KEYS_LOG ?= 'glite-wms-wmproxy-purge-proxycache-keys.log';
 variable WMS_CRON_PURGESTORAGE_PARTIAL_INTERVAL ?= 6;
-variable WMS_CRON_PURGESTORAGE_PARTIAL_AGE_THRESHOLD ?= 604800;
+variable WMS_CRON_PURGESTORAGE_PARTIAL_TARGET ?= if ( is_null(SELF) ) {
+                                                   SELF;
+                                                 } else {
+                                                   40;
+                                                 };
 
 # Minimum number of days a file is kept before being eligible to purging. Default = 7 days
 variable WMS_CRON_PURGESTORAGE_AGE_THRESHOLD ?= 1296000;
+# Minimum number of days a file is kept before being eligible to partial purging. Default = WMS_CRON_PURGESTORAGE_AGE_THRESHOLD / 2
+variable WMS_CRON_PURGESTORAGE_PARTIAL_AGE_THRESHOLD ?= WMS_CRON_PURGESTORAGE_AGE_THRESHOLD / 2;
 
 include { 'components/cron/config' };
 include { 'components/altlogrotate/config' };
@@ -43,6 +49,11 @@ include { 'components/altlogrotate/config' };
 # Execute the 'purger' command at every day except on Sunday with a frequency of six hours
 # glite-wms-purge storage is run only if needed Monday-Saturday and unconditonnally on Sunday
 # This cron also takes care of renewing proxy used by WMS services.
+variable WMS_CRON_PARTIAL_TARGET_OPTION = if ( is_defined(WMS_CRON_PURGESTORAGE_PARTIAL_TARGET) ) {
+                                            ' -a '+to_string(WMS_CRON_PURGESTORAGE_PARTIAL_TARGET);
+                                          } else {
+                                            '';
+                                          };
 "/software/components/cron/entries" = 
   push(
     nlist(
@@ -53,7 +64,8 @@ include { 'components/altlogrotate/config' };
         "PATH=/sbin:/bin:/usr/sbin:/usr/bin; . " + GLITE_GRID_ENV_PROFILE+";" +
         GLITE_LOCATION + "/sbin/glite-wms-purgeStorage.sh -l " +
         WMS_LOCATION_LOG + "/" + WMS_PURGER_LOG +
-        " -p " + WMS_SANDBOX_DIR + " -t " + to_string(WMS_CRON_PURGESTORAGE_PARTIAL_AGE_THRESHOLD),
+        " -p " + WMS_SANDBOX_DIR + " -t " + to_string(WMS_CRON_PURGESTORAGE_PARTIAL_AGE_THRESHOLD)+
+        WMS_CRON_PARTIAL_TARGET_OPTION,
     )
   );
 
