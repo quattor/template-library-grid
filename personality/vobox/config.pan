@@ -114,8 +114,8 @@ include { 'components/altlogrotate/config' };
   if ( is_defined(VOBOX_ENABLED_VOS_USER) ) {
     foreach (vo;user;VOBOX_ENABLED_VOS_USER) {
       contents = file_contents('personality/vobox/voname-box-proxyrenewal.template');
-      variables = replace('(?m:THEVO)',vo,contents);
-      variables = replace('(?m:THEADMIN)',user,contents);
+      contents = replace('(?m:THEVO)',vo,contents);
+      contents = replace('(?m:THEADMIN)',user,contents);
       debug("contents = \n"+contents);
       script_name = vo+'-box-proxyrenewal';
       script_path = '/etc/init.d/'+script_name;
