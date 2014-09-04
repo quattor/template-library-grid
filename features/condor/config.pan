@@ -15,13 +15,17 @@ variable CONDOR_INSTALL_PATH ?= '/usr';
 variable CONDOR_ADMIN ?= SITE_EMAIL;
 
 variable CONDOR_CONFIG_CONTENTS = file_contents('features/condor/templ/condor_config.templ');
-variable CONDOR_CONFIG_CONTENTS = replace('<%LOCAL_DIR%>',CONDOR_VAR_DIR,CONDOR_CONFIG_CONTENTS);
+variable CONDOR_CONFIG_CONTENTS = replace('\$\(TILDE\)',CONDOR_VAR_DIR,CONDOR_CONFIG_CONTENTS);
+
 variable CONDOR_LOCAL_CONFIG_CONTENTS = file_contents('features/condor/templ/condor_config.local.templ');
 variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%HOSTNAME%>',FULL_HOSTNAME,CONDOR_LOCAL_CONFIG_CONTENTS);
 variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%CONDOR_ADMIN%>',CONDOR_ADMIN,CONDOR_LOCAL_CONFIG_CONTENTS);
-variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%LOCAL_DIR%>',CONDOR_VAR_DIR,CONDOR_LOCAL_CONFIG_CONTENTS);
 variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%PORT_MIN%>',GLOBUS_TCP_PORT_RANGE_MIN,CONDOR_LOCAL_CONFIG_CONTENTS);
 variable CONDOR_LOCAL_CONFIG_CONTENTS = replace('<%PORT_MAX%>',GLOBUS_TCP_PORT_RANGE_MAX,CONDOR_LOCAL_CONFIG_CONTENTS);
+
+include { 'components/filecopy/config' };
+'/software/components/filecopy/dependencies/post' = append('glitestartup');
+'/software/components/glitestartup/dependencies/pre' = append('filecopy');
 
 '/software/components/filecopy/services' =
   npush(escape(CONDOR_LOCAL_CONFIG_FILE),
