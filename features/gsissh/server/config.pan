@@ -60,4 +60,4 @@ prefix '/software/components/metaconfig/services/{/etc/grid-security/gsi-authz.c
 'owner'  = 'root';
 'group'  = 'root';
 'module' = 'general';
-'contents/globus_mapping' = '/usr/lib64/liblcas_lcmaps_gt4_mapping_.so lcmaps_callout';
+'contents/globus_mapping' = '/usr/lib64/liblcas_lcmaps_gt4_mapping.so lcmaps_callout';
