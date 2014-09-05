@@ -2,7 +2,7 @@
 
 unique template features/lb/env;
 
-variable LB_PROFILE_SCRIPT ?= GLITE_LOCATION + '/etc/lb.conf';
+variable LB_PROFILE_SCRIPT ?= EMI_LOCATION + '/etc/lb.conf';
 
 # Use same variable names and default values for WMS and LB to ensure consistency if both 
 # run on the same machine, whichever is included first.
