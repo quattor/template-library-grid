@@ -17,6 +17,10 @@ variable NODE_VO_GRIDMAPDIR_CONFIG ?= true;
 variable NODE_VO_PROFILE_ENV ?= true;
 variable VO_GRIDMAPFILE_MAP_VOMS_ROLES ?= true;
 variable GSISSH_SERVER_ENABLED ?= true;
+# Means that X509_USER_PROXY variable will not be defined.
+# Define to something or to undef if you want this variable to be defined.
+# undef will result in using the default value.
+variable X509_USER_PROXY_PATH ?= null;
 
 #
 # Include base configuration of a gLite node.
