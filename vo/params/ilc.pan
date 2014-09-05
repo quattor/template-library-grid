@@ -9,11 +9,11 @@ structure template vo/params/ilc;
           'port', 15110,
           'adminport', 8443,
          ),
-    nlist('name', 'voms.fnal.gov',
-          'host', 'voms.fnal.gov',
-          'port', 15023,
-          'adminport', 8443,
-         ),
+#    nlist('name', 'voms.fnal.gov',
+#          'host', 'voms.fnal.gov',
+#          'port', 15023,
+#          'adminport', 8443,
+#         ),
 );
 
 'voms_mappings' ?= list(

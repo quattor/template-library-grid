@@ -12,6 +12,11 @@ structure template vo/params/vo.lpnhe.in2p3.fr;
 );
 
 'voms_mappings' ?= list(
+    nlist('description', 'SW manager',
+          'fqan', '/vo.lpnhe.in2p3.fr/Role=SoftwareManager',
+          'suffix', 's',
+          'suffix2', 's',
+         ),
 );
 
 'base_uid' ?= 411000;
