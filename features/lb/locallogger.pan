@@ -1,3 +1,4 @@
+# Template to configure a LB locallogger on a machine other than the LB for WMS
 
 unique template features/lb/locallogger;
 
@@ -10,37 +11,23 @@ include { 'features/lb/env' };
 # Add gLite user
 include { 'users/glite' };
 
-# Do a copy of machine cert/key for locallogger usage
-'/software/components/filecopy/services' = {
-  SELF[escape(WMS_HOST_KEY)] = nlist('source', SITE_DEF_HOST_KEY,
-                                       'owner', GLITE_USER+':'+GLITE_GROUP,
-                                       'perms', '0400',
-                                       );
-  SELF[escape(WMS_HOST_CERT)] = nlist('source', SITE_DEF_HOST_CERT,
-                                        'owner', GLITE_USER+':'+GLITE_GROUP,
-                                        'perms', '0644',
-                                        );
-  SELF;
-};
 
-# Add glite-lb-locallogger to chkconfig
+# Configure glite-lb-locallogger startup
+include { 'features/lb/glitestartup' };
+'/software/components/glitestartup/services' = glitestartup_mod_service(LOCALLOGGER_SERVICE);
 
+# Ensure it is not enabled in chkconfig (it used to be in Quattor config).
+# Can be removed in the future (4/9/2014)
 include { 'components/chkconfig/config' };
-
 prefix '/software/components/chkconfig';
-
 'service' = {
-  SELF[LOCALLOGGER_SERVICE] = nlist('on','',
-                                   'startstop',true);
+  SELF[LOCALLOGGER_SERVICE] = nlist('off','');
   SELF;
 };
 
 # Fix /var/run/glite ownership
-
 include { 'components/dirperm/config' };
-
 prefix '/software/components/dirperm';
-
 'paths' = append(
   nlist(
     'owner','glite:glite',
