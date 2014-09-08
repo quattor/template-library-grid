@@ -81,6 +81,8 @@ include { 'components/sysconfig/config' };
 # Certificate and key
 #
 include { 'components/filecopy/config' };
+'/software/components/filecopy/dependencies/post' = append('myproxy');
+'/software/components/myproxy/dependencies/pre' = append('filecopy');
 '/software/components/filecopy/services/{/etc/grid-security/myproxy/hostcert.pem}' = nlist(
     'source', '/etc/grid-security/hostcert.pem',
     'owner', 'myproxy',
