@@ -9,6 +9,12 @@ structure template vo/params/envirogrids.vo.eu-egee.org;
           'port', 15012,
           'adminport', 8443,
          ),
+    nlist('name', 'voms2.cern.ch',
+          'host', 'voms2.cern.ch',
+          'port', 15012,
+          'adminport', 8443,
+         ),
+
 );
 
 'voms_mappings' ?= list(
