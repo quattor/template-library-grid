@@ -5,7 +5,7 @@ variable MYPROXY_SERVER_CONFIG_FILE ?= '/etc/myproxy-server.config';
 variable MYPROXY_SERVER_DAEMON_NAME ?= 'myproxy-server';
 
 # Add RPMs for PX
-include { 'personality/px/rpms/config' };
+include { 'personality/px/rpms' };
 
 # Ensure that the host certificates have the correct permissions.
 include { 'features/security/host_certs' };
