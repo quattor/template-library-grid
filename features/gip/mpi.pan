@@ -22,8 +22,10 @@ variable MPI_RUNTIMEENV = {
   # MPI-2 implementations.
   SELF[length(SELF)] = "OPENMPI";
   SELF[length(SELF)] = "OPENMPI-"+MPI_OPENMPI_VERSION;
-  SELF[length(SELF)] = "MPICH2";
-  SELF[length(SELF)] = "MPICH2-"+MPI_MPICH2_VERSION;
+  if(is_defined(MPI_USE_MPICH2) && MPI_USE_MPICH2){
+	SELF[length(SELF)] = "MPICH2";
+  	SELF[length(SELF)] = "MPICH2-"+MPI_MPICH2_VERSION;
+  };
 
   # Shared home directories support
   if ( is_defined(CE_SHARED_HOMES) ) {
