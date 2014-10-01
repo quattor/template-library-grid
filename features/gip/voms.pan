@@ -18,6 +18,8 @@ get_owner = echo $VOMS_VO
 get_acbr = echo VO:$VOMS_VO
 get_data = echo
 get_services = echo
+get_implementationname = echo VOMS
+get_implementationversion = rpm -q --qf %{V} voms-server
 EOF
 
 'confFiles/{/etc/bdii/gip/glite-info-service-voms-admin.conf}'= <<EOF;
