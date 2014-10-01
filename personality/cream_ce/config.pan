@@ -136,6 +136,16 @@ variable CREAM_DATA_SOURCE_FACTORY_CLASS ?= 'org.apache.commons.dbcp.BasicDataSo
 # Create BLParser environment config file (used by CREAM submission)
 include { 'features/blparser/blah-config' };
 
+#-----
+# Add a script to purge running job that are keeped on cream_ce
+#----
+variable CREAM_PURGE_RUNNING_ENABLE ?= false;
+include { if (CREAM_PURGE_RUNNING_ENABLE) {
+    'personality/cream_ce/purge-running';
+  } else {
+    null;
+  };
+};
 #-----------------------------------------------------------------------------
 # Configuration for GLEXEC.
 #-----------------------------------------------------------------------------
