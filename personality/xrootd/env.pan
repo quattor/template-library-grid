@@ -25,7 +25,7 @@ variable XROOTD_SITE_NAME ?= {
 };
 
 # Default monitoring options, when enabled
-variable XROOTD_MONITORING_OPTIONS ?= 'all rbuff 32k auth flush 30s  window 5s dest files info user io redir';
+variable XROOTD_MONITORING_OPTIONS ?= 'all 32k flush 30s  window 5s dest files info user redir';
 variable XROOTD_REPORTING_OPTIONS ?= 'every 60s all -buff -poll sync';
 # Monitoring destinations: both must be lists
 variable XROOTD_MONITORING_DESTINATIONS ?= undef;
