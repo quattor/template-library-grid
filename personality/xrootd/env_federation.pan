@@ -5,6 +5,7 @@
 unique template personality/xrootd/env_federation;
 
 # Default parameters for some well known federations.
+# For LHC VOs, the reference information is at https://svnweb.cern.ch/trac/lcgdm/wiki/Dpm/Xroot/ManualSetup.
 # The key is a VO name.
 variable XROOTD_FEDERATION_PARAMS_DEFAULT = {
   SELF['atlas'] = nlist('instance', 'atlasfed',
@@ -12,7 +13,10 @@ variable XROOTD_FEDERATION_PARAMS_DEFAULT = {
                         'local_port', 11000,
                         'fedredir', undef,
                         'monitoring_host', 'atlas-fax-eu-collector.cern.ch:9930',
+                        'monitoring_options', 'all rbuff 32k flush 30s fstat 60 lfn ops xfr 5 window 5s',
+                        'monitoring_events', list('fstat','info','user','redir'),
                         'reporting_host', 'atl-prod05.slac.stanford.edu:9931',
+                        'reporting_options', 'every 60s all -buff -poll sync',
                         'xrd_mgr_port', 1094,
                         'n2n_library', 'XrdOucName2NameLFC.so',
 #                        Normally retrieved from AGIS but can be used to override AGIS definition
@@ -34,8 +38,11 @@ variable XROOTD_FEDERATION_PARAMS_DEFAULT = {
                         'cmsd_mgr_port', 1213,
                         'local_port', 11001,
                         'fedredir', undef,
-                        #'monitoring_host', 'xrd.report xrootd.t2.ucsd.edu:9930',
-                        #'reporting_host', 'xrd.report xrootd.t2.ucsd.edu:9931',
+                        'monitoring_host', 'xrootd.t2.ucsd.edu:9930',
+                        'monitoring_options', 'all flush io 30s ident 5m fstat 60 lfn ops xfr 5 mbuff 8k rbuff 4k rnums 3 window 5s',
+                        'monitoring_events', list('files','io','info','user','redir'),
+                        'reporting_host', 'xrootd.t2.ucsd.edu:9931',
+                        'reporting_options', 'every 60s all -buff -poll sync',
                         'xrd_mgr_port', 1094,
                         'n2n_library', 'libXrdCmsTfc.so',
                         'n2n_options', 'file:/etc/xrootd/storage.xml?protocol=direct',

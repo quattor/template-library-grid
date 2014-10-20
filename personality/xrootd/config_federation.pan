@@ -136,10 +136,29 @@ include { 'personality/xrootd/env_federation' };
 
       # Configure Xrootd monitoring if destination hosts are specified
       if ( is_defined(params['monitoring_host']) ) {
-        SELF[federation]['monitoringOptions'] = XROOTD_MONITORING_OPTIONS + ' ' + params['monitoring_host'];
+        if ( is_defined(params['monitoring_options']) ) {
+          monitoring_options = params['monitoring_options'];
+        } else {
+          monitoring_options = XROOTD_MONITORING_OPTIONS;
+        };
+        if ( is_defined(params['monitoring_events']) ) {
+          monitoring_events = params['monitoring_events'];
+        } else {
+          monitoring_events = XROOTD_MONITORING_EVENTS;
+        };
+        monitoring_events_str = '';
+        foreach (k;event;monitoring_events) {
+           monitoring_events_str = monitoring_events_str + ' ' + event;
+        };
+        SELF[federation]['monitoringOptions'] = format('%s dest %s %s', monitoring_options, monitoring_events_str, params['monitoring_host']);
       };
       if ( is_defined(params['reporting_host']) ) {
-        SELF[federation]['reportingOptions'] = params['reporting_host'] + ' ' + XROOTD_REPORTING_OPTIONS;
+        if ( is_defined(params['reporting_options']) ) {
+          reporting_options = params['reporting_options'];
+        } else {
+          reporting_options = XROOTD_REPORTING_OPTIONS;
+        };
+        SELF[federation]['reportingOptions'] = params['reporting_host'] + ' ' + reporting_options;
       };
     };
   };
