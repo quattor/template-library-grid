@@ -41,3 +41,37 @@ include { 'components/filecopy/config' };
 
   SELF;
 };
+
+
+# ---------------------------------------------------------------------------- 
+# Glue 1 configuration
+# ---------------------------------------------------------------------------- 
+
+variable GIP_GLUE1_PROVIDER_SCRIPT = 'glite-info-glue1-provider-service-argus';
+variable GIP_GLUE1_PROVIDER_TEMPLATE = list(
+  '/etc/glite/info/service/glite-info-service-argus-pap.conf',
+  '/etc/glite/info/service/glite-info-service-argus-pep.conf',
+  '/etc/glite/info/service/glite-info-service-argus-pdp.conf');
+
+"/software/components/gip2/provider" = {
+  glue1_template_id = 0;
+  ok = first(GIP_GLUE1_PROVIDER_TEMPLATE,idx, tpl);
+  glue1_provider_content = "";
+  while ( ok ) {
+    glue1_provider_content = format("%s /usr/bin/glite-info-service %s %s\n",glue1_provider_content,tpl,SITE_NAME);
+    ok = next(GIP_GLUE1_PROVIDER_TEMPLATE,idx,tpl);
+  };
+  SELF[GIP_GLUE1_PROVIDER_SCRIPT] = glue1_provider_content;
+  SELF;
+};
+
+'/software/components/filecopy/services' = {
+  foreach(g1_template; file; GIP_GLUE1_PROVIDER_TEMPLATE) {
+    SELF[escape(file)] = nlist(
+      'source', file + '.template',
+      'owner', 'root',
+      'perms', '0644',
+    );
+  };
+  SELF;
+};
