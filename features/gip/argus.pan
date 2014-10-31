@@ -1,13 +1,15 @@
 unique template features/gip/argus;
 
 # ---------------------------------------------------------------------------- 
-# gip2
+# Glue 2 configuration
 # ---------------------------------------------------------------------------- 
 include { 'components/gip2/config' };
 variable GIP_PROVIDER_SCRIPT ?= 'glite-info-glue2-provider-service-argus';
-variable GIP_PROVIDER_TEMPLATES ?= list('/etc/glite/info/service/glite-info-glue2-argus-pap.conf','/etc/glite/info/service/glite-info-glue2-argus-pdp.conf','/etc/glite/info/service/glite-info-glue2-argus-pep.conf');
+variable GIP_PROVIDER_TEMPLATES ?= list(
+  '/etc/glite/info/service/glite-info-glue2-argus-pap.conf',
+  '/etc/glite/info/service/glite-info-glue2-argus-pdp.conf',
+  '/etc/glite/info/service/glite-info-glue2-argus-pep.conf');
 variable GIP_PROVIDER_ID ?= '/etc/glite/info/service/glite-info-glue2-service-argus.conf';
-
 
 "/software/components/gip2/provider" = {
   if ( exists(SELF) && is_defined(SELF) && !is_nlist(SELF) ) {
@@ -23,7 +25,7 @@ variable GIP_PROVIDER_ID ?= '/etc/glite/info/service/glite-info-glue2-service-ar
      };
      i = i + 1;
   };
-  SELF[GIP_PROVIDER_SCRIPT] = SELF[GIP_PROVIDER_SCRIPT] + ' ' + SITE_NAME + ' ' + GIP_PROVIDER_ID;
+  SELF[GIP_PROVIDER_SCRIPT] = SELF[GIP_PROVIDER_SCRIPT] + ' ' + SITE_NAME + "\n";
   SELF;
 };
 

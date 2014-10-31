@@ -2,6 +2,8 @@
 unique template personality/argus/service;
 
 # Include BDII
+# BDII user must be root
+variable BDII_USER ?= 'root';
 include { 'personality/bdii/service' };
 include { 'features/gip/base'};
 include { 'features/gip/argus'};
