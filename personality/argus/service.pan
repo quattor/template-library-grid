@@ -1,6 +1,11 @@
 
 unique template personality/argus/service;
 
+# Include BDII
+include { 'personality/bdii/service' };
+include { 'features/gip/base'};
+include { 'features/gip/argus'};
+
 # Include MON RPMs
 include { 'personality/argus/rpms/config' };
 
