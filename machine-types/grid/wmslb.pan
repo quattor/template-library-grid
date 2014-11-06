@@ -20,7 +20,7 @@ variable VOMS_LSC_FILE ?= true;
 
 #
 # Virtual organization configuration options.
-# Must be done before calling machine-types/base
+# Must be done before calling machine-types/grid/base
 #
 variable CONFIGURE_VOS = true;
 variable NODE_VO_ACCOUNTS =true;
@@ -40,7 +40,7 @@ include { 'personality/wms/service' };
 include { 'personality/lb/service' };
 
 #
-# gLite updates
+# middleware updates
 #
 include { if_exists('update/config') };
 
@@ -48,5 +48,4 @@ include { if_exists('update/config') };
 # Do any final configuration needed for some reasons (e.g. : run gLite4 on SL4)
 # Should be done at the very end of machine configuration
 #
-include { return(GLITE_OS_POSTCONFIG) };
-
+include { if_exists(GLITE_OS_POSTCONFIG) };

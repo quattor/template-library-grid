@@ -46,20 +46,8 @@ include { 'components/profile/config' };
 
 
 # Add LB services to the list of gLite enabled services
-# As ncm-wmslb is also used by WMS, avoid to add twice the same dependency (even if harmless)
-include { 'components/glitestartup/config' };
-'/software/components/glitestartup/configFile'='/etc/gLiteservices';
-'/software/components/glitestartup/dependencies/pre' = glitestartup_add_dependency(list('accounts','dirperm','mysql','wmslb'));
-'/software/components/glitestartup/restartEnv' = push(LB_PROFILE_SCRIPT);
-"/software/components/glitestartup/scriptPaths" = list("/etc/init.d");
-# FIXME : remove when glitestartup support defining a list of service to restart
-'/software/components/glitestartup/restartServices' = true;
-# This line is necessary because of PAN bug (see LCGQWG ticket #154)
-'/software/components/glitestartup/services' = if ( exists(SELF) && is_defined(SELF) ) {
-                                                 return(SELF);
-                                               } else {
-                                                 return(nlist());
-                                               };
+include { 'features/lb/glitestartup' };
+'/software/components/glitestartup/dependencies/pre' = glitestartup_add_dependency(list('wmslb'));
 '/software/components/glitestartup/services' = {
   services = SELF;
   
