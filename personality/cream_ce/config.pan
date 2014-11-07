@@ -146,6 +146,19 @@ include { if (CREAM_PURGE_RUNNING_ENABLE) {
     null;
   };
 };
+
+#-----------------------------------------------------------------------------
+# Configure Central Ban
+#-----------------------------------------------------------------------------
+variable CREAM_CENTRAL_BAN_ENABLE ?= false;
+include { if (CREAM_CENTRAL_BAN_ENABLE) {
+    'personality/cream_ce/central-ban';
+  } else {
+    null;
+  };
+
+};
+
 #-----------------------------------------------------------------------------
 # Configuration for GLEXEC.
 #-----------------------------------------------------------------------------
