@@ -184,6 +184,7 @@ include { 'features/gip/base' };
 
 #
 # Patch /etc/glite-info-static/site/site.glue1.tpl to publish site instead of resource data
+# FIXME: can we remove this hack?
 #
 variable CONTENTS = <<EOF;
 #!/bin/sh

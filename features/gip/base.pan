@@ -22,7 +22,6 @@ include { 'components/gip2/config' };
 '/software/components/gip2/ldifDir' = GIP_LDIF_DIR;
 '/software/components/gip2/pluginDir' = GIP_PLUGIN_DIR;
 '/software/components/gip2/providerDir' = GIP_PROVIDER_DIR;
-'/software/components/gip2/staticInfoCmd' ?= '/usr/sbin/glite-info-static';
 '/software/components/gip2/dependencies/pre' = push('accounts');
 
 # Configure the list of GIP working directories.
