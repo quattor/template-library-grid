@@ -589,11 +589,10 @@ variable GIP_CE_LDIF_PARAMS = {
   # Cache mode is currently supported only for Torque/MAUI.
   # iterate over all defined queues (there is one GlueCE object per queue)
   if ( is_defined(CE_QUEUES['vos']) ) {
-    # host_entries_g1 and all_ce_entries_g1 contain the VOView/CE DN list per LRMS (GLUE1)
-    # host_entries_g2 and all_ce_entries_g2 contain the shares and computing service descriptions (GLUE2)
+    # GLUE1: host_entries_g1 and all_ce_entries_g1 contain the VOView/CE DN list per LRMS
+    # GLUE2: all_ce_entries_g2 contain the shares and computing service descriptions (there is no host_entries_g2)
     host_entries_g1 = nlist();
     all_ce_entries_g1 = nlist();
-    host_entries_g2 = nlist();
     all_ce_entries_g2 = nlist();
     
     foreach (queue;vos;CE_QUEUES['vos']) {
@@ -606,16 +605,13 @@ variable GIP_CE_LDIF_PARAMS = {
       lrms = CE_BATCH_SYS_LIST[jobmanager];
       if ( !is_nlist(host_entries_g1[lrms]) ) {
         host_entries_g1[lrms] = nlist();
-        host_entries_g2[lrms] = nlist();
       };
   
       if ( (lrms == 'pbs') && GIP_CE_USE_MAUI && GIP_CE_USE_CACHE && (FULL_HOSTNAME == LRMS_SERVER_HOST) ) {
         ce_list = CE_HOSTS;
         # Create only if necessary to avoid creating a useless emtpy file
-        if ( !is_nlist(all_ce_entries_g1[lrms]) ) {
-          all_ce_entries_g1[lrms] = nlist();
-          all_ce_entries_g2[lrms] = nlist();
-        };
+        if ( !is_nlist(all_ce_entries_g1[lrms]) ) all_ce_entries_g1[lrms] = nlist();
+        if ( !is_nlist(all_ce_entries_g2[lrms]) ) all_ce_entries_g2[lrms] = nlist();
       } else {
         ce_list = list(FULL_HOSTNAME);
       };
@@ -766,7 +762,6 @@ variable GIP_CE_LDIF_PARAMS = {
         # Entries are for the current host, add them to the list of DN for the GIP standard LDIF file
         if ( ce == FULL_HOSTNAME ) {
           host_entries_g1[lrms] = merge(host_entries_g1[lrms],entries_g1);
-          host_entries_g2[lrms] = merge(host_entries_g2[lrms],entries_g2);
         };
         
         # Also add to LDIF file used when cache mode is enabled (several entries in ce_list)
@@ -780,22 +775,22 @@ variable GIP_CE_LDIF_PARAMS = {
     };             # end of iteration over queues
                  
     # Create LDIF configuration entries describing CE queues
-    # FIXME: merge existing entries with new ones in the loops
     foreach (lrms;ce_entries;host_entries_g1) {
-        conf_file_g1 = "lcg-info-static-ce-"+lrms+".conf";
-        SELF['glue1'][conf_file_g1] = nlist();
-        SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-CE-"+lrms+".ldif";
-        SELF['glue1'][conf_file_g1]['entries'] = ce_entries;
-    };
-    foreach (lrms;ce_entries;all_ce_entries_g2) {
-        conf_file_g2 = "glite-ce-glue2.conf";
-        SELF['glue2']['shares'] = ce_entries;
+      conf_file_g1 = "lcg-info-static-ce-"+lrms+".conf";
+      SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-CE-"+lrms+".ldif";
+      if ( !is_defined(SELF['glue1'][conf_file_g1]['entries']) ) SELF['glue1'][conf_file_g1]['entries'] = nlist();
+      SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
     };
     foreach (lrms;ce_entries;all_ce_entries_g1) {
-        conf_file_g1 = "lcg-info-static-all-CE-"+lrms+".conf";
-        SELF['glue1'][conf_file_g1] = nlist();
-        SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-all-CE-"+lrms+".ldif";
-        SELF['glue1'][conf_file_g1]['entries'] = ce_entries;
+      conf_file_g1 = "lcg-info-static-all-CE-"+lrms+".conf";
+      SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-all-CE-"+lrms+".ldif";
+      if ( !is_defined(SELF['glue1'][conf_file_g1]['entries']) ) SELF['glue1'][conf_file_g1]['entries'] = nlist();
+      SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
+    };
+    foreach (lrms;ce_entries;all_ce_entries_g2) {
+      conf_file_g2 = "glite-ce-glue2.conf";
+      if ( !is_defined(SELF['glue2']['shares']) ) SELF['glue2']['shares'] = nlist();
+      SELF['glue2']['shares'] = merge(SELF['glue2']['shares'],ce_entries);
     };
   };
      
@@ -913,7 +908,7 @@ variable GIP_CE_LDIF_PARAMS = {
     ce_acbr[length(ce_acbr)] = format('VO:%s',vo);
   };
   ce_shares = list();
-  foreach (lrms;ce_entries;host_entries_g2) {
+  foreach (lrms;ce_entries;all_ce_entries_g2) {
     foreach (share;params;ce_entries) {
       ce_shares[length(ce_shares)] = to_uppercase(share);
     }
