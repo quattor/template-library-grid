@@ -3,7 +3,7 @@ unique template personality/se_dpm/service;
 # SEDPM_CONFIG_SITE is the legacy name of the variable.
 variable SEDPM_CONFIG_SITE ?= null;
 variable DPM_CONFIG_SITE ?= SEDPM_CONFIG_SITE;
-
+variable DPM_USE_PUPPET_CONFIG ?= false;
 
 # Ensure that the host certificates have the correct permissions.
 include { 'features/security/host_certs' };
@@ -27,32 +27,11 @@ include { 'features/fetch-crl/config' };
 include { 'features/mkgridmap/standard' };
 include { 'features/mkgridmap/lcgdm' };
 
-
-# Configure DPM services.
-# Must be done before doing specific configuration for the node type.
-include { 'personality/se_dpm/config' };
-
-
-# Add RPMs (needs variables defined by glite/se_dpm/config
-include { 'personality/se_dpm/rpms/config' };
-
-
-# DPM node type specific configuration
-variable SEDPM_MACHINE_CONFIG = {
-    if ( SEDPM_IS_HEAD_NODE ) {
-        "personality/se_dpm/server/service";
-    } else {
-        "personality/se_dpm/disk/service";
-    };
+include {
+	if(DPM_USE_PUPPET_CONFIG){
+		'personality/se_dpm/service_puppet';
+	}else{
+		'personality/se_dpm/service_quattor';
+	};
 };
-include { SEDPM_MACHINE_CONFIG };
 
-
-# Configure dmlite
-variable DEBUG = debug(OBJECT+': DMLITE_ENABLED='+to_string(DMLITE_ENABLED));
-include { if ( DMLITE_ENABLED ) 'personality/se_dpm/config_dmlite'};
-
-
-# Configure Xrootd services if needed
-# Must be done AFTER the DPM configuration is complete
-include { if ( XROOT_ENABLED ) 'personality/xrootd/service' };
