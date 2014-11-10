@@ -299,8 +299,10 @@ variable GIP_CE_PLUGIN_COMMAND = {
     };
     gip_script_options = "--max-normal-slots " + to_string(CE_CPU_CONFIG['cores']);
     SELF['ce'] = pythonbin + ' ' + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-maui --host "+LRMS_SERVER_HOST+" "+gip_script_options;
+    # FIXME: lcg-info-dynamic-scheduler doesn't allow to use a LDIF file in a non standard location...
+    # Update to whatever is appropriate in cache mode when this is fixed.
     if ( GIP_CE_USE_CACHE ) {
-      SELF['ce'] = SELF['ce'] + ' --ce-ldif ' + GIP_VAR_DIR + '/static-file-all-CE-pbs.ldif';
+      SELF['ce'] = SELF['ce'] + ' --ce-ldif ' + GIP_LDIF_DIR + '/static-file-all-CE-pbs.ldif';
     } else {
       SELF['ce'] = SELF['ce'] + ' --ce-ldif ' + GIP_LDIF_DIR + '/static-file-CE-pbs.ldif';
     };
@@ -678,74 +680,74 @@ variable GIP_CE_LDIF_PARAMS = {
           #FIXME: use home directory if in a shared area
           shared_data_dir = nlist('GlueCEInfoDataDir', list(CE_DATADIR));
           
+          # GLUE1 GlueVOView entry (LDIF, 1/VO/CE)
           entries_g1[escape('dn: GlueVOViewLocalID='+vo_name+',GlueCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] =
-            merge(nlist(
-                        'objectClass', list('GlueCETop','GlueVOView','GlueCEInfo','GlueCEState','GlueCEAccessControlBase','GlueCEPolicy',
-                                           'GlueKey','GlueSchemaVersion'),
-                        'GlueVOViewLocalID',                list(vo_name),
-                        'GlueSchemaVersionMajor',           list('1'),
-                        'GlueSchemaVersionMinor',           list('3'),
-                        'GlueCEAccessControlBaseRule',      list(rule),
-                        'GlueCEStateRunningJobs',           list('0'),
-                        'GlueCEStateWaitingJobs',           list(to_string(GLUE_FAKE_JOB_VALUE)),
-                        'GlueCEStateTotalJobs',             list('0'),
-                        'GlueCEStateFreeJobSlots',          list('0'),
-                        'GlueCEStateEstimatedResponseTime', list('2146660842'),
-                        'GlueCEStateWorstResponseTime',     list('2146660842'),
-                        'GlueChunkKey',                     list("GlueCEUniqueID="+unique_id),
-                       ),
-                  gluese_info_default_se,
-                  sw_area,
-                  shared_data_dir,
-                 );
+                  merge(nlist('objectClass', list('GlueCETop','GlueVOView','GlueCEInfo','GlueCEState','GlueCEAccessControlBase','GlueCEPolicy',
+                                                  'GlueKey','GlueSchemaVersion'),
+                              'GlueVOViewLocalID',                list(vo_name),
+                              'GlueSchemaVersionMajor',           list('1'),
+                              'GlueSchemaVersionMinor',           list('3'),
+                              'GlueCEAccessControlBaseRule',      list(rule),
+                              'GlueCEStateRunningJobs',           list('0'),
+                              'GlueCEStateWaitingJobs',           list(to_string(GLUE_FAKE_JOB_VALUE)),
+                              'GlueCEStateTotalJobs',             list('0'),
+                              'GlueCEStateFreeJobSlots',          list('0'),
+                              'GlueCEStateEstimatedResponseTime', list('2146660842'),
+                              'GlueCEStateWorstResponseTime',     list('2146660842'),
+                              'GlueChunkKey',                     list("GlueCEUniqueID="+unique_id),
+                             ),
+                        gluese_info_default_se,
+                        sw_area,
+                        shared_data_dir,
+                       );
         };
     
-        # GLUE1 entry (LDIF)
+        # GLUE1 GlueCE entry (LDIF)
         entries_g1[escape('dn: GlueCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] = 
-          merge(nlist('objectClass',              list('GlueCETop','GlueCE','GlueCEAccessControlBase','GlueCEInfo','GlueCEPolicy', 'GlueCEState',
-                                                       'GlueInformationService','GlueKey','GlueSchemaVersion'),
-                      'GlueCEImplementationName',    list(GLUE_CE_IMPLEMENTATION[ce_flavor]),
-                      'GlueCEImplementationVersion', list(CREAM_CE_VERSION),
-                      'GlueCEHostingCluster',        list(GIP_CLUSTER_PUBLISHER_HOST),
-                      'GlueCEName',                  list(queue),
-                      'GlueCEUniqueID',              list(unique_id),
-                      'GlueCEInfoGatekeeperPort',    list(to_string(CE_PORT[ce_flavor])),
-                      'GlueCEInfoHostName',          list(FULL_HOSTNAME),
-                      'GlueCEInfoLRMSType',          list(lrms),
-                      'GlueCEInfoLRMSVersion',       list('not defined'),
-                      'GlueCEInfoTotalCPUs',         list('0'),
-                      'GlueCEInfoJobManager',        list(jobmanager),
-                      'GlueCEInfoContactString',     list(unique_id),
-                      'GlueCEInfoApplicationDir',         list("/home/"),
-                      'GlueCEInfoDataDir',                list(CE_DATADIR),
-                      'GlueCEStateEstimatedResponseTime', list(to_string(2146660842)),
-                      'GlueCEStateFreeCPUs', list('0'),
-                      'GlueCEStateRunningJobs', list('0'),
-                      'GlueCEStateStatus', list(queue_status),
-                      'GlueCEStateTotalJobs', list('0'),
-                      'GlueCEStateWaitingJobs', list(to_string(GLUE_FAKE_JOB_VALUE)),
-                      'GlueCEStateWorstResponseTime', list('2146660842'),
-                      'GlueCEStateFreeJobSlots', list('0'),
-                      'GlueCEPolicyMaxCPUTime', list('0'),
-                      'GlueCEPolicyMaxRunningJobs', list('0'),
-                      'GlueCEPolicyMaxTotalJobs', list('0'),
-                      'GlueCEPolicyMaxWallClockTime', list('0'),
-                      'GlueCEPolicyPriority', list('1'),
-                      'GlueCEPolicyAssignedJobSlots', list('0'),
-                      'GlueCECapability', CE_CAPABILITIES,
-                      'GlueForeignKey', list('GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST),
-                      'GlueInformationServiceURL', list(RESOURCE_INFORMATION_URL),
-                      'GlueCEAccessControlBaseRule', access,
-                      'GlueCEPolicyMaxObtainableCPUTime', list('0'),
-                      'GlueCEPolicyMaxObtainableWallClockTime', list('0'),
-                      'GlueCEPolicyMaxSlotsPerJob', list('0'),
-                      'GlueCEPolicyPreemption', list('0'),
-                      'GlueCEPolicyMaxWaitingJobs', list('0'),
-                      'GlueSchemaVersionMajor',     list('1'),
-                      'GlueSchemaVersionMinor',     list('3'),
-                     ),
-                gluese_info_default_se
-               );
+                merge(nlist('objectClass',              list('GlueCETop','GlueCE','GlueCEAccessControlBase','GlueCEInfo','GlueCEPolicy', 'GlueCEState',
+                                                             'GlueInformationService','GlueKey','GlueSchemaVersion'),
+                            'GlueCEImplementationName',    list(GLUE_CE_IMPLEMENTATION[ce_flavor]),
+                            'GlueCEImplementationVersion', list(CREAM_CE_VERSION),
+                            'GlueCEHostingCluster',        list(GIP_CLUSTER_PUBLISHER_HOST),
+                            'GlueCEName',                  list(queue),
+                            'GlueCEUniqueID',              list(unique_id),
+                            'GlueCEInfoGatekeeperPort',    list(to_string(CE_PORT[ce_flavor])),
+                            'GlueCEInfoHostName',          list(FULL_HOSTNAME),
+                            'GlueCEInfoLRMSType',          list(lrms),
+                            'GlueCEInfoLRMSVersion',       list('not defined'),
+                            'GlueCEInfoTotalCPUs',         list('0'),
+                            'GlueCEInfoJobManager',        list(jobmanager),
+                            'GlueCEInfoContactString',     list(unique_id),
+                            'GlueCEInfoApplicationDir',         list("/home/"),
+                            'GlueCEInfoDataDir',                list(CE_DATADIR),
+                            'GlueCEStateEstimatedResponseTime', list(to_string(2146660842)),
+                            'GlueCEStateFreeCPUs', list('0'),
+                            'GlueCEStateRunningJobs', list('0'),
+                            'GlueCEStateStatus', list(queue_status),
+                            'GlueCEStateTotalJobs', list('0'),
+                            'GlueCEStateWaitingJobs', list(to_string(GLUE_FAKE_JOB_VALUE)),
+                            'GlueCEStateWorstResponseTime', list('2146660842'),
+                            'GlueCEStateFreeJobSlots', list('0'),
+                            'GlueCEPolicyMaxCPUTime', list('0'),
+                            'GlueCEPolicyMaxRunningJobs', list('0'),
+                            'GlueCEPolicyMaxTotalJobs', list('0'),
+                            'GlueCEPolicyMaxWallClockTime', list('0'),
+                            'GlueCEPolicyPriority', list('1'),
+                            'GlueCEPolicyAssignedJobSlots', list('0'),
+                            'GlueCECapability', CE_CAPABILITIES,
+                            'GlueForeignKey', list('GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST),
+                            'GlueInformationServiceURL', list(RESOURCE_INFORMATION_URL),
+                            'GlueCEAccessControlBaseRule', access,
+                            'GlueCEPolicyMaxObtainableCPUTime', list('0'),
+                            'GlueCEPolicyMaxObtainableWallClockTime', list('0'),
+                            'GlueCEPolicyMaxSlotsPerJob', list('0'),
+                            'GlueCEPolicyPreemption', list('0'),
+                            'GlueCEPolicyMaxWaitingJobs', list('0'),
+                            'GlueSchemaVersionMajor',     list('1'),
+                            'GlueSchemaVersionMinor',     list('3'),
+                           ),
+                      gluese_info_default_se
+                     );
 
         # GLUE2 entry (LDIF generator config entry)
         share_name =  replace('\.','-',format('%s_%s',queue,vo_name));
@@ -773,18 +775,28 @@ variable GIP_CE_LDIF_PARAMS = {
       
     };             # end of iteration over queues
                  
-    # Create LDIF configuration entries describing CE queues
-    foreach (lrms;ce_entries;host_entries_g1) {
-      conf_file_g1 = "lcg-info-static-ce-"+lrms+".conf";
-      SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-CE-"+lrms+".ldif";
-      if ( !is_defined(SELF['glue1'][conf_file_g1]['entries']) ) SELF['glue1'][conf_file_g1]['entries'] = nlist();
-      SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
-    };
-    foreach (lrms;ce_entries;all_ce_entries_g1) {
-      conf_file_g1 = "lcg-info-static-all-CE-"+lrms+".conf";
-      SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-all-CE-"+lrms+".ldif";
-      if ( !is_defined(SELF['glue1'][conf_file_g1]['entries']) ) SELF['glue1'][conf_file_g1]['entries'] = nlist();
-      SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
+    # Create LDIF configuration entries describing CE queues (GlueCE and GlueVOView).
+    # Due to a problem in lcg-info-dynamic-scheduler not allowing anymore to redefine
+    # the static file location, everything is published on the GIP_CLUSTER_PUBLISHER_HOST as
+    # there is no point to publish the same information twice on different hosts.
+#    if ( index(FULL_HOSTNAME,CE_HOSTS) >= 0 ) {
+#      foreach (lrms;ce_entries;host_entries_g1) {
+#        conf_file_g1 = "lcg-info-static-ce-"+lrms+".conf";
+#        SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-CE-"+lrms+".ldif";
+#        if ( !is_defined(SELF['glue1'][conf_file_g1]['entries']) ) SELF['glue1'][conf_file_g1]['entries'] = nlist();
+#        SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
+#      };
+#    } else {
+    if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {
+      foreach (lrms;ce_entries;all_ce_entries_g1) {
+        conf_file_g1 = "lcg-info-static-all-CE-"+lrms+".conf";
+        # Use standard location for LDIF file until the lcg-info-dynamic-scheduler issue is fixed and 
+        # original behaviour can be restored.
+        #SELF['glue1'][conf_file_g1]['ldifFile'] = GIP_VAR_DIR + "/static-file-all-CE-"+lrms+".ldif";
+        SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-all-CE-"+lrms+".ldif";
+        if ( !is_defined(SELF['glue1'][conf_file_g1]['entries']) ) SELF['glue1'][conf_file_g1]['entries'] = nlist();
+        SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
+      };
     };
     foreach (lrms;ce_entries;all_ce_entries_g2) {
       conf_file_g2 = "glite-ce-glue2.conf";
@@ -1088,19 +1100,6 @@ variable GIP_CE_LDIF_PARAMS = {
                 "#!/bin/sh\n" + 
                 GIP_PROVIDER_SERVICE + '-glue2 ' + service_provider_conf + ' ' + SITE_NAME + ' ' + service_uniqueid + "\n";
         };
-    };
-    SELF;
-};
-
-# FIXME: remove this symlink after release a new version of lcg-info-dynamic-maui
-include { 'components/symlink/config' };
-'/software/components/symlink/links' = {
-    if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST  && GIP_CE_USE_CACHE ) {
-        append(nlist(
-            "name", GIP_VAR_DIR + '/static-file-all-CE-pbs.ldif',
-            "target", GIP_LDIF_DIR + '/static-file-all-CE-pbs.ldif',
-            "replace", nlist("all", "yes"),
-        ));
     };
     SELF;
 };
