@@ -28,7 +28,6 @@ variable CE_OS_FAMILY ?= 'Linux';
 
 # FIXME: adding packages in this template is unexpected...
 prefix '/software/packages';
-'{bdii}' ?= nlist();
 '{glite-ce-cream-utils}' ?= nlist();
 '{glite-info-provider-service}' ?= nlist();
 '{lcg-info-dynamic-maui}' ?= nlist();
