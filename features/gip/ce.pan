@@ -895,16 +895,19 @@ variable GIP_CE_LDIF_PARAMS = {
   
 
   # Create LDIF configuration entries for GLUE2 (general parameters)
-  # FIXME: properly handle multiple CEs
+  # FIXME: check ComputingServiceId with multiple CEs
   # FIXME: ServingState configuration
   # FIXME: Argus paramater based on actual config
   # FIXME: CE_BATCH_VERSION paramater based on actual config
   # FIXME: CloseSEs: set LocalPath/RemotePath
   # FIXME: manage ESComputingServiceID and WorkingAreaxxx attributes
-  ce = CE_HOSTS[0];
   ce_acbr = list();
   foreach (i;vo;VOS) {
     ce_acbr[length(ce_acbr)] = format('VO:%s',vo);
+  };
+  computing_services = list();
+  foreach (i;ce;CE_HOSTS) {
+    computing_services[length(computing_services)] = ce+'_ComputingElement';
   };
   ce_shares = list();
   foreach (lrms;ce_entries;all_ce_entries_g2) {
@@ -924,7 +927,7 @@ variable GIP_CE_LDIF_PARAMS = {
     working_area_shared = 'no';
   };
   SELF['glue2']['CEParameters'] = nlist('SiteId', list(SITE_NAME),
-                                        'ComputingServiceId', list(ce+'_ComputingElement'),
+                                        'ComputingServiceId', computing_services,
                                         'NumberOfEndPointType', list('3'),
                                         'ImplementationVersion', list(CREAM_CE_VERSION),
                                         'InterfaceVersion', list(CREAM_CE_VERSION),
