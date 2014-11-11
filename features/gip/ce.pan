@@ -753,7 +753,7 @@ variable GIP_CE_LDIF_PARAMS = {
         entries_g2[share_name] = nlist(glue2_var_prefix+'QUEUENAME', list(queue),
                                        glue2_var_prefix+'OWNER', list(vo_name),
                                        glue2_var_prefix+'ENDPOINTS', list(ce+'_org.glite.ce.CREAM'),
-                                       glue2_var_prefix+'EXECUTIONENVIRONMENTS', list(ce),
+                                       glue2_var_prefix+'EXECUTIONENVIRONMENTS', list(GIP_CLUSTER_PUBLISHER_HOST),
                                        glue2_var_prefix+'ACBRS', access,
                                        glue2_var_prefix+'CEIDS', list(unique_id),
                                       );
@@ -935,7 +935,7 @@ variable GIP_CE_LDIF_PARAMS = {
                                         'EMIES', list('no'),
                                         'ACBR', ce_acbr,
                                         'Shares', ce_shares,
-                                        'ExecutionEnvironments', list(ce),
+                                        'ExecutionEnvironments', list(GIP_CLUSTER_PUBLISHER_HOST),
                                         'CE_BATCH_SYS', list(CE_BATCH_SYS),
                                         'BATCH_VERSION', list('0.0.0.0'),
                                         'CECapabilities', CE_CAPABILITIES,
@@ -958,7 +958,7 @@ variable GIP_CE_LDIF_PARAMS = {
   # FIXME: ProcessorModel. Define separate Execution Environments for different HW?
   # FIXME: ProcessorClockSpeed. Define separate Execution Environments for different HW?
   if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {    
-    glue2_var_prefix = format('ExecutionEnvironment_%s_',ce);
+    glue2_var_prefix = format('ExecutionEnvironment_%s_',GIP_CLUSTER_PUBLISHER_HOST);
     SELF['glue2']['ExecutionEnvironment'] = nlist(glue2_var_prefix+'ArchitecturePlatformType', list(CE_WN_ARCH),
                                                   glue2_var_prefix+'PhysicalCPUs', list(to_string(CE_CPU_CONFIG['cpus'])),
                                                   glue2_var_prefix+'LogicalCPUs', list(to_string(CE_CPU_CONFIG['cores'])),
