@@ -712,7 +712,9 @@ variable GIP_CE_LDIF_PARAMS = {
                             'GlueCEName',                  list(queue),
                             'GlueCEUniqueID',              list(unique_id),
                             'GlueCEInfoGatekeeperPort',    list(to_string(CE_PORT[ce_flavor])),
-                            'GlueCEInfoHostName',          list(FULL_HOSTNAME),
+                            # This is a hack to fix a problem affecting WMS/NagiosBox that don't like a InfoHostName
+                            # that doesn't match a CE name... InfoHostName should be FULL_HOSTNAME normally. 
+                            'GlueCEInfoHostName',          list(CE_HOSTS[0]),
                             'GlueCEInfoLRMSType',          list(lrms),
                             'GlueCEInfoLRMSVersion',       list('not defined'),
                             'GlueCEInfoTotalCPUs',         list('0'),
@@ -907,7 +909,6 @@ variable GIP_CE_LDIF_PARAMS = {
   
 
   # Create LDIF configuration entries for GLUE2 (general parameters)
-  # FIXME: check ComputingServiceId with multiple CEs
   # FIXME: ServingState configuration
   # FIXME: Argus paramater based on actual config
   # FIXME: CE_BATCH_VERSION paramater based on actual config
@@ -916,10 +917,6 @@ variable GIP_CE_LDIF_PARAMS = {
   ce_acbr = list();
   foreach (i;vo;VOS) {
     ce_acbr[length(ce_acbr)] = format('VO:%s',vo);
-  };
-  computing_services = list();
-  foreach (i;ce;CE_HOSTS) {
-    computing_services[length(computing_services)] = ce+'_ComputingElement';
   };
   ce_shares = list();
   foreach (lrms;ce_entries;all_ce_entries_g2) {
@@ -939,7 +936,7 @@ variable GIP_CE_LDIF_PARAMS = {
     working_area_shared = 'no';
   };
   SELF['glue2']['CEParameters'] = nlist('SiteId', list(SITE_NAME),
-                                        'ComputingServiceId', computing_services,
+                                        'ComputingServiceId', list(GIP_CLUSTER_PUBLISHER_HOST+'_ComputingElement'),
                                         'NumberOfEndPointType', list('3'),
                                         'ImplementationVersion', list(CREAM_CE_VERSION),
                                         'InterfaceVersion', list(CREAM_CE_VERSION),
