@@ -72,7 +72,8 @@ variable BLAH_CONF_CONTENTS = {
     contents = contents + "bupdater_debug_logfile="+GLITE_LOCATION_LOG+'/'+BLAH_UPDATER_DEBUG_FILE+"\n";
     contents = contents + "bnotifier_debug_level="+to_string(BLAH_NOTIFIER_DEBUG_LEVEL)+"\n";
     contents = contents + "bnotifier_debug_logfile="+GLITE_LOCATION_LOG+'/'+BLAH_NOTIFIER_DEBUG_FILE+"\n";
-    contents = contents + "blah_children_restart_interval=0";
+    contents = contents + "blah_children_restart_interval=0\n";
+    contents = contents + "async_notification_port="+to_string(BLPARSER_LRMS_PARAMS[BLPARSER_BATCH_SYS]['creamPort'])+"\n";
   } else {
     contents = contents + BLPARSER_BATCH_SYS + "_BLPserver=" + BLPARSER_HOST + "\n";
     contents = contents + BLPARSER_BATCH_SYS + "_BLPport=" + to_string(BLPARSER_LRMS_PARAMS[BLPARSER_BATCH_SYS]['port']) + "\n";

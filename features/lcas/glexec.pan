@@ -6,6 +6,8 @@ unique template features/lcas/glexec;
 
 variable LCAS_GLEXEC_DB_FILE ?= LCAS_CONFIG_DIR + '/lcas-glexec.db';
 
+variable LCAS_GLEXEC_ALLOWED_EXEC_PREFIX = CE_BATCH_SYS;
+
 # Executables allowed with glexec
 variable LCAS_GLEXEC_ALLOWED_EXEC ?= list('/bin/cat',
                                           '/bin/cp',
@@ -19,11 +21,11 @@ variable LCAS_GLEXEC_ALLOWED_EXEC ?= list('/bin/cat',
                                           '/usr/bin/whoami',
                                           '/usr/bin/BPRclient',
                                           '/usr/bin/blah_job_registry_lkup',
-                                          '/usr/bin/pbs_submit.sh',
-                                          '/usr/bin/pbs_status.sh',
-                                          '/usr/bin/pbs_cancel.sh',
-                                          '/usr/bin/pbs_hold.sh',
-                                          '/usr/bin/pbs_resume.sh',
+                                          '/usr/bin/'+LCAS_GLEXEC_ALLOWED_EXEC_PREFIX+'_submit.sh',
+                                          '/usr/bin/'+LCAS_GLEXEC_ALLOWED_EXEC_PREFIX+'_status.sh',
+                                          '/usr/bin/'+LCAS_GLEXEC_ALLOWED_EXEC_PREFIX+'_cancel.sh',
+                                          '/usr/bin/'+LCAS_GLEXEC_ALLOWED_EXEC_PREFIX+'_hold.sh',
+                                          '/usr/bin/'+LCAS_GLEXEC_ALLOWED_EXEC_PREFIX+'_resume.sh',
                                           '/usr/bin/glite-cream-createsandboxdir',
                                           '/etc/glite-ce-cream/cream-glexec.sh',
                                          );

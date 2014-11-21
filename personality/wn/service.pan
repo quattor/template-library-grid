@@ -47,6 +47,9 @@ include { 'personality/wn/rpms/config' };
 
 variable LRMS_CLIENT_INCLUDE = {
   if ( exists(CE_BATCH_NAME) && is_defined(CE_BATCH_NAME) ) {
+    if(CE_BATCH_NAME == 'condor'){
+    	return("features/htcondor/client/service");
+    };
     return("features/"+CE_BATCH_NAME+"/client/service");
   } else {
     return(null);

@@ -43,15 +43,18 @@ include { 'components/sudo/config' };
   SELF;
 };
 
+
+variable GLEXEC_CMD_PREFIX=CE_BATCH_SYS;
+
 "/software/components/sudo/cmd_aliases" = {
   SELF['GLEXEC_CMDS'] = list('/bin/echo', '/bin/mkdir', '/bin/cp', '/bin/cat',
                              '/usr/bin/groups', '/usr/bin/whoami', '/bin/dd',
                              '/bin/mv', '/usr/bin/id', '/bin/kill',
-                             '/usr/libexec/pbs_submit.sh',
-                             '/usr/libexec/pbs_status.sh',
-                             '/usr/libexec/pbs_cancel.sh',
-                             '/usr/libexec/pbs_hold.sh',
-                             '/usr/libexec/pbs_resume.sh',
+                             '/usr/libexec/'+GLEXEC_CMD_PREFIX+'_submit.sh',
+                             '/usr/libexec/'+GLEXEC_CMD_PREFIX+'_status.sh',
+                             '/usr/libexec/'+GLEXEC_CMD_PREFIX+'_cancel.sh',
+                             '/usr/libexec/'+GLEXEC_CMD_PREFIX+'_hold.sh',
+                             '/usr/libexec/'+GLEXEC_CMD_PREFIX+'_resume.sh',
                              '/usr/bin/glite-cream-copyProxyToSandboxDir.sh',
                              '/usr/bin/glite-cream-createsandboxdir',
                              '/usr/bin/glite-ce-cream-purge-sandbox',

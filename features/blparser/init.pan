@@ -30,10 +30,12 @@ variable BLAH_PURGE_INTERVAL ?= 5000000;   # About 2months
 variable BLAH_UPDATER ?= nlist(
   'lsf', GLITE_LOCATION+'/bin/BUpdaterLSF',
   'pbs', GLITE_LOCATION+'/bin/BUpdaterPBS',
+  'condor', '/usr/libexec/condor/glite/bin/BUpdaterCondor',
 );
 variable BLAH_NOTIFIER ?= nlist(
   'lsf', GLITE_LOCATION+'/bin/BNotifier',
   'pbs', GLITE_LOCATION+'/bin/BNotifier',
+  'condor', '/usr/libexec/condor/glite/bin/BNotifier',
 );
 variable BLAH_UPDATER_DEBUG_LEVEL ?= 2;
 variable BLAH_NOTIFIER_DEBUG_LEVEL ?= 2;
@@ -65,7 +67,12 @@ variable BLPARSER_LRMS_PARAMS ?= {
                       'creamPort', 56565,
                       'numOfDaemons', 1,
                      );
-
+  SELF['condor'] = nlist('enabled', 'no',
+                         'logFile', 'glite-blparser-htcondor.log',
+                         'port', 33331,
+                         'creamPort', 56564,
+                         'numOfDaemons', 1,
+                        );
   SELF;
 };
 
