@@ -302,9 +302,11 @@ variable GIP_CE_PLUGIN_COMMAND = {
     # FIXME: lcg-info-dynamic-scheduler doesn't allow to use a LDIF file in a non standard location...
     # Update to whatever is appropriate in cache mode when this is fixed.
     if ( GIP_CE_USE_CACHE ) {
-      SELF['ce'] = SELF['ce'] + ' --ce-ldif ' + GIP_LDIF_DIR + '/static-file-all-CE-pbs.ldif';
+      SELF['ce'] = SELF['ce'] + format(' --ce-ldif %s --share-ldif %s', GIP_LDIF_DIR+'/static-file-all-CE-pbs.ldif',
+                                                                        GIP_LDIF_DIR+'/'+GIP_CE_GLUE2_LDIF_FILES['shares']);
     } else {
-      SELF['ce'] = SELF['ce'] + ' --ce-ldif ' + GIP_LDIF_DIR + '/static-file-CE-pbs.ldif';
+      SELF['ce'] = SELF['ce'] + format(' --ce-ldif %s --share-ldif %s', GIP_LDIF_DIR+'/static-file-all-CE-pbs.ldif',
+                                                                        GIP_LDIF_DIR+'/'+GIP_CE_GLUE2_LDIF_FILES['shares']);
     };
   };
 
