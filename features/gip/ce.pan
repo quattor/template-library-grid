@@ -1,5 +1,7 @@
 unique template features/gip/ce;
 
+include { 'components/gip2/config' };
+
 variable GIP_CE_GLUE2_CONFIG_FILE ?= 'glite-ce-glue2.conf';
 
 variable GIP_CE_GLUE2_LDIF_PROCESSOR_DIR ?= '/usr/libexec';
@@ -26,16 +28,6 @@ variable GIP_CE_GLUE2_LDIF_FILES = nlist(
 
 variable CE_OS_FAMILY ?= 'Linux';
 
-# FIXME: adding packages in this template is unexpected...
-prefix '/software/packages';
-'{glite-ce-cream-utils}' ?= nlist();
-'{glite-info-provider-service}' ?= nlist();
-'{lcg-info-dynamic-maui}' ?= nlist();
-'{lcg-info-dynamic-scheduler-pbs}' ?= nlist();
-
-
-include { 'components/gip2/config' };
-
 @{
 desc = define VO shares to be applied to each CE
 values = percentage 
@@ -48,6 +40,7 @@ variable CREAM_CE_VERSION ?= '1.14.0';
 
 
 variable CE_HOSTS_CREAM ?= list();
+variable CE_HOSTS_LCG ?= list();
 
 variable CE_FLAVOR ?= if ( is_defined(CE_HOSTS_CREAM) && (index(FULL_HOSTNAME,CE_HOSTS_CREAM) >= 0) ) {
                         'cream';
@@ -188,6 +181,20 @@ variable GIP_CE_SERVICE_PARAMS = nlist(
                       'implementationname', 'ApplicationPublisher',
                      ),
 );
+
+
+
+# ---------------------------------------------------------------------------- 
+# Add RPMs that are required by GIP on CE to update dynamic information
+# ---------------------------------------------------------------------------- 
+'/software/packages' = {
+  pkg_repl('glite-ce-cream-utils');
+  pkg_repl('glite-info-provider-service');
+  pkg_repl('lcg-info-dynamic-scheduler-pbs');
+  if ( GIP_CE_USE_MAUI ) pkg_repl('lcg-info-dynamic-maui');
+  SELF;
+};
+
 
 # ---------------------------------------------------------------------------- 
 # Compute several variables summarizing the configuration
@@ -620,14 +627,14 @@ variable GIP_CE_LDIF_PARAMS = {
       };
       
       foreach (i;ce;ce_list) {
-        if ( index(ce,CE_HOSTS_CREAM) >= 0 ) {
+        if ( index(ce,CE_HOSTS_LCG) >= 0 ) {
+          ce_flavor = 'lcg';
+          unique_id = ce+':'+to_string(CE_PORT[ce_flavor])+'/jobmanager-'+jobmanager+'-'+queue;
+        } else {
           ce_flavor = 'cream';
           # On CREAM CE, there is no distinction between lcgpbs and pbs. Reset jobmanager to lrms.
           jobmanager = lrms;
           unique_id = ce+':'+to_string(CE_PORT[ce_flavor])+'/cream-'+jobmanager+'-'+queue;
-        } else {
-          ce_flavor = 'lcg';
-          unique_id = ce+':'+to_string(CE_PORT[ce_flavor])+'/jobmanager-'+jobmanager+'-'+queue;
         };
         
         access = list();
