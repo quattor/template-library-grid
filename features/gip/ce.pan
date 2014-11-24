@@ -614,13 +614,17 @@ variable GIP_CE_LDIF_PARAMS = {
         jobmanager=CE_BATCH_SYS;
       };
       lrms = CE_BATCH_SYS_LIST[jobmanager];
-      if ( !is_nlist(host_entries_g1[lrms]) ) {
-        host_entries_g1[lrms] = nlist();
-      };
+      if ( !is_nlist(host_entries_g1[lrms]) ) host_entries_g1[lrms] = nlist();
   
-      if ( (lrms == 'pbs') && GIP_CE_USE_MAUI && GIP_CE_USE_CACHE && (FULL_HOSTNAME == LRMS_SERVER_HOST) ) {
+      # FIXME: cache mode should not be specific to Torque/MAUI...
+      # FIXME: cluster mode (distinct CEs and LRMS master) validation with LRMS other than Torque/MAUI 
+      if ( FULL_HOSTNAME == LRMS_SERVER_HOST ) {
         ce_list = CE_HOSTS;
         # Create only if necessary to avoid creating a useless emtpy file
+        # FIXME: when lcg-info-dynamic-scheduler is fixed to allow publishing GlueCE/GlueVOView on the CE,
+        #        initialize all_ce_entries_g1[lrms] only if GIP_CE_USE_CACHE is true.
+        #        Also see the related modification at the end of this block.
+        #        Issue can be followed up at https://ggus.eu/index.php?mode=ticket_info&ticket_id=110336.
         if ( !is_nlist(all_ce_entries_g1[lrms]) ) all_ce_entries_g1[lrms] = nlist();
         if ( !is_nlist(all_ce_entries_g2[lrms]) ) all_ce_entries_g2[lrms] = nlist();
       } else {
@@ -777,9 +781,13 @@ variable GIP_CE_LDIF_PARAMS = {
           host_entries_g1[lrms] = merge(host_entries_g1[lrms],entries_g1);
         };
         
-        # Also add to LDIF file used when cache mode is enabled (several entries in ce_list)
+        # Also add to GLUE1 LDIF file used when cache mode is enabled (several entries in ce_list)
         if ( is_nlist(all_ce_entries_g1[lrms]) ) {
           all_ce_entries_g1[lrms] = merge(all_ce_entries_g1[lrms],entries_g1);
+        };
+
+        # GLUE2 : add entries if on the LRMS master node
+        if ( is_nlist(all_ce_entries_g2[lrms]) ) {
           all_ce_entries_g2[lrms] = merge(all_ce_entries_g2[lrms],entries_g2);
         };
                
@@ -788,6 +796,8 @@ variable GIP_CE_LDIF_PARAMS = {
     };             # end of iteration over queues
                  
     # Create LDIF configuration entries describing CE queues (GlueCE and GlueVOView).
+    # FIXME: restore original behaviour when lcg-info-dynamic-scheduler is fixed (https://ggus.eu/index.php?mode=ticket_info&ticket_id=110336).
+    #        See other related section at the beginning of this block.
     # Due to a problem in lcg-info-dynamic-scheduler not allowing anymore to redefine
     # the static file location, everything is published on the GIP_CLUSTER_PUBLISHER_HOST as
     # there is no point to publish the same information twice on different hosts.
