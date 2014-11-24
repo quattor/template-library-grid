@@ -26,7 +26,8 @@ variable GIP_CE_GLUE2_LDIF_FILES = nlist(
   'storage', 'ToStorageService.ldif',
 );
 
-variable CE_OS_FAMILY ?= 'Linux';
+# Must be lower case according to EGI profile
+variable CE_OS_FAMILY ?= 'linux';
 
 @{
 desc = define VO shares to be applied to each CE
