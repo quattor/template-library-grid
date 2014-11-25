@@ -74,7 +74,7 @@ variable CE_FLAVOR = {
 };
 
 # Default static value for several job-related attributes (updated by dynamic info providers)
-variable GLUE_FAKE_JOB_VALUE ?= 4444;
+variable GLUE_FAKE_JOB_VALUE ?= 444444;
 
 # Host publishing GlueCluster and GlueSubCluster information.
 # This is important to ensure this is published once even though
