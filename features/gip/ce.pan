@@ -26,6 +26,8 @@ variable GIP_CE_GLUE2_LDIF_FILES = nlist(
   'storage', 'ToStorageService.ldif',
 );
 
+variable GIP_CE_MAUI_PLUGIN_DEFAULTS_FILE ?= '/etc/lrms/lcg-info-dynamic-maui.defaults';
+
 # Must be lower case according to EGI profile
 variable CE_OS_FAMILY ?= 'linux';
 
@@ -36,6 +38,22 @@ default = none
 required = no
 }
 variable CE_VO_SHARES ?= undef;
+
+@{
+desc = define default value for job maximum physical memory if not defined at the queue level
+values = MB
+default = 2000
+required = no
+}
+variable CE_DEFAULT_MAX_PHYS_MEM ?= 2000*MB;
+
+@{
+desc = define default value for job maximum virtual memory if not defined at the queue level
+values = MB
+default = 20000
+required = no
+}
+variable CE_DEFAULT_MAX_VIRT_MEM ?= 20000*MB;
 
 variable CREAM_CE_VERSION ?= '1.14.0';
 
@@ -305,7 +323,7 @@ variable GIP_CE_PLUGIN_COMMAND = {
     } else {
       pythonbin = 'python'
     };
-    gip_script_options = "--max-normal-slots " + to_string(CE_CPU_CONFIG['cores']);
+    gip_script_options = format("--max-normal-slots %d --defaults %s", CE_CPU_CONFIG['cores'], GIP_CE_MAUI_PLUGIN_DEFAULTS_FILE);
     SELF['ce'] = pythonbin + ' ' + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-maui --host "+LRMS_SERVER_HOST+" "+gip_script_options;
     # FIXME: lcg-info-dynamic-scheduler doesn't allow to use a LDIF file in a non standard location...
     # Update to whatever is appropriate in cache mode when this is fixed.
@@ -955,6 +973,7 @@ variable GIP_CE_LDIF_PARAMS = {
   } else {
     working_area_shared = 'no';
   };
+  # FIXME: check what ImplementationVersion and InterfaceVersion should be (CE version or LRMS version)
   SELF['glue2']['CEParameters'] = nlist('SiteId', list(SITE_NAME),
                                         'ComputingServiceId', list(GIP_CLUSTER_PUBLISHER_HOST+'_ComputingElement'),
                                         'NumberOfEndPointType', list('3'),
@@ -1121,6 +1140,12 @@ variable GIP_CE_LDIF_PARAMS = {
     SELF;
 };
 
+
+# Create the file defining default values for some queue attributes if using
+# lcg-info-dynamic-maui.
+include if ( GIP_CE_USE_MAUI && (FULL_HOSTNAME == LRMS_SERVER_HOST) ) 'features/gip/ce-maui-plugin-defaults';
+
+# Define permissions/owner for some key directories
 include { 'components/dirperm/config' };
 '/software/components/dirperm/paths' = {
     append(nlist(
