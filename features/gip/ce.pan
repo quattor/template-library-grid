@@ -55,6 +55,14 @@ required = no
 }
 variable CE_DEFAULT_MAX_VIRT_MEM ?= 20000*MB;
 
+@{
+desc = define default value for maximum number of processors per job if not defined at the queue level
+values = integer
+default = 1
+required = no
+}
+variable CE_DEFAULT_JOB_MAX_PROCS ?= 1;
+
 variable CREAM_CE_VERSION ?= '1.14.0';
 
 

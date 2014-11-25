@@ -27,6 +27,9 @@ include 'components/metaconfig/config';
   if ( is_defined(CE_DEFAULT_MAX_VIRT_MEM) ) {
     SELF['services'][service_id]['contents']['MaxVirtualMemory'] = CE_DEFAULT_MAX_VIRT_MEM;
   };
+  if ( is_defined(CE_DEFAULT_JOB_MAX_PROCS) ) {
+    SELF['services'][service_id]['contents']['MaxProcessorsPerJob'] = CE_DEFAULT_JOB_MAX_PROCS;
+  };
 
   SELF;
 };
