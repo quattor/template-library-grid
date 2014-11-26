@@ -319,6 +319,7 @@ variable CE_CPU_CONFIG = {
 # There are 2 entries in GIP_CE_PLUGIN_COMMAND : 1 for the 'dynamic-ce' plugin, 1 for the 'dynamic-scheduler'
 # plugin.
 # NOTE: this feature is currently implemented only for MAUI-based plugins.
+# FIXME: generalize this feature for all batch systems
 variable GIP_CE_PLUGIN_COMMAND = {
   # If using the standard Torque-based plugin, do nothing
   if ( GIP_CE_USE_MAUI ) {
@@ -346,8 +347,22 @@ variable GIP_CE_PLUGIN_COMMAND = {
 
   # Define only if using cache mode
   if ( GIP_CE_USE_CACHE ) {
-    SELF['scheduler'] = LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-scheduler -c "+
-                                    GIP_SCRIPTS_CONF_DIR+"/lcg-info-dynamic-scheduler-pbs.conf";
+      SELF['scheduler'] = '';
+    foreach (jobmanager;lrms;CE_BATCH_SYS_LIST) {
+      # The pipe is a workaround to allow GLUE2ComputingShareFreeSlots to be computing by lcg-info-dynamic-maui rather than
+      # lcg-info-dynamic-scheduler
+      if ( (lrms == 'pbs') && GIP_CE_USE_MAUI ) {
+        remove_free_slots_cmd = '| grep -v GLUE2ComputingShareFreeSlots';
+      } else {
+        remove_free_slots_cmd = '';
+      };
+      SELF['scheduler'] = SELF['scheduler'] + format('%s/lcg-info-dynamic-scheduler -c %s/lcg-info-dynamic-scheduler-%s.conf %s',
+                                                     LCG_INFO_SCRIPTS_DIR,
+                                                     GIP_SCRIPTS_CONF_DIR,
+                                                     lrms,
+                                                     remove_free_slots_cmd,
+                                                    );
+    };
   };
   
   SELF;
@@ -418,8 +433,19 @@ variable GIP_CE_PLUGIN_COMMAND = {
         # Just display the content of cache file if cache mode is used. If the file doesn't exist, error will be detected/reported by GIP.
         contents = contents + 'cat ' + GIP_CE_CACHE_FILE['scheduler'];
       } else {
-        contents = contents + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-scheduler -c "+
-                                                  GIP_SCRIPTS_CONF_DIR+"/lcg-info-dynamic-scheduler-"+lrms+".conf\n";
+        # The pipe is a workaround to allow GLUE2ComputingShareFreeSlots to be computing by lcg-info-dynamic-maui rather than
+        # lcg-info-dynamic-scheduler
+        if ( (lrms == 'pbs') && GIP_CE_USE_MAUI ) {
+          remove_free_slots_cmd = '| grep -v GLUE2ComputingShareFreeSlots';
+        } else {
+          remove_free_slots_cmd = '';
+        };
+        contents = contents + format('%s/lcg-info-dynamic-scheduler -c %s/lcg-info-dynamic-scheduler-%s.conf %s',
+                                     LCG_INFO_SCRIPTS_DIR,
+                                     GIP_SCRIPTS_CONF_DIR,
+                                     lrms,
+                                     remove_free_slots_cmd,
+                                    );
       };
     };
 
