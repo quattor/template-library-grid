@@ -656,7 +656,7 @@ variable GIP_CE_LDIF_PARAMS = {
     # GLUE2: all_ce_entries_g2 contain the shares and computing service descriptions (there is no host_entries_g2)
     host_entries_g1 = nlist();
     all_ce_entries_g1 = nlist();
-    all_ce_entries_g2 = nlist();
+    share_entries_g2 = nlist();
     
     foreach (queue;vos;CE_QUEUES['vos']) {
       if (exists(CE_QUEUES['lrms'][queue])) {
@@ -678,7 +678,7 @@ variable GIP_CE_LDIF_PARAMS = {
         #        Also see the related modification at the end of this block.
         #        Issue can be followed up at https://ggus.eu/index.php?mode=ticket_info&ticket_id=110336.
         if ( !is_nlist(all_ce_entries_g1[lrms]) ) all_ce_entries_g1[lrms] = nlist();
-        if ( !is_nlist(all_ce_entries_g2[lrms]) ) all_ce_entries_g2[lrms] = nlist();
+        if ( !is_nlist(share_entries_g2[lrms]) ) share_entries_g2[lrms] = nlist();
       } else {
         ce_list = list(FULL_HOSTNAME);
       };
@@ -817,17 +817,6 @@ variable GIP_CE_LDIF_PARAMS = {
                       gluese_info_default_se
                      );
 
-        # GLUE2 entry (LDIF generator config entry)
-        share_name =  replace('\.','-',format('%s_%s',queue,vo_name));
-        glue2_var_prefix = format('SHARE_%s_',to_uppercase(share_name));
-        entries_g2[share_name] = nlist(glue2_var_prefix+'QUEUENAME', list(queue),
-                                       glue2_var_prefix+'OWNER', list(vo_name),
-                                       glue2_var_prefix+'ENDPOINTS', list(ce+'_org.glite.ce.CREAM'),
-                                       glue2_var_prefix+'EXECUTIONENVIRONMENTS', list(GIP_CLUSTER_PUBLISHER_HOST),
-                                       glue2_var_prefix+'ACBRS', access,
-                                       glue2_var_prefix+'CEIDS', list(unique_id),
-                                      );
-
         # Entries are for the current host, add them to the list of DN for the GIP standard LDIF file
         if ( ce == FULL_HOSTNAME ) {
           host_entries_g1[lrms] = merge(host_entries_g1[lrms],entries_g1);
@@ -838,9 +827,23 @@ variable GIP_CE_LDIF_PARAMS = {
           all_ce_entries_g1[lrms] = merge(all_ce_entries_g1[lrms],entries_g1);
         };
 
-        # GLUE2 : add entries if on the LRMS master node
-        if ( is_nlist(all_ce_entries_g2[lrms]) ) {
-          all_ce_entries_g2[lrms] = merge(all_ce_entries_g2[lrms],entries_g2);
+        # GLUE2 entry (LDIF generator config entry).
+        # GLUE2 shares are independent of CEs: add only once.
+        share_name =  replace('\.','-',format('%s_%s',queue,vo_name));
+        if ( !is_defined(share_entries_g2[lrms][share_name]) ) {
+          glue2_var_prefix = format('SHARE_%s_',to_uppercase(share_name));
+          entries_g2[share_name] = nlist(glue2_var_prefix+'QUEUENAME', list(queue),
+                                         glue2_var_prefix+'OWNER', list(vo_name),
+                                         glue2_var_prefix+'ENDPOINTS', list(ce+'_org.glite.ce.CREAM'),
+                                         glue2_var_prefix+'EXECUTIONENVIRONMENTS', list(GIP_CLUSTER_PUBLISHER_HOST),
+                                         glue2_var_prefix+'ACBRS', access,
+                                         glue2_var_prefix+'CEIDS', list(unique_id),
+                                        );
+
+          # GLUE2 : add entries if on the LRMS master node
+          if ( is_nlist(share_entries_g2[lrms]) ) {
+            share_entries_g2[lrms] = merge(share_entries_g2[lrms],entries_g2);
+          };
         };
                
       };           # end of iteration over CEs
@@ -872,10 +875,10 @@ variable GIP_CE_LDIF_PARAMS = {
         SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
       };
     };
-    foreach (lrms;ce_entries;all_ce_entries_g2) {
+    foreach (lrms;share_entries;share_entries_g2) {
       conf_file_g2 = "glite-ce-glue2.conf";
       if ( !is_defined(SELF['glue2']['shares']) ) SELF['glue2']['shares'] = nlist();
-      SELF['glue2']['shares'] = merge(SELF['glue2']['shares'],ce_entries);
+      SELF['glue2']['shares'] = merge(SELF['glue2']['shares'],share_entries);
     };
   };
      
@@ -991,8 +994,8 @@ variable GIP_CE_LDIF_PARAMS = {
     ce_acbr[length(ce_acbr)] = format('VO:%s',vo);
   };
   ce_shares = list();
-  foreach (lrms;ce_entries;all_ce_entries_g2) {
-    foreach (share;params;ce_entries) {
+  foreach (lrms;share_entries;share_entries_g2) {
+    foreach (share;params;share_entries) {
       ce_shares[length(ce_shares)] = to_uppercase(share);
     }
   };
