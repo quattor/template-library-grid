@@ -482,12 +482,12 @@ variable GIP_CE_VOMAP ?= {
     foreach (jobmanager;lrms;CE_BATCH_SYS_LIST) {
       if ( lrms == "pbs" ) {
         if ( GIP_CE_USE_CACHE ) {
-          ldif_file = GIP_VAR_DIR + "/static-file-all-CE-pbs.ldif\n";
-          ldif_file_glue2 = GIP_VAR_DIR + "/static-file-all-CE-pbs-glue2.ldif\n";
+          static_ldif_dir = GIP_VAR_DIR;
         } else {
-          ldif_file = GIP_LDIF_DIR + "/static-file-CE-pbs.ldif\n";
-          ldif_file_glue2 = GIP_LDIF_DIR + "/static-file-CE-pbs-glue2.ldif\n";
+          static_ldif_dir = GIP_LDIF_DIR;
         };
+        ldif_file = format("%s/static-file-all-CE-pbs.ldif\n",static_ldif_dir);
+        ldif_file_glue2 = format("%s/%s\n",static_ldif_dir,GIP_CE_GLUE2_LDIF_FILES['shares']);
         contents = 
           "[Main]\n" + 
           "static_ldif_file: "+ ldif_file +
