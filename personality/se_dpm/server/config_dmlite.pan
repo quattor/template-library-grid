@@ -3,7 +3,7 @@
 
 unique template personality/se_dpm/server/config_dmlite;
 
-variable DMLITE_MYSQL_NSPOOLSITE ?= 32;
+variable DMLITE_MYSQL_NSPOOLSIZE ?= 32;
 
 # Set to true if dmlite memcache plugin should be enabled
 variable DMLITE_MEMCACHE_ENABLED ?= false;
@@ -23,7 +23,7 @@ variable contents = {
     "NsDatabase " + DPNS_DB_NAME + "\n" +
     "DpmDatabase " + DPM_DB_NAME + "\n" +
     "MapFile /etc/lcgdm-mapfile\n" +
-    "NsPoolSize " + to_string(DMLITE_MYSQL_NSPOOLSITE) + "\n";
+    "NsPoolSize " + to_string(DMLITE_MYSQL_NSPOOLSIZE) + "\n";
 };
 include { 'components/filecopy/config' };
 '/software/components/filecopy/services' = if (is_boolean(DMLITE_ENABLED) && DMLITE_ENABLED) {
