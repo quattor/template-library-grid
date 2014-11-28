@@ -27,3 +27,6 @@ variable APEL_DB_PWD ?= if ( exists(APELDB_PWD) && is_defined(APELDB_PWD) ) {
                                          );
   SELF;
 };
+
+# Set to true if the cluster has multicore resources available
+variable APEL_MULTICORE_ENABLED ?= true;

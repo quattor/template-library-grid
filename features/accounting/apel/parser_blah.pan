@@ -71,7 +71,7 @@ include {'components/metaconfig/config'};
             'enabled', to_string(match(FULL_HOSTNAME, LRMS_SERVER_HOST)),
             'reparse', 'false',
             'type', 'PBS',
-            'parallel', 'false',
+            'parallel', to_string(APEL_MULTICORE_ENABLED),
             'dir', TORQUE_CONFIG_DIR + '/server_priv/accounting',
             'filename_prefix', '20',
             'subdirs', 'false',
