@@ -780,7 +780,7 @@ variable GIP_CE_LDIF_PARAMS = {
                             'GlueCEInfoGatekeeperPort',    list(to_string(CE_PORT[ce_flavor])),
                             # This is a hack to fix a problem affecting WMS/NagiosBox that don't like a InfoHostName
                             # that doesn't match a CE name... InfoHostName should be FULL_HOSTNAME normally. 
-                            'GlueCEInfoHostName',          list(CE_HOSTS[0]),
+                            'GlueCEInfoHostName',          list(ce),
                             'GlueCEInfoLRMSType',          list(lrms),
                             'GlueCEInfoLRMSVersion',       list('not defined'),
                             'GlueCEInfoTotalCPUs',         list('0'),
