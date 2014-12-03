@@ -53,14 +53,21 @@ include { 'features/mysql/server' };
 variable MAUI_MONITORING_POSTPONED = true;
 variable LRMS_SERVER_INCLUDE = {
   if ( is_defined(CE_BATCH_NAME) ) {
+
+    if(CE_BATCH_NAME=='condor'){
+	batch_dir='htcondor';
+    }else{
+	batch_dir=CE_BATCH_NAME;
+    };
+
     if ( LRMS_SERVER_HOST == FULL_HOSTNAME ) {
-      "features/"+CE_BATCH_NAME+"/server/service";
+      "features/"+batch_dir+"/server/service";
     } else {
-      client_include = if_exists("features/"+CE_BATCH_NAME+"/client/client-only");
+      client_include = if_exists("features/"+batch_dir+"/client/client-only");
       if ( is_defined(client_include) ) {
         client_include;
       } else {
-        "features/"+CE_BATCH_NAME+"/client/service"
+        "features/"+batch_dir+"/client/service"
       };
     };
   } else {
@@ -126,7 +133,15 @@ include { 'features/gip/base' };
 include { CE_GIP_INCLUDE };
 
 # PBS accounting.
-include { 'features/accounting/apel/parser_blah' };
+variable APEL_ACCOUNTING_CONFIG?={
+	 if(match(CE_BATCH_SYS,'condor')){
+		return('features/accounting/apel/parser_condor');
+	 }else{
+	        return('features/accounting/apel/parser_blah');
+	 }
+};
+
+include { APEL_ACCOUNTING_CONFIG };
 
 # Configure gridftp server
 # Must be done after configuring GIP provider
