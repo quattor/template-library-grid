@@ -21,14 +21,15 @@ variable library = if (PKG_ARCH_DEFAULT == 'x86_64') {
 #
 # /etc/dmlite.conf
 #
-variable contents = {
-    "LoadPlugin plugin_config /usr/" + library + "/dmlite/plugin_config.so\n" +
-    "Include /etc/dmlite.conf.d/*.conf\n";
-};
 include { 'components/filecopy/config' };
 '/software/components/filecopy/services' = {
+    this = "LoadPlugin plugin_config /usr/" + library + "/dmlite/plugin_config.so\n";
+    if (DPM_VERSION > '1.8.8') {
+        this = this + "LogLevel 1\n";
+    };
+    this = this + "Include /etc/dmlite.conf.d/*.conf\n";
     SELF[escape('/etc/dmlite.conf')] = nlist(
-        'config', contents,
+        'config', this,
         'owner', DPM_USER,
         'group', DPM_GROUP,
         'perms', '0640',
