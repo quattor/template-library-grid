@@ -278,6 +278,23 @@ include { if ( XROOT_ENABLED ) 'personality/se_dpm/config_xrootd' };
 };
 
 
+# Create the DPM-readable version of the host certificate
+# May have already been done by Xrootd configuration but harmless to redo it
+variable SEDPM_HOST_CERT_DIR ?= SITE_DEF_GRIDSEC_ROOT + '/' + DPM_USER;
+include 'components/filecopy/config';
+'/software/components/filecopy/services' = {
+  SELF[escape(SEDPM_HOST_CERT_DIR+'/dpmkey.pem')] = nlist('source', SITE_DEF_HOST_KEY,
+                                                          'owner', DPM_USER+':'+DPM_GROUP,
+                                                          'perms', '0400',
+                                                         );
+
+  SELF[escape(SEDPM_HOST_CERT_DIR+'/dpmcert.pem')] = nlist('source', SITE_DEF_HOST_CERT,
+                                                           'owner', DPM_USER+':'+DPM_GROUP,
+                                                           'perms', '0644',
+                                                          );
+  SELF;
+};
+
 # ---------------------------------------------------------------------------- 
 # iptables
 # ---------------------------------------------------------------------------- 
