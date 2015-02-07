@@ -42,9 +42,3 @@ include {'components/dirperm/config'};
 include {'components/chkconfig/config'};
 
 '/software/components/chkconfig/service/glite-ce-blah-parser' = nlist('on', '', 'startstop', true);
-
-
-
-
-
-

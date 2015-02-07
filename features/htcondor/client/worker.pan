@@ -15,6 +15,3 @@ variable CONDOR_CONFIG={
 
 	SELF;
 };
-
-
-

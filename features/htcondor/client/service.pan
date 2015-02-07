@@ -28,8 +28,7 @@ variable CONDOR_CONFIG={
   SELF;
 };
 
-variable CONDOR_HOST=CONDOR_CONFIG['host'];
-
+variable CONDOR_HOST ?= CONDOR_CONFIG['host'];
 
 include {
   if(index(FULL_HOSTNAME,CE_HOSTS) < 0){
