@@ -88,12 +88,12 @@ variable PBS_AUTHORIZED_USERS_SCRIPT ?= {
 };
 
 "/software/components/filecopy/services" = {
-         SELF[escape("/var/torque/myinit.sh")]=
+         SELF[escape(TORQUE_CONFIG_DIR+"myinit.sh")]=
         nlist("config",PBS_AUTHORIZED_USERS_SCRIPT,
               "perms", "0700",
              "owner", "root",
               "group","root",
-              "restart","/var/torque/myinit.sh",
+              "restart",TORQUE_CONFIG_DIR+"myinit.sh",
 	"forceRestart",true,
         );
          SELF;
