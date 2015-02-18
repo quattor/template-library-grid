@@ -8,6 +8,7 @@ variable DPM_VERSION ?= '1.8.8';
 #
 # It doesn't make sense to have this variable false if executing this template...
 variable DMLITE_ENABLED = true;
+variable DMLITE_LOGLEVEL ?= '1';
 variable DMLITE_TOKEN_ID ?= 'ip';
 variable DMLITE_TOKEN_LIFE ?= '1000';
 variable DMLITE_TOKEN_PASSWORD ?= error('DMLITE_TOKEN_PASSWORD must be defined');
@@ -25,7 +26,7 @@ include { 'components/filecopy/config' };
 '/software/components/filecopy/services' = {
     this = "LoadPlugin plugin_config /usr/" + library + "/dmlite/plugin_config.so\n";
     if (DPM_VERSION > '1.8.8') {
-        this = this + "LogLevel 1\n";
+        this = this + 'LogLevel ' + DMLITE_LOGLEVEL + "\n";
     };
     this = this + "Include /etc/dmlite.conf.d/*.conf\n";
     SELF[escape('/etc/dmlite.conf')] = nlist(
