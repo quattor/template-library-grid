@@ -86,15 +86,15 @@ variable PBS_AUTHORIZED_USERS_SCRIPT ?= {
   contents;
 #"#! /bin/bash\nqmgr -c 'set server authorized_users =*@"+CE_HOST+"'\n";
 };
-
+variable TORQUE_MYINIT_SCRIPT ?= TORQUE_CONFIG_DIR + '/myinit.sh';
 "/software/components/filecopy/services" = {
-         SELF[escape(TORQUE_CONFIG_DIR+"myinit.sh")]=
+         SELF[escape(TORQUE_MYINIT_SCRIPT)]=
         nlist("config",PBS_AUTHORIZED_USERS_SCRIPT,
               "perms", "0700",
-             "owner", "root",
+              "owner", "root",
               "group","root",
-              "restart",TORQUE_CONFIG_DIR+"myinit.sh",
-	"forceRestart",true,
+              "restart",TORQUE_MYINIT_SCRIPT,
+	      "forceRestart",true,
         );
          SELF;
        };
