@@ -5,7 +5,7 @@ variable GIP_PROVIDER_SERVICE_INIT_WMS ?= GIP_SCRIPTS_DIR + '/glite-info-service
 variable GIP_PROVIDER_SERVICE_CONF_WMS ?= GIP_BASE_DIR + '/glite-info-service-wmproxy.conf';
 variable GIP_PROVIDER_SERVICE_UNIQUEID_WMS ?= FULL_HOSTNAME+"_"+GIP_PROVIDER_SERVICE_TYPE_WMS;
 variable GIP_PROVIDER_WRAPPER_WMS ?= 'glite-info-service-wmproxy';
-
+variable WMPROXY_RPM ?= 'glite-wms-interface';
 
 # Configure GIP provider for services
 
@@ -20,10 +20,9 @@ variable GIP_PROVIDER_WRAPPER_WMS ?= 'glite-info-service-wmproxy';
     SELF['confFiles'][escape(GIP_PROVIDER_SERVICE_CONF_WMS)] = 
         "init = "+GIP_PROVIDER_SERVICE_INIT_WMS+"\n" +
         "service_type = "+GIP_PROVIDER_SERVICE_TYPE_WMS+"\n" +
-        "get_version = rpm -q glite-wms-wmproxy --queryformat '%{version}\\n'\n" +
+        "get_version = rpm -q "+ WMPROXY_RPM + " --queryformat '%{version}\\n'\n" +
         "get_endpoint = echo  https://${WMPROXY_HOST}:${WMPROXY_PORT}/glite_wms_wmproxy_server\n" +
-        "get_status = " + GIP_SCRIPTS_DIR + "/glite-info-service-test WMPROXY && " +
-            GLITE_LOCATION + "/etc/init.d/glite-wms-wmproxy status\n"+
+        "get_status = " + GIP_SCRIPTS_DIR + "/glite-info-service-test WMPROXY && /etc/init.d/glite-wms-wmproxy status\n"+
         "WSDL_URL = echo http://trinity.datamat.it/projects/EGEE/WMProxy/WMProxy.wsdl\n" +
         "semantics_URL = echo https://edms.cern.ch/file/674643/1/EGEE-JRA1-TEC-674643-WMPROXY-guide-v0-2.pdf\n" +
         "get_starttime =  perl -e '@st=stat($ENV{WMPROXY_PID_FILE});print \"@st[10]\\n\";'\n" +
@@ -33,7 +32,7 @@ variable GIP_PROVIDER_WRAPPER_WMS ?= 'glite-info-service-wmproxy';
             SITE_DEF_HOST_CERT + " -subject\n" +
         "get_services = echo\n";
     SELF['provider'][GIP_PROVIDER_WRAPPER_WMS] =
-        "#!/bin/sh\n" + 
+        "#!/bin/sh\n" +
         GIP_PROVIDER_SERVICE + ' ' + GIP_PROVIDER_SERVICE_CONF_WMS + 
             ' ' + SITE_NAME + ' ' + GIP_PROVIDER_SERVICE_UNIQUEID_WMS + "\n";
 
