@@ -20,10 +20,9 @@ variable GIP_PROVIDER_WRAPPER_LB ?= 'glite-info-service-lbserver';
     SELF['confFiles'][escape(GIP_PROVIDER_SERVICE_CONF_LB)] = 
         "init = "+GIP_PROVIDER_SERVICE_INIT_LB+"\n" +
         "service_type = "+GIP_PROVIDER_SERVICE_TYPE_LB+"\n" +
-        "get_version = rpm -q  glite-lb-ws-interface --queryformat '%{version}\\n'\n" +
+        "get_version = rpm -qa | grep 'glite-lb-server-[0-9]' | cut -d- -f4\n" +
         "get_endpoint = echo  https://${LBSERVER_HOST}:${LBSERVER_PORT}/\n" +
-        "get_status = " + GIP_SCRIPTS_DIR + "/glite-info-service-test LBSERVER && " +
-            GLITE_LOCATION + "/etc/init.d/glite-lb-bkserverd status\n"+
+        "get_status = " + GIP_SCRIPTS_DIR + "/glite-info-service-test LBSERVER && /etc/init.d/glite-lb-bkserverd status\n"+
         "WSDL_URL = echo http://trinity.datamat.it/projects/EGEE/WMProxy/WMProxy.wsdl\n" +
         "semantics_URL = echo https://edms.cern.ch/file/571273/2/LB-guide.pdf\n" +
         "get_starttime =  perl -e '@st=stat($ENV{LBSERVER_PID_FILE});print \"@st[10]\\n\";'\n" +
