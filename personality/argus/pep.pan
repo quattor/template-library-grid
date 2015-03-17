@@ -21,6 +21,13 @@ variable PEP_LOCATION_ETC = ARGUS_LOCATION_ETC + '/pepd';
 variable PEP_LOCATION_LOG = ARGUS_LOCATION_LOG + '/pepd';
 variable PEP_LOCATION_SBIN = PEP_LOCATION + '/sbin';
 
+# PDP responses caching mechanism
+# variable PEP_PDP_CACHE_ENABLED ?= false;  # recommended
+variable PEP_PDP_CACHE_ENABLED ?= true;     # default
+
+# PEP daemon java options
+# variable PEP_JAVA_OPTIONS ?= '-Xmx1024M'; # recommended
+variable PEP_JAVA_OPTIONS ?= '-Xmx256M';    # default
 
 #-----------------------------------------------------------------------------
 # PEP Configuration
@@ -51,6 +58,10 @@ variable PEP_CONFIG_CONTENTS = {
     contents = contents + ' ' + endpoint;
   };
   contents = contents + "\n";
+  if (is_boolean(PEP_PDP_CACHE_ENABLED) && ! PEP_PDP_CACHE_ENABLED) {
+    contents = contents + "# disable the cache\n";
+    contents = contents + "maximumCachedResponses = 0\n";
+  };
   contents = contents + "\n";
   contents = contents + '[SECURITY]' + "\n";
   contents = contents + 'servicePrivateKey = ' + SITE_DEF_HOST_KEY + "\n";
@@ -106,6 +117,46 @@ variable PEP_CONFIG_CONTENTS = {
        )
   );
 
+
+#-----------------------------------------------------------------------------
+# PEP system configuration file
+#-----------------------------------------------------------------------------
+
+variable PEP_SYSCONFIG_FILE ?= '/etc/sysconfig/argus-pepd';
+'/software/components/filecopy/services' = {
+    this = <<EOF;
+#
+# Options for the Argus PEP server
+#
+#JAVACMD="/usr/bin/java"
+# IPv4 instead of IPv6
+#PEPD_JOPTS="-Djava.net.preferIPv4Stack=true"
+PEPD_JOPTS=PEP_JAVA_OPTIONS
+#PEPD_HOME="/usr/share/argus/pepd"
+#PEPD_CONF="/etc/argus/pepd/pepd.ini"
+#PEPD_CONFDIR="/etc/argus/pepd"
+#PEPD_LOGDIR="/var/log/argus/pepd"
+#PEPD_LIBDIR="/var/lib/argus/pepd/lib"
+#PEPD_ENDORSEDDIR="/var/lib/argus/pepd/lib/endorsed"
+#PEPD_PROVIDEDDIR="/var/lib/argus/pepd/lib/provided"
+#PEPD_PID="/var/run/argus-pepd.pid"
+
+# OS provided dependencies (false to use embedded)
+#PEPD_USE_OS_CANL="false"
+#PEPD_USE_OS_BCPROV="false"
+#PEPD_USE_OS_VOMS="false"
+#PEPD_USE_OS_BCMAIL="false"
+EOF
+    this = replace('PEP_JAVA_OPTIONS', PEP_JAVA_OPTIONS, this);
+    SELF[escape(PEP_SYSCONFIG_FILE)] = nlist(
+        'config', this,
+        'owner', 'root',
+        'perms', '0640',
+        'backup', false,
+        'restart', '/sbin/service pepd restart',
+    );
+    SELF;
+};
 
 #-----------------------------------------------------------------------------
 # PEP Startup Script
