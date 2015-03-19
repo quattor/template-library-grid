@@ -1,7 +1,7 @@
 template-library-grid
 =====================
 
-Template library for configuring EMI grid middleware services
+Template library for configuring EMI grid middleware services.
 
 EMI services validated (9/9/2014): APEL, ARGUS, BDII, CREAM CE, DPM, LB, LFC, MyProxy, Torque, UI, WLCG VOBOX, VOMS, WMS, WN, Xrootd
 
