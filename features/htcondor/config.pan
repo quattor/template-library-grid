@@ -2,14 +2,11 @@ unique template features/htcondor/config;
 
 include {'features/htcondor/params'};
 
-#Temporary: fix a problem with globus libraries
-variable HTCONDOR_GLOBUS_FIX?=false;
-include {if(HTCONDOR_GLOBUS_FIX){'features/htcondor/globus-fix'}};
-
 #Package
 include {'components/spma/config'};
 
 '/software/packages/{condor}' = nlist();
+'/software/packages/{voms-clients3}' = nlist();
 
 #When the package is reinstalled - re-run the config. Cause some config files may be overwritten.
 '/software/components/spma/dependencies/post' = push('filecopy');

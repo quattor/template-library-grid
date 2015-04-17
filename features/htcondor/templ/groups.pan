@@ -22,6 +22,7 @@ structure template features/htcondor/templ/groups;
        #Some default values
        if(CONDOR_CONFIG['group_defaults']['accept_surplus']){
 		txt = txt + "GROUP_ACCEPT_SURPLUS = True\n";
+		txt = txt + "GROUP_AUTOREGROUP = True\n";
        }else{
 		txt = txt + "GROUP_ACCEPT_SURPLUS = False\n";
        };

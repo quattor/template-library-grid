@@ -2,7 +2,8 @@ unique template features/htcondor/server/groups;
 
 variable CONDOR_CONFIG={
 
-  SELF['cfgfiles'][length(SELF['cfgfiles'])]=nlist( 'name','groups','contents','features/htcondor/templ/groups');
+  SELF['cfgfiles'][length(SELF['cfgfiles'])]=nlist( 'name','groups',
+                                                    'contents','features/htcondor/templ/groups');
 
   #Default list of standard group is build on the VO list
   if(!is_defined(SELF['stdgroups'])){
@@ -57,7 +58,7 @@ variable CONDOR_CONFIG={
     };				
   };
 
-  #finally if the list of group regexps is notr defined... create a default one
+  #finally if the list of group regexps is not defined... create a default one
   if(!is_defined(SELF['group_regexps'])){
     SELF['group_regexps'] = list( nlist("match",'^\(([^,]+),\S+admin\S+,.+\)$',"result","group_$1.admin"),
 				  nlist("match",'^\(([^,]+),\S+prod\S+,.+\)$',"result","group_$1.prod"),
@@ -69,27 +70,29 @@ variable CONDOR_CONFIG={
   SELF;
 };
 
-'/software/components/filecopy/services/{/usr/libexec/condor_local_submit_attributes.sh}' = {
+include {'components/filecopy/config'};
+prefix '/software/components/filecopy/services';
+'{/usr/libexec/condor_local_submit_attributes.sh}' = {
   SELF['config']=file_contents('features/htcondor/templ/condor_local_submit_attributes.sh');
   SELF['perms']='0755';
   SELF; 
 };
 
-'/software/components/filecopy/services/{/etc/condor/groups_list}' = {
+'{/etc/condor/groups_list}' = {
   dummy=create('features/htcondor/templ/groups_list');
   SELF['config']=dummy['text'];
   SELF['perms']='0644';
   SELF; 
 };
 
-'/software/components/filecopy/services/{/etc/condor/groups_mapping.xml}' = {
+'{/etc/condor/groups_mapping.xml}' = {
   dummy=create('features/htcondor/templ/groups_mapping');
   SELF['config']=dummy['text'];
   SELF['perms']='0664';
   SELF; 
 };
 
-'/software/components/filecopy/services/{/usr/libexec/matching_regexps}' = {
+'{/usr/libexec/matching_regexps}' = {
   SELF['config']=file_contents('features/htcondor/templ/matching_regexps');
   SELF['perms']='0755';
   SELF; 

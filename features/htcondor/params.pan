@@ -60,6 +60,16 @@ variable CONDOR_CONFIG = {
     SELF['config.local'] = '';
   };
 
+  # Default configuration is *not* enable Multicore
+  if (!is_defined(SELF['multicore'])){
+      SELF['multicore'] = false;
+  };
+
+  # Default wallclocktime for all jobs
+  if (!is_defined(SELF['wctlimit'])){
+      SELF['wctlimit'] = 0;
+  };
+
   SELF; 
 };
 
