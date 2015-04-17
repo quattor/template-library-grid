@@ -116,7 +116,9 @@ include { 'components/altlogrotate/config' };
     # Remove potential duplicates
     foreach (lrms;params;BLPARSER_LRMS_PARAMS) {
       if ( index(params['logFile'],log_files) < 0 ) {
-        log_files[length(log_files)] = params['logFile'];
+      	 if(lrms != 'condor' || CE_BATCH_SYS == 'condor' ){
+	         log_files[length(log_files)] = params['logFile'];
+	};
       };
     };
     foreach (i;file;log_files) {
