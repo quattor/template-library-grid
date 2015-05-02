@@ -29,7 +29,7 @@ endif
 
 # Default drain configuration
 if $(DRAIN)
-    START = (regexp(".*group_ops.*", AcctGroup))
+    START = ( x509UserProxyVOName == "ops" )
 endif
 EOF
     txt;

@@ -1,5 +1,9 @@
 unique template features/htcondor/params;
 
+@{
+desc = CONDOR_CONFIG is used to manage configuration information about HTCondor
+}
+
 variable CONDOR_CONFIG = {
 	 
   if(!is_defined(SELF['pwd_hash'])){
@@ -18,6 +22,7 @@ variable CONDOR_CONFIG = {
     SELF['cfgprefix'] = 'quattor';
   };
 
+  # Default, all other file under SELF['cfgdir']/config.d will be removed
   if(!is_defined(SELF['strict'])){
     SELF['strict'] = true; 
   };
@@ -70,6 +75,10 @@ variable CONDOR_CONFIG = {
       SELF['wctlimit'] = 0;
   };
 
+  # Default allow all machine under SITE_DOMAIN
+  if (!is_defined(SELF['allow'])) {
+      SELF['allow'] = "*."+SITE_DOMAIN;
+  };
   SELF; 
 };
 
