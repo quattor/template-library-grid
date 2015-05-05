@@ -21,6 +21,13 @@ variable PEP_LOCATION_ETC = ARGUS_LOCATION_ETC + '/pepd';
 variable PEP_LOCATION_LOG = ARGUS_LOCATION_LOG + '/pepd';
 variable PEP_LOCATION_SBIN = PEP_LOCATION + '/sbin';
 
+# PDP responses caching mechanism
+# variable PEP_PDP_CACHE_ENABLED ?= true; # default
+variable PEP_PDP_CACHE_ENABLED ?= false;  # recommended
+
+# PEP daemon java options
+# variable PEP_JAVA_OPTIONS ?= '-Xmx256M'; # default
+variable PEP_JAVA_OPTIONS ?= '-Xmx1024M';  # recommended
 
 #-----------------------------------------------------------------------------
 # PEP Configuration
@@ -51,6 +58,10 @@ variable PEP_CONFIG_CONTENTS = {
     contents = contents + ' ' + endpoint;
   };
   contents = contents + "\n";
+  if (is_boolean(PEP_PDP_CACHE_ENABLED) && ! PEP_PDP_CACHE_ENABLED) {
+    contents = contents + "# disable the cache\n";
+    contents = contents + "maximumCachedResponses = 0\n";
+  };
   contents = contents + "\n";
   contents = contents + '[SECURITY]' + "\n";
   contents = contents + 'servicePrivateKey = ' + SITE_DEF_HOST_KEY + "\n";
@@ -98,14 +109,54 @@ variable PEP_CONFIG_CONTENTS = {
   contents;
 };
 
-"/software/components/filecopy/services" =
-  npush(escape(PEP_CONFIG_FILE),
-        nlist("config",PEP_CONFIG_CONTENTS,
-              "owner","root",
-              "perms","0640",
-       )
-  );
+"/software/components/filecopy/services" = {
+    SELF[escape(PEP_CONFIG_FILE)] = dict(
+        "config", PEP_CONFIG_CONTENTS,
+        "owner", "root",
+        "perms", "0640",
+    );
+    SELF;
+};
 
+
+#-----------------------------------------------------------------------------
+# PEP system configuration file
+#-----------------------------------------------------------------------------
+
+variable PEP_SYSCONFIG_FILE ?= '/etc/sysconfig/argus-pepd';
+'/software/components/filecopy/services' = {
+    this = <<EOF;
+#
+# Options for the Argus PEP server
+#
+#JAVACMD="/usr/bin/java"
+# IPv4 instead of IPv6
+#PEPD_JOPTS="-Djava.net.preferIPv4Stack=true"
+PEPD_JOPTS=%s
+#PEPD_HOME="/usr/share/argus/pepd"
+#PEPD_CONF="/etc/argus/pepd/pepd.ini"
+#PEPD_CONFDIR="/etc/argus/pepd"
+#PEPD_LOGDIR="/var/log/argus/pepd"
+#PEPD_LIBDIR="/var/lib/argus/pepd/lib"
+#PEPD_ENDORSEDDIR="/var/lib/argus/pepd/lib/endorsed"
+#PEPD_PROVIDEDDIR="/var/lib/argus/pepd/lib/provided"
+#PEPD_PID="/var/run/argus-pepd.pid"
+
+# OS provided dependencies (false to use embedded)
+#PEPD_USE_OS_CANL="false"
+#PEPD_USE_OS_BCPROV="false"
+#PEPD_USE_OS_VOMS="false"
+#PEPD_USE_OS_BCMAIL="false"
+EOF
+    SELF[escape(PEP_SYSCONFIG_FILE)] = dict(
+        'config', format(this, PEP_JAVA_OPTIONS),
+        'owner', 'root',
+        'perms', '0640',
+        'backup', false,
+        'restart', '/sbin/service pepd restart',
+    );
+    SELF;
+};
 
 #-----------------------------------------------------------------------------
 # PEP Startup Script
@@ -167,34 +218,33 @@ variable PEP_STARTUP_CONTENTS = {
   contents;
 };
 
-'/software/components/filecopy/services' =
-  npush(escape(PEP_STARTUP_FILE),
-        nlist('config', PEP_STARTUP_CONTENTS,
-              'owner', 'root',
-              'perms', '0755',
-              'restart', '/sbin/service pepd restart',
-       )
-  );
+'/software/components/filecopy/services' = {
+    SELF[escape(PEP_STARTUP_FILE)] = dict(
+        'config', PEP_STARTUP_CONTENTS,
+        'owner', 'root',
+        'perms', '0755',
+        'restart', '/sbin/service pepd restart',
+    );
+    SELF;
+};
 
 
 #-----------------------------------------------------------------------------
 # Fix temporary RPM issues
 #-----------------------------------------------------------------------------
 
-include { 'components/dirperm/config' };
-
+include 'components/dirperm/config';
 '/software/components/dirperm/paths' = {
-  SELF[length(SELF)] = nlist('path', PEP_LOCATION_ETC,
-                             'owner', 'root:root',
-                             'perm', '0750',
-                             'type', 'd',
-                            );
-  SELF[length(SELF)] = nlist('path', PEP_LOCATION_LOG,
-                             'owner', 'root:root',
-                             'perm', '0750',
-                             'type', 'd',
-                            );
-
-  SELF;
+    append(dict(
+        'path', PEP_LOCATION_ETC,
+        'owner', 'root:root',
+        'perm', '0750',
+        'type', 'd',
+    ));
+    append(dict(
+        'path', PEP_LOCATION_LOG,
+        'owner', 'root:root',
+        'perm', '0750',
+        'type', 'd',
+    ));
 };
-
