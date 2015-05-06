@@ -25,6 +25,8 @@ variable REPOSITORY_GRID_THIRD_PARTY_PREFIX ?= REPOSITORY_GRID_THIRD_PARTY_VARIA
 @{
 desc = defines the repository to use for WLCG RPMs.
 values = any string
+default = the default is built by appending 'wlcg', os and arch.
+required = no
 }
 variable REPOSITORY_WLCG ?= 'wlcg_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
 
