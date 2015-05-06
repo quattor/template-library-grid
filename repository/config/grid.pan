@@ -22,6 +22,11 @@ variable REPOSITORY_GRID_THIRD_PARTY_VARIANT ?= 'emi';
 variable REPOSITORY_GRID_PREFIX ?= REPOSITORY_GRID_VARIANT + '_3_0_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
 variable REPOSITORY_GRID_THIRD_PARTY_PREFIX ?= REPOSITORY_GRID_THIRD_PARTY_VARIANT + '_3_0_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
 
+@{
+desc = defines the repository to use for WLCG RPMs.
+values = any string
+}
+variable REPOSITORY_WLCG ?= 'wlcg_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
 
 variable YUM_SNAPSHOT_NS ?= 'repository/snapshot';
 variable YUM_EMI_SNAPSHOT_NS ?= YUM_SNAPSHOT_NS;
@@ -40,9 +45,7 @@ variable EMI_REPOSITORY_LIST ?= {
   SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_base';
   SELF[length(SELF)] = REPOSITORY_GRID_THIRD_PARTY_PREFIX + '_third_party';
   SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_updates';
-  if (OS_VERSION_PARAMS['major'] == 'sl6') {
-    SELF[length(SELF)] = 'wlcg_x86_64';
-  };
+  SELF[length(SELF)] = REPOSITORY_WLCG;
   SELF[length(SELF)] = 'mpi';
   if ( !is_defined(YUM_SNAPSHOT_DATE) ) {
     SELF[length(SELF)] = REPOSITORY_GRID_PREFIX + '_external';
