@@ -219,7 +219,6 @@ variable GIP_CE_SERVICE_PARAMS = nlist(
   pkg_repl('glite-info-provider-service');
   pkg_repl('lcg-info-dynamic-scheduler-pbs');
   if ( GIP_CE_USE_MAUI ) pkg_repl('lcg-info-dynamic-maui');
-  if(CE_BATCH_SYS == 'condor') pkg_repl('lcg-info-dynamic-condor');
   SELF;
 };
 
@@ -385,8 +384,8 @@ variable GIP_CE_PLUGIN_COMMAND = {
 
     foreach (jobmanager;lrms;CE_BATCH_SYS_LIST) {
       if ( lrms == "condor" ) {
-        contents = contents + "/opt/glite/libexec/lcg-info-dynamic-condor /usr/bin/ "+
-            GIP_LDIF_DIR + "/static-file-all-CE-"+lrms+".ldif "+CONDOR_HOST+"\n";
+        contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-condor /opt/condor/bin/ "+
+            GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif "+CONDOR_HOST+"\n";
       } else if ( lrms == "lsf" ) {
         contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-lsf /usr/local/lsf/bin/ "+
             GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif"+"\n";
@@ -664,7 +663,7 @@ variable GIP_CE_LDIF_PARAMS = {
       };
       lrms = CE_BATCH_SYS_LIST[jobmanager];
       if ( !is_nlist(host_entries_g1[lrms]) ) host_entries_g1[lrms] = nlist();
-
+  
       # FIXME: cache mode should not be specific to Torque/MAUI...
       # FIXME: cluster mode (distinct CEs and LRMS master) validation with LRMS other than Torque/MAUI 
       if ( FULL_HOSTNAME == LRMS_SERVER_HOST ) {
@@ -847,7 +846,6 @@ variable GIP_CE_LDIF_PARAMS = {
       
     };             # end of iteration over queues
                  
-
     # Create LDIF configuration entries describing CE queues (GlueCE and GlueVOView).
     # FIXME: restore original behaviour when lcg-info-dynamic-scheduler is fixed (https://ggus.eu/index.php?mode=ticket_info&ticket_id=110336).
     #        See other related section at the beginning of this block.
@@ -1175,6 +1173,7 @@ variable GIP_CE_LDIF_PARAMS = {
     SELF;
 };
 
+
 # Create the file defining default values for some queue attributes if using
 # lcg-info-dynamic-maui.
 include if ( GIP_CE_USE_MAUI && (FULL_HOSTNAME == LRMS_SERVER_HOST) ) 'features/gip/ce-maui-plugin-defaults';
@@ -1201,4 +1200,3 @@ include { 'components/dirperm/config' };
         'type','d',
     ));
 };
-
