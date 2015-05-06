@@ -334,10 +334,8 @@ variable GIP_CE_PLUGIN_COMMAND = {
     };
     gip_script_options = format("--max-normal-slots %d --defaults %s", CE_CPU_CONFIG['cores'], GIP_CE_MAUI_PLUGIN_DEFAULTS_FILE);
     SELF['ce'] = pythonbin + ' ' + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-maui --host "+LRMS_SERVER_HOST+" "+gip_script_options;
-    # FIXME: lcg-info-dynamic-scheduler doesn't allow to use a LDIF file in a non standard location...
-    # Update to whatever is appropriate in cache mode when this is fixed.
     if ( GIP_CE_USE_CACHE ) {
-      SELF['ce'] = SELF['ce'] + format(' --ce-ldif %s --share-ldif %s', GIP_LDIF_DIR+'/static-file-all-CE-pbs.ldif',
+      SELF['ce'] = SELF['ce'] + format(' --ce-ldif %s --share-ldif %s', GIP_VAR_DIR+'/static-file-all-CE-pbs.ldif',
                                                                         GIP_LDIF_DIR+'/'+GIP_CE_GLUE2_LDIF_FILES['shares']);
     } else {
       SELF['ce'] = SELF['ce'] + format(' --ce-ldif %s --share-ldif %s', GIP_LDIF_DIR+'/static-file-all-CE-pbs.ldif',
@@ -662,17 +660,13 @@ variable GIP_CE_LDIF_PARAMS = {
         jobmanager=CE_BATCH_SYS;
       };
       lrms = CE_BATCH_SYS_LIST[jobmanager];
-      if ( !is_nlist(host_entries_g1[lrms]) ) host_entries_g1[lrms] = nlist();
+      if ( GIP_CE_USE_CACHE && !is_nlist(host_entries_g1[lrms]) ) host_entries_g1[lrms] = nlist();
   
       # FIXME: cache mode should not be specific to Torque/MAUI...
       # FIXME: cluster mode (distinct CEs and LRMS master) validation with LRMS other than Torque/MAUI 
       if ( FULL_HOSTNAME == LRMS_SERVER_HOST ) {
         ce_list = CE_HOSTS;
         # Create only if necessary to avoid creating a useless emtpy file
-        # FIXME: when lcg-info-dynamic-scheduler is fixed to allow publishing GlueCE/GlueVOView on the CE,
-        #        initialize all_ce_entries_g1[lrms] only if GIP_CE_USE_CACHE is true.
-        #        Also see the related modification at the end of this block.
-        #        Issue can be followed up at https://ggus.eu/index.php?mode=ticket_info&ticket_id=110336.
         if ( !is_nlist(all_ce_entries_g1[lrms]) ) all_ce_entries_g1[lrms] = nlist();
         if ( !is_nlist(share_entries_g2[lrms]) ) share_entries_g2[lrms] = nlist();
       } else {
@@ -847,26 +841,17 @@ variable GIP_CE_LDIF_PARAMS = {
     };             # end of iteration over queues
                  
     # Create LDIF configuration entries describing CE queues (GlueCE and GlueVOView).
-    # FIXME: restore original behaviour when lcg-info-dynamic-scheduler is fixed (https://ggus.eu/index.php?mode=ticket_info&ticket_id=110336).
-    #        See other related section at the beginning of this block.
-    # Due to a problem in lcg-info-dynamic-scheduler not allowing anymore to redefine
-    # the static file location, everything is published on the GIP_CLUSTER_PUBLISHER_HOST as
-    # there is no point to publish the same information twice on different hosts.
-#    if ( index(FULL_HOSTNAME,CE_HOSTS) >= 0 ) {
-#      foreach (lrms;ce_entries;host_entries_g1) {
-#        conf_file_g1 = "lcg-info-static-ce-"+lrms+".conf";
-#        SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-CE-"+lrms+".ldif";
-#        if ( !is_defined(SELF['glue1'][conf_file_g1]['entries']) ) SELF['glue1'][conf_file_g1]['entries'] = nlist();
-#        SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
-#      };
-#    } else {
-    if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {
+    if ( index(FULL_HOSTNAME,CE_HOSTS) >= 0 ) {
+      foreach (lrms;ce_entries;host_entries_g1) {
+        conf_file_g1 = "lcg-info-static-ce-"+lrms+".conf";
+        SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-CE-"+lrms+".ldif";
+        if ( !is_defined(SELF['glue1'][conf_file_g1]['entries']) ) SELF['glue1'][conf_file_g1]['entries'] = nlist();
+        SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
+      };
+    } else {
       foreach (lrms;ce_entries;all_ce_entries_g1) {
         conf_file_g1 = "lcg-info-static-all-CE-"+lrms+".conf";
-        # Use standard location for LDIF file until the lcg-info-dynamic-scheduler issue is fixed and 
-        # original behaviour can be restored.
-        #SELF['glue1'][conf_file_g1]['ldifFile'] = GIP_VAR_DIR + "/static-file-all-CE-"+lrms+".ldif";
-        SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-all-CE-"+lrms+".ldif";
+        SELF['glue1'][conf_file_g1]['ldifFile'] = GIP_VAR_DIR + "/static-file-all-CE-"+lrms+".ldif";
         if ( !is_defined(SELF['glue1'][conf_file_g1]['entries']) ) SELF['glue1'][conf_file_g1]['entries'] = nlist();
         SELF['glue1'][conf_file_g1]['entries'] = merge(SELF['glue1'][conf_file_g1]['entries'],ce_entries);
       };
