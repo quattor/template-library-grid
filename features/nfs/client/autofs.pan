@@ -48,14 +48,18 @@ variable NFS_MOUNT_POINTS = {
         # ncm-autofs doesn't properly handle undefined options
         SELF[e_autofs_mnt_point]["options"] = '';
       };
-      if ( is_defined(params["nfsVersion"]) && (params["nfsVersion"] == '4') ) {
-        debug('Mounting FS '+params['nfsPath']+' with NFS v4');
-        if ( length(SELF[e_autofs_mnt_point]["options"]) > 0 ) {
-          SELF[e_autofs_mnt_point]["options"] = SELF[e_autofs_mnt_point]["options"] + ',';
+      if ( is_defined(params["nfsVersion"]) ) {
+        if ( match(params["nfsVersion"], '2|3|4') ) {
+          debug('Mounting FS '+params['nfsPath']+' with NFS version '+params["nfsVersion"]);
+          if ( length(SELF[e_autofs_mnt_point]["options"]) > 0 ) {
+            SELF[e_autofs_mnt_point]["options"] = SELF[e_autofs_mnt_point]["options"] + ',';
+          };
+          SELF[e_autofs_mnt_point]["options"] = SELF[e_autofs_mnt_point]["options"] + 'nfsvers=' + params['nfsVersion'];
+        } else {
+          error(format('Invalid NFS version specified (%s) for %s', params['nfsVersion'], params['mntpoint']));
         };
-        SELF[e_autofs_mnt_point]["options"] = SELF[e_autofs_mnt_point]["options"] + 'fstype=nfs4';
       } else {
-        debug('Mounting FS '+params['nfsPath']+' with NFS v3');
+        debug('Mounting FS '+params['nfsPath']+' with NFS default version');
       };
     } else {
       debug('Mount point '+params['mntpoint']+' already defined');
