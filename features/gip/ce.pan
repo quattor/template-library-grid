@@ -482,11 +482,7 @@ variable GIP_CE_VOMAP ?= {
   if ( is_defined(CE_BATCH_SYS_LIST) ) {
     foreach (jobmanager;lrms;CE_BATCH_SYS_LIST) {
       if ( lrms == "pbs" ) {
-        if ( GIP_CE_USE_CACHE ) {
-          static_ldif_dir = GIP_VAR_DIR;
-        } else {
-          static_ldif_dir = GIP_LDIF_DIR;
-        };
+        static_ldif_dir = GIP_LDIF_DIR;
         ldif_file = format("%s/static-file-all-CE-pbs.ldif\n",static_ldif_dir);
         ldif_file_glue2 = format("%s/%s\n",static_ldif_dir,GIP_CE_GLUE2_LDIF_FILES['shares']);
         contents = 
