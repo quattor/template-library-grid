@@ -1,6 +1,6 @@
 unique template personality/lb/messaging;
 
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 
 '/software/components/filecopy/services/{/etc/glite-lb/msg.conf}' =
  nlist('config', format(file_contents('personality/lb/msg.conf'),
