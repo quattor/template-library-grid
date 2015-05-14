@@ -7,12 +7,9 @@ variable LCMAPS_FLAVOR = 'glite';
 
 
 # Add site specific configuration, if any
-variable LB_CONFIG_SITE ?= if ( exists(WMS_CONFIG_SITE) && is_defined(WMS_CONFIG_SITE) ) {
-                             return(WMS_CONFIG_SITE);
-                           } else {
-                             return(null);
-                           };
-include { return(LB_CONFIG_SITE) };
+variable WMS_CONFIG_SITE ?= null;
+variable LB_CONFIG_SITE ?= WMS_CONFIG_SITE;
+include LB_CONFIG_SITE;
 
 
 # Include gLite LB rpms
