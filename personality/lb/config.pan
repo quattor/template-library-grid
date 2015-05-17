@@ -1,12 +1,12 @@
 unique template personality/lb/config;
 
-include { 'personality/lb/variables' };
+include 'personality/lb/variables';
 
 # Add site specific configuration, if any
-include { return(LB_CONFIG_SITE) };
+include LB_CONFIG_SITE;
 
 # Define some required environment variables and configure services.
-include { 'components/wmslb/config' };
+include 'components/wmslb/config';
 '/software/components/wmslb/dependencies/pre' = push('accounts','profile');
 '/software/components/wmslb/confFile' = WMS_LOCATION_ETC + '/glite_wms.conf';
 # Delete envScript property to prevent wmslb updating the profile script. This will be done
@@ -14,7 +14,7 @@ include { 'components/wmslb/config' };
 '/software/components/wmslb/envScript' = null;
  
 # Define environment variables required by LB
-include { 'features/lb/env' };
+include 'features/lb/env';
 
 # Reset WMS configuration not to use LB proxy if LB is on the same machine
 # if it has been defined previously.
@@ -30,7 +30,7 @@ include { 'features/lb/env' };
 
 # Add a few variables to grid-env.sh
 
-include { 'components/profile/config' };
+include 'components/profile/config';
 '/software/components/profile' = component_profile_add_env(
   GLITE_GRID_ENV_PROFILE, nlist(
     'GLITE_USER', GLITE_USER,
@@ -46,7 +46,7 @@ include { 'components/profile/config' };
 
 
 # Add LB services to the list of gLite enabled services
-include { 'features/lb/glitestartup' };
+include 'features/lb/glitestartup';
 '/software/components/glitestartup/dependencies/pre' = glitestartup_add_dependency(list('wmslb'));
 '/software/components/glitestartup/services' = {
   services = SELF;
@@ -66,7 +66,7 @@ include { 'features/lb/glitestartup' };
 
 # Configure some directories
 
-include { 'components/dirperm/config' };
+include 'components/dirperm/config';
 '/software/components/dirperm/paths' = push(
   nlist(
     'path', LB_LOG_DIR,
@@ -87,10 +87,10 @@ include { 'components/dirperm/config' };
 
 # Configure Messaging
 variable EMI_LB_MESSAGING_SERVER ?= 'tcp://egi-1.msg.cern.ch:6166';
-include { 'personality/lb/messaging' };
+include 'personality/lb/messaging';
 
 # Configure MySQL database for LB
-include { 'components/mysql/config' };
+include 'components/mysql/config';
 '/software/components/mysql/servers/' = {
   SELF[LB_MYSQL_SERVER]['adminuser'] = LB_MYSQL_ADMINUSER;
   SELF[LB_MYSQL_SERVER]['adminpwd'] = LB_MYSQL_ADMINPWD;
@@ -200,4 +200,4 @@ include { 'components/mysql/config' };
 
 
 # Add LB cron jobs
-include { 'features/lb/crons' };
+include 'features/lb/crons';

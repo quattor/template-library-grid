@@ -365,11 +365,11 @@ variable WMS_HOST_CERT ?= WMS_CERT_DIR + "/" + "hostcert.pem";
 # Don't try to modify it as it is hardcoded in some scripts. See GGUS #34890
 variable WMS_X509_PROXY ?= EMI_LOCATION_VAR + '/glite/wms.proxy';
 
-include { 'components/chkconfig/config' };
+include 'components/chkconfig/config';
 "/software/components/chkconfig/service/globus-gridftp/on" = ""; 
 "/software/components/chkconfig/service/globus-gridftp/startstop" = true; 
 
-include { 'features/globus/sysconfig' };
+include 'features/globus/sysconfig';
 #"/software/components/sysconfig/files/globus/LCMAPS_DB_FILE" = "/etc/lcmaps/lcmaps.db.gridftp";
 '/software/components/sysconfig/files/globus/epilogue' = {
   epilogue = '';
@@ -386,7 +386,7 @@ include { 'features/globus/sysconfig' };
 
 ## Define some required environment variables and configure WMS services
 #
-include { 'components/wmslb/config' };
+include 'components/wmslb/config';
 '/software/components/wmslb/dependencies/pre' = push('accounts','profile');
 # Run glitestartup component after any wmslb config change to handle service restart
 '/software/components/wmslb/dependencies/post' = push('glitestartup');
@@ -477,7 +477,7 @@ variable WMS_DIRECTORIES = list(
   WMS_LOCATION_VAR + "/workload_manager/jobdir",
 );
 
-include { 'components/dirperm/config' };
+include 'components/dirperm/config';
 
 '/software/components/dirperm/paths' = {
   foreach(k;directory;WMS_DIRECTORIES) {
@@ -523,7 +523,7 @@ include { 'components/dirperm/config' };
 
 
 # Fix some issues with hard-coded repositories
-include { 'components/symlink/config' };
+include 'components/symlink/config';
 "/software/components/symlink/links" = {
   SELF[length(SELF)] =   nlist("name", "/var/glite/wmproxy",
                                "target", "/var/wmproxy",
@@ -542,7 +542,7 @@ include { 'components/symlink/config' };
 # gLite startup script
 #-----------------------------------------------------------------------------
 
-include { 'components/glitestartup/config' };
+include 'components/glitestartup/config';
 
 "/software/components/glitestartup/configFile" = EMI_LOCATION_ETC + "/gLiteservices";
 '/software/components/glitestartup/dependencies/pre' = glitestartup_add_dependency(list('accounts','dirperm','mysql','profile','wmslb'));
@@ -584,7 +584,7 @@ include { 'components/glitestartup/config' };
 # MySQL Configuration
 #-----------------------------------------------------------------------------
 
-include { 'components/mysql/config' };
+include 'components/mysql/config';
 
 '/software/components/mysql/servers/' = {
   SELF[WMS_MYSQL_SERVER]['adminuser'] = LB_MYSQL_ADMINUSER;
@@ -624,7 +624,7 @@ include { 'components/mysql/config' };
 #
 #
 # Configure grid ACLs
-include { 'components/gacl/config' };
+include 'components/gacl/config';
 '/software/components/gacl/aclFile' = WMS_GACL_FILE;
 
 
@@ -632,7 +632,7 @@ include { 'components/gacl/config' };
 # Configure logrotate for WMS log files
 #----------------------------------------------------------------
 
-include { 'components/altlogrotate/config' };
+include 'components/altlogrotate/config';
 
 "/software/components/altlogrotate/entries/ice" =
   nlist("pattern", "/var/log/wms/ice*.log",
@@ -716,4 +716,4 @@ include { 'components/altlogrotate/config' };
 
 
 # Configure WMS cron jobs
-include { 'features/wms/crons' };
+include 'features/wms/crons';

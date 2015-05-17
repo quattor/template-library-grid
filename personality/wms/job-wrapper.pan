@@ -2,7 +2,7 @@
 
 unique template personality/wms/job-wrapper;
 
-include { 'components/wmslb/config' };
+include 'components/wmslb/config';
 
 variable WMS_JOB_WRAPPER = EMI_LOCATION + '/etc/templates/template.sh';
 
