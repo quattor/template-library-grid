@@ -7,7 +7,11 @@ unique template personality/ui/rpms/config;
 variable HEP_OSLIBS ?= true;
 "/software/packages" = {
     if (is_boolean(HEP_OSLIBS) && HEP_OSLIBS) {
-        SELF[escape('HEP_OSlibs_SL6')] = nlist();
+        if (OS_VERSION_PARAMS['major'] == 'sl5') {
+            SELF[escape('HEP_OSlibs_SL5')] = nlist();
+        } else {
+            SELF[escape('HEP_OSlibs_SL6')] = nlist();
+        };
     };
     SELF;
 };
