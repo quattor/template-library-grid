@@ -17,7 +17,7 @@ include 'components/metaconfig/config';
   if ( !is_defined(SELF['dependencies']['post']) ) SELF['dependencies']['post'] = list();
   SELF['dependencies']['post'][length(SELF['dependencies']['post'])] = 'gip2';
   service_id = escape(GIP_CE_MAUI_PLUGIN_DEFAULTS_FILE);
-  SELF['services'][service_id]['mode'] = 0600;
+  SELF['services'][service_id]['mode'] = 0644;
   SELF['services'][service_id]['owner'] = 'root';
   SELF['services'][service_id]['group'] = 'root';
   SELF['services'][service_id]['module'] = 'tiny';
