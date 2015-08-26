@@ -460,7 +460,7 @@ sub process_nodes {
         if (m/^\s*state\s*=\s*(\w+)/) {
             $state = ($1 eq "offline") ? 0 : 1;
         } elsif (m/^\s*status\s*=\s*.*ncpus=(\d+),/) {
-            my $ncpus = $1 / __WN_CPU_SLOTS__;
+            my $ncpus = $1;
             if ($state) {
                 if (defined($machines{$ncpus})) {
                     $machines{$ncpus} = $machines{$ncpus}+1;
@@ -572,8 +572,7 @@ EOF
     };
   };
   if ( !is_defined(submit_filter) ) {
-    debug('Node '+FULL_HOSTNAME+': WN_CPU_SLOTS='+to_string(WN_CPU_SLOTS));
-    submit_filter = replace('__WN_CPU_SLOTS__', to_string (WN_CPU_SLOTS), TORQUE_SUBMIT_FILTER_DEFAULT);
+    submit_filter = TORQUE_SUBMIT_FILTER_DEFAULT;
   };
   return(submit_filter)
 };
