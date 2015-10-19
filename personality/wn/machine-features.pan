@@ -1,62 +1,87 @@
-template personality/wn/machine-features;
+unique template personality/wn/machine-features;
 
+variable MACHINE_FEATURES_TEMPLATE ?= undef;
 variable MACHINE_FEATURES_PATH ?= '/etc/machinefeatures';
-variable WN_HS06 ?= nlist();
-variable WN_SHUTDOWNTIME ?= nlist();
-
-include { 'components/dirperm/config' };
-
-'/software/components/dirperm/paths' = push(
-  nlist('path',MACHINE_FEATURES_PATH,
-        'owner','root:root',
-        'perm','0755',
-        'type','d')
+variable MACHINE_FEATURES_LIST ?= list(
+    'hs06',
+    'shutdowntime',
+    'jobslots',
+    'phys_cores',
+    'log_cores',
+    'shutdown_command',
 );
 
-
-#------------------------------------------------------------------------------
-# Configure the HS06 rating for a single core
-#------------------------------------------------------------------------------
-
-variable WN_HS06_FILE ?= MACHINE_FEATURES_PATH + '/hs06';
-variable WN_HS06_CONTENTS ?= {
-  if ( is_defined(WN_HS06[FULL_HOSTNAME]) ) {
-    contents = to_string(WN_HS06[FULL_HOSTNAME]) + "\n";
-  } else {
-    contents = "\n";
-  };
-
-  contents;
+# Machine features can be defined through a structure template
+variable MACHINE_FEATURES ?= {
+    this = dict();
+    if (is_defined(MACHINE_FEATURES_TEMPLATE) && exists(MACHINE_FEATURES_TEMPLATE)) {
+        this = create(MACHINE_FEATURES_TEMPLATE);
+    };
+    this;
 };
 
-"/software/components/filecopy/services" = npush(
-  escape(WN_HS06_FILE), nlist(
-    "config",WN_HS06_CONTENTS,
-    "owner","root",
-    "perms","0644",
-  )
-);
-
-
-#------------------------------------------------------------------------------
-# Configure the timestamp for when the node is expected to be rebooted
-#------------------------------------------------------------------------------
-
-variable WN_SHUTDOWN_FILE ?= MACHINE_FEATURES_PATH + '/shutdowntime';
-variable SHUTDOWNTIME_CONTENTS ?= {
-  if ( is_defined(WN_SHUTDOWNTIME[FULL_HOSTNAME]) ) {
-    contents = to_string(WN_SHUTDOWNTIME[FULL_HOSTNAME]) + "\n";
-  } else {
-    contents = "\n";
-  };
-
-  contents;
+# Machine features can also be defined by node with the following variables
+variable MACHINE_FEATURES = {
+    if (is_defined(NODE_HEP_SPEC06)) {
+        SELF['hs06'][escape(FULL_HOSTNAME)] = NODE_HEP_SPEC06;
+    };
+    if (is_defined(NODE_SHUTDOWN_TIME)) {
+        SELF['shutdowntime'][escape(FULL_HOSTNAME)] = NODE_SHUTDOWN_TIME;
+    };
+    if (is_defined(NODE_JOB_SLOTS)) {
+        SELF['jobslots'][escape(FULL_HOSTNAME)] = NODE_JOB_SLOTS;
+    };
+    if (is_defined(NODE_PHYSICAL_CORES)) {
+        SELF['phys_cores'][escape(FULL_HOSTNAME)] = NODE_PHYSICAL_CORES;
+    };
+    if (is_defined(NODE_LOGICAL_CORES)) {
+        SELF['log_cores'][escape(FULL_HOSTNAME)] = NODE_LOGICAL_CORES;
+    };
+    if (is_defined(NODE_SHUTDOWN_COMMAND)) {
+        SELF['shutdown_command'][escape(FULL_HOSTNAME)] = NODE_SHUTDOWN_COMMAND;
+    };
+    SELF;
 };
 
-"/software/components/filecopy/services" = npush(
-  escape(WN_SHUTDOWN_FILE), nlist(
-    "config",SHUTDOWNTIME_CONTENTS,
-    "owner","root",
-    "perms","0644",
-  )
+# Define MACHINEFEATURES environment variable
+include 'components/profile/config';
+'/software/components/profile/env/MACHINEFEATURES' ?= MACHINE_FEATURES_PATH;
+
+# Create path
+include 'components/dirperm/config';
+'/software/components/dirperm/paths' = append(
+    dict(
+        'path', MACHINE_FEATURES_PATH,
+        'owner', 'root:root',
+        'perm', '0755',
+        'type', 'd',
+    ),
 );
+
+# Create files
+include 'components/filecopy/config';
+'/software/components/filecopy/services' = {
+    foreach(k; v; MACHINE_FEATURES_LIST) {
+        if (is_defined(MACHINE_FEATURES[v])) {
+            key = FULL_HOSTNAME;
+            follow = true;
+            while (follow) {
+                if (is_defined(MACHINE_FEATURES[v][escape(key)])) {
+                    key = to_string(MACHINE_FEATURES[v][escape(key)]);
+                } else {
+                    follow = false;
+                };
+            };
+            if (key != FULL_HOSTNAME) {
+                SELF[escape(MACHINE_FEATURES_PATH + '/' + v)] = dict(
+                    'config', key + "\n",
+                    'owner', 'root',
+                    'group', 'root',
+                    'perms', '0644',
+                    'backup', false,
+                );
+            };
+        };
+    };
+    SELF;
+};
