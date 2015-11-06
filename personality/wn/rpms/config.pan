@@ -3,19 +3,6 @@ unique template personality/wn/rpms/config;
 # EMI WN
 "/software/packages/{emi-wn}" ?= nlist();
 
-# HEP dependencies
-variable HEP_OSLIBS ?= true;
-"/software/packages" = {
-    if (is_boolean(HEP_OSLIBS) && HEP_OSLIBS) {
-        if (OS_VERSION_PARAMS['major'] == 'sl5') {
-            SELF[escape('HEP_OSlibs_SL5')] = nlist();
-        } else { 
-            SELF[escape('HEP_OSlibs_SL6')] = nlist();
-        };
-    };
-    SELF;
-};
-
 # Atlas Worker Node metapackage
 variable ATLAS_SUPPORT ?= true;
 "/software/packages" = {

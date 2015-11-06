@@ -3,8 +3,11 @@ unique template personality/ui/service;
 
 variable PKG_ARCH_GLITE ?= PKG_ARCH_DEFAULT;
 
-# Add  some RPMs from the OS
+# Add some RPMs from the OS
 include { 'rpms/scientific-libraries' };
+
+# Configure WLCG-related libraries and packages
+include { 'features/wlcg/config' };
 
 # Add UI RPMs
 include { 'personality/ui/rpms/config' };
