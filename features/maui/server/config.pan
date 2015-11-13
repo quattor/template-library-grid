@@ -416,8 +416,8 @@ variable MAUI_CONFIG ?= {
     };
     
     # Compute the number of slots dedicated to SR.
-    if ( MAUI_USE_HW_CONFIG && exists(WN_CPU_CONFIG[wn]['cores']) && is_defined(WN_CPU_CONFIG[wn]['cores']) ) {
-      process_slots = to_long(WN_CPU_CONFIG[wn]['cores']);
+    if ( MAUI_USE_HW_CONFIG && exists(WN_CPU_CONFIG[wn]['slots']) && is_defined(WN_CPU_CONFIG[wn]['slots']) ) {
+      process_slots = to_long(WN_CPU_CONFIG[wn]['slots']);
     } else if ( exists(WN_CPUS[wn]) && is_defined(WN_CPUS[wn]) ) {
       process_slots = to_long(WN_CPUS[wn]);
     } else {
