@@ -1185,17 +1185,27 @@ variable WN_CPU_CONFIG = {
     };
     cpu_num = length(wn_hw['cpu']);
     core_num =0;
+    slot_num =0;
     if ( cpu_num > 0 ) {
       if ( is_defined(WN_CPUS[wn]) ) {
         core_num = WN_CPUS[wn];
+        slot_num = core_num;
       } else if ( is_defined(wn_hw['cpu'][0]['cores']) ) {
         core_num = cpu_num * wn_hw['cpu'][0]['cores'];
+        slot_num = core_num;
+
+        # If hyperthreading is set to true, gives slots = 2 * cores
+        if ( is_defined(wn_hw['cpu'][0]['hyperthreading']) && wn_hw['cpu'][0]['hyperthreading']  ) {
+          slot_num = slot_num * 2;
+        };
       } else {
         core_num = WN_CPUS_DEF;
+        slot_num = core_num;
       };
     };
     SELF[wn] = nlist('cpus', cpu_num,
                      'cores', core_num,
+                     'slots', slot_num,
                     );
   };
   
