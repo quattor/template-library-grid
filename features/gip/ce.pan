@@ -335,7 +335,7 @@ variable GIP_CE_PLUGIN_COMMAND = {
     } else {
       pythonbin = 'python'
     };
-    gip_script_options = format("--max-normal-slots %d --defaults %s", CE_CPU_CONFIG['cores'], GIP_CE_MAUI_PLUGIN_DEFAULTS_FILE);
+    gip_script_options = format("--max-normal-slots %d --defaults %s", CE_CPU_CONFIG['slots'], GIP_CE_MAUI_PLUGIN_DEFAULTS_FILE);
     SELF['ce'] = pythonbin + ' ' + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-maui --host "+LRMS_SERVER_HOST+" "+gip_script_options;
     # FIXME: lcg-info-dynamic-scheduler doesn't allow to use a LDIF file in a non standard location...
     # Update to whatever is appropriate in cache mode when this is fixed.
@@ -602,7 +602,7 @@ variable GIP_CE_LDIF_PARAMS = {
   
     # For GlueHostArchitecturePlatformType, assume the same type as CE until we support several subclusters
     # per cluster.
-    average_core_num = to_double(CE_CPU_CONFIG['cores']) / CE_CPU_CONFIG['cpus'];
+    average_core_num = to_double(CE_CPU_CONFIG['slots']) / CE_CPU_CONFIG['cpus'];
     hepspec06 = 4 * to_double(CE_SI00) / 1000;
     cluster_entries_g1[escape('dn: GlueSubClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+', GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+',Mds-Vo-name=resource,o=grid')] = 
       nlist(
@@ -629,7 +629,7 @@ variable GIP_CE_LDIF_PARAMS = {
             'GlueHostProcessorVendor',          list(CE_CPU_VENDOR),
             'GlueSubClusterName',               list(FULL_HOSTNAME),
             'GlueSubClusterPhysicalCPUs',       list(to_string(CE_CPU_CONFIG['cpus'])),
-            'GlueSubClusterLogicalCPUs',        list(to_string(CE_CPU_CONFIG['cores'])),
+            'GlueSubClusterLogicalCPUs',        list(to_string(CE_CPU_CONFIG['slots'])),
             'GlueSubClusterTmpDir',             list('/tmp'),
             'GlueSubClusterWNTmpDir',           list('/tmp'),
             "GlueInformationServiceURL", list(RESOURCE_INFORMATION_URL),
@@ -1049,7 +1049,7 @@ variable GIP_CE_LDIF_PARAMS = {
     glue2_var_prefix = format('ExecutionEnvironment_%s_',GIP_CLUSTER_PUBLISHER_HOST);
     SELF['glue2']['ExecutionEnvironment'] = nlist(glue2_var_prefix+'ArchitecturePlatformType', list(CE_WN_ARCH),
                                                   glue2_var_prefix+'PhysicalCPUs', list(to_string(CE_CPU_CONFIG['cpus'])),
-                                                  glue2_var_prefix+'LogicalCPUs', list(to_string(CE_CPU_CONFIG['cores'])),
+                                                  glue2_var_prefix+'LogicalCPUs', list(to_string(CE_CPU_CONFIG['slots'])),
                                                   glue2_var_prefix+'SmpSize', list(CE_SMPSIZE),
                                                   glue2_var_prefix+'ProcessorVendor', list(CE_CPU_VENDOR),
                                                   glue2_var_prefix+'ProcessorModel', list(CE_CPU_MODEL),
