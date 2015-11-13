@@ -303,10 +303,12 @@ variable CE_BATCH_SYS_LIST ?= {
 variable CE_CPU_CONFIG = {
   SELF['cpus'] = 0;
   SELF['cores'] = 0;
+  SELF['slots'] = 0;
   foreach (i;wn;WORKER_NODES) {
     if ( is_defined(WN_CPU_CONFIG[wn]) ) {
       SELF['cpus'] = SELF['cpus'] + WN_CPU_CONFIG[wn]['cpus'];
       SELF['cores'] = SELF['cores'] + WN_CPU_CONFIG[wn]['cores'];
+      SELF['slots'] = SELF['slots'] + WN_CPU_CONFIG[wn]['slots'];
     } else {
       error('Failed to find '+wn+' CPU configuration in WN_CPU_CONFIG');
     };
