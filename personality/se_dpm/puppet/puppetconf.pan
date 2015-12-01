@@ -4,7 +4,7 @@ include {'components/puppet/config'};
 
 '/software/components/puppet/puppetconf/main/parser' = 'future';
 
-include {'quattor/functions/strings'};
+include {'quattor/functions/package'};
 
 #Including the needed modules
 variable DPM_PUPPET_MODULE_VERSION ?= "1.8.9";
@@ -24,7 +24,7 @@ variable DPMMGR_UID?=970;
 
 	self[escape("dpm::params::volist")] = VOS;
 
-	if(comparever(DPM_PUPPET_MODULE_VERSION,'1.8.10')>0){
+	if(pkg_compare_version(DPM_PUPPET_MODULE_VERSION,'1.8.10')>0){
 	  disk_list='';
 	  foreach(i;disk;DPM_HOSTS['disk']){
 	    if(disk_list==''){
