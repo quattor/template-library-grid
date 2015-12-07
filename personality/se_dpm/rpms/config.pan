@@ -6,6 +6,7 @@ variable SEDPM_USE_METAPACKAGES ?= if ( is_defined(REPOSITORY_EPEL_TESTING_ENABL
                                    } else {
                                      true;
                                    };
+variable SEDPM_MEMCACHE_ENABLED ?= false;
 
 '/software/packages/' = {
   if ( SEDPM_USE_METAPACKAGES ) {
@@ -47,6 +48,12 @@ variable SEDPM_USE_METAPACKAGES ?= if ( is_defined(REPOSITORY_EPEL_TESTING_ENABL
       SELF[escape('dpm-srm-server-mysql')] = nlist();
       SELF[escape('dmlite-plugins-mysql')] = nlist();
       SELF[escape('glite-info-provider-service')] = nlist();
+      SELF[escape('dpm-contrib-admintools')] = nlist();
+      SELF[escape('argus-pep-api-c')] = nlist();
+      if ( SEDPM_MEMCACHE_ENABLED ){
+        SELF[escape('dmlite-plugins-memcache')] = nlist();
+        SELF[escape('memcached')] = nlist();
+      }
     };
 
   };
