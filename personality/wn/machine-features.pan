@@ -43,6 +43,14 @@ variable MACHINE_FEATURES = {
     SELF;
 };
 
+# Try to use hardware's HEP-SPEC06 benchmark (unless already defined)
+variable MACHINE_FEATURES = {
+    if (exists('/hardware/benchmarks/hepspec06') && ! is_defined(SELF['hs06'][escape(FULL_HOSTNAME)])) {
+        SELF['hs06'][escape(FULL_HOSTNAME)] = value('/hardware/benchmarks/hepspec06');
+    };
+    SELF;
+};
+
 # Define MACHINEFEATURES environment variable
 include 'components/profile/config';
 '/software/components/profile/env/MACHINEFEATURES' ?= MACHINE_FEATURES_PATH;
