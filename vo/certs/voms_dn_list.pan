@@ -62,7 +62,7 @@ variable VOMS_SERVER_DN ?= list(
                                           'issuer', '/C=JP/O=KEK/OU=CRC/CN=KEK GRID Certificate Authority',
                                          ),
     'voms.cnaf.infn.it',            nlist('subject', '/C=IT/O=INFN/OU=Host/L=CNAF/CN=voms.cnaf.infn.it',
-                                          'issuer', '/C=IT/O=INFN/CN=INFN CA',
+                                          'issuer', '/C=IT/O=INFN/CN=INFN Certification Authority',
                                          ),
     'voms.consorzio-cometa.it',     nlist('subject', '/C=IT/O=INFN/OU=Host/L=COMETA/CN=voms.consorzio-cometa.it',
                                           'issuer', '/C=IT/O=INFN/CN=INFN CA',
@@ -163,6 +163,12 @@ variable VOMS_SERVER_DN ?= list(
     'voms2.cnaf.infn.it',           nlist('subject', '/C=IT/O=INFN/OU=Host/L=CNAF/CN=voms2.cnaf.infn.it',
                                           'issuer', '/C=IT/O=INFN/CN=INFN CA',
                                          ),
+    'voms1.grid.cesnet.cz',         nlist('subject', '/DC=org/DC=terena/DC=tcs/C=CZ/ST=Hlavni mesto Praha/L=Praha 6/O=CESNET/CN=voms1.grid.cesnet.cz',
+                                          'issuer', '/C=NL/ST=Noord-Holland/L=Amsterdam/O=TERENA/CN=TERENA eScience SSL CA 3',
+                                         ),
+    'voms2.grid.cesnet.cz',         nlist('subject', '/DC=org/DC=terena/DC=tcs/C=CZ/ST=Hlavni mesto Praha/L=Praha 6/O=CESNET/CN=voms2.grid.cesnet.cz',
+                                          'issuer', '/C=NL/ST=Noord-Holland/L=Amsterdam/O=TERENA/CN=TERENA eScience SSL CA 3',
+                                         ),
     'voms2.hellasgrid.gr',          nlist('subject', '/C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms2.hellasgrid.gr',
                                           'issuer', '/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006',
                                          ),
@@ -173,4 +179,3 @@ variable VOMS_SERVER_DN ?= list(
                                           'issuer', '/C=IT/O=INFN/CN=INFN CA',
                                          ),
 );
-
