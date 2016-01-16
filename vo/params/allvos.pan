@@ -187,6 +187,7 @@ variable ALLVOS ?= list(
         'vo.grid.auth.gr',
         'vo.gridcl.fr',
         'vo.grif.fr',
+        'harpo.cea.fr',
         'vo.helio-vo.eu',
         'vo.hess-experiment.eu',
         'vo.ifisc.csic.es',
