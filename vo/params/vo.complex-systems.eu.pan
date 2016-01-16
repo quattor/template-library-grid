@@ -4,10 +4,16 @@ structure template vo/params/vo.complex-systems.eu;
 'account_prefix' ?= 'comsya';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.auth.gr',
-          'host', 'voms.grid.auth.gr',
+    nlist('name', 'voms.hellasgrid.gr',
+          'host', 'voms.hellasgrid.gr',
           'port', 15160,
           'adminport', 8443,
+         ),
+    nlist('name', 'voms2.hellasgrid.gr',
+          'host', 'voms2.hellasgrid.gr',
+          'port', 15160,
+          'adminport', 8443,
+          'type', list('voms-only'),
          ),
 );
 
