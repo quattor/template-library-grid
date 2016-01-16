@@ -8,7 +8,6 @@ structure template vo/params/lhcb;
           'host', 'lcg-voms2.cern.ch',
           'port', 15003,
           'adminport', 8443,
-          'type', list('voms-only'),
          ),
     nlist('name', 'voms2.cern.ch',
           'host', 'voms2.cern.ch',
