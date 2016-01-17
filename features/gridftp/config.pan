@@ -130,8 +130,10 @@ variable GLOBUSCFG_FIX_EXE ?= "/usr/sbin/globuscfg_fix";
 #  );
 
 
+include 'components/symlink/config';
 #work around configuration file path, which cannot be specified in globuscfg component
-variable GLOBUS_GRIDFTP_CFGFILE ?= GLOBUS_LOCATION + "/etc/gridftp.conf";  
+variable GLOBUS_GRIDFTP_CFGFILE ?= GLOBUS_LOCATION + "/etc/gridftp.conf";
+
 "/software/components/symlink/links" =
   push(nlist("target", GLOBUS_GRIDFTP_CFGFILE,
              "name", "/etc/gridftp.conf",
