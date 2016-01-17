@@ -418,13 +418,18 @@ variable CE_USE_SSH ?= undef;
 # Define batch system to use. Currently supported values are :
 #   - torque1 : Torque v1 with MAUI
 #   - torque2 : Torque v2 with MAUI
+#   - condor : HTCondor
 # Default is torque1 if CE_BATCH_SYS is defined to pbs (backward compatibility)
 variable CE_BATCH_NAME ?= if ( exists(CE_BATCH_SYS) &&
                                is_defined(CE_BATCH_SYS) &&
                                ((CE_BATCH_SYS == "pbs") || (CE_BATCH_SYS == "lcgpbs")) ) {
                             'torque1';
                           } else {
-                            undef;
+                            if (is_defined(CE_BATCH_SYS) && (CE_BATCH_SYS == "condor")) {
+                                'condor';
+                            } else {
+                                undef;
+                            };
                           };                             
 
 
@@ -445,7 +450,12 @@ variable CE_BATCH_SYS ?= if ( exists(CE_BATCH_NAME) &&
                                 (CE_BATCH_NAME == 'torque2') ) ) {
                            'pbs';
                          } else {
-                           undef;
+                           if (is_defined(CE_BATCH_NAME) &&
+                               CE_BATCH_NAME == 'condor') {
+                                   'condor';
+                               } else {
+                                   undef;
+                               };
                          };
 variable CE_JM_TYPE ?= CE_BATCH_SYS;
 

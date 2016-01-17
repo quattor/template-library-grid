@@ -2,24 +2,39 @@ unique template features/htcondor/config;
 
 include {'features/htcondor/params'};
 
-#Package
-include {'components/spma/config'};
+# Fixme: globus-gridftp-server need gssapi but not in RPM requirements
+variable HTCONDOR_GLOBUS_FIX ?= true;
+include {
+  if( HTCONDOR_GLOBUS_FIX ) {
+    'features/htcondor/globus-fix';
+  };
+};
 
-'/software/packages/{condor}' = nlist();
-'/software/packages/{voms-clients3}' = nlist();
+# Fixme: Due to ATLAS_SUPPORT, we must remove condor before installing condor.x86_64
+'/software/packages/{condor}' = null;
+'/software/packages' = {
+  if (CONDOR_CONFIG['version'] >= '8.3') {
+    SELF[escape('condor-all.x86_64')] = nlist();
+  } else {
+    SELF[escape('condor.x86_64')] = nlist();
+    };
+  SELF;
+};
 
-#When the package is reinstalled - re-run the config. Cause some config files may be overwritten.
+
+# When the package is reinstalled - re-run the config. Cause some config files may be overwritten.
 '/software/components/spma/dependencies/post' = push('filecopy');
 
 include {'components/filecopy/config'};
 
 '/software/components/filecopy/services' = {	    
-  #Put the cluster Key file
-  SELF[escape(CONDOR_CONFIG['pwd_file']+'.encoded')] = nlist('config', CONDOR_CONFIG['pwd_hash'],
-				                             'restart', 'base64 -d '+ CONDOR_CONFIG['pwd_file'] +'.encoded >'+CONDOR_CONFIG['pwd_file'],
-				                             'perms', '0400',
-	    				                    );
-  #Put the config files
+  # Put the cluster Key file
+  SELF[escape(CONDOR_CONFIG['pwd_file']+'.encoded')] =
+    nlist('config', CONDOR_CONFIG['pwd_hash'],
+				  'restart', 'base64 -d '+ CONDOR_CONFIG['pwd_file'] +'.encoded >'+CONDOR_CONFIG['pwd_file'],
+				  'perms', '0400',
+	    		);
+  # Put the config files
   foreach(i;file;CONDOR_CONFIG['cfgfiles']){
 
     dummy = create(file['contents']);

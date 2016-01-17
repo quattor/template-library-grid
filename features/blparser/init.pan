@@ -27,6 +27,7 @@ variable BLAH_JOBID_PREFIX ?= 'cream_';
 
 # BLAH new parser (BLParser-less) configuration
 variable BLAH_PURGE_INTERVAL ?= 5000000;   # About 2months
+
 variable BLAH_UPDATER ?= nlist(
   'lsf', GLITE_LOCATION+'/bin/BUpdaterLSF',
   'pbs', GLITE_LOCATION+'/bin/BUpdaterPBS',
@@ -51,6 +52,16 @@ variable BLAH_CONFIG_FILE = GLITE_LOCATION + '/etc/blah.config';
 variable BLAH_LOG_DIR = '/var/log/accounting';
 variable BLAH_LOG_FILE = 'blahp.log';
 
+variable LRMS_CONFIG_DIR ?= {
+  if (  CE_BATCH_SYS == 'pbs' ) {
+    TORQUE_CONFIG_DIR;
+  } else if ( CE_BATCH_SYS == 'condor' ) {
+    '/var/lib/condor';
+  } else {
+    error(format('BLParser configuration: unsupported batch system (%s)',to_string(CE_BATCH_SYS)));
+  };
+};
+
 # Which LRMS to enable in blparser
 # BLPARSER_LRMS_PARMAS must contain one entry per supported LRMS.
 # Support for a particular LRMS should be disabled by default.
@@ -60,18 +71,21 @@ variable BLPARSER_LRMS_PARAMS ?= {
                       'port', 33333,
                       'creamPort', 56566,
                       'numOfDaemons', 1,
+                      'configDir',LRMS_CONFIG_DIR,
                      );
   SELF['pbs'] = nlist('enabled', 'no',
                       'logFile', 'glite-blparser-pbs.log',
                       'port', 33332,
                       'creamPort', 56565,
                       'numOfDaemons', 1,
-                     );
+                      'configDir',LRMS_CONFIG_DIR,
+                      );
   SELF['condor'] = nlist('enabled', 'no',
                          'logFile', 'glite-blparser-htcondor.log',
                          'port', 33331,
                          'creamPort', 56564,
                          'numOfDaemons', 1,
+                         'configDir','/var/lib/condor',
                         );
   SELF;
 };
@@ -85,7 +99,7 @@ variable BLPARSER_BATCH_SYS ?= if ( is_defined(CREAM_BATCH_SYS) ) {
                                } else {
                                  CE_BATCH_SYS;
                                };
-                               
+
 variable BLPARSER_LRMS_PARAMS = {
   if ( is_defined(SELF[BLPARSER_BATCH_SYS]) ) {
     SELF[BLPARSER_BATCH_SYS]['enabled'] = 'yes';

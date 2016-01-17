@@ -23,3 +23,5 @@ prefix '/software/packages/';
 '{globus-gsi-proxy-ssl.x86_64}' = nlist();
 '{globus-xio.x86_64}' = nlist();
 '{globus-gass-transfer.x86_64}' = nlist();
+'{voms.x86_64}' = nlist();
+'{voms.i686}' = nlist();

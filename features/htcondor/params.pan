@@ -5,7 +5,21 @@ desc = CONDOR_CONFIG is used to manage configuration information about HTCondor
 }
 
 variable CONDOR_CONFIG = {
-	 
+  # Default Central Manager is LRMS_SERVER_HOST
+  if (!is_defined(SELF['host'])) {
+    SELF['host'] = LRMS_SERVER_HOST;
+  };
+
+  # Default domain name is grid
+  if (!is_defined(SELF['domain'])) {
+    SELF['domain'] = 'grid';
+  };
+
+  # Condor version is used to a RPM packaging change in condor 8.3
+  if (!is_defined(SELF['version'])) {
+     SELF['version'] = '8.2';
+  };
+
   if(!is_defined(SELF['pwd_hash'])){
     error("Missing 'pwd_hash' attribute of CONDOR_CONFIG.\n");
   };
@@ -68,6 +82,11 @@ variable CONDOR_CONFIG = {
   # Default configuration is *not* enable Multicore
   if (!is_defined(SELF['multicore'])){
       SELF['multicore'] = false;
+  };
+
+  # Default MaxVacateTime (48 * 60 * 60)
+  if (!is_defined(SELF['maxvacatetime'])) {
+    SELF['maxvacatetime'] = 48 * 60 * 60 * 100;
   };
 
   # Default wallclocktime for all jobs

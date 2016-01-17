@@ -1,24 +1,19 @@
 unique template features/htcondor/server/service;
 
-variable CONDOR_CONFIG={
-
-  SELF['host'] = LRMS_SERVER_HOST;
-
-  SELF['domain'] = 'grid';
-	
-  #Define the appropriate config files
+variable CONDOR_CONFIG = {
+  # Define the appropriate config files
   if(!is_defined(SELF['cfgfiles'])){
     SELF['cfgfiles']=list();
   };	
 
-  file_list=list('global','security');
+  file_list=list('global','security','params','head');
 
-  if(FULL_HOSTNAME == SELF['host']){
-    file_list[length(file_list)]='head';
+  if (is_defined(SELF['multicore']) && SELF['multicore']) {
+    file_list[length(file_list)] = 'defrag';
   };
 
-  if(FULL_HOSTNAME == CE_HOST){
-    file_list[length(file_list)]='submit';
+  if (is_defined(SELF['ganglia']) && SELF['ganglia']) {
+    file_list[length(file_list)] = 'ganglia';
   };
 
   foreach(i;file;file_list){
@@ -30,40 +25,30 @@ variable CONDOR_CONFIG={
     SELF['options']['head'] = nlist();
   };
 
-  if(!is_defined(SELF['options']['submit'])){
-    SELF['options']['submit'] = nlist();
-  };
-
   SELF;
 };
 
 include {'features/htcondor/server/groups'};
+include {'features/htcondor/client/policies'};
 
-variable CONDOR_HOST=CONDOR_CONFIG['host'];
 
-variable BLPARSER_WITH_UPDATER_NOTIFIER=true;
-
+# By default all VO has same queue named https://cream.domain.org:7443/cream-condor-default
 variable CE_QUEUES ?={
-  SELF['vos']['gridq']=VOS;
-  SELF;		
+  SELF['vos']['default']=VOS;
+  SELF;
+};
+
+# If current machine is CREAM-CE
+include {
+  if(index(FULL_HOSTNAME,CE_HOSTS) >= 0){
+    'features/htcondor/client/ce';
+  }else{
+    null;
+  };
 };
 
 include {'features/htcondor/config'};
 
-#fix a bug in the blah rpm
-include {'components/filecopy/config'};
-
-'/software/components/filecopy/services/{/usr/libexec/condor_status.sh}' = {
-  SELF['source']='/usr/libexec/condor_status.sh.save';
-  SELF['perms']='0755';
-  SELF; 
-};
-
-include {'components/dirperm/config'};
-
-'/software/components/dirperm/paths' = push(nlist('path', '/var/glite/blah','type', 'd','owner','tomcat','perm','775'));
-
-include {'components/chkconfig/config'};
-
-'/software/components/chkconfig/service/glite-ce-blah-parser' = nlist('on', '', 'startstop', true);
+# CONDOR_HOST is mandatory for GIP configuration
+variable CONDOR_HOST=CONDOR_CONFIG['host'];
 
