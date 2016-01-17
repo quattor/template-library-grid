@@ -1,4 +1,7 @@
 unique template personality/se_dpm/rpms/memcached;
 
-'/software/packages/{dmlite-plugins-memcache}' ?= nlist();
-'/software/packages/{memcached}' ?= nlist();
+'/software/packages' = {
+  pkg_repl('memcached');
+  pkg_repl('dmlite-plugins-memcache');
+  SELF;
+};

@@ -33,7 +33,6 @@ variable SEDPM_USE_METAPACKAGES ?= if ( is_defined(REPOSITORY_EPEL_TESTING_ENABL
     SELF[escape('dmlite-plugins-adapter')] = nlist();
     SELF[escape('edg-mkgridmap')] = nlist();
     SELF[escape('emi-version')] = nlist();
-    SELF[escape('fetch-crl')] = nlist();
     SELF[escape('finger')] = nlist();
     SELF[escape('lcgdm-dav')] = nlist();
     SELF[escape('lcgdm-dav-server')] = nlist();
