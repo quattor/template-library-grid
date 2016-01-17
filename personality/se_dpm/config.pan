@@ -172,6 +172,7 @@ variable SEDPM_IS_HEAD_NODE = {
 #  - Use of SURL with RFIO requires a RFIO daemon on the head node even though
 #    this is not a disk server. 
 variable DPM_ACCESS_PROTOCOLS ?= list('gsiftp','rfio');
+variable DPM_USE_LEGACY_PROTOCOL_OPTIONS ?= false;
 variable TEST = if ( length(DPM_ACCESS_PROTOCOLS) == 0 ) error('No access protocol configured in DPM configuration');
 "/software/components/dpmlfc/options/dpm/accessProtocols" ?= DPM_ACCESS_PROTOCOLS;
 "/software/components/dpmlfc/" = {
@@ -181,24 +182,27 @@ variable TEST = if ( length(DPM_ACCESS_PROTOCOLS) == 0 ) error('No access protoc
       access_protocols[length(access_protocols)] = 'rfio';
     };
     foreach (i;protocol;access_protocols) {
-      # https configuration through dpmlfc is not yet supported
-      if ( protocol != 'https' ) {
-        disk_servers = DPM_HOSTS['disk'];
-        if ( (protocol == 'rfio') && (index(DPM_HOSTS['dpns'][0],disk_servers) < 0) ) {
-          disk_servers[length(disk_servers)] = DPM_HOSTS['dpns'][0];
-        };
-        foreach (i;host;disk_servers) {
-          if ( is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
-            host_params = DPM_SERVICE_PARAMS[protocol];
-          } else {
-            host_params = nlist();
-          };
-          if ( !is_defined(SELF[protocol]) ) {
-            SELF[protocol] = nlist();
-          };
-          SELF[protocol][host] = host_params;
-        };
+      if ( protocol == 'https' ) {
+        protocol = 'dav';
       };
+      # Write common parameters for the protocol into the protocol global options
+      if ( is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
+        SELF['protocols'][protocol]= DPM_SERVICE_PARAMS[protocol];
+      };
+      disk_servers = DPM_HOSTS['disk'];
+      if ( match(protocol, '^dav|rfio$') && (index(DPM_HOSTS['dpns'][0],disk_servers) < 0) ) {
+        disk_servers[length(disk_servers)] = DPM_HOSTS['dpns'][0];
+      };
+      # In legacy ncm-dpmlfc, the options had to be set as node specific options
+      foreach (i;host;disk_servers) {
+        if ( DPM_USE_LEGACY_PROTOCOL_OPTIONS && is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
+          host_params = DPM_SERVICE_PARAMS[protocol];
+        } else {
+          host_params = nlist();
+        };
+        SELF[protocol][host] = host_params;
+      };
+      debug(format('%s: DPM protocol %s config = %s',OBJECT,protocol,to_string(SELF[config_protocol])));
     };
   } else {
     error("No disk server defined (DPM_HOSTS['disk'])");
@@ -351,6 +355,7 @@ include { DPM_IPTABLES_INCLUDE };
     null;
   };
 };
+
 
 # ----------------------------------------------------------------------------
 # Set appropriate ownership/permissions on /etc/grid_security/gridmapdir
