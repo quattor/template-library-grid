@@ -1,6 +1,11 @@
 unique template features/wlcg/config;
 
-# HEP dependencies
+@{
+desc = add libraries required by WLCG applications
+values = boolean
+required = no
+default = true
+}
 variable HEP_OSLIBS ?= true;
 
 variable HEP_OSLIBS_MAPPING ?= dict(
@@ -10,11 +15,12 @@ variable HEP_OSLIBS_MAPPING ?= dict(
 );
 
 "/software/packages" = {
-  if (HEP_OSLIBS) {
-    if (exists(HEP_OSLIBS_MAPPING[OS_VERSION_PARAMS['major']])) {
+  if ( HEP_OSLIBS ) {
+    if ( is_defined(HEP_OSLIBS_MAPPING[OS_VERSION_PARAMS['major']]) ) {
       pkg_repl(HEP_OSLIBS_MAPPING[OS_VERSION_PARAMS['major']]);
     } else {
       error(format('No HEP_OSlibs mapping defined for an OS whose major version is %s.',OS_VERSION_PARAMS['major']));
     };
   };
+  SELF;
 };
