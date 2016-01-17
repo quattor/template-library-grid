@@ -9,7 +9,7 @@ variable DMLITE_MYSQL_NSPOOLSIZE ?= 32;
 variable DMLITE_MEMCACHE_ENABLED ?= false;
 variable DMLITE_MEMCACHE_POOLSIZE ?= 500;
 
-include { if (DMLITE_MEMCACHE_ENABLED) 'personality/se_dpm/rpms/memcached' };
+include if ( DMLITE_MEMCACHE_ENABLED ) 'features/memcached/config';
 
 #
 # /etc/dmlite.conf.d/mysql.conf
@@ -44,18 +44,22 @@ include { 'components/filecopy/config' };
 # /etc/dmlite.conf.d/zmemcache.conf
 #
 variable contents = {
-  "LoadPlugin plugin_memcache /usr/" + library + "/dmlite/plugin_memcache.so\n" +
-  "MemcachedServer localhost:11211\n" +
-  "SymLinkLimit 5\n" +
-  "MemcachedExpirationLimit 60\n" +
-  "MemcachedProtocol binary\n" +
-  "MemcachedPOSIX on\n" +
-  "MemcachedFunctionCounter off\n" +
-  "MemcachedBloomFilter off\n" +
-  "MemcachedPoolSize " + to_string(DMLITE_MEMCACHE_POOLSIZE) + "\n";
+  if ( DMLITE_MEMCACHE_ENABLED ) {
+    "LoadPlugin plugin_memcache /usr/" + library + "/dmlite/plugin_memcache.so\n" +
+    "MemcachedServer localhost:11211\n" +
+    "SymLinkLimit 5\n" +
+    "MemcachedExpirationLimit 60\n" +
+    "MemcachedProtocol binary\n" +
+    "MemcachedPOSIX on\n" +
+    "MemcachedFunctionCounter off\n" +
+    "MemcachedBloomFilter off\n" +
+    "MemcachedPoolSize " + to_string(DMLITE_MEMCACHE_POOLSIZE) + "\n";
+  } else {
+    '';
+  };
 };
 
-'/software/components/filecopy/services' = if (is_boolean(DMLITE_ENABLED) && DMLITE_ENABLED && DMLITE_MEMCACHE_ENABLED) {
+'/software/components/filecopy/services' = if ( is_boolean(DMLITE_ENABLED) && DMLITE_ENABLED ) {
     SELF[escape('/etc/dmlite.conf.d/zmemcache.conf')] = nlist(
         'config', contents,
         'owner', 'root',

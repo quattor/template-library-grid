@@ -6,6 +6,7 @@ variable SEDPM_USE_METAPACKAGES ?= if ( is_defined(REPOSITORY_EPEL_TESTING_ENABL
                                    } else {
                                      true;
                                    };
+variable DMLITE_MEMCACHE_ENABLED ?= false;
 
 '/software/packages/' = {
   if ( SEDPM_USE_METAPACKAGES ) {
@@ -48,6 +49,10 @@ variable SEDPM_USE_METAPACKAGES ?= if ( is_defined(REPOSITORY_EPEL_TESTING_ENABL
       SELF[escape('glite-info-provider-service')] = nlist();
       SELF[escape('dpm-contrib-admintools')] = nlist();
       SELF[escape('argus-pep-api-c')] = nlist();
+    };
+
+    if ( DMLITE_MEMCACHE_ENABLED ) {
+      pkg_repl('dmlite-plugins-memcache');
     };
 
   };
