@@ -6,7 +6,13 @@ unique template features/lcas/glexec;
 
 variable LCAS_GLEXEC_DB_FILE ?= LCAS_CONFIG_DIR + '/lcas-glexec.db';
 
-variable LCAS_GLEXEC_ALLOWED_EXEC_PREFIX = CE_BATCH_SYS;
+variable LCAS_GLEXEC_ALLOWED_EXEC_PREFIX = {
+    if (is_defined(CE_BATCH_SYS)) {
+        CE_BATCH_SYS;
+    } else {
+        error("CE_BATCH_SYS variable need to be defined to compute LCAS_GLEXEC_ALLOWED_EXEC_PREFIX")
+    };
+};
 
 # Executables allowed with glexec
 variable LCAS_GLEXEC_ALLOWED_EXEC ?= list('/bin/cat',
