@@ -217,11 +217,21 @@ variable GIP_CE_SERVICE_PARAMS = nlist(
 '/software/packages' = {
   pkg_repl('glite-ce-cream-utils');
   pkg_repl('glite-info-provider-service');
-  pkg_repl('lcg-info-dynamic-scheduler-pbs');
-  if ( GIP_CE_USE_MAUI ) pkg_repl('lcg-info-dynamic-maui');
-  if(CE_BATCH_SYS == 'condor') pkg_repl('lcg-info-dynamic-condor');
+  if(CE_BATCH_SYS == 'pbs' || CE_BATCH_SYS == 'torque'){
+    pkg_repl('lcg-info-dynamic-scheduler-pbs');
+    if ( GIP_CE_USE_MAUI ) pkg_repl('lcg-info-dynamic-maui');
+  };
+  if(CE_BATCH_SYS == 'condor'){ pkg_repl('dynsched-generic');};
   SELF;
 };
+
+
+# ---------------------------------------------------------------------------- 
+# HTCondor: add required scripts not part of official RPMs
+# ---------------------------------------------------------------------------- 
+
+# Necessary only the GIP_CLUSTER_PUBLISHER_HOST (generally LRMS_SERVER_HOST)
+include  if( (CE_BATCH_SYS == 'condor') && (FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST) ) 'features/gip/ce-condor-plugins';
 
 
 # ---------------------------------------------------------------------------- 
@@ -383,15 +393,25 @@ variable GIP_CE_PLUGIN_COMMAND = {
   
   # iterate over supported batch systems
   if ( is_defined(CE_BATCH_SYS_LIST) && (length(CE_BATCH_SYS_LIST) > 0) ) {
-    contents = "#!/bin/sh\n";
+    contents = "";
 
     foreach (jobmanager;lrms;CE_BATCH_SYS_LIST) {
       if ( lrms == "condor" ) {
-        contents = contents + "/opt/glite/libexec/lcg-info-dynamic-condor /usr/bin/ "+
-            GIP_LDIF_DIR + "/static-file-all-CE-"+lrms+".ldif "+CONDOR_HOST+"\n";
+        # Do it only the GIP_CLUSTER_PUBLISHER_HOST, not on all CEs
+        if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {
+          if ( !is_defined(GIP_CE_CONDOR_INFO_DYNAMIC_PLUGIN) ) {
+            error('Internal error: GIP_CE_CONDOR_INFO_DYNAMIC_PLUGIN variable undefined');
+          };
+          contents = contents + "/usr/libexec/" + GIP_CE_CONDOR_INFO_DYNAMIC_PLUGIN + " --scheduler " + CE_HOST +
+                                " --glue1-ldif /var/lib/bdii/gip/ldif/static-file-all-CE-condor.ldif" +
+                                " --glue2-ldif /var/lib/bdii/gip/ldif/ComputingShare.ldif\n";
+          GIP_LDIF_DIR + "/static-file-all-CE-"+lrms+".ldif "+CONDOR_HOST+"\n";
+        };
+
       } else if ( lrms == "lsf" ) {
         contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-lsf /usr/local/lsf/bin/ "+
             GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif"+"\n";
+
       } else if ( lrms == "remotepbs" ) {
         contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-remotepbs "+REMOTEPBS_REMOTE_HOST+
                                                                              " "+REMOTEPBS_REMOTE_PORT+"\n";   
@@ -417,7 +437,9 @@ variable GIP_CE_PLUGIN_COMMAND = {
       };
     };
 
-    SELF['lcg-info-dynamic-ce'] = contents;
+    if ( length(contents) > 0 ) {
+      SELF['lcg-info-dynamic-ce'] = "#!/bin/sh\n" + contents;
+    };
   };
 
   SELF;
@@ -484,7 +506,11 @@ variable GIP_CE_VOMAP ?= {
   if ( is_defined(CE_BATCH_SYS_LIST) ) {
     foreach (jobmanager;lrms;CE_BATCH_SYS_LIST) {
       if ( lrms == "pbs" ) {
-        static_ldif_dir = GIP_LDIF_DIR;
+        if ( GIP_CE_USE_CACHE ) {
+          static_ldif_dir = GIP_VAR_DIR;
+        } else {
+          static_ldif_dir = GIP_LDIF_DIR;
+        };
         ldif_file = format("%s/static-file-all-CE-pbs.ldif\n",static_ldif_dir);
         ldif_file_glue2 = format("%s/%s\n",static_ldif_dir,GIP_CE_GLUE2_LDIF_FILES['shares']);
         contents = 
@@ -508,7 +534,7 @@ variable GIP_CE_VOMAP ?= {
       } else if ( lrms == "condor" ) {
         contents = 
           "[Main]\n" + 
-          "static_ldif_file: " + GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif\n" + 
+          "static_ldif_file: " + GIP_LDIF_DIR + "/static-file-all-CE-"+lrms+".ldif\n" + 
           "vomap : \n";
    
         foreach (k; vo; GIP_CE_VOMAP) {
@@ -665,8 +691,13 @@ variable GIP_CE_LDIF_PARAMS = {
         jobmanager=CE_BATCH_SYS;
       };
       lrms = CE_BATCH_SYS_LIST[jobmanager];
+      if ( !is_dict(host_entries_g1[lrms]) ) host_entries_g1[lrms] = dict();
+      # FIXME: when lcg-info-dynamic-scheduler is fixed to allow publishing GlueCE/GlueVOView on the CE,
+      # uncomment next line and remove the following one (initialize host_entries_g1[lrms] only if
+      # GIP_CE_USE_CACHE is true).
+      #if ( GIP_CE_USE_CACHE && !is_dict(host_entries_g1[lrms]) ) host_entries_g1[lrms] = dict();
       if ( !is_nlist(host_entries_g1[lrms]) ) host_entries_g1[lrms] = nlist();
-
+   
       # FIXME: cache mode should not be specific to Torque/MAUI...
       # FIXME: cluster mode (distinct CEs and LRMS master) validation with LRMS other than Torque/MAUI 
       if ( FULL_HOSTNAME == LRMS_SERVER_HOST ) {
@@ -826,30 +857,34 @@ variable GIP_CE_LDIF_PARAMS = {
           all_ce_entries_g1[lrms] = merge(all_ce_entries_g1[lrms],entries_g1);
         };
 
-        # GLUE2 entry (LDIF generator config entry).
-        # GLUE2 shares are independent of CEs: add only once.
-        share_name =  replace('\.','-',format('%s_%s',queue,vo_name));
-        if ( !is_defined(share_entries_g2[lrms][share_name]) ) {
-          glue2_var_prefix = format('SHARE_%s_',to_uppercase(share_name));
-          entries_g2[share_name] = nlist(glue2_var_prefix+'QUEUENAME', list(queue),
-                                         glue2_var_prefix+'OWNER', list(vo_name),
-                                         glue2_var_prefix+'ENDPOINTS', list(ce+'_org.glite.ce.CREAM'),
-                                         glue2_var_prefix+'EXECUTIONENVIRONMENTS', list(GIP_CLUSTER_PUBLISHER_HOST),
-                                         glue2_var_prefix+'ACBRS', access,
-                                         glue2_var_prefix+'CEIDS', list(unique_id),
-                                        );
-
-          # GLUE2 : add entries if on the LRMS master node
-          if ( is_nlist(share_entries_g2[lrms]) ) {
-            share_entries_g2[lrms] = merge(share_entries_g2[lrms],entries_g2);
+        foreach (k;vo;vos) {
+          vo_name = VO_INFO[vo]['name'];
+          # GLUE2 entry (LDIF generator config entry).
+          # GLUE2 shares are independent of CEs: add only once.
+          share_name =  replace('\.','-',format('%s_%s',queue,vo_name));
+          if ( !is_defined(share_entries_g2[lrms][share_name]) ) {
+            glue2_var_prefix = format('SHARE_%s_',to_uppercase(share_name));
+            entries_g2[share_name] = dict(
+                                       glue2_var_prefix+'QUEUENAME', list(queue),
+                                       glue2_var_prefix+'OWNER', list(vo_name),
+                                       glue2_var_prefix+'ENDPOINTS', list(ce+'_org.glite.ce.CREAM'),
+                                       glue2_var_prefix+'EXECUTIONENVIRONMENTS', list(GIP_CLUSTER_PUBLISHER_HOST),
+                                       glue2_var_prefix+'ACBRS', access,
+                                       glue2_var_prefix+'CEIDS', list(unique_id),
+                                     );
           };
         };
+
+        # GLUE2 : add entries if on the LRMS master node
+        if ( is_dict(share_entries_g2[lrms]) ) {
+          share_entries_g2[lrms] = merge(share_entries_g2[lrms],entries_g2);
+        };
+
                
       };           # end of iteration over CEs
       
     };             # end of iteration over queues
                  
-
     # Create LDIF configuration entries describing CE queues (GlueCE and GlueVOView).
     # FIXME: restore original behaviour when lcg-info-dynamic-scheduler is fixed (https://ggus.eu/index.php?mode=ticket_info&ticket_id=110336).
     #        See other related section at the beginning of this block.
@@ -1177,6 +1212,7 @@ variable GIP_CE_LDIF_PARAMS = {
     SELF;
 };
 
+
 # Create the file defining default values for some queue attributes if using
 # lcg-info-dynamic-maui.
 include if ( GIP_CE_USE_MAUI && (FULL_HOSTNAME == LRMS_SERVER_HOST) ) 'features/gip/ce-maui-plugin-defaults';
@@ -1203,4 +1239,3 @@ include { 'components/dirperm/config' };
         'type','d',
     ));
 };
-
