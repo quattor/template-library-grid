@@ -25,7 +25,7 @@ variable contents = {
     "MapFile /etc/lcgdm-mapfile\n" +
     "NsPoolSize " + to_string(DMLITE_MYSQL_NSPOOLSIZE) + "\n";
 };
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = if (is_boolean(DMLITE_ENABLED) && DMLITE_ENABLED) {
     SELF[escape('/etc/dmlite.conf.d/mysql.conf')] = nlist(
         'config', contents,

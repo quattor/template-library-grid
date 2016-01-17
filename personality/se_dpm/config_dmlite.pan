@@ -22,7 +22,7 @@ variable library = if (PKG_ARCH_DEFAULT == 'x86_64') {
 #
 # /etc/dmlite.conf
 #
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
     this = "LoadPlugin plugin_config /usr/" + library + "/dmlite/plugin_config.so\n";
     if (DPM_VERSION > '1.8.8') {
@@ -42,7 +42,7 @@ include { 'components/filecopy/config' };
 #
 # /etc/dmlite.conf.d
 #
-include { 'components/dirperm/config' };
+include 'components/dirperm/config';
 '/software/components/dirperm/paths' = {
     append(nlist(
         'path', '/etc/dmlite.conf.d',
@@ -80,7 +80,7 @@ variable contents = {
     this = this + "TokenLife " + DMLITE_TOKEN_LIFE + "\n";
     this;
 };
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
     SELF[escape('/etc/dmlite.conf.d/adapter.conf')] = nlist(
         'config', contents,
@@ -102,7 +102,7 @@ include { 'components/filecopy/config' };
 
 # dmlite configuration specific to head node if needed
 # Be sure to use the same condition as the one used to select which plugin to load in adapter.conf
-include { if ( SEDPM_IS_HEAD_NODE && (SEDPM_DB_TYPE == 'mysql') ) 'personality/se_dpm/server/config_dmlite' };
+include if ( SEDPM_IS_HEAD_NODE && (SEDPM_DB_TYPE == 'mysql') ) 'personality/se_dpm/server/config_dmlite';
 
 
 

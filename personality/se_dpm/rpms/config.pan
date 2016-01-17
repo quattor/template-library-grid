@@ -60,7 +60,7 @@ variable DMLITE_MEMCACHE_ENABLED ?= false;
   SELF;
 };
 
-include { if (XROOT_ENABLED) 'personality/se_dpm/rpms/xrootd' };
-include { if (HTTPS_ENABLED) 'personality/se_dpm/rpms/dav' };
+include if (XROOT_ENABLED) 'personality/se_dpm/rpms/xrootd';
+include if (HTTPS_ENABLED) 'personality/se_dpm/rpms/dav';
 
-include { if (SEDPM_IS_HEAD_NODE && SEDPM_MONITORING_ENABLED) 'personality/se_dpm/rpms/monitoring' };
+include if (SEDPM_IS_HEAD_NODE && SEDPM_MONITORING_ENABLED) 'personality/se_dpm/rpms/monitoring';

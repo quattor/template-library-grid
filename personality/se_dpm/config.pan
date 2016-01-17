@@ -34,7 +34,7 @@ variable DPM_PORTS = nlist(
 
 
 # Add site specific configuration, if any.
-include { DPM_CONFIG_SITE };
+include DPM_CONFIG_SITE;
 
 # Other initialization after site configuration has been loaded
 variable SEDPM_MONITORING_ENABLED ?= false;
@@ -85,7 +85,7 @@ variable DPM_SLOW_THREADS ?= if ( is_null(SELF) ) {
 # Add account dpmmgr
 # User running DPM deamons
 variable DPM_USER ?= 'dpmmgr';
-include { 'users/' + DPM_USER };
+include 'users/' + DPM_USER;
 # Normally define by preceding template
 variable DPM_GROUP ?= 'dpmmgr';
 "/software/components/dpmlfc/options/dpm/user" ?= DPM_USER;
@@ -95,7 +95,7 @@ variable DPM_GROUP ?= 'dpmmgr';
 # Load ncm-dpmlfc and set pre dependency : ncm-accounts need be executed first
 # Also ncm-sysconfig must be executed before for dpm-gsiftp (globus-gridftp).
 # Define daemon ports to match site parameters
-include { 'components/dpmlfc/config' };
+include 'components/dpmlfc/config';
 # Ideally installDir should use GLITE_LOCATION for during migration to
 # EMI GLITE_LOCATION was set to /usr which is not appropriate.
 # TO BE FIXED whend GLITE_LOCATION is really the root of all directory used.
@@ -255,10 +255,10 @@ variable SRMV2_ENABLED = if ( is_defined(DPM_HOSTS['srmv22']) ) {
                          };
 
 # Configure https access if needed
-include { if ( HTTPS_ENABLED ) 'personality/se_dpm/config_dav' };
+include if ( HTTPS_ENABLED ) 'personality/se_dpm/config_dav';
 
 # Configure Xrootd access if needed
-include { if ( XROOT_ENABLED ) 'personality/se_dpm/config_xrootd' };
+include if ( XROOT_ENABLED ) 'personality/se_dpm/config_xrootd';
 
 
 # Define service port numbers to match site parameters if not explicitly defined
@@ -343,7 +343,7 @@ variable DPM_IPTABLES_INCLUDE = if ( is_defined(DPM_IPTABLES_RULES) && (length(D
                                 } else {
                                   null;
                                 };
-include { DPM_IPTABLES_INCLUDE };
+include DPM_IPTABLES_INCLUDE;
 "/software/components/iptables/filter/rules" = {
   rules = list();
   if ( !is_null(DPM_IPTABLES_INCLUDE) ) {
@@ -368,5 +368,5 @@ include { DPM_IPTABLES_INCLUDE };
 # ----------------------------------------------------------------------------
 # Must be done at the very end of the configuration
 # ----------------------------------------------------------------------------
-include { 'personality/se_dpm/check-dpm-daemons' };
+include 'personality/se_dpm/check-dpm-daemons';
 

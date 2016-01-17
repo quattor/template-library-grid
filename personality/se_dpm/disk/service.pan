@@ -17,7 +17,7 @@ variable NET_IPV4_TCP_SACK ?= 0;
 variable NET_IPV4_TCP_TIMESTAMPS ?= 0;
 
 # Tune TCP parameters
-include { 'components/sysctl/config' };
+include 'components/sysctl/config';
 '/software/components/sysctl/variables' = nlist(
     'net.core.rmem_max',    to_string(NET_CORE_RMEM_MAX),
     'net.core.wmem_max',    to_string(NET_CORE_WMEM_MAX),

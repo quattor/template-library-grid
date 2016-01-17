@@ -26,7 +26,7 @@ include 'components/metaconfig/config';
 #
 # Disable /etc/httpd/conf.d/ssl.conf
 #
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = if (is_boolean(DPM_DAV_ENABLED) && DPM_DAV_ENABLED) {
     SELF[escape(HTTPD_CONF_DIR + '/conf.d/ssl.conf')] = nlist(
         'config', "# Disabled by Quattor\n",
@@ -43,7 +43,7 @@ include { 'components/filecopy/config' };
 #
 # Disable /etc/httpd/conf.d/zgridsite.conf
 #
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = if (is_boolean(DPM_DAV_ENABLED) && DPM_DAV_ENABLED) {
     SELF[escape(HTTPD_CONF_DIR + '/conf.d/zgridsite.conf')] = nlist(
         'config', "# Disabled by Quattor\n",
@@ -69,7 +69,7 @@ variable contents = {
     'sed -i "s/^LoadModule dav_fs_module \(.*\)/#LoadModule dav_fs_module \1/g" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n" +
     'sed -i "s/^[# ]*KeepAlive .*/KeepAlive On/" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n";
 };
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = if (is_boolean(DPM_DAV_ENABLED) && DPM_DAV_ENABLED) {
     SELF[escape('/usr/local/quattor/sbin/dpm-dav_httpd.conf_patch.sh')] = nlist(
         'config', contents,
@@ -112,7 +112,7 @@ if [ -f "/etc/cron.d/fetch-crl" ]; then
     fi
 fi
 EOF
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = if (is_boolean(DPM_DAV_ENABLED) && DPM_DAV_ENABLED) {
     SELF[escape('/usr/local/quattor/sbin/fetch-crl-cron_patch.sh')] = nlist(
         'config', contents,

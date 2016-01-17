@@ -21,7 +21,7 @@ variable DPM_DB_CONFIG_FILE_DEFAULT ?= '/etc/DPMCONFIG';
 
 
 # ncm-mysql must be executed first
-include { 'components/dpmlfc/config' };
+include 'components/dpmlfc/config';
 '/software/components/dpmlfc/dependencies/pre' = if ( DPM_MYSQL_SERVER == FULL_HOSTNAME ) {
     push('mysql');
   } else {
@@ -127,9 +127,9 @@ include { if (DPM_MYSQL_SERVER == FULL_HOSTNAME) {
 
 # Check if a site specific version of GIP DPM plugin is used and configure it if needed 
 
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 
-include { GIP_SCRIPT_DPM_DYNAMIC_CONFIG };
+include GIP_SCRIPT_DPM_DYNAMIC_CONFIG;
 
 '/software/components/filecopy/services' = {
   if ( is_defined(GIP_SCRIPT_DPM_DYNAMIC) ) {
