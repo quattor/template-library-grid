@@ -1,6 +1,4 @@
 unique template personality/wms/rpms/config;
 
-prefix '/software/packages';
-
-'{emi-wms}' ?= nlist();
+'/software/packages' = pkg_repl('emi-wms');
 

@@ -1,6 +1,4 @@
 unique template personality/lb/rpms/config;
 
-prefix '/software/packages';
-
-'{emi-lb}' = nlist();
+'/software/packages' = pkg_repl('emi-lb');
 
