@@ -10,13 +10,7 @@ template personality/condor_server/service;
 
 variable GIP_USER ?= 'ldap';
 
-variable MAUI_GROUP_PARAMS ?= nlist(
-  "DEFAULT",    "FSTARGET=1+",
-);
-
 variable BDII_TYPE ?= 'resource';
-##variable PKG_ARCH_TORQUE_MAUI ?= PKG_ARCH_GLITE;
-
 
 # Ensure that the host certificates have the correct permissions.
 include { 'features/security/host_certs' };
@@ -36,18 +30,6 @@ include { 'features/htcondor/server/service' };
 # Configure GIP plugin for Torque/MAUI
 include { 'features/gip/ce' };
 
-
-# Configure MAUI monitoring, also used to optionally implement a GIP plugin cache.
-##variable MAUI_MONITORING_TEMPLATE_INCLUDE = if ( is_defined(MAUI_MONITORING_TEMPLATE) ) {
-##                                               debug(OBJECT+': configuring MAUI monitoring');
-##                                               MAUI_MONITORING_TEMPLATE;
-##                                             } else {
-##                                               debug(OBJECT+': MAUI monitoring disabled');
-##                                               undef;
-##                                             };
-##include { MAUI_MONITORING_TEMPLATE_INCLUDE };
-
-
 # Include a resource BDII
 include { 'personality/bdii/service' };
 
@@ -61,6 +43,7 @@ include { 'features/ldconf/config' };
 # Globus sysconfig files. 
 include { 'features/globus/sysconfig' };
 include { 'features/edg/sysconfig' };
+
 # Add accepted CAs
 include { 'security/cas' };
 
@@ -75,5 +58,5 @@ include { 'features/mkgridmap/standard' };
 include { 'features/gridftp/service' };
 
 # PBS accounting.
-##include { 'features/accounting/apel/parser_condor' };
+include { 'features/accounting/apel/parser_condor' };
 

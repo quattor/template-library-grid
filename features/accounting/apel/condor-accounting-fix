@@ -2,7 +2,7 @@
 # re-write blah logs with hostname included with job id
 # convert condor history file to PBS style accounting log file for consumption by APEL parser
 #
-# Author: sartiran@llr.in2p3.fr 
+# Author: sartiran@llr.in2p3.fr
 #
 # Minimal modification of an original script by Andrew Lahiff
 #
@@ -18,8 +18,8 @@ from datetime import datetime, timedelta
 import socket
 import time
 import re
-
-
+import argparse
+import os
 
 #for file in files:
 
@@ -75,7 +75,7 @@ def condorToPBS(file,outFile):
    document = ElementTree.fromstring(output)
 
    #outFile = '/var/apel/accounting/'+((file.split('/'))[len(file.split('/'))-1].replace('history.','condor-'))
-   f = open(outFile,'w')
+   f = open(outFile,'a')
    print 'writing to ',outFile
 
    data = {}
@@ -96,8 +96,11 @@ def condorToPBS(file,outFile):
          count = count + 1
 
          groups = [g.gr_name for g in grp.getgrall() if data['Owner'] in g.gr_mem]
-         gid = pwd.getpwnam(data['Owner']).pw_gid
-         group = grp.getgrgid(gid).gr_name
+         try:
+            gid = pwd.getpwnam(data['Owner']).pw_gid
+            group = grp.getgrgid(gid).gr_name
+         except KeyError:
+            group = "unknown"
 
          #scaling = float(data['MATCH_EXP_MachineRalScaling'])
          scaling = 1
@@ -131,18 +134,36 @@ def condorToPBS(file,outFile):
 
    f.close()
 
-
-
-
 usedate = datetime.now() - timedelta(days=1)
+
+parser = argparse.ArgumentParser(description='Process Condor logs for accounting purpose.')
+parser.add_argument('--date', default='%d%02d%02d' % (usedate.year, usedate.month, usedate.day),
+                   help='date of the logs to be parsed (default is yesterday)')
+parser.add_argument('--blah-dir', default='/var/log/accounting/',
+                   help='directory of the blah logs (default is /var/log/accounting/)')
+parser.add_argument('--fixed-blah-dir', default='/var/apel/accounting/',
+                   help='directory of the fixed blah logs (default is /var/apel/accounting/)')
+parser.add_argument('--history-dir', default='/var/lib/condor/spool/',
+                   help='directory of the condor history logs (default is /var/lib/condor/spool/)')
+parser.add_argument('--pbs-dir', default='/var/lib/condor/server_priv/accounting/',
+                   help='directory of the pbs history logs (default is /var/lib/condor/server_priv/accounting/)')
+parser.add_argument('--done-blah', default='/var/lib/condor/server_priv/done',
+                   help='list of fixed blah files (default is /var/apel/done)')
+parser.add_argument('--done-condor', default='/var/lib/condor/server_priv/done',
+                   help='list of fixed condor files(default is /var/lib/condor/server_priv/done)')
+
+
+args = parser.parse_args()
+usedate=datetime.strptime(args.date, '%Y%m%d')
 yesterday = '%d%02d%02d' % (usedate.year, usedate.month, usedate.day)
-usedate = datetime.now()
-today = '%d%02d%02d' % (usedate.year, usedate.month, usedate.day)
-
-fixBlahFile('/var/log/accounting/blahp.log-'+yesterday,'/var/apel/accounting/blahp.log-'+yesterday);
-
-files = glob.glob('/var/lib/condor/spool/history.'+today+'*')
-condorToPBS(files[0], '/var/lib/condor/server_priv/accounting/'+yesterday)
+#usedate = usedate  + timedelta(days=1)
+#today = '%d%02d%02d' % (usedate.year, usedate.month, usedate.day)
 
 
+fixBlahFile(args.blah_dir+'/blahp.log-'+yesterday,args.fixed_blah_dir+'/blahp.log-'+yesterday);
+
+files = glob.glob(args.history_dir+'/history.'+yesterday+'*')
+files.sort(key=lambda x: os.stat(x).st_mtime)
+for logfile in files:
+   condorToPBS(logfile, args.pbs_dir+'/'+yesterday)
 
