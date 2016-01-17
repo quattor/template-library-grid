@@ -1,12 +1,12 @@
 unique template personality/se_dpm/rpms/xrootd;
 
-'/software/packages/{dpm-xrootd}' ?= nlist();
-'/software/packages/{dpm-xrootd-devel}' ?= nlist();
+'/software/packages' = pkg_repl('dpm-xrootd');
+'/software/packages' = pkg_repl('dpm-xrootd-devel');
 
 variable VOMS_XROOTD_EXTENSION_ENABLED ?= true;
 '/software/packages' = {
     if (is_boolean(VOMS_XROOTD_EXTENSION_ENABLED) && VOMS_XROOTD_EXTENSION_ENABLED) {
-        SELF[escape('vomsxrd')] = nlist();
+        pkg_repl('vomsxrd');
     };
     SELF;
 };

@@ -11,11 +11,11 @@ variable DMLITE_MEMCACHE_ENABLED ?= false;
 '/software/packages/' = {
   if ( SEDPM_USE_METAPACKAGES ) {
     if ( SEDPM_IS_HEAD_NODE ) {
-      SELF[escape('emi-dpm_mysql')] = nlist();
-      SELF[escape('argus-pep-api-c')] = nlist();
-      SELF[escape('dpm-contrib-admintools')] = nlist();
+      pkg_repl('emi-dpm_mysql');
+      pkg_repl('argus-pep-api-c');
+      pkg_repl('dpm-contrib-admintools');
     } else {
-      SELF[escape('emi-dpm_disk')] = nlist();
+      pkg_repl('emi-dpm_disk');
     };
 
   } else {
@@ -24,31 +24,31 @@ variable DMLITE_MEMCACHE_ENABLED ?= false;
     # to allow testing of new version of DPM, as the metapackage has
     # requirement for explicit versions.
 
-    SELF[escape('dpm')] = nlist();
-    SELF[escape('dpm-devel')] = nlist();
-    SELF[escape('dpm-dsi')] = nlist();
-    SELF[escape('dpm-perl')] = nlist();
-    SELF[escape('dpm-python')] = nlist();
-    SELF[escape('dpm-rfio-server')] = nlist();
-    SELF[escape('dpm-yaim')] = nlist();
-    SELF[escape('dmlite-plugins-adapter')] = nlist();
-    SELF[escape('edg-mkgridmap')] = nlist();
-    SELF[escape('emi-version')] = nlist();
-    SELF[escape('finger')] = nlist();
-    SELF[escape('lcgdm-dav')] = nlist();
-    SELF[escape('lcgdm-dav-server')] = nlist();
-    SELF[escape('lcg-expiregridmapdir')] = nlist();
+    pkg_repl('dpm');
+    pkg_repl('dpm-devel');
+    pkg_repl('dpm-dsi');
+    pkg_repl('dpm-perl');
+    pkg_repl('dpm-python');
+    pkg_repl('dpm-rfio-server');
+    pkg_repl('dpm-yaim');
+    pkg_repl('dmlite-plugins-adapter');
+    pkg_repl('edg-mkgridmap');
+    pkg_repl('emi-version');
+    pkg_repl('finger');
+    pkg_repl('lcgdm-dav');
+    pkg_repl('lcgdm-dav-server');
+    pkg_repl('lcg-expiregridmapdir');
   
     if ( SEDPM_IS_HEAD_NODE ) {
-      SELF[escape('bdii')] = nlist();
-      SELF[escape('dpm-copy-server-mysql')] = nlist();
-      SELF[escape('dpm-name-server-mysql')] = nlist();
-      SELF[escape('dpm-server-mysql')] = nlist();
-      SELF[escape('dpm-srm-server-mysql')] = nlist();
-      SELF[escape('dmlite-plugins-mysql')] = nlist();
-      SELF[escape('glite-info-provider-service')] = nlist();
-      SELF[escape('dpm-contrib-admintools')] = nlist();
-      SELF[escape('argus-pep-api-c')] = nlist();
+      pkg_repl('bdii');
+      pkg_repl('dpm-copy-server-mysql');
+      pkg_repl('dpm-name-server-mysql');
+      pkg_repl('dpm-server-mysql');
+      pkg_repl('dpm-srm-server-mysql');
+      pkg_repl('dmlite-plugins-mysql');
+      pkg_repl('glite-info-provider-service');
+      pkg_repl('dpm-contrib-admintools');
+      pkg_repl('argus-pep-api-c');
     };
 
     if ( DMLITE_MEMCACHE_ENABLED ) {
