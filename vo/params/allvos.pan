@@ -35,7 +35,6 @@ variable ALLVOS ?= list(
         'compchem',
         'comput-er.it',
         'cosmo',
-        'cppm',
         'cyclops',
         'd4science.research-infrastructures.eu',
         'dca.euro-vo.org',
