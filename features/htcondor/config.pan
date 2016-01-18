@@ -14,9 +14,9 @@ include {
 '/software/packages/{condor}' = null;
 '/software/packages' = {
   if (CONDOR_CONFIG['version'] >= '8.3') {
-    SELF[escape('condor-all.x86_64')] = nlist();
+    pkg_repl('condor-all.x86_64');
   } else {
-    SELF[escape('condor.x86_64')] = nlist();
+    pkg_repl('condor.x86_64');
     };
   SELF;
 };
