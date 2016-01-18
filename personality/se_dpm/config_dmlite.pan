@@ -1,7 +1,8 @@
 unique template personality/se_dpm/config_dmlite;
 
-# Define to 1.8.7 is you are not running 1.8 or later
-variable DPM_VERSION ?= '1.8.8';
+# Define to 1.8.7 or 1.8.8, as appropriate, is you are not running 1.8.9 or later
+variable DPM_VERSION ?= '1.8.10';
+variable TEST = debug(format('%s: DPM_VERSION=%s',OBJECT,DPM_VERSION));
 
 #
 # DMLite defaults
@@ -25,7 +26,7 @@ variable library = if (PKG_ARCH_DEFAULT == 'x86_64') {
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
     this = "LoadPlugin plugin_config /usr/" + library + "/dmlite/plugin_config.so\n";
-    if (DPM_VERSION > '1.8.8') {
+    if ( (DPM_VERSION >= '1.9') || (DPM_VERSION == '1.8.9') || match(DPM_VERSION,'^1\.8\.1\d$') ) {
         this = this + 'LogLevel ' + DMLITE_LOGLEVEL + "\n";
     };
     this = this + "Include /etc/dmlite.conf.d/*.conf\n";
@@ -61,7 +62,8 @@ include 'components/dirperm/config';
 #
 variable contents = {
     this = '';
-    if ( match(DPM_VERSION,'^1.8.7') ) {
+    # Ignore versions before 1.8.7 as dmlite was not available
+    if ( DPM_VERSION == '1.8.7' ) {
       plugin_fs_io = 'plugin_fs_io';
     } else {
       plugin_fs_io = 'plugin_fs_rfio';
