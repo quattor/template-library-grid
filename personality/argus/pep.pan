@@ -153,77 +153,7 @@ EOF
         'owner', 'root',
         'perms', '0640',
         'backup', false,
-        'restart', '/sbin/service pepd restart',
-    );
-    SELF;
-};
-
-#-----------------------------------------------------------------------------
-# PEP Startup Script
-#-----------------------------------------------------------------------------
-
-variable PEP_STARTUP_FILE = '/etc/init.d/pepd';
-variable PEP_STARTUP_CONTENTS = {
-  contents = "#!/bin/bash\n";
-  contents = contents + '###############################################################################' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#       Copyright (c) Members of the EGEE Collaboration. 2004' + "\n";
-  contents = contents + '#       See http://eu-egee.org/partners/ for details on the copyright holders' + "\n";
-  contents = contents + '#       For license conditions see the license file or http://eu-egee.org/license.html' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   Startup script for PEP daemon server' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   chkconfig: 345 97 97' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   description:  PEP daemon server startup script' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   processname: pepd' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   Author(s): Maria Alandes Pradillo <yaim-contact@cern.ch>' + "\n";
-  contents = contents + '#              Valery Tschopp <argus-support@cern.ch>' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   Version: V1.2' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   Date: 12/04/2010' + "\n";
-  contents = contents + '###############################################################################' + "\n";
-  contents = contents + 'PEP_HOME=' + PEP_HOME + "\n";
-  contents = contents + 'export PEP_HOME' + "\n";
-  contents = contents + "\n";
-  contents = contents + 'if [ `id -u` -ne 0 ]; then' + "\n";
-  contents = contents + '    echo "You need root privileges to run this script"' + "\n";
-  contents = contents + '    exit 1' + "\n";
-  contents = contents + 'fi ' + "\n";
-  contents = contents + "\n";
-  contents = contents + 'case "$1" in' + "\n";
-  contents = contents + '    start)' + "\n";
-  contents = contents + '        ' + PEP_HOME + '/sbin/pepdctl.sh start' + "\n";
-  contents = contents + '        ;; ' + "\n";
-  contents = contents + '    stop)' + "\n";
-  contents = contents + '        ' + PEP_HOME + '/sbin/pepdctl.sh stop' + "\n";
-  contents = contents + '        ;;' + "\n";
-  contents = contents + '    status)' + "\n";
-  contents = contents + '        ' + PEP_HOME + '/sbin/pepdctl.sh status' + "\n";
-  contents = contents + '        ;;' + "\n";
-  contents = contents + '    clearcache)' + "\n";
-  contents = contents + '        ' + PEP_HOME + '/sbin/pepdctl.sh clearResponseCache' + "\n";
-  contents = contents + '        ;;' + "\n";
-  contents = contents + '    *)' + "\n";
-  contents = contents + '        echo "Usage: $0 {start|stop|status|clearcache}"' + "\n";
-  contents = contents + '        exit 1' + "\n";
-  contents = contents + '        ;;' + "\n";
-  contents = contents + 'esac' + "\n";
-  contents = contents + "\n";
-  contents = contents + 'exit $?' + "\n";
-
-  contents;
-};
-
-'/software/components/filecopy/services' = {
-    SELF[escape(PEP_STARTUP_FILE)] = dict(
-        'config', PEP_STARTUP_CONTENTS,
-        'owner', 'root',
-        'perms', '0755',
-        'restart', '/sbin/service pepd restart',
+        'restart', '/sbin/service argus-pepd restart',
     );
     SELF;
 };
