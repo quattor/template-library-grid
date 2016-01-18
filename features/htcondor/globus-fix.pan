@@ -1,6 +1,6 @@
 unique template features/htcondor/globus-fix;
 
-include {'components/spma/config'};
+include 'components/spma/config';
 
 prefix '/software/packages/';
 

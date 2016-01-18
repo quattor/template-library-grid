@@ -1,6 +1,6 @@
 unique template features/htcondor/config;
 
-include {'features/htcondor/params'};
+include 'features/htcondor/params';
 
 # Fixme: globus-gridftp-server need gssapi but not in RPM requirements
 variable HTCONDOR_GLOBUS_FIX ?= true;
@@ -25,7 +25,7 @@ include {
 # When the package is reinstalled - re-run the config. Cause some config files may be overwritten.
 '/software/components/spma/dependencies/post' = push('filecopy');
 
-include {'components/filecopy/config'};
+include 'components/filecopy/config';
 
 '/software/components/filecopy/services' = {	    
   # Put the cluster Key file
@@ -63,7 +63,7 @@ include {'components/filecopy/config'};
 };
 
 #Set the condor service to be running at boot
-include {'components/chkconfig/config'};
+include 'components/chkconfig/config';
 
 prefix '/software/components/chkconfig/service';
 

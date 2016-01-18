@@ -25,7 +25,7 @@ include {
   };
 };
 
-include {'features/htcondor/config'};
+include 'features/htcondor/config';
 
 # CONDOR_HOST is mandatory for GIP configuration
 variable CONDOR_HOST ?= CONDOR_CONFIG['host'];

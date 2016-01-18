@@ -28,8 +28,8 @@ variable CONDOR_CONFIG = {
   SELF;
 };
 
-include {'features/htcondor/server/groups'};
-include {'features/htcondor/client/policies'};
+include 'features/htcondor/server/groups';
+include 'features/htcondor/client/policies';
 
 
 # By default all VO has same queue named https://cream.domain.org:7443/cream-condor-default
@@ -47,7 +47,7 @@ include {
   };
 };
 
-include {'features/htcondor/config'};
+include 'features/htcondor/config';
 
 # CONDOR_HOST is mandatory for GIP configuration
 variable CONDOR_HOST=CONDOR_CONFIG['host'];

@@ -85,7 +85,7 @@ variable CONDOR_CONFIG={
   SELF;
 };
 
-include {'components/filecopy/config'};
+include 'components/filecopy/config';
 prefix '/software/components/filecopy/services';
 '{/usr/libexec/condor_local_submit_attributes.sh}' = {
   SELF['config']=file_contents('features/htcondor/templ/condor_local_submit_attributes.sh');
@@ -113,7 +113,7 @@ prefix '/software/components/filecopy/services';
   SELF; 
 };
 
-include {'components/spma/config'};
+include 'components/spma/config';
 
 # Needed as the matching script depends on it
 '/software/packages/{voms-clients3}' = nlist();
