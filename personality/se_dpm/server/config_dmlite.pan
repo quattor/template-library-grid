@@ -5,9 +5,26 @@ unique template personality/se_dpm/server/config_dmlite;
 
 variable DMLITE_MYSQL_NSPOOLSIZE ?= 32;
 
-# Set to true if dmlite memcache plugin should be enabled
-variable DMLITE_MEMCACHE_ENABLED ?= false;
-variable DMLITE_MEMCACHE_POOLSIZE ?= 500;
+@{
+desc = configure and enable memcached usage in dmlite
+values = boolean
+required = no
+default = true
+}
+variable DMLITE_MEMCACHE_ENABLED ?= true;
+variable DMLITE_MEMCACHE_POOLSIZE ?= if ( (DPM_VERSION >= '1.9') || (DPM_VERSION == '1.8.9') || match(DPM_VERSION,'^1\.8\.1\d$') ) {
+                                       250;
+                                     } else {
+                                       500;
+                                     };
+variable MEMCACHED_PORT ?= 11211;
+variable MEMCACHED_MAXCONN ?= 8192;
+variable MEMCACHED_CACHESIZE ?= 2048;
+variable MEMCACHED_OPTIONS ?= '"-l 127.0.0.1 -U ' + to_string(MEMCACHED_PORT) + ' -t 4"';
+
+# FIXME: should include other dmlite-based services like gsiftp and xrootd if enabled
+variable DMLITE_SERVICE_RESTART_CMD ?= '/sbin/chkconfig --list httpd && /sbin/service httpd restart';
+
 
 include if ( DMLITE_MEMCACHE_ENABLED ) 'features/memcached/config';
 
@@ -33,7 +50,7 @@ include 'components/filecopy/config';
         'group', DPM_GROUP,
         'perms', '0640',
         'backup', false,
-        'restart', '/sbin/service dpm-all-daemons restart',
+        'restart', DMLITE_SERVICE_RESTART_CMD,
     );
     SELF;
 } else {
@@ -46,7 +63,7 @@ include 'components/filecopy/config';
 variable contents = {
   if ( DMLITE_MEMCACHE_ENABLED ) {
     "LoadPlugin plugin_memcache /usr/" + library + "/dmlite/plugin_memcache.so\n" +
-    "MemcachedServer localhost:11211\n" +
+    "MemcachedServer localhost:" + to_string(MEMCACHED_PORT) + "\n" +
     "SymLinkLimit 5\n" +
     "MemcachedExpirationLimit 60\n" +
     "MemcachedProtocol binary\n" +
@@ -66,7 +83,7 @@ variable contents = {
         'group', 'root',
         'perms', '0644',
         'backup', false,
-        'restart', '/sbin/service dpm-all-daemons restart',
+        'restart', DMLITE_SERVICE_RESTART_CMD,
     );
     SELF;
 } else {

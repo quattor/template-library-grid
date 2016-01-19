@@ -48,10 +48,10 @@ variable DMLITE_MEMCACHE_ENABLED ?= false;
     pkg_repl('glite-info-provider-service');
     pkg_repl('dpm-contrib-admintools');
     pkg_repl('argus-pep-api-c');
-  };
-
-  if ( DMLITE_MEMCACHE_ENABLED ) {
-    pkg_repl('dmlite-plugins-memcache');
+    # memcache is useless on disk servers
+    if ( DMLITE_MEMCACHE_ENABLED ) {
+      pkg_repl('dmlite-plugins-memcache');
+    };
   };
 
   SELF;

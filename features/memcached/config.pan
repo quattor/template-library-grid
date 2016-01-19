@@ -1,5 +1,11 @@
 unique template features/memcached/config;
 
+variable MEMCACHED_PORT ?= 11211;
+variable MEMCACHED_USER ?= 'memcached';
+variable MEMCACHED_MAXCONN ?= 1024;
+variable MEMCACHED_CACHESIZE ?= 64;
+variable MEMCACHED_OPTIONS ?= '"-l 127.0.0.1 -U ' + to_string(MEMCACHED_PORT) + ' -t 4"';
+
 include 'components/metaconfig/config';
 
 # Add RPMs
@@ -13,11 +19,11 @@ prefix '/software/components/metaconfig/services/{/etc/sysconfig/memcached}';
 'backup' = '.old';
 'module' = 'tiny';
 'contents' = {
-  SELF['PORT'] = 11211;
-  SELF['USER'] = "memcached";
-  SELF['MAXCONN'] = 1024;
-  SELF['CACHESIZE'] = 64;
-  SELF['OPTIONS'] = '"-l 127.0.0.1 -U 11211 -t 4"';
+  SELF['PORT'] = MEMCACHED_PORT;
+  SELF['USER'] = MEMCACHED_USER;
+  SELF['MAXCONN'] = MEMCACHED_MAXCONN;
+  SELF['CACHESIZE'] = MEMCACHED_CACHESIZE;
+  SELF['OPTIONS'] = MEMCACHED_OPTIONS;
   SELF;
 };
 bind '/software/components/metaconfig/services/{/etc/sysconfig/memcached}/contents' = memcached_sysconfig_keys;
