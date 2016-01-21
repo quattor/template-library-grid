@@ -17,6 +17,10 @@ include 'features/htcondor/globus-fix';
 };
 
 
+# Add YUM repository
+include 'repository/config/htcondor';
+
+
 # When the package is reinstalled - re-run the config. Cause some config files may be overwritten.
 '/software/components/spma/dependencies/post' = push('filecopy');
 
