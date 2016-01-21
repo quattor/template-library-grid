@@ -2,13 +2,8 @@ unique template features/htcondor/config;
 
 include 'features/htcondor/params';
 
-# Fixme: globus-gridftp-server need gssapi but not in RPM requirements
-variable HTCONDOR_GLOBUS_FIX ?= true;
-include {
-  if( HTCONDOR_GLOBUS_FIX ) {
-    'features/htcondor/globus-fix';
-  };
-};
+# FIXME: add required Globus dependencies messed up by HTCondor RPMs
+include 'features/htcondor/globus-fix';
 
 # Fixme: Due to ATLAS_SUPPORT, we must remove condor before installing condor.x86_64
 '/software/packages/{condor}' = null;
