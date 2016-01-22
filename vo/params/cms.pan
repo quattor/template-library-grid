@@ -8,19 +8,12 @@ structure template vo/params/cms;
           'host', 'lcg-voms2.cern.ch',
           'port', 15002,
           'adminport', 8443,
-          'type', list('voms-only'),
          ),
     nlist('name', 'voms2.cern.ch',
           'host', 'voms2.cern.ch',
           'port', 15002,
           'adminport', 8443,
          ),
-# 18/07/2012: CD: ce serveur ne repond pas
-#    nlist('name', 'voms.fnal.gov',
-#          'host', 'voms.fnal.gov',
-#          'port', 15015,
-#          'adminport', 8443,
-#         ),
 );
 
 'voms_mappings' ?= list(

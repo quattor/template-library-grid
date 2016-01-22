@@ -9,6 +9,12 @@ structure template vo/params/dteam;
           'port', 15004,
           'adminport', 8443,
          ),
+    nlist('name', 'voms2.hellasgrid.gr',
+          'host', 'voms2.hellasgrid.gr',
+          'port', 15004,
+          'adminport', 8443,
+          'type', list('voms-only'),
+         ),
 );
 
 'voms_mappings' ?= list(
