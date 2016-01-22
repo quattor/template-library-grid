@@ -2,13 +2,6 @@
 
 template personality/cream_ce/config;
 
-##TO_BE_FIXED:BEGIN these reconfigurations are probably not in the best place
-
-"/software/components/glitestartup/configFile" = "/etc/gLiteservices";
-"/software/components/glitestartup/restartEnv" = list("/etc/profile.d/env.sh","/etc/profile.d/grid-env.sh");
-"/software/components/glitestartup/scriptPaths" = list("/etc/init.d");
-'/software/components/glitestartup/active' = false;
-
 variable GLOBUS_GRIDFTP_CFGFILE ?= "/usr/etc/gridftp.conf";
 '/software/components/profile' = component_profile_add_env(
     GLITE_GRID_ENV_PROFILE, nlist(
