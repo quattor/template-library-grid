@@ -22,8 +22,29 @@ variable MEMCACHED_MAXCONN ?= 8192;
 variable MEMCACHED_CACHESIZE ?= 2048;
 variable MEMCACHED_OPTIONS ?= '"-l 127.0.0.1 -U ' + to_string(MEMCACHED_PORT) + ' -t 4"';
 
-# FIXME: should include other dmlite-based services like gsiftp and xrootd if enabled
-variable DMLITE_SERVICE_RESTART_CMD ?= '/sbin/chkconfig --list httpd && /sbin/service httpd restart';
+variable DMLITE_SERVICE_RESTART_CMD ?= {
+  services = list();
+  if ( XROOT_ENABLED ) {
+    services[length(services)] = 'xrootd';
+  };
+  if ( HTTPS_ENABLED ) {
+    services[length(services)] = 'httpd';
+  };
+  if ( GSIFTP_ENABLED ) {
+    services[length(services)] = 'dpm-gsiftp';
+  };
+  cmd = '';
+  first = true;
+  foreach (i;service;services) {
+    if ( first ) {
+      first = false;
+    } else {
+      cmd = cmd + '; ';
+    };
+    cmd = cmd + format('/sbin/service %s restart',service);
+  };
+  cmd;
+};
 
 
 include if ( DMLITE_MEMCACHE_ENABLED ) 'features/memcached/config';
