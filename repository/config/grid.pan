@@ -33,12 +33,14 @@ variable REPOSITORY_WLCG ?= 'wlcg_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARC
 variable YUM_SNAPSHOT_NS ?= 'repository/snapshot';
 variable YUM_EMI_SNAPSHOT_NS ?= YUM_SNAPSHOT_NS;
 
-variable YUM_EMI_SNAPSHOT_DATE ?= if ( is_null(YUM_EMI_SNAPSHOT_DATE) ) {
-  SELF;
-} else if ( is_defined(YUM_SNAPSHOT_DATE) ) {
-  YUM_SNAPSHOT_DATE;
-} else {
-  undef;
+variable YUM_EMI_SNAPSHOT_DATE ?= {
+  if ( is_defined(YUM_EMI_SNAPSHOT_DATE) && !is_null(YUM_EMI_SNAPSHOT_DATE) ) {
+    SELF;
+  } else if ( is_defined(YUM_SNAPSHOT_DATE) ) {
+    YUM_SNAPSHOT_DATE;
+  } else {
+    undef;
+  };
 };
 
 include { 'repository/config/quattor' };
