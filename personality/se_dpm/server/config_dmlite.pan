@@ -11,7 +11,7 @@ values = boolean
 required = no
 default = true
 }
-variable DMLITE_MEMCACHE_ENABLED ?= true;
+variable DMLITE_MEMCACHE_ENABLED ?= false;
 variable DMLITE_MEMCACHE_POOLSIZE ?= if ( (DPM_VERSION >= '1.9') || (DPM_VERSION == '1.8.9') || match(DPM_VERSION,'^1\.8\.1\d$') ) {
                                        250;
                                      } else {
