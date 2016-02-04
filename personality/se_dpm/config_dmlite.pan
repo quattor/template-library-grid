@@ -1,7 +1,8 @@
 unique template personality/se_dpm/config_dmlite;
 
-# Define to 1.8.7 is you are not running 1.8 or later
-variable DPM_VERSION ?= '1.8.8';
+# Define to 1.8.7 or 1.8.8, as appropriate, is you are not running 1.8.9 or later
+variable DPM_VERSION ?= '1.8.10';
+variable TEST = debug(format('%s: DPM_VERSION=%s',OBJECT,DPM_VERSION));
 
 #
 # DMLite defaults
@@ -22,10 +23,10 @@ variable library = if (PKG_ARCH_DEFAULT == 'x86_64') {
 #
 # /etc/dmlite.conf
 #
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
     this = "LoadPlugin plugin_config /usr/" + library + "/dmlite/plugin_config.so\n";
-    if (DPM_VERSION > '1.8.8') {
+    if ( (DPM_VERSION >= '1.9') || (DPM_VERSION == '1.8.9') || match(DPM_VERSION,'^1\.8\.1\d$') ) {
         this = this + 'LogLevel ' + DMLITE_LOGLEVEL + "\n";
     };
     this = this + "Include /etc/dmlite.conf.d/*.conf\n";
@@ -42,7 +43,7 @@ include { 'components/filecopy/config' };
 #
 # /etc/dmlite.conf.d
 #
-include { 'components/dirperm/config' };
+include 'components/dirperm/config';
 '/software/components/dirperm/paths' = {
     append(nlist(
         'path', '/etc/dmlite.conf.d',
@@ -61,7 +62,8 @@ include { 'components/dirperm/config' };
 #
 variable contents = {
     this = '';
-    if ( match(DPM_VERSION,'^1.8.7') ) {
+    # Ignore versions before 1.8.7 as dmlite was not available
+    if ( DPM_VERSION == '1.8.7' ) {
       plugin_fs_io = 'plugin_fs_io';
     } else {
       plugin_fs_io = 'plugin_fs_rfio';
@@ -80,7 +82,7 @@ variable contents = {
     this = this + "TokenLife " + DMLITE_TOKEN_LIFE + "\n";
     this;
 };
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
     SELF[escape('/etc/dmlite.conf.d/adapter.conf')] = nlist(
         'config', contents,
@@ -102,7 +104,7 @@ include { 'components/filecopy/config' };
 
 # dmlite configuration specific to head node if needed
 # Be sure to use the same condition as the one used to select which plugin to load in adapter.conf
-include { if ( SEDPM_IS_HEAD_NODE && (SEDPM_DB_TYPE == 'mysql') ) 'personality/se_dpm/server/config_dmlite' };
+include if ( SEDPM_IS_HEAD_NODE && (SEDPM_DB_TYPE == 'mysql') ) 'personality/se_dpm/server/config_dmlite';
 
 
 

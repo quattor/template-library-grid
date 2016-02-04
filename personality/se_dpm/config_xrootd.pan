@@ -4,7 +4,7 @@
 unique template personality/se_dpm/config_xrootd;
 
 # Define basic Xrootd installation files and directories
-include { 'personality/xrootd/env' };
+include 'personality/xrootd/env';
 
 # Xrootd sysconfig file
 variable DPM_XROOTD_SYSCONFIG_FILE ?= XROOTD_INSTALL_ETC + '/sysconfig/xrootd';
@@ -164,7 +164,7 @@ variable XROOTD_PARAMS = {
 # trick is used to prevent a modification loop between filecopy and dpmlfc.                          #
 ######################################################################################################
 
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
   SELF[escape(DPM_XROOTD_SYSCONFIG_FILE+'.templ-quattor')] = nlist('config', file_contents('personality/se_dpm/xrootd.dpm-templ'),
                                                                    'owner', 'root:root',
@@ -207,7 +207,7 @@ variable MKGRIDMAP_DPMLFC_LOCAL_ENTRIES = {
 # LOG COMPRESSION LOGS    #
 ###########################
 
-include { 'components/cron/config' };
+include 'components/cron/config';
 
 variable XROOTD_LOG_GZIP_CMD ?= 'gzip /var/log/xrootd/*/*.log.[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]';
 variable XROOTD_LOG_GZIP_TIME ?= "45 16 * * *";

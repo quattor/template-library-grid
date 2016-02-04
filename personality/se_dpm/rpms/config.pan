@@ -1,67 +1,63 @@
 unique template personality/se_dpm/rpms/config;
 
-# Metapackages cannot be used with EPEL testing (requirements with strict versions)
-variable SEDPM_USE_METAPACKAGES ?= if ( is_defined(REPOSITORY_EPEL_TESTING_ENABLED) && REPOSITORY_EPEL_TESTING_ENABLED ) {
-                                     false;
-                                   } else {
-                                     true;
-                                   };
-variable SEDPM_MEMCACHE_ENABLED ?= false;
+# As of Dec. 2015, it was decided that the metapackage will no longer be built
+# 1.8.10 metapackage has been the last one. Live without it by default!
+variable SEDPM_USE_METAPACKAGES ?= false;
+
+variable DMLITE_MEMCACHE_ENABLED ?= false;
 
 '/software/packages/' = {
+  # Backward compatibility: keep metapackage in the config if SEDPM_USE_METAPACKAGES=true.
+  # This is necessary to workaround a problem with YUM that uninstall all the RPMs required
+  # by the metapackage when uninstalling the metapackage.
+  # To switch from using the matapackage to not using it, be sure to remove the metapackage
+  # manually BEFORE deploying the configuration change to workaround the YUM problem.
   if ( SEDPM_USE_METAPACKAGES ) {
     if ( SEDPM_IS_HEAD_NODE ) {
-      SELF[escape('emi-dpm_mysql')] = nlist();
-      SELF[escape('argus-pep-api-c')] = nlist();
-      SELF[escape('dpm-contrib-admintools')] = nlist();
+      pkg_repl('emi-dpm_mysql');
     } else {
-      SELF[escape('emi-dpm_disk')] = nlist();
+      pkg_repl('emi-dpm_disk');
     };
+  };
 
-  } else {
-    # This section explicitly includes in the configuration
-    # everything required by the DPM metapackage. It is mainly used
-    # to allow testing of new version of DPM, as the metapackage has
-    # requirement for explicit versions.
+  # Always include the main packages required by the metapackage to
+  # prevent YUM from removing these packages when the metapackage is removed.
 
-    SELF[escape('dpm')] = nlist();
-    SELF[escape('dpm-devel')] = nlist();
-    SELF[escape('dpm-dsi')] = nlist();
-    SELF[escape('dpm-perl')] = nlist();
-    SELF[escape('dpm-python')] = nlist();
-    SELF[escape('dpm-rfio-server')] = nlist();
-    SELF[escape('dpm-yaim')] = nlist();
-    SELF[escape('dmlite-plugins-adapter')] = nlist();
-    SELF[escape('edg-mkgridmap')] = nlist();
-    SELF[escape('emi-version')] = nlist();
-    SELF[escape('fetch-crl')] = nlist();
-    SELF[escape('finger')] = nlist();
-    SELF[escape('lcgdm-dav')] = nlist();
-    SELF[escape('lcgdm-dav-server')] = nlist();
-    SELF[escape('lcg-expiregridmapdir')] = nlist();
-  
-    if ( SEDPM_IS_HEAD_NODE ) {
-      SELF[escape('bdii')] = nlist();
-      SELF[escape('dpm-copy-server-mysql')] = nlist();
-      SELF[escape('dpm-name-server-mysql')] = nlist();
-      SELF[escape('dpm-server-mysql')] = nlist();
-      SELF[escape('dpm-srm-server-mysql')] = nlist();
-      SELF[escape('dmlite-plugins-mysql')] = nlist();
-      SELF[escape('glite-info-provider-service')] = nlist();
-      SELF[escape('dpm-contrib-admintools')] = nlist();
-      SELF[escape('argus-pep-api-c')] = nlist();
-      if ( SEDPM_MEMCACHE_ENABLED ){
-        SELF[escape('dmlite-plugins-memcache')] = nlist();
-        SELF[escape('memcached')] = nlist();
-      }
+  pkg_repl('dpm');
+  pkg_repl('dpm-devel');
+  pkg_repl('dpm-dsi');
+  pkg_repl('dpm-perl');
+  pkg_repl('dpm-python');
+  pkg_repl('dpm-rfio-server');
+  pkg_repl('dpm-yaim');
+  pkg_repl('dmlite-plugins-adapter');
+  pkg_repl('edg-mkgridmap');
+  pkg_repl('emi-version');
+  pkg_repl('finger');
+  pkg_repl('lcgdm-dav');
+  pkg_repl('lcgdm-dav-server');
+  pkg_repl('lcg-expiregridmapdir');
+
+  if ( SEDPM_IS_HEAD_NODE ) {
+    pkg_repl('bdii');
+    pkg_repl('dpm-copy-server-mysql');
+    pkg_repl('dpm-name-server-mysql');
+    pkg_repl('dpm-server-mysql');
+    pkg_repl('dpm-srm-server-mysql');
+    pkg_repl('dmlite-plugins-mysql');
+    pkg_repl('glite-info-provider-service');
+    pkg_repl('dpm-contrib-admintools');
+    pkg_repl('argus-pep-api-c');
+    # memcache is useless on disk servers
+    if ( DMLITE_MEMCACHE_ENABLED ) {
+      pkg_repl('dmlite-plugins-memcache');
     };
-
   };
 
   SELF;
 };
 
-include { if (XROOT_ENABLED) 'personality/se_dpm/rpms/xrootd' };
-include { if (HTTPS_ENABLED) 'personality/se_dpm/rpms/dav' };
+include if (XROOT_ENABLED) 'personality/se_dpm/rpms/xrootd';
+include if (HTTPS_ENABLED) 'personality/se_dpm/rpms/dav';
 
-include { if (SEDPM_IS_HEAD_NODE && SEDPM_MONITORING_ENABLED) 'personality/se_dpm/rpms/monitoring' };
+include if (SEDPM_IS_HEAD_NODE && SEDPM_MONITORING_ENABLED) 'personality/se_dpm/rpms/monitoring';

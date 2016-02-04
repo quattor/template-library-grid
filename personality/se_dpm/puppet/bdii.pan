@@ -13,9 +13,9 @@ variable SRMV2_ENABLED ?= true;
 variable XROOTD_ENABLED ?= true;
 
 
-include {'personality/bdii/service'};
-include {'personality/se_dpm/puppet/info_user_proxy'};
-include {'features/gip/se'};
+include 'personality/bdii/service';
+include 'personality/se_dpm/puppet/info_user_proxy';
+include 'features/gip/se';
 
 
 

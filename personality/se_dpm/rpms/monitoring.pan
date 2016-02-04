@@ -1,9 +1,9 @@
 unique template personality/se_dpm/rpms/monitoring;
 
-'/software/packages/{setuptools}' ?= nlist();
-'/software/packages/{PIL}' ?= nlist();
-'/software/packages/{numpy}' ?= nlist();
-'/software/packages/{matplotlib}' ?= nlist();
-'/software/packages/{graphtool}' ?= nlist();
-'/software/packages/{CherryPy}' ?= nlist();
-'/software/packages/{GridppDpmMonitor}' ?= nlist();
+'/software/packages' = pkg_repl('setuptools');
+'/software/packages' = pkg_repl('PIL');
+'/software/packages' = pkg_repl('numpy');
+'/software/packages' = pkg_repl('matplotlib');
+'/software/packages' = pkg_repl('graphtool');
+'/software/packages' = pkg_repl('CherryPy');
+'/software/packages' = pkg_repl('GridppDpmMonitor');

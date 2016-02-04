@@ -1,10 +1,10 @@
 unique template personality/se_dpm/puppet/puppetconf;
 
-include {'components/puppet/config'};
+include 'components/puppet/config';
 
 '/software/components/puppet/puppetconf/main/parser' = 'future';
 
-include {'quattor/functions/package'};
+include 'quattor/functions/package';
 
 #Including the needed modules
 variable DPM_PUPPET_MODULE_VERSION ?= "1.8.9";

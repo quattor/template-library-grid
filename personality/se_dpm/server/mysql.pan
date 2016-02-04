@@ -3,7 +3,7 @@ unique template personality/se_dpm/server/mysql;
 # ----------------------------------------------------------------------------
 # DB Configuration
 # ----------------------------------------------------------------------------
-include { 'components/mysql/config' };
+include 'components/mysql/config';
 
 variable DPM_DB_INIT_SCRIPT ?= '/usr/share/lcgdm/create_dpm_tables_mysql.sql';
 variable DPNS_DB_INIT_SCRIPT ?= '/usr/share/lcgdm/create_dpns_tables_mysql.sql';

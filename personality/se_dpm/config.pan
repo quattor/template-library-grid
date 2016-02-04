@@ -34,7 +34,7 @@ variable DPM_PORTS = nlist(
 
 
 # Add site specific configuration, if any.
-include { DPM_CONFIG_SITE };
+include DPM_CONFIG_SITE;
 
 # Other initialization after site configuration has been loaded
 variable SEDPM_MONITORING_ENABLED ?= false;
@@ -85,7 +85,7 @@ variable DPM_SLOW_THREADS ?= if ( is_null(SELF) ) {
 # Add account dpmmgr
 # User running DPM deamons
 variable DPM_USER ?= 'dpmmgr';
-include { 'users/' + DPM_USER };
+include 'users/' + DPM_USER;
 # Normally define by preceding template
 variable DPM_GROUP ?= 'dpmmgr';
 "/software/components/dpmlfc/options/dpm/user" ?= DPM_USER;
@@ -95,7 +95,7 @@ variable DPM_GROUP ?= 'dpmmgr';
 # Load ncm-dpmlfc and set pre dependency : ncm-accounts need be executed first
 # Also ncm-sysconfig must be executed before for dpm-gsiftp (globus-gridftp).
 # Define daemon ports to match site parameters
-include { 'components/dpmlfc/config' };
+include 'components/dpmlfc/config';
 # Ideally installDir should use GLITE_LOCATION for during migration to
 # EMI GLITE_LOCATION was set to /usr which is not appropriate.
 # TO BE FIXED whend GLITE_LOCATION is really the root of all directory used.
@@ -172,6 +172,7 @@ variable SEDPM_IS_HEAD_NODE = {
 #  - Use of SURL with RFIO requires a RFIO daemon on the head node even though
 #    this is not a disk server. 
 variable DPM_ACCESS_PROTOCOLS ?= list('gsiftp','rfio');
+variable DPM_USE_LEGACY_PROTOCOL_OPTIONS ?= false;
 variable TEST = if ( length(DPM_ACCESS_PROTOCOLS) == 0 ) error('No access protocol configured in DPM configuration');
 "/software/components/dpmlfc/options/dpm/accessProtocols" ?= DPM_ACCESS_PROTOCOLS;
 "/software/components/dpmlfc/" = {
@@ -181,24 +182,27 @@ variable TEST = if ( length(DPM_ACCESS_PROTOCOLS) == 0 ) error('No access protoc
       access_protocols[length(access_protocols)] = 'rfio';
     };
     foreach (i;protocol;access_protocols) {
-      # https configuration through dpmlfc is not yet supported
-      if ( protocol != 'https' ) {
-        disk_servers = DPM_HOSTS['disk'];
-        if ( (protocol == 'rfio') && (index(DPM_HOSTS['dpns'][0],disk_servers) < 0) ) {
-          disk_servers[length(disk_servers)] = DPM_HOSTS['dpns'][0];
-        };
-        foreach (i;host;disk_servers) {
-          if ( is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
-            host_params = DPM_SERVICE_PARAMS[protocol];
-          } else {
-            host_params = nlist();
-          };
-          if ( !is_defined(SELF[protocol]) ) {
-            SELF[protocol] = nlist();
-          };
-          SELF[protocol][host] = host_params;
-        };
+      if ( protocol == 'https' ) {
+        protocol = 'dav';
       };
+      # Write common parameters for the protocol into the protocol global options
+      if ( is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
+        SELF['protocols'][protocol]= DPM_SERVICE_PARAMS[protocol];
+      };
+      disk_servers = DPM_HOSTS['disk'];
+      if ( match(protocol, '^dav|rfio$') && (index(DPM_HOSTS['dpns'][0],disk_servers) < 0) ) {
+        disk_servers[length(disk_servers)] = DPM_HOSTS['dpns'][0];
+      };
+      # In legacy ncm-dpmlfc, the options had to be set as node specific options
+      foreach (i;host;disk_servers) {
+        if ( DPM_USE_LEGACY_PROTOCOL_OPTIONS && is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
+          host_params = DPM_SERVICE_PARAMS[protocol];
+        } else {
+          host_params = nlist();
+        };
+        SELF[protocol][host] = host_params;
+      };
+      debug(format('%s: DPM protocol %s config = %s',OBJECT,protocol,to_string(SELF[config_protocol])));
     };
   } else {
     error("No disk server defined (DPM_HOSTS['disk'])");
@@ -251,10 +255,10 @@ variable SRMV2_ENABLED = if ( is_defined(DPM_HOSTS['srmv22']) ) {
                          };
 
 # Configure https access if needed
-include { if ( HTTPS_ENABLED ) 'personality/se_dpm/config_dav' };
+include if ( HTTPS_ENABLED ) 'personality/se_dpm/config_dav';
 
 # Configure Xrootd access if needed
-include { if ( XROOT_ENABLED ) 'personality/se_dpm/config_xrootd' };
+include if ( XROOT_ENABLED ) 'personality/se_dpm/config_xrootd';
 
 
 # Define service port numbers to match site parameters if not explicitly defined
@@ -339,7 +343,7 @@ variable DPM_IPTABLES_INCLUDE = if ( is_defined(DPM_IPTABLES_RULES) && (length(D
                                 } else {
                                   null;
                                 };
-include { DPM_IPTABLES_INCLUDE };
+include DPM_IPTABLES_INCLUDE;
 "/software/components/iptables/filter/rules" = {
   rules = list();
   if ( !is_null(DPM_IPTABLES_INCLUDE) ) {
@@ -352,6 +356,7 @@ include { DPM_IPTABLES_INCLUDE };
   };
 };
 
+
 # ----------------------------------------------------------------------------
 # Set appropriate ownership/permissions on /etc/grid_security/gridmapdir
 # ----------------------------------------------------------------------------
@@ -363,5 +368,5 @@ include { DPM_IPTABLES_INCLUDE };
 # ----------------------------------------------------------------------------
 # Must be done at the very end of the configuration
 # ----------------------------------------------------------------------------
-include { 'personality/se_dpm/check-dpm-daemons' };
+include 'personality/se_dpm/check-dpm-daemons';
 

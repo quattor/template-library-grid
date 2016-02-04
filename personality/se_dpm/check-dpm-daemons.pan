@@ -1,7 +1,7 @@
 
 unique template personality/se_dpm/check-dpm-daemons;
 
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 
 variable DPM_CHECKDAEMONS_SCRIPT = 'check-dpm-daemons';
 variable DPM_CHECKDAEMONS_FILE = '/usr/bin/'+DPM_CHECKDAEMONS_SCRIPT;
