@@ -1,25 +1,39 @@
 unique template features/htcondor/config;
 
-include {'features/htcondor/params'};
+include 'features/htcondor/params';
 
-#Package
-include {'components/spma/config'};
+# FIXME: add required Globus dependencies messed up by HTCondor RPMs
+include 'features/htcondor/globus-fix';
 
-'/software/packages/{condor}' = nlist();
-'/software/packages/{voms-clients3}' = nlist();
+# Fixme: Due to ATLAS_SUPPORT, we must remove condor before installing condor.x86_64
+'/software/packages/{condor}' = null;
+'/software/packages' = {
+  if (CONDOR_CONFIG['version'] >= '8.3') {
+    pkg_repl('condor-all.x86_64');
+  } else {
+    pkg_repl('condor.x86_64');
+    };
+  SELF;
+};
 
-#When the package is reinstalled - re-run the config. Cause some config files may be overwritten.
+
+# Add YUM repository
+include 'repository/config/htcondor';
+
+
+# When the package is reinstalled - re-run the config. Cause some config files may be overwritten.
 '/software/components/spma/dependencies/post' = push('filecopy');
 
-include {'components/filecopy/config'};
+include 'components/filecopy/config';
 
 '/software/components/filecopy/services' = {	    
-  #Put the cluster Key file
-  SELF[escape(CONDOR_CONFIG['pwd_file']+'.encoded')] = nlist('config', CONDOR_CONFIG['pwd_hash'],
-				                             'restart', 'base64 -d '+ CONDOR_CONFIG['pwd_file'] +'.encoded >'+CONDOR_CONFIG['pwd_file'],
-				                             'perms', '0400',
-	    				                    );
-  #Put the config files
+  # Put the cluster Key file
+  SELF[escape(CONDOR_CONFIG['pwd_file']+'.encoded')] =
+    nlist('config', CONDOR_CONFIG['pwd_hash'],
+				  'restart', 'base64 -d '+ CONDOR_CONFIG['pwd_file'] +'.encoded >'+CONDOR_CONFIG['pwd_file'],
+				  'perms', '0400',
+	    		);
+  # Put the config files
   foreach(i;file;CONDOR_CONFIG['cfgfiles']){
 
     dummy = create(file['contents']);
@@ -48,7 +62,7 @@ include {'components/filecopy/config'};
 };
 
 #Set the condor service to be running at boot
-include {'components/chkconfig/config'};
+include 'components/chkconfig/config';
 
 prefix '/software/components/chkconfig/service';
 

@@ -17,6 +17,12 @@ EOF
     } else {
         txt = txt + format("DRAIN=false\n",);
     };
+    if (CONDOR_CONFIG["multicore"]) {
+      txt = txt + format("MAXJOBRETIREMENTTIME=%s\n", CONDOR_CONFIG["maxvacatetime"]);
+    };
+    if (exists(WN_CPUS[FULL_HOSTNAME])) {
+      txt = txt + format("NUM_CPUS=%s\n",WN_CPUS[FULL_HOSTNAME]);
+    };
     txt = txt + <<EOF;
 
 # Default Multicore configuration

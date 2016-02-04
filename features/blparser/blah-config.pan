@@ -3,6 +3,9 @@
 
 unique template features/blparser/blah-config;
 
+# Include blparser parameters for the supported lrms
+include { 'features/blparser/init' };
+
 # Should have been defined before, for example by service.tpl
 variable BLPARSER_HOST ?= error('BLPARSER_HOST is not defined');
 
@@ -20,18 +23,13 @@ variable LSF_CONFPATH ?= '';
 
 #Assuming that we are using Torque > = 2.5.7
 variable BLAH_TORQUE_MULTIPLE_STAGING_DIRECTIVE_BUG = {
-        if(TORQUE_VERSION == '2.5.7-7.el5'){
-                return("yes");
-        }else{
-                return("no");
-        };
+  if(is_defined(TORQUE_VERSION) && TORQUE_VERSION == '2.5.7-7.el5'){
+    return("yes");
+  }else{
+    return("no");
+  };
 
 };
-
-
-# Include blparser parameters for the supported lrms
-include { 'features/blparser/init' };
-
 
 # blparser configuration file
 include { 'components/filecopy/config' };
@@ -44,17 +42,17 @@ variable BLAH_CONF_CONTENTS = {
     contents = contents + '. ' + LSFPROFILE_DIR + '/profile.lsf' + "\n";
   };
 
-    contents = contents + "# working on glexec -> sudo support\n";
-    contents = contents + "blah_disable_proxy_user_copy=yes\n";
-    contents = contents + "blah_id_mapping_command_sudo='/usr/bin/sudo -H'\n";
-    contents = contents + "blah_set_default_workdir_to_home=yes\n";
-    contents = contents + "blah_torque_multiple_staging_directive_bug="+BLAH_TORQUE_MULTIPLE_STAGING_DIRECTIVE_BUG+"\n";   
+  contents = contents + "# working on glexec -> sudo support\n";
+  contents = contents + "blah_disable_proxy_user_copy=yes\n";
+  contents = contents + "blah_id_mapping_command_sudo='/usr/bin/sudo -H'\n";
+  contents = contents + "blah_set_default_workdir_to_home=yes\n";
+  contents = contents + "blah_torque_multiple_staging_directive_bug="+BLAH_TORQUE_MULTIPLE_STAGING_DIRECTIVE_BUG+"\n";
 
   contents = contents + "blah_disable_wn_proxy_renewal=yes\n";
   contents = contents + "BLAHPD_ACCOUNTING_INFO_LOG=" + BLAH_LOG_DIR + '/' + BLAH_LOG_FILE + "\n";
   contents = contents + BLPARSER_BATCH_SYS + "_binpath=/usr/bin\n";
   contents = contents + BLPARSER_BATCH_SYS + "_confpath=\n";
-  contents = contents + BLPARSER_BATCH_SYS + "_spoolpath="+TORQUE_CONFIG_DIR+"\n";
+  contents = contents + BLPARSER_BATCH_SYS + "_spoolpath="+BLPARSER_LRMS_PARAMS[BLPARSER_BATCH_SYS]['configDir']+"\n";
   contents = contents + BLPARSER_BATCH_SYS + "_nochecksubmission=yes\n";
   contents = contents + BLPARSER_BATCH_SYS + "_nologaccess=\n";
   contents = contents + BLPARSER_BATCH_SYS + "_fallback=no\n";
@@ -95,12 +93,12 @@ variable BLAH_CONFIG_FILE_RESTART = if ( FULL_HOSTNAME == BLPARSER_HOST ) {
                                     };
 "/software/components/filecopy/services" =
   npush(escape(BLAH_CONF_FILE),
-        nlist("config",BLAH_CONF_CONTENTS,
-              "owner","root",
-              "perms","0644",
-              "restart", BLAH_CONFIG_FILE_RESTART,
-        )
-  );
+    nlist("config",BLAH_CONF_CONTENTS,
+          "owner","root",
+          "perms","0644",
+          "restart", BLAH_CONFIG_FILE_RESTART,
+    )
+);
 
 # Allow tomcat to write in BLAH_LOG_DIR on CEs (else accounting will be lost)
 include { 'components/dirperm/config' };
