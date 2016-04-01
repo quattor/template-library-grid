@@ -17,7 +17,7 @@ variable CONDOR_CONFIG = {
 
   # Condor version is used to a RPM packaging change in condor 8.3
   if (!is_defined(SELF['version'])) {
-     SELF['version'] = '8.2';
+     SELF['version'] = '8.4';
   };
 
   if(!is_defined(SELF['pwd_hash'])){
