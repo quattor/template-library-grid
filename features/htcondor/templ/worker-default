@@ -1,0 +1,19 @@
+
+# Default Multicore configuration
+if $(MULTICORE)
+    NUM_SLOTS=1
+    NUM_SLOTS_TYPE_1=1
+    SLOT_TYPE_1=100%
+    SLOT_TYPE_1_PARTITIONABLE=true
+endif
+
+# Default drain configuration
+if $(DRAIN)
+    START = ( x509UserProxyVOName == "ops" )
+endif
+
+# Default offline configuration
+if $(OFFLINE)
+    START = false
+endif
+
