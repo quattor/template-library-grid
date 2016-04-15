@@ -6,7 +6,7 @@ structure template vo/params/icecube;
 'voms_servers' ?= list(
     nlist('name', 'grid-voms.desy.de',
           'host', 'grid-voms.desy.de',
-          'port', 15106,
+          'port', 15109,
           'adminport', 8443,
          ),
 );
