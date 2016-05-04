@@ -17,11 +17,6 @@ structure template vo/params/vo.mcia.fr;
           'suffix', 's',
           'suffix2', 's',
          ),
-    nlist('description', 'DI',
-          'fqan', '/vo.mcia.fr/di',
-          'suffix', 'esjo',
-          'suffix2', 'sjec',
-         ),
 );
 
 'base_uid' ?= 1870000;

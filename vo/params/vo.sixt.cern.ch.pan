@@ -4,14 +4,8 @@ structure template vo/params/vo.sixt.cern.ch;
 'account_prefix' ?= 'sixc';
 
 'voms_servers' ?= list(
-    nlist('name', 'lcg-voms2.cern.ch',
-          'host', 'lcg-voms2.cern.ch',
-          'port', 15005,
-          'adminport', 8443,
-          'type', list('voms-only'),
-         ),
-    nlist('name', 'voms2.cern.ch',
-          'host', 'voms2.cern.ch',
+    nlist('name', 'voms.cern.ch',
+          'host', 'voms.cern.ch',
           'port', 15005,
           'adminport', 8443,
          ),

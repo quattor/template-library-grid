@@ -1,6 +1,6 @@
 unique template vo/site/vos_base_uids;
 
-variable VOS_BASE_UID = nlist("vo.agata.org", 36000,
+variable VOS_BASE_UID ?= nlist("vo.agata.org", 36000,
                               "alice", 1000,
                               "astro.vo.eu-egee.org", 37000,
                               "atlas", 2000,

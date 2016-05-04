@@ -89,6 +89,14 @@ include { 'components/profile/config' };
 # Do we actually have a shared home?
 '/software/components/profile/env/MPI_SHARED_HOME' = {
   if (CE_SHARED_HOMES) {
+    '1';
+  } else {
+    null;
+  };
+};
+
+'/software/components/profile/env/MPI_SHARED_HOME_PATH' = {
+  if (CE_SHARED_HOMES) {
     '$HOME';
   } else {
     null;
@@ -96,7 +104,8 @@ include { 'components/profile/config' };
 };
 
 # Assume (for now) that ssh host-based authentication is always setup.
-'/software/components/profile/env/MPI_SSH_HOST_BASED_AUTH' = 'yes';
+#'/software/components/profile/env/MPI_SSH_HOST_BASED_AUTH' = 'yes';
+'/software/components/profile/env/MPI_SSH_HOST_BASED_AUTH' = 'no';
 
 # Path-like variables.
 '/software/components/profile/path/PATH/prepend' = push('/opt/mpi/bin');

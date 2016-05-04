@@ -4,8 +4,8 @@ structure template vo/params/vo.cs.br;
 'account_prefix' ?= 'csbski';
 
 'voms_servers' ?= list(
-    nlist('name', 'roc-la-03.cat.cbpf.br',
-          'host', 'roc-la-03.cat.cbpf.br',
+    nlist('name', 'voms.cat.cbpf.br',
+          'host', 'voms.cat.cbpf.br',
           'port', 15001,
           'adminport', 8443,
          ),

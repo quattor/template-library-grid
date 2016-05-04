@@ -86,15 +86,15 @@ variable PBS_AUTHORIZED_USERS_SCRIPT ?= {
   contents;
 #"#! /bin/bash\nqmgr -c 'set server authorized_users =*@"+CE_HOST+"'\n";
 };
-variable TORQUE_MYINIT_SCRIPT ?= TORQUE_CONFIG_DIR + '/myinit.sh';
+
 "/software/components/filecopy/services" = {
-         SELF[escape(TORQUE_MYINIT_SCRIPT)]=
+         SELF[escape("/var/torque/myinit.sh")]=
         nlist("config",PBS_AUTHORIZED_USERS_SCRIPT,
               "perms", "0700",
-              "owner", "root",
+             "owner", "root",
               "group","root",
-              "restart",TORQUE_MYINIT_SCRIPT,
-	      "forceRestart",true,
+              "restart","/var/torque/myinit.sh",
+	"forceRestart",true,
         );
          SELF;
        };
@@ -334,8 +334,8 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
     wn_attrs = WN_ATTRS;
   };
   foreach (i;wn;WORKER_NODES) {
-    if ( TORQUE_USE_HW_CONFIG && exists(WN_CPU_CONFIG[wn]['slots']) && is_defined(WN_CPU_CONFIG[wn]['slots']) ) {
-      process_slots = to_long(WN_CPU_CONFIG[wn]['slots']);
+    if ( TORQUE_USE_HW_CONFIG && exists(WN_CPU_CONFIG[wn]['cores']) && is_defined(WN_CPU_CONFIG[wn]['cores']) ) {
+      process_slots = to_long(WN_CPU_CONFIG[wn]['cores']);
     } else if ( exists(WN_CPUS[wn]) && is_defined(WN_CPUS[wn]) ) {
       process_slots = to_long(WN_CPUS[wn]);
     } else {

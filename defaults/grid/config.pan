@@ -418,18 +418,13 @@ variable CE_USE_SSH ?= undef;
 # Define batch system to use. Currently supported values are :
 #   - torque1 : Torque v1 with MAUI
 #   - torque2 : Torque v2 with MAUI
-#   - condor : HTCondor
 # Default is torque1 if CE_BATCH_SYS is defined to pbs (backward compatibility)
 variable CE_BATCH_NAME ?= if ( exists(CE_BATCH_SYS) &&
                                is_defined(CE_BATCH_SYS) &&
                                ((CE_BATCH_SYS == "pbs") || (CE_BATCH_SYS == "lcgpbs")) ) {
                             'torque1';
                           } else {
-                            if (is_defined(CE_BATCH_SYS) && (CE_BATCH_SYS == "condor")) {
-                                'condor';
-                            } else {
-                                undef;
-                            };
+                            undef;
                           };                             
 
 
@@ -450,12 +445,7 @@ variable CE_BATCH_SYS ?= if ( exists(CE_BATCH_NAME) &&
                                 (CE_BATCH_NAME == 'torque2') ) ) {
                            'pbs';
                          } else {
-                           if (is_defined(CE_BATCH_NAME) &&
-                               CE_BATCH_NAME == 'condor') {
-                                   'condor';
-                               } else {
-                                   undef;
-                               };
+                           undef;
                          };
 variable CE_JM_TYPE ?= CE_BATCH_SYS;
 
@@ -1195,27 +1185,17 @@ variable WN_CPU_CONFIG = {
     };
     cpu_num = length(wn_hw['cpu']);
     core_num =0;
-    slot_num =0;
     if ( cpu_num > 0 ) {
       if ( is_defined(WN_CPUS[wn]) ) {
         core_num = WN_CPUS[wn];
-        slot_num = core_num;
       } else if ( is_defined(wn_hw['cpu'][0]['cores']) ) {
         core_num = cpu_num * wn_hw['cpu'][0]['cores'];
-        slot_num = core_num;
-
-        # If hyperthreading is set to true, gives slots = 2 * cores
-        if ( is_defined(wn_hw['cpu'][0]['hyperthreading']) && wn_hw['cpu'][0]['hyperthreading']  ) {
-          slot_num = slot_num * 2;
-        };
       } else {
         core_num = WN_CPUS_DEF;
-        slot_num = core_num;
       };
     };
     SELF[wn] = nlist('cpus', cpu_num,
                      'cores', core_num,
-                     'slots', slot_num,
                     );
   };
   

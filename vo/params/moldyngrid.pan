@@ -4,9 +4,9 @@ structure template vo/params/moldyngrid;
 'account_prefix' ?= 'molsee';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid.org.ua',
-          'host', 'grid.org.ua',
-          'port', 15010,
+    nlist('name', 'voms.grid.org.ua',
+          'host', 'voms.grid.org.ua',
+          'port', 15110,
           'adminport', 443,
          ),
 );

@@ -6,7 +6,7 @@ structure template vo/params/vo.turbo.pic.es;
 'voms_servers' ?= list(
     nlist('name', 'voms01.pic.es',
           'host', 'voms01.pic.es',
-          'port', 15004,
+          'port', 15005,
           'adminport', 8443,
          ),
 );

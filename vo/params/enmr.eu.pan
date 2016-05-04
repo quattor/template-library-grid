@@ -18,16 +18,6 @@ structure template vo/params/enmr.eu;
 );
 
 'voms_mappings' ?= list(
-#    nlist('description', 'SW manager',
-#          'fqan', '/enmr.eu/cirmmp/Role=SoftwareManager',
-#          'suffix', 's',
-#          'suffix2', 's',
-#         ),
-#    nlist('description', 'SW manager',
-#          'fqan', '/enmr.eu/bmrz/Role=SoftwareManager',
-#          'suffix', 's',
-#          'suffix2', 's',
-#         ),
     nlist('description', 'SW manager',
           'fqan', '/enmr.eu/Role=SoftwareManager',
           'suffix', 's',
@@ -38,10 +28,15 @@ structure template vo/params/enmr.eu;
 #          'suffix', 'mhp',
 #          'suffix2', 'tgvfehp',
 #         ),
-#    nlist('description', 'SW manager',
-#          'fqan', '/enmr.eu/bcbr/Role=SoftwareManager',
-#          'suffix', 's',
-#          'suffix2', 's',
+    nlist('description', 'users of the given application group',
+          'fqan', '/enmr.eu/*',
+          'suffix', 'ahp',
+          'suffix2', 'svh',
+         ),
+#    nlist('description', 'operations/Nagios user',
+#          'fqan', '/enmr.eu/ops',
+#          'suffix', 'chp',
+#          'suffix2', 'txozh',
 #         ),
 );
 

@@ -1,7 +1,7 @@
 structure template vo/params/harpo.cea.fr;
 
 'name' ?= 'harpo.cea.fr';
-'account_prefix' ?= 'hrp';
+'account_prefix' ?= 'harfwf';
 
 'voms_servers' ?= list(
     nlist('name', 'grid12.lal.in2p3.fr',
@@ -14,4 +14,4 @@ structure template vo/params/harpo.cea.fr;
 'voms_mappings' ?= list(
 );
 
-'base_uid' ?= 10278000;
+'base_uid' ?= 10311000;

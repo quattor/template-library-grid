@@ -8,12 +8,12 @@ structure template vo/params/voce;
           'host', 'voms1.grid.cesnet.cz',
           'port', 7001,
           'adminport', 8443,
+          'type', list('voms-only'),
          ),
     nlist('name', 'voms2.grid.cesnet.cz',
           'host', 'voms2.grid.cesnet.cz',
           'port', 7001,
           'adminport', 8443,
-          'type', list('voms-only'),
          ),
 );
 

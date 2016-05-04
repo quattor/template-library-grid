@@ -4,12 +4,11 @@ structure template vo/params/envirogrids.vo.eu-egee.org;
 'account_prefix' ?= 'envtza';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms2.cern.ch',
-          'host', 'voms2.cern.ch',
+    nlist('name', 'voms.cern.ch',
+          'host', 'voms.cern.ch',
           'port', 15012,
           'adminport', 8443,
          ),
-
 );
 
 'voms_mappings' ?= list(

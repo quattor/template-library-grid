@@ -13,11 +13,13 @@ structure template vo/params/t2k.org;
           'host', 'voms02.gridpp.ac.uk',
           'port', 15003,
           'adminport', 8443,
+          'type', list('voms-only'),
          ),
     nlist('name', 'voms03.gridpp.ac.uk',
           'host', 'voms03.gridpp.ac.uk',
           'port', 15003,
           'adminport', 8443,
+          'type', list('voms-only'),
          ),
 );
 

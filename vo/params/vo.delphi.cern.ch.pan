@@ -4,13 +4,8 @@ structure template vo/params/vo.delphi.cern.ch;
 'account_prefix' ?= 'delszo';
 
 'voms_servers' ?= list(
-    nlist('name', 'lcg-voms2.cern.ch',
-          'host', 'lcg-voms2.cern.ch',
-          'port', 15002,
-          'adminport', 8443,
-         ),
-    nlist('name', 'voms2.cern.ch',
-          'host', 'voms2.cern.ch',
+    nlist('name', 'voms.cern.ch',
+          'host', 'voms.cern.ch',
           'port', 15002,
           'adminport', 8443,
          ),

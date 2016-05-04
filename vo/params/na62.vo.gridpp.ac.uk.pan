@@ -6,7 +6,17 @@ structure template vo/params/na62.vo.gridpp.ac.uk;
 'voms_servers' ?= list(
     nlist('name', 'voms.gridpp.ac.uk',
           'host', 'voms.gridpp.ac.uk',
-          'port', 15002,
+          'port', 15501,
+          'adminport', 8443,
+         ),
+    nlist('name', 'voms02.gridpp.ac.uk',
+          'host', 'voms02.gridpp.ac.uk',
+          'port', 15501,
+          'adminport', 8443,
+         ),
+    nlist('name', 'voms03.gridpp.ac.uk',
+          'host', 'voms03.gridpp.ac.uk',
+          'port', 15501,
           'adminport', 8443,
          ),
 );

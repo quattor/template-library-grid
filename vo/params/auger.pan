@@ -4,10 +4,17 @@ structure template vo/params/auger;
 'account_prefix' ?= 'augut';
 
 'voms_servers' ?= list(
+    nlist('name', 'voms1.egee.cesnet.cz',
+          'host', 'voms1.egee.cesnet.cz',
+          'port', 15004,
+          'adminport', 8443,
+          'type', list('voms-only'),
+         ),
     nlist('name', 'voms1.grid.cesnet.cz',
           'host', 'voms1.grid.cesnet.cz',
           'port', 15004,
           'adminport', 8443,
+          'type', list('voms-only'),
          ),
     nlist('name', 'voms2.grid.cesnet.cz',
           'host', 'voms2.grid.cesnet.cz',

@@ -67,6 +67,21 @@ structure template vo/params/vo.grand-est.fr;
           'suffix', 'cztcc',
           'suffix2', 'tmsdpp',
          ),
+    nlist('description', 'LIVE users',
+          'fqan', '/vo.grand-est.fr/LIVE',
+          'suffix', 'gvtcc',
+          'suffix2', 'tmseaf',
+         ),
+    nlist('description', 'EOST users',
+          'fqan', '/vo.grand-est.fr/EOST',
+          'suffix', 'krtcc',
+          'suffix2', 'tlhqyi',
+         ),
+    nlist('description', 'GMGM users',
+          'fqan', '/vo.grand-est.fr/GMGM',
+          'suffix', 'nntcc',
+          'suffix2', 'tlkxrl',
+         ),
 );
 
 'base_uid' ?= 2352000;

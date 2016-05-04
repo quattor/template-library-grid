@@ -12,11 +12,6 @@ structure template vo/params/belle;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', '',
-          'fqan', '/belle/Role=VO-Admin',
-          'suffix', 'ksf',
-          'suffix2', 'tgvfehp',
-         ),
     nlist('description', 'SW manager',
           'fqan', '/belle/Role=lcgadmin',
           'suffix', 's',

@@ -4,16 +4,15 @@ structure template vo/params/vo.metacentrum.cz;
 'account_prefix' ?= 'mettri';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms1.grid.cesnet.cz',
-          'host', 'voms1.grid.cesnet.cz',
-          'port', 15020,
+    nlist('name', 'voms1.egee.cesnet.cz',
+          'host', 'voms1.egee.cesnet.cz',
+          'port', 15007,
           'adminport', 8443,
          ),
     nlist('name', 'voms2.grid.cesnet.cz',
           'host', 'voms2.grid.cesnet.cz',
-          'port', 15020,
+          'port', 15007,
           'adminport', 8443,
-          'type', list('voms-only'),
          ),
 );
 

@@ -17,6 +17,7 @@ variable TORQUE_FORCE_MOM_STARTUP ?= false;
 # Must be specified as valid cron values
 variable PBS_MONITORING_INTERVAL_MINUTE ?= "*/15";
 
+
 # include configuration common to client and server
 include { 'features/torque2/config' };
 
@@ -349,7 +350,3 @@ include { 'components/symlink/config' };
     null;
   };
 };
-
-# Create LRMS job features files
-variable WN_JOB_FEATURES_ENABLED ?= false;
-include { if (WN_JOB_FEATURES_ENABLED) 'features/torque2/client/job-features' };

@@ -9,6 +9,18 @@ structure template vo/params/gridpp;
           'port', 15000,
           'adminport', 8443,
          ),
+    nlist('name', 'voms02.gridpp.ac.uk',
+          'host', 'voms02.gridpp.ac.uk',
+          'port', 15000,
+          'adminport', 8443,
+          'type', list('voms-only'),
+         ),
+    nlist('name', 'voms03.gridpp.ac.uk',
+          'host', 'voms03.gridpp.ac.uk',
+          'port', 15000,
+          'adminport', 8443,
+          'type', list('voms-only'),
+         ),
 );
 
 'voms_mappings' ?= list(
