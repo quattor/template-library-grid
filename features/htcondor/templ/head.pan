@@ -17,6 +17,12 @@ endif
 ROTATE_HISTORY_DAILY = true
 MAX_HISTORY_ROTATIONS = 10
 
+NEGOTIATOR_POST_JOB_RANK = \
+   (RemoteOwner =?= UNDEFINED) * \
+   (ifThenElse(isUndefined(Mips), 1000, Mips) - \
+   SlotID - 1.0e10*(Offline=?=True))
+
+
 EOF
 	foreach(i;opt;CONDOR_CONFIG['options']['head']){
 		txt = txt +  opt['name'] + ' = ' + opt['value'] + "\n"; 
