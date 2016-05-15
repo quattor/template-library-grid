@@ -12,6 +12,9 @@ variable XROOTD_MAIN_SERVICE ?= 'xrootd';
 variable XROOTD_CMSD_SERVICE ?= 'cmsd';
 variable XROOTD_QUATTOR_TEMPL_EXT ?= '.templ-quattor';
 
+# Define is vomsxrd plugin is used to access VOM information when GSI is enabled
+variable VOMS_XROOTD_EXTENSION_ENABLED ?= true;
+
 # Default Xrootd site name built from GRIF site name
 variable XROOTD_SITE_NAME ?= {
   if ( !is_defined(SITE_NAME) ) {
@@ -35,3 +38,19 @@ variable XROOTD_MONITORING_DESTINATIONS ?= undef;
 variable XROOTD_REPORTING_DESTINATIONS ?= undef;
 
 
+# Default GSI-related parameters
+variable XROOTD_SECURITY_GSI_PARAMS ?= {
+  SELF["ca"] = 2;
+  SELF["cert"] = "/etc/grid-security/dpmmgr/dpmcert.pem";
+  SELF["crl"] = 3;
+  SELF["gmapopt"] = 10;
+  SELF["key"] = "/etc/grid-security/dpmmgr/dpmkey.pem";
+  SELF["md"] = "sha256:sha1";
+  if ( VOMS_XROOTD_EXTENSION_ENABLED ) { 
+    SELF["vomsfun"] = "/usr/lib64/libXrdSecgsiVOMS.so";
+  } else {
+    SELF["vomsat"] = 0;
+  };
+
+  SELF;
+};

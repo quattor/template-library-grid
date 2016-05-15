@@ -133,6 +133,11 @@ variable XROOTD_TOKEN_AUTH_PARAMS = {
       SELF['tokenAuthz']['exportedVOs'] = XROOTD_TOKEN_AUTH_PARAMS['exportedVOs'];
     };
   };
+
+  if ( !is_defined(SELF['securityProtocol']['gsi']) ) {
+    SELF['securityProtocol']['gsi'] = XROOTD_SECURITY_GSI_PARAMS;
+  };
+
   SELF['installDir'] = XROOTD_INSTALL_ROOT;
 
   debug('/software/components/xrootd/options = '+to_string(SELF));
