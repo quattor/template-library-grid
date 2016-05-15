@@ -58,6 +58,17 @@ include 'components/filecopy/config';
 										 );    
   };
 
+  if(CONDOR_CONFIG['intel_mic']){
+    script = create('features/htcondor/templ/condor_mic_discovery');
+    SELF[escape('/usr/libexec/condor/condor_mic_discovery')] = nlist(
+      'config', script['text'],
+      'backup',false,
+      'perms','0775',
+    );
+  };
+  
+
+
   SELF;
 };
 

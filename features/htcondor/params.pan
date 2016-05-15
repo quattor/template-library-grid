@@ -84,6 +84,16 @@ variable CONDOR_CONFIG = {
       SELF['multicore'] = false;
   };
 
+  # Default configuration is *not* enable GPU's detection
+  if (!is_defined(SELF['gpu'])){
+      SELF['gpu'] = false;
+  };
+
+  # Default configuration is *not* enable Intel MIC detection
+  if (!is_defined(SELF['intel_mic'])){
+      SELF['intel_mic'] = false;
+  };
+
   # Default MaxVacateTime (48 * 60 * 60)
   if (!is_defined(SELF['maxvacatetime'])) {
     SELF['maxvacatetime'] = 48 * 60 * 60 * 100;
