@@ -8,7 +8,16 @@ include 'quattor/functions/package';
 
 #Including the needed modules
 variable DPM_PUPPET_MODULE_VERSION ?= "1.8.9";
-"/software/components/puppet/modules/{sartiran-dpm}" = nlist("version",DPM_PUPPET_MODULE_VERSION);
+variable DPM_PUPPET_MODULE ?= "sartiran-dpm";
+
+"/software/components/puppet/modules" ?= dict();
+
+"/software/components/puppet/modules" = {
+  if(DPM_PUPPET_MODULE != "NONE"){
+    SELF[escape(DPM_PUPPET_MODULE)] = nlist("version",DPM_PUPPET_MODULE_VERSION);
+  };
+  SELF;
+};
 
 variable DPMMGR_UID?=970;
 
