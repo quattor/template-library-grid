@@ -1198,8 +1198,11 @@ variable WN_CPU_CONFIG = {
                 core_num = cpu_num * wn_hw['cpu'][0]['cores'];
                 slot_num = core_num;
 
-                # If hyperthreading is set to true, gives slots = 2 * cores
-                if ( is_defined(wn_hw['cpu'][0]['hyperthreading']) && wn_hw['cpu'][0]['hyperthreading']  ) {
+                # Take SMT into account when calculating slots
+                if ( is_defined(wn_hw['cpu'][0]['max_threads']) && wn_hw['cpu'][0]['max_threads']  ) {
+                    # TODO: Only apply this if SMT is enabled system-wide
+                    slot_num = cpu_num * wn_hw['cpu'][0]['max_threads'];
+                } else if ( is_defined(wn_hw['cpu'][0]['hyperthreading']) && wn_hw['cpu'][0]['hyperthreading']  ) {
                     slot_num = slot_num * 2;
                 };
             } else {
