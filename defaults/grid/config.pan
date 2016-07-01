@@ -427,7 +427,7 @@ variable CE_USE_SSH ?= undef;
 #   - torque2 : Torque v2 with MAUI
 #   - condor : HTCondor
 # Default is torque1 if CE_BATCH_SYS is defined to pbs (backward compatibility)
-variable CE_BATCH_NAME ?= if ( exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && ((CE_BATCH_SYS == "pbs") || (CE_BATCH_SYS == "lcgpbs")) ) {
+variable CE_BATCH_NAME ?= if ( exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(CE_BATCH_SYS, "^(lcg)?pbs$") ) ) {
     'torque1';
 } else {
     if (is_defined(CE_BATCH_SYS) && (CE_BATCH_SYS == "condor")) {
@@ -447,7 +447,7 @@ variable MKGRIDMAP_FLAVOR ?= 'glite';
 
 # Batch system and CE Job manager.
 # For Torque must be 'pbs'.
-variable CE_BATCH_SYS ?= if ( exists(CE_BATCH_NAME) && is_defined(CE_BATCH_NAME) && ((CE_BATCH_NAME == 'torque') || (CE_BATCH_NAME == 'torque1') || (CE_BATCH_NAME == 'torque2')) ) {
+variable CE_BATCH_SYS ?= if ( exists(CE_BATCH_NAME) && is_defined(CE_BATCH_NAME) && match(CE_BATCH_NAME, '^torque[12]?$') ) {
     'pbs';
 } else {
     if (is_defined(CE_BATCH_NAME) && CE_BATCH_NAME == 'condor') {
@@ -460,11 +460,7 @@ variable CE_JM_TYPE ?= CE_BATCH_SYS;
 
 # Used by several templates to trig install of Torque/MAUI components
 # Should not be redefined in normal circumstances
-variable CE_TORQUE ?= if ( exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && ((CE_BATCH_SYS == "pbs") || (CE_BATCH_SYS == "lcgpbs")) ) {
-    true;
-} else {
-    false;
-};
+variable CE_TORQUE ?= exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(CE_BATCH_SYS, "^(lcg)?pbs$");
 
 # Set GIP_CE_USE_MAUI to true if you want to use MAUI to collect data about CE usage,
 # instead of Torque. Required to support advanced MAUI features like
@@ -477,7 +473,7 @@ variable CE_TORQUE ?= if ( exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && (
 # (backward compatibility) but it is recommended to set it to true in any
 # case as cache mode protect over MAUI not responding properly to
 # commands under heavy loads.
-variable GIP_CE_USE_CACHE ?= if ( is_defined(CE_HOSTS)&&((length(CE_HOSTS) > 1) || ( CE_HOSTS[0] != LRMS_SERVER_HOST ))) {
+variable GIP_CE_USE_CACHE ?= if ( is_defined(CE_HOSTS) && ((length(CE_HOSTS) > 1) || ( CE_HOSTS[0] != LRMS_SERVER_HOST ))) {
     true;
 } else {
     false;
@@ -523,10 +519,11 @@ variable CE_CLOSE_SE_LIST ?= if ( exists(SE_HOST_DEFAULT) && is_defined(SE_HOST_
     return(list(SE_HOST_DEFAULT));
 } else {
     if (exists(SE_HOSTS) && is_defined(SE_HOSTS) && (length(SE_HOSTS) > 0) ) {
+        se_list = SELF;
         foreach (name;params;SE_HOSTS) {
-            SELF[length(SELF)] = name;
+            se_list = append(name);
         };
-        SELF;
+        se_list;
     } else {
         null;
     };
@@ -671,9 +668,7 @@ variable CE_DEFAULT_SE = {
                 ce_default_se = CE_CLOSE_SE_LIST;
             };
         } else if ( is_dict(CE_CLOSE_SE_LIST) ) {
-            if ( exists(CE_CLOSE_SE_LIST['DEFAULT']) &&
-                      is_defined(CE_CLOSE_SE_LIST['DEFAULT']) &&
-                      (length(CE_CLOSE_SE_LIST['DEFAULT']) > 0) ) {
+            if ( exists(CE_CLOSE_SE_LIST['DEFAULT']) && is_defined(CE_CLOSE_SE_LIST['DEFAULT']) && (length(CE_CLOSE_SE_LIST['DEFAULT']) > 0) ) {
                 ce_default_se = CE_CLOSE_SE_LIST['DEFAULT'];
             };
         } else {
@@ -926,7 +921,7 @@ variable NFS_CLIENT_HOSTS = {
                     SELF['DEFAULT'][escape(host)] = undef;
                 }
             } else if ( is_dict(host_list) ) {
-                  SELF['DEFAULT'] = merge(SELF['DEFAULT'],host_list);
+                SELF['DEFAULT'] = merge(SELF['DEFAULT'],host_list);
             } else if ( is_defined(host_list) ) {
                 error('Invalid format for one of the NFS_xxx_HOSTS lists');
             };
@@ -1099,17 +1094,18 @@ variable MATLAB_INSTALL_DIR ?= undef;
 # Add a SW tag for all the installed version, except DEFAULT as we
 # don't know what version it is.
 variable CE_RUNTIMEENV = {
+    ce_runtimeenv = SELF;
     if ( is_dict(MATLAB_INSTALL_DIR) ) {
         foreach (version_e;path;MATLAB_INSTALL_DIR) {
             if ( version_e != 'DEFAULT' ) {
                 tag = 'MATLAB_' + to_uppercase(unescape(version_e));
                 if ( index(tag,SELF) < 0 ) {
-                    SELF[length(SELF)] = tag;
+                    ce_runtimeenv = append(tag);
                 };
             };
         };
     };
-    SELF;
+    ce_runtimeenv;
 };
 
 
