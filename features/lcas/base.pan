@@ -5,6 +5,7 @@ unique template features/lcas/base;
 # User DNs can be specified unquoted.
 # Define a dummy entry as an example: will never match.
 variable LCAS_BANNED_USERS ?= list('/O=GetRID/O=abusers/CN=Endless Job');
+variable LCAS_TIMESLOTS_ENABLE ?= true;
 variable LCAS_TIMESLOT_ENTRIES ?= list('* * * * * *');
 # Module lcas_userallow is disabled by default as it doesn't bring any real
 # value: it just checks a user is in the grid-mapfile. Adding this constraint
@@ -40,11 +41,11 @@ variable LCAS_DB_FILE ?= LCAS_CONFIG_DIR+"/lcas.db";
 variable LCAS_MODULE_PATH ?= LCAS_LIB_DIR+"/lcas";
 
 # Module definitions.
-# Module order has no impact on LCAS decisions: use a nlist for easy tweaking of module parameters in
+# Module order has no impact on LCAS decisions: use a dict for easy tweaking of module parameters in
 # other templates.
 variable LCAS_MODULES ?= {
   # Banned users.  Ensure DNs are double-quoted. 
-  SELF['userban'] = nlist();
+  SELF['userban'] = dict();
   SELF['userban']['path'] = LCAS_MODULE_PATH+"/lcas_userban.mod";
   SELF['userban']['args'] = "ban_users.db";
   banned_users = list();
@@ -55,20 +56,22 @@ variable LCAS_MODULES ?= {
       banned_users[length(banned_users)] = '"' + user + '"';
     };
   };
-  SELF['userban']['conf'] = nlist("path", LCAS_CONFIG_DIR+"/ban_users.db",
+  SELF['userban']['conf'] = dict("path", LCAS_CONFIG_DIR+"/ban_users.db",
                                   "content", banned_users,
-                                 );
+                                );
 
   # Defined time slots. 
-  SELF['timeslots'] = nlist();
-  SELF['timeslots']['path'] = LCAS_MODULE_PATH+"/lcas_timeslots.mod";
-  SELF['timeslots']['args'] = "timeslots.db";
-  SELF['timeslots']['conf'] = nlist("path", LCAS_CONFIG_DIR+"/timeslots.db",
-                                    "content", LCAS_TIMESLOT_ENTRIES,
-                                 );
+  if ( LCAS_TIMESLOTS_ENABLE ) {
+    SELF['timeslots'] = dict();
+    SELF['timeslots']['path'] = LCAS_MODULE_PATH+"/lcas_timeslots.mod";
+    SELF['timeslots']['args'] = "timeslots.db";
+    SELF['timeslots']['conf'] = dict("path", LCAS_CONFIG_DIR+"/timeslots.db",
+                                      "content", LCAS_TIMESLOT_ENTRIES,
+                                    );
+  };
 
   # VOMS users
-  SELF['voms'] = nlist();
+  SELF['voms'] = dict();
   SELF['voms']['path'] = LCAS_MODULE_PATH+"/lcas_voms.mod";
   SELF['voms']['args'] = '"-vomsdir /etc/grid-security/vomsdir -certdir ' + SITE_DEF_CERTDIR +
                                ' -authfile ' + SITE_DEF_GRIDMAP + ' -authformat simple -use_user_dn"';
@@ -77,7 +80,7 @@ variable LCAS_MODULES ?= {
   # lcas_userallow ignores its argument and always uses grid-mapfile as its input file: argument defined
   # for sake of clarity.
   if ( LCAS_USER_ALLOW_ENABLE ) {
-    SELF['userallow'] = nlist();
+    SELF['userallow'] = dict();
     SELF['userallow']['path'] = LCAS_MODULE_PATH+"/lcas_userallow.mod";
     SELF['userallow']['args'] = SITE_DEF_GRIDMAP;
   };
@@ -97,7 +100,7 @@ include { 'components/lcas/config' };
   } else {
     config_len = 0;
   };
-  SELF[config_len] = nlist();
+  SELF[config_len] = dict();
   SELF[config_len]['path'] = LCAS_DB_FILE;
   SELF[config_len]['module'] = list();
   foreach (plugin;params;LCAS_MODULES) {
@@ -112,7 +115,7 @@ include { 'components/lcas/config' };
 # ---------------------------------------------------------------------------- 
 include { 'components/profile/config' };
 '/software/components/profile' = component_profile_add_env(GLITE_GRID_ENV_PROFILE,
-                                                           nlist('LCAS_DEBUG_LEVEL', to_string(LCAS_DEBUG_LEVEL),
+                                                           dict('LCAS_DEBUG_LEVEL', to_string(LCAS_DEBUG_LEVEL),
                                                                  'LCAS_LOG_LEVEL', to_string(LCAS_LOG_LEVEL),
                                                                )
                                                           );
