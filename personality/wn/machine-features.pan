@@ -3,12 +3,10 @@ unique template personality/wn/machine-features;
 variable MACHINE_FEATURES_TEMPLATE ?= undef;
 variable MACHINE_FEATURES_PATH ?= '/etc/machinefeatures';
 variable MACHINE_FEATURES_LIST ?= list(
+    'grace_secs',
     'hs06',
     'shutdowntime',
-    'jobslots',
-    'phys_cores',
-    'log_cores',
-    'shutdown_command',
+    'total_cpu',
 );
 
 # Machine features can be defined through a structure template
@@ -22,6 +20,9 @@ variable MACHINE_FEATURES ?= {
 
 # Machine features can also be defined by node with the following variables
 variable MACHINE_FEATURES = {
+    if (is_defined(NODE_GRACE_SECS)) {
+        SELF['grace_secs'][escape(FULL_HOSTNAME)] = NODE_GRACE_SECS;
+    };
     if (is_defined(NODE_HEP_SPEC06)) {
         SELF['hs06'][escape(FULL_HOSTNAME)] = NODE_HEP_SPEC06;
     };
@@ -29,16 +30,10 @@ variable MACHINE_FEATURES = {
         SELF['shutdowntime'][escape(FULL_HOSTNAME)] = NODE_SHUTDOWN_TIME;
     };
     if (is_defined(NODE_JOB_SLOTS)) {
-        SELF['jobslots'][escape(FULL_HOSTNAME)] = NODE_JOB_SLOTS;
+        SELF['total_cpu'][escape(FULL_HOSTNAME)] = NODE_JOB_SLOTS;
     };
-    if (is_defined(NODE_PHYSICAL_CORES)) {
-        SELF['phys_cores'][escape(FULL_HOSTNAME)] = NODE_PHYSICAL_CORES;
-    };
-    if (is_defined(NODE_LOGICAL_CORES)) {
-        SELF['log_cores'][escape(FULL_HOSTNAME)] = NODE_LOGICAL_CORES;
-    };
-    if (is_defined(NODE_SHUTDOWN_COMMAND)) {
-        SELF['shutdown_command'][escape(FULL_HOSTNAME)] = NODE_SHUTDOWN_COMMAND;
+    if (is_defined(NODE_TOTAL_CPU)) {
+        SELF['total_cpu'][escape(FULL_HOSTNAME)] = NODE_TOTAL_CPU;
     };
     SELF;
 };
