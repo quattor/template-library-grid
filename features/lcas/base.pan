@@ -16,10 +16,10 @@ variable LCAS_USER_ALLOW_ENABLE ?= false;
 
 variable LCAS_CONFIG_DIR ?= GLITE_LOCATION_ETC + '/lcas';
 variable LCAS_LIB_DIR ?= if ( PKG_ARCH_GLITE == 'x86_64' ) {
-                           GLITE_LOCATION + '/lib64';
-                         } else {
-                           GLITE_LOCATION + '/lib';
-                         };
+    GLITE_LOCATION + '/lib64';
+} else {
+    GLITE_LOCATION + '/lib';
+};
 
 # Define default logging level to be minimal
 variable LCAS_DEBUG_LEVEL ?= 0;
@@ -29,7 +29,7 @@ variable LCAS_LOG_LEVEL ?= 1;
 variable GLITE_GRID_ENV_PROFILE ?= '/etc/profile.d/grid-env.sh';
 
 # Include LCAS RPMs
-include { 'features/lcas/rpms' };
+include 'features/lcas/rpms';
 
  
 # ---------------------------------------------------------------------------- 
@@ -44,48 +44,50 @@ variable LCAS_MODULE_PATH ?= LCAS_LIB_DIR+"/lcas";
 # Module order has no impact on LCAS decisions: use a dict for easy tweaking of module parameters in
 # other templates.
 variable LCAS_MODULES ?= {
-  # Banned users.  Ensure DNs are double-quoted. 
-  SELF['userban'] = dict();
-  SELF['userban']['path'] = LCAS_MODULE_PATH+"/lcas_userban.mod";
-  SELF['userban']['args'] = "ban_users.db";
-  banned_users = list();
-  foreach(i;user;LCAS_BANNED_USERS) {
-    if ( match(user,'^\s*".*"\s*') ) {
-      banned_users[length(banned_users)] = user;
-    } else {
-      banned_users[length(banned_users)] = '"' + user + '"';
+    # Banned users.  Ensure DNs are double-quoted. 
+    SELF['userban'] = dict();
+    SELF['userban']['path'] = LCAS_MODULE_PATH+"/lcas_userban.mod";
+    SELF['userban']['args'] = "ban_users.db";
+    banned_users = list();
+    foreach(i;user;LCAS_BANNED_USERS) {
+        if ( match(user,'^\s*".*"\s*') ) {
+            banned_users[length(banned_users)] = user;
+        } else {
+            banned_users[length(banned_users)] = '"' + user + '"';
+        };
     };
-  };
-  SELF['userban']['conf'] = dict("path", LCAS_CONFIG_DIR+"/ban_users.db",
-                                  "content", banned_users,
-                                );
+    SELF['userban']['conf'] = dict(
+        "path", LCAS_CONFIG_DIR+"/ban_users.db",
+        "content", banned_users,
+    );
 
-  # Defined time slots. 
-  if ( LCAS_TIMESLOTS_ENABLE ) {
-    SELF['timeslots'] = dict();
-    SELF['timeslots']['path'] = LCAS_MODULE_PATH+"/lcas_timeslots.mod";
-    SELF['timeslots']['args'] = "timeslots.db";
-    SELF['timeslots']['conf'] = dict("path", LCAS_CONFIG_DIR+"/timeslots.db",
-                                      "content", LCAS_TIMESLOT_ENTRIES,
-                                    );
-  };
+    # Defined time slots. 
+    if ( LCAS_TIMESLOTS_ENABLE ) {
+        SELF['timeslots'] = dict();
+        SELF['timeslots']['path'] = LCAS_MODULE_PATH+"/lcas_timeslots.mod";
+        SELF['timeslots']['args'] = "timeslots.db";
+        SELF['timeslots']['conf'] = dict(
+            "path", LCAS_CONFIG_DIR+"/timeslots.db",
+            "content", LCAS_TIMESLOT_ENTRIES,
+        );
+    };
 
-  # VOMS users
-  SELF['voms'] = dict();
-  SELF['voms']['path'] = LCAS_MODULE_PATH+"/lcas_voms.mod";
-  SELF['voms']['args'] = '"-vomsdir /etc/grid-security/vomsdir -certdir ' + SITE_DEF_CERTDIR +
-                               ' -authfile ' + SITE_DEF_GRIDMAP + ' -authformat simple -use_user_dn"';
+    # VOMS users
+    SELF['voms'] = dict();
+    SELF['voms']['path'] = LCAS_MODULE_PATH+"/lcas_voms.mod";
+    SELF['voms']['args'] = '"-vomsdir /etc/grid-security/vomsdir -certdir ' + SITE_DEF_CERTDIR +
+        ' -authfile ' + SITE_DEF_GRIDMAP + ' -authformat simple -use_user_dn"';
   
-  # Allowed users.
-  # lcas_userallow ignores its argument and always uses grid-mapfile as its input file: argument defined
-  # for sake of clarity.
-  if ( LCAS_USER_ALLOW_ENABLE ) {
-    SELF['userallow'] = dict();
-    SELF['userallow']['path'] = LCAS_MODULE_PATH+"/lcas_userallow.mod";
-    SELF['userallow']['args'] = SITE_DEF_GRIDMAP;
-  };
+    # Allowed users.
+    # lcas_userallow ignores its argument and always uses grid-mapfile as its input file: argument defined
+    # for sake of clarity.
+    if ( LCAS_USER_ALLOW_ENABLE ) {
+        SELF['userallow'] = dict();
+        SELF['userallow']['path'] = LCAS_MODULE_PATH+"/lcas_userallow.mod";
+        SELF['userallow']['args'] = SITE_DEF_GRIDMAP;
+    };
   
-  SELF;
+    SELF;
 };
 
 
@@ -93,29 +95,30 @@ variable LCAS_MODULES ?= {
 # Add LCAS configuration to ncm-lcas configuration, taking care that
 # several LCAS configuration can coexist on one node.
 # ---------------------------------------------------------------------------- 
-include { 'components/lcas/config' };
+include 'components/lcas/config';
 '/software/components/lcas/db' = {
-  if ( is_list(SELF) ) {
-    config_len = length(SELF);
-  } else {
-    config_len = 0;
-  };
-  SELF[config_len] = dict();
-  SELF[config_len]['path'] = LCAS_DB_FILE;
-  SELF[config_len]['module'] = list();
-  foreach (plugin;params;LCAS_MODULES) {
-    SELF[config_len]['module'][length(SELF[config_len]['module'])] = params;
-  };
-  debug('LCAS databases: '+to_string(SELF));
-  SELF;
+    if ( is_list(SELF) ) {
+        config_len = length(SELF);
+    } else {
+        config_len = 0;
+    };
+    SELF[config_len] = dict();
+    SELF[config_len]['path'] = LCAS_DB_FILE;
+    SELF[config_len]['module'] = list();
+    foreach (plugin;params;LCAS_MODULES) {
+        SELF[config_len]['module'][length(SELF[config_len]['module'])] = params;
+    };
+    debug('LCAS databases: '+to_string(SELF));
+    SELF;
 };
 
 # ---------------------------------------------------------------------------- 
 # Define LCAS debug and logging level (default is very verbose)
 # ---------------------------------------------------------------------------- 
-include { 'components/profile/config' };
-'/software/components/profile' = component_profile_add_env(GLITE_GRID_ENV_PROFILE,
-                                                           dict('LCAS_DEBUG_LEVEL', to_string(LCAS_DEBUG_LEVEL),
-                                                                 'LCAS_LOG_LEVEL', to_string(LCAS_LOG_LEVEL),
-                                                               )
-                                                          );
+include 'components/profile/config';
+'/software/components/profile' = component_profile_add_env(
+    GLITE_GRID_ENV_PROFILE, dict(
+        'LCAS_DEBUG_LEVEL', to_string(LCAS_DEBUG_LEVEL),
+        'LCAS_LOG_LEVEL', to_string(LCAS_LOG_LEVEL),
+    )
+);
