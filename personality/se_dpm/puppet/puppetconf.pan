@@ -33,7 +33,7 @@ variable DPMMGR_UID?=970;
 
 	self[escape('dpm::params::volist')] = VOS;
 
-	if(pkg_compare_version(DPM_PUPPET_MODULE_VERSION,'1.8.10')>0){
+	if ( pkg_compare_version(DPM_PUPPET_MODULE_VERSION,'1.8.10') == PKG_VERSION_LESS ) {
 	  disk_list='';
 	  foreach(i;disk;DPM_HOSTS['disk']){
 	    if(disk_list==''){
