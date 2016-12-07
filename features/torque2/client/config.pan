@@ -42,7 +42,7 @@ variable TORQUE_TMPDIR = if ( exists(TORQUE_TMPDIR) &&
 # client tries to contact server.
 "/software/components/chkconfig/service/pbs_mom" = {
   wn_list = nlist();
-  if ( exists(WORKER_NODES_NLIST[FULL_HOSTNAME]) || TORQUE_FORCE_MOM_STARTUP ) {
+  if ( exists(WORKER_NODES_DICT[FULL_HOSTNAME]) || TORQUE_FORCE_MOM_STARTUP ) {
     SELF['on'] = '';
     SELF['off'] = null;
   } else {
@@ -310,39 +310,39 @@ include { 'components/symlink/config' };
         "name", "/usr/bin/qsub",
         "target", "/usr/bin/qsub-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
-    );  
+        "exists", true,
+    );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qhold",
         "target", "/usr/bin/qhold-torque",
         "replace", nlist("link","yes"),
-        "exists", true,         
+        "exists", true,
     );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qrls",
         "target", "/usr/bin/qrls-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
-    );  
+        "exists", true,
+    );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qalter",
         "target", "/usr/bin/qalter-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
+        "exists", true,
     );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qselect",
         "target", "/usr/bin/qselect-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
+        "exists", true,
     );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qdel",
         "target", "/usr/bin/qdel-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
+        "exists", true,
     );
-  };  
+  };
   if ( is_defined(SELF) ) {
     SELF;
   } else {
