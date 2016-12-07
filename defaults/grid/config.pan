@@ -147,8 +147,8 @@ variable INSTALL_DATE ?= undef;
 # By default LRMS server is the first CE listed in CE_HOSTS.
 # When CE_HOSTS is defined, CE_HOST is refefined to the current node if
 # it present in the list CE_HOSTS, else it is left undefined.
-variable CE_HOST ?= if ( is_defined(CE_HOSTS) && (length(CE_HOSTS)) > 0 ) {
-    if ( index(FULL_HOSTNAME,CE_HOSTS) > -1 ) {
+variable CE_HOST ?= if (is_defined(CE_HOSTS) && (length(CE_HOSTS)) > 0) {
+    if (index(FULL_HOSTNAME, CE_HOSTS) > -1) {
         FULL_HOSTNAME;
     } else {
         undef;
@@ -157,13 +157,13 @@ variable CE_HOST ?= if ( is_defined(CE_HOSTS) && (length(CE_HOSTS)) > 0 ) {
     undef;
 };
 
-variable CE_HOSTS ?= if ( is_defined(CE_HOST) ) {
+variable CE_HOSTS ?= if (is_defined(CE_HOST)) {
     list(CE_HOST);
 } else {
     undef;
 };
 
-variable LRMS_SERVER_HOST ?= if ( is_defined(CE_HOSTS) ) {
+variable LRMS_SERVER_HOST ?= if (is_defined(CE_HOSTS)) {
     CE_HOSTS[0];
 } else {
     undef;
@@ -196,23 +196,23 @@ variable SE_HOSTS ?= undef;
 # If SE_HOSTS exists as a list (old format), convert to a dict.
 # (of strings) even if you have only one.  The values
 # must be fully qualified host names.
-variable SE_HOST_NAMES = if ( is_defined(SE_HOSTS) && is_list(SE_HOSTS) ) {
+variable SE_HOST_NAMES = if (is_defined(SE_HOSTS) && is_list(SE_HOSTS)) {
     foreach (i;v;SE_HOSTS) {
-        if ( exists(SE_TYPES[v]) && is_defined(SE_TYPES[v]) ) {
-            if ( SE_TYPES[v] == 'disk' ) {
-                SELF[v] = dict('type','SE_classic');
+        if (exists(SE_TYPES[v]) && is_defined(SE_TYPES[v])) {
+            if (SE_TYPES[v] == 'disk') {
+                SELF[v] = dict('type', 'SE_classic');
             } else {
-                SELF[v] = dict('type',SE_TYPES[v]);
+                SELF[v] = dict('type', SE_TYPES[v]);
             };
         } else {
             error(format('SE_HOSTS deprecated format : missing entry index %d in SE_TYPES', i));
         };
-        if ( exists(SE_ACCESS[v]) && is_defined(SE_ACCESS[v]) ) {
+        if (exists(SE_ACCESS[v]) && is_defined(SE_ACCESS[v])) {
             SELF[v]['accessPoint'] = SE_ACCESS[v];
-        } else if ( exists(STORAGE_DIRS[i]) && is_defined(STORAGE_DIRS[i]) ) {
+        } else if (exists(STORAGE_DIRS[i]) && is_defined(STORAGE_DIRS[i])) {
             SELF[v]['accessPoint'] = STORAGE_DIRS[i];
         };
-        if ( exists(SE_ARCH[v]) && is_defined(SE_ARCH[v]) ) {
+        if (exists(SE_ARCH[v]) && is_defined(SE_ARCH[v])) {
             SELF[v]['arch'] = SE_ARCH[v];
         };
     };
@@ -221,7 +221,7 @@ variable SE_HOST_NAMES = if ( is_defined(SE_HOSTS) && is_list(SE_HOSTS) ) {
     null;
 };
 
-variable SE_HOSTS = if ( is_null(SE_HOST_NAMES) ) {
+variable SE_HOSTS = if (is_null(SE_HOST_NAMES)) {
     SELF;
 } else {
     null;
@@ -234,7 +234,7 @@ variable LFC_PORT ?= 5010;
 variable LFC_DLI_PORT ?= 8085;
 variable LFC_HOST ?= undef;
 # Convert LFC_HOST to a dict if a string
-variable LFC_HOSTS ?= if ( is_string(LFC_HOST) ) {
+variable LFC_HOSTS ?= if (is_string(LFC_HOST)) {
     SELF[LFC_HOST] = dict();
     SELF;
 } else {
@@ -314,7 +314,7 @@ variable VOS ?= list(
 # Value is the name of a structure template defining parameters.
 variable VOS_SITE_PARAMS ?= dict();
 
-variable ALLVOS_INCLUDE ?= if ( is_string(VOS) && (VOS == 'ALL') ) {
+variable ALLVOS_INCLUDE ?= if (is_string(VOS) && (VOS == 'ALL')) {
     if_exists('vo/params/allvos');
 } else {
     undef;
@@ -322,9 +322,9 @@ variable ALLVOS_INCLUDE ?= if ( is_string(VOS) && (VOS == 'ALL') ) {
 
 include ALLVOS_INCLUDE;
 
-variable VOS_TMP ?= if ( is_string(VOS) ) {
-    if ( VOS == 'ALL' ) {
-        if ( exists(ALLVOS) && is_list(ALLVOS) ) {
+variable VOS_TMP ?= if (is_string(VOS)) {
+    if (VOS == 'ALL') {
+        if (exists(ALLVOS) && is_list(ALLVOS)) {
             ALLVOS;
         } else {
             error('Variable ALLVOS undefined or not a list');
@@ -427,7 +427,7 @@ variable CE_USE_SSH ?= undef;
 #   - torque2 : Torque v2 with MAUI
 #   - condor : HTCondor
 # Default is torque1 if CE_BATCH_SYS is defined to pbs (backward compatibility)
-variable CE_BATCH_NAME ?= if ( exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(CE_BATCH_SYS, "^(lcg)?pbs$") ) ) {
+variable CE_BATCH_NAME ?= if (exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(CE_BATCH_SYS, "^(lcg)?pbs$"))) {
     'torque1';
 } else {
     if (is_defined(CE_BATCH_SYS) && (CE_BATCH_SYS == "condor")) {
@@ -447,7 +447,7 @@ variable MKGRIDMAP_FLAVOR ?= 'glite';
 
 # Batch system and CE Job manager.
 # For Torque must be 'pbs'.
-variable CE_BATCH_SYS ?= if ( exists(CE_BATCH_NAME) && is_defined(CE_BATCH_NAME) && match(CE_BATCH_NAME, '^torque[12]?$') ) {
+variable CE_BATCH_SYS ?= if (exists(CE_BATCH_NAME) && is_defined(CE_BATCH_NAME) && match(CE_BATCH_NAME, '^torque[12]?$')) {
     'pbs';
 } else {
     if (is_defined(CE_BATCH_NAME) && CE_BATCH_NAME == 'condor') {
@@ -473,7 +473,7 @@ variable CE_TORQUE ?= exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(
 # (backward compatibility) but it is recommended to set it to true in any
 # case as cache mode protect over MAUI not responding properly to
 # commands under heavy loads.
-variable GIP_CE_USE_CACHE ?= if ( is_defined(CE_HOSTS) && ((length(CE_HOSTS) > 1) || ( CE_HOSTS[0] != LRMS_SERVER_HOST ))) {
+variable GIP_CE_USE_CACHE ?= if (is_defined(CE_HOSTS) && ((length(CE_HOSTS) > 1) || (CE_HOSTS[0] != LRMS_SERVER_HOST))) {
     true;
 } else {
     false;
@@ -500,7 +500,7 @@ variable CE_SF00 ?= undef;
 # Operating system information.
 variable CE_OS ?= undef;
 variable CE_OS_RELEASE ?= undef;
-variable CE_OS_VERSION ?= if ( is_defined(CE_OS) && (CE_OS == "Scientific Linux") ) {
+variable CE_OS_VERSION ?= if (is_defined(CE_OS) && (CE_OS == "Scientific Linux")) {
     "SL";
 } else {
     undef;
@@ -515,10 +515,10 @@ variable CE_MINVIRTMEM ?= undef;
 # one entry per VO (key is the VO name) and one default entry (key is 'DEFAULT').
 # If not defined, defaults to SE_HOSTS list. Define as 'undef' to remove any
 # close SE definition.
-variable CE_CLOSE_SE_LIST ?= if ( exists(SE_HOST_DEFAULT) && is_defined(SE_HOST_DEFAULT) ) {
+variable CE_CLOSE_SE_LIST ?= if (exists(SE_HOST_DEFAULT) && is_defined(SE_HOST_DEFAULT)) {
     return(list(SE_HOST_DEFAULT));
 } else {
-    if (exists(SE_HOSTS) && is_defined(SE_HOSTS) && (length(SE_HOSTS) > 0) ) {
+    if (exists(SE_HOSTS) && is_defined(SE_HOSTS) && (length(SE_HOSTS) > 0)) {
         se_list = SELF;
         foreach (name;params;SE_HOSTS) {
             se_list = append(name);
@@ -610,14 +610,14 @@ variable CE_VO_CLOSE_SE = {
     foreach (i;vo;VOS) {
         close_se = undef;
 
-        if ( exists(CE_CLOSE_SE_LIST) && is_defined(CE_CLOSE_SE_LIST) ) {
-            if ( is_string(CE_CLOSE_SE_LIST) || is_list(CE_CLOSE_SE_LIST) ) {
+        if (exists(CE_CLOSE_SE_LIST) && is_defined(CE_CLOSE_SE_LIST)) {
+            if (is_string(CE_CLOSE_SE_LIST) || is_list(CE_CLOSE_SE_LIST)) {
                 close_se = CE_CLOSE_SE_LIST;
-            } else if ( is_dict(CE_CLOSE_SE_LIST) ) {
-                if ( exists(CE_CLOSE_SE_LIST[vo]) && is_defined(CE_CLOSE_SE_LIST[vo]) ) {
+            } else if (is_dict(CE_CLOSE_SE_LIST)) {
+                if (exists(CE_CLOSE_SE_LIST[vo]) && is_defined(CE_CLOSE_SE_LIST[vo])) {
                     close_se = CE_CLOSE_SE_LIST[vo];
                 };
-                if ( !is_defined(close_se) && exists(CE_CLOSE_SE_LIST['DEFAULT']) && is_defined(CE_CLOSE_SE_LIST['DEFAULT']) ) {
+                if (!is_defined(close_se) && exists(CE_CLOSE_SE_LIST['DEFAULT']) && is_defined(CE_CLOSE_SE_LIST['DEFAULT'])) {
                     close_se = CE_CLOSE_SE_LIST['DEFAULT'];
                 };
             } else {
@@ -625,10 +625,10 @@ variable CE_VO_CLOSE_SE = {
             };
         };
 
-        if ( is_defined(close_se) && (length(close_se) > 0) ) {
-            if ( is_string(close_se) ) {
+        if (is_defined(close_se) && (length(close_se) > 0)) {
+            if (is_string(close_se)) {
                 SELF[vo] = list(close_se);
-            } else if ( is_list(close_se) ) {
+            } else if (is_list(close_se)) {
                 SELF[vo] = close_se;
             } else {
                 error(format('Invalid close SE for VO %s : must be a string or list', vo));
@@ -650,11 +650,11 @@ variable CE_VO_CLOSE_SE = {
 # It is valid not having a default SE defined.
 variable CE_DEFAULT_SE = {
     ce_default_se = undef;
-    if ( exists(CE_DEFAULT_SE_LIST) && is_defined(CE_DEFAULT_SE_LIST) ) {
-        if ( is_string(CE_DEFAULT_SE_LIST) ) {
+    if (exists(CE_DEFAULT_SE_LIST) && is_defined(CE_DEFAULT_SE_LIST)) {
+        if (is_string(CE_DEFAULT_SE_LIST)) {
             ce_default_se = CE_DEFAULT_SE_LIST;
-        } else if ( is_dict(CE_DEFAULT_SE_LIST) ) {
-            if ( exists(CE_DEFAULT_SE_LIST['DEFAULT']) && is_defined(CE_DEFAULT_SE_LIST['DEFAULT']) ) {
+        } else if (is_dict(CE_DEFAULT_SE_LIST)) {
+            if (exists(CE_DEFAULT_SE_LIST['DEFAULT']) && is_defined(CE_DEFAULT_SE_LIST['DEFAULT'])) {
                 ce_default_se = CE_DEFAULT_SE_LIST['DEFAULT'];
             };
         } else {
@@ -662,13 +662,13 @@ variable CE_DEFAULT_SE = {
         };
     };
 
-    if ( !is_defined(ce_default_se) && exists(CE_CLOSE_SE_LIST) && is_defined(CE_CLOSE_SE_LIST) ) {
-        if ( is_string(CE_CLOSE_SE_LIST) || is_list(CE_CLOSE_SE_LIST) ) {
-            if ( length(CE_CLOSE_SE_LIST) > 0 ) {
+    if (!is_defined(ce_default_se) && exists(CE_CLOSE_SE_LIST) && is_defined(CE_CLOSE_SE_LIST)) {
+        if (is_string(CE_CLOSE_SE_LIST) || is_list(CE_CLOSE_SE_LIST)) {
+            if (length(CE_CLOSE_SE_LIST) > 0) {
                 ce_default_se = CE_CLOSE_SE_LIST;
             };
-        } else if ( is_dict(CE_CLOSE_SE_LIST) ) {
-            if ( exists(CE_CLOSE_SE_LIST['DEFAULT']) && is_defined(CE_CLOSE_SE_LIST['DEFAULT']) && (length(CE_CLOSE_SE_LIST['DEFAULT']) > 0) ) {
+        } else if (is_dict(CE_CLOSE_SE_LIST)) {
+            if (exists(CE_CLOSE_SE_LIST['DEFAULT']) && is_defined(CE_CLOSE_SE_LIST['DEFAULT']) && (length(CE_CLOSE_SE_LIST['DEFAULT']) > 0)) {
                 ce_default_se = CE_CLOSE_SE_LIST['DEFAULT'];
             };
         } else {
@@ -676,10 +676,10 @@ variable CE_DEFAULT_SE = {
         };
     };
 
-    if ( is_defined(ce_default_se) && (length(ce_default_se) > 0) ) {
-        if ( is_string(ce_default_se) ) {
+    if (is_defined(ce_default_se) && (length(ce_default_se) > 0)) {
+        if (is_string(ce_default_se)) {
             return(ce_default_se);
-        } else if ( is_list(ce_default_se) ) {
+        } else if (is_list(ce_default_se)) {
             return(ce_default_se[0]);
         } else {
             error('Invalid default SE : must be a string or list');
@@ -702,26 +702,26 @@ variable CE_VO_DEFAULT_SE = {
     foreach (i;vo;VOS) {
         se_default = undef;
 
-        if ( exists(CE_DEFAULT_SE_LIST) && is_defined(CE_DEFAULT_SE_LIST) ) {
+        if (exists(CE_DEFAULT_SE_LIST) && is_defined(CE_DEFAULT_SE_LIST)) {
             # CE_DEFAULT_SE_LIST have already been checked to have a valid type
-            if ( is_string(CE_DEFAULT_SE_LIST) ) {
+            if (is_string(CE_DEFAULT_SE_LIST)) {
                 se_default = list(CE_DEFAULT_SE_LIST);
-            } else if ( exists(CE_DEFAULT_SE_LIST[vo]) && is_defined(CE_DEFAULT_SE_LIST[vo]) ) {
+            } else if (exists(CE_DEFAULT_SE_LIST[vo]) && is_defined(CE_DEFAULT_SE_LIST[vo])) {
                 se_default = CE_DEFAULT_SE_LIST[vo];
-            } else if ( exists(CE_DEFAULT_SE_LIST['DEFAULT']) && is_defined(CE_DEFAULT_SE_LIST['DEFAULT']) ) {
+            } else if (exists(CE_DEFAULT_SE_LIST['DEFAULT']) && is_defined(CE_DEFAULT_SE_LIST['DEFAULT'])) {
                 se_default = CE_DEFAULT_SE_LIST['DEFAULT'];
             };
         };
 
-        if ( !is_defined(se_default) && is_defined(CE_VO_CLOSE_SE[vo]) ) {
+        if (!is_defined(se_default) && is_defined(CE_VO_CLOSE_SE[vo])) {
             se_default = CE_VO_CLOSE_SE[vo][0];
         };
 
-        if ( !is_defined(se_default) ) {
+        if (!is_defined(se_default)) {
             se_default = CE_DEFAULT_SE;
         };
 
-        if ( is_defined(se_default) && (length(se_default) > 0) ) {
+        if (is_defined(se_default) && (length(se_default) > 0)) {
             SELF[vo] = se_default;
         } else {
             SELF[vo] = undef;
@@ -746,7 +746,7 @@ variable GRIDMAPDIR_SHARED_PROTOCOL ?= 'nfs';
 
 # Host serving the shared gridmapdir, if any.
 # No default, required if GRIDMAPDIR_SHARED_PATH is defined.
-variable GRIDMAPDIR_SHARED_SERVER ?= if ( is_defined(GRIDMAPDIR_SHARED_PATH) && match(to_lowercase(GRIDMAPDIR_SHARED_PROTOCOL), '^nfs') ) {
+variable GRIDMAPDIR_SHARED_SERVER ?= if (is_defined(GRIDMAPDIR_SHARED_PATH) && match(to_lowercase(GRIDMAPDIR_SHARED_PROTOCOL), '^nfs')) {
     error('GRIDMAPDIR_SHARED_SERVER must be defined if GRIDMAPDIR_SHARED_PATH is defined and GRIDMAPDIR_SHARED_PROTOCOL is NFS');
 } else {
     undef;
@@ -771,7 +771,7 @@ variable BDII_UPDATE_URL ?= "http://lcg-bdii-conf.cern.ch/bdii-conf/bdii.conf";
 # names of services and the value is an LDAP URL.
 #
 # For example:
-# variable BDII_URLS = dict("CE","ldap://ce.example.org:2135/mds-vo-name=local,o=grid");
+# variable BDII_URLS = dict("CE", "ldap://ce.example.org:2135/mds-vo-name=local,o=grid");
 variable BDII_URLS ?= undef;
 
 
@@ -813,11 +813,11 @@ variable GLOBUS_TCP_PORT_RANGE_MAX ?= '25000';
 #    - If CE_NFS_ENABLED (deprecated) is true, it is initialized with one
 #      entry for /home using CE_HOST as NFS server.
 #
-variable WN_SHARED_AREAS ?= if ( exists(WN_NFS_AREAS) && is_defined(WN_NFS_AREAS) ) {
+variable WN_SHARED_AREAS ?= if (exists(WN_NFS_AREAS) && is_defined(WN_NFS_AREAS)) {
     WN_NFS_AREAS;
 } else {
-    if ( exists(CE_NFS_ENABLED) && is_defined(CE_NFS_ENABLED) && CE_NFS_ENABLED ) {
-        dict(escape("/home"),CE_HOST);
+    if (exists(CE_NFS_ENABLED) && is_defined(CE_NFS_ENABLED) && CE_NFS_ENABLED) {
+        dict(escape("/home"), CE_HOST);
     } else {
         undef;
     };
@@ -836,7 +836,7 @@ variable NFS_SERVER_ENABLED ?= NFS_ENABLED;
 #            not served by the current node.
 # Default value is false.
 variable NFS_CLIENT_ENABLED_TMP = {
-    if ( exists(NFS_CLIENT_ENABLED) ) {
+    if (exists(NFS_CLIENT_ENABLED)) {
         SELF;
     } else {
         false;
@@ -865,9 +865,9 @@ variable NFS_CLIENT_ENABLED = NFS_CLIENT_ENABLED_TMP;
 # Export options for CE hosts.
 # NFS_CE_HOSTS is a dict where the key must be the escaped host name.
 variable NFS_CE_HOSTS ?= {
-    ce_def_right = '(rw,no_root_squash)';
-    if ( exists(SITE_CE_HOSTS) && is_defined(SITE_CE_HOSTS) ) {
-        if ( is_string(SITE_CE_HOSTS) ) {
+    ce_def_right = '(rw, no_root_squash)';
+    if (exists(SITE_CE_HOSTS) && is_defined(SITE_CE_HOSTS)) {
+        if (is_string(SITE_CE_HOSTS)) {
             ce_hosts = list(SITE_CE_HOSTS);
         } else {
             ce_hosts = SITE_CE_HOSTS;
@@ -876,12 +876,12 @@ variable NFS_CE_HOSTS ?= {
         ce_hosts = CE_HOSTS;
     };
     # If this is already a dict, just use it
-    if ( is_list(ce_hosts) ) {
+    if (is_list(ce_hosts)) {
         foreach (i;host;ce_hosts) {
             SELF[escape(host)] =  ce_def_right;
         };
         SELF;
-    } else if ( is_defined(ce_hosts) ) {
+    } else if (is_defined(ce_hosts)) {
         ce_hosts;
     } else {
         debug('CE host list is empty');
@@ -889,15 +889,15 @@ variable NFS_CE_HOSTS ?= {
     };
 };
 
-variable NFS_WN_HOSTS ?= if ( exists(SITE_WN_HOSTS) && is_defined(SITE_WN_HOSTS) ) {
+variable NFS_WN_HOSTS ?= if (exists(SITE_WN_HOSTS) && is_defined(SITE_WN_HOSTS)) {
     SITE_WN_HOSTS;
-} else if ( exists(WORKER_NODES) && is_defined(WORKER_NODES) ) {
+} else if (exists(WORKER_NODES) && is_defined(WORKER_NODES)) {
     WORKER_NODES;
 } else {
     undef;
 };
 
-variable NFS_LOCAL_CLIENTS ?= if ( exists(LOCAL_NFS_CLIENT) && is_defined(LOCAL_NFS_CLIENT) ) {
+variable NFS_LOCAL_CLIENTS ?= if (exists(LOCAL_NFS_CLIENT) && is_defined(LOCAL_NFS_CLIENT)) {
     LOCAL_NFS_CLIENT;
 } else {
     undef;
@@ -910,19 +910,19 @@ variable NFS_LOCAL_CLIENTS ?= if ( exists(LOCAL_NFS_CLIENT) && is_defined(LOCAL_
 # In additition, there is an entry 'DEFAULT' for the file systems not listed explicitly
 # Default for 'DEFAULT' entry is NFS_CE_HOSTS + NFS_WN_HOSTS + NFS_LOCAL_CLIENTS.
 variable NFS_CLIENT_HOSTS = {
-    if ( !exists(SELF['DEFAULT']) || !is_defined(SELF['DEFAULT']) ) {
-        host_lists = list(NFS_CE_HOSTS,NFS_WN_HOSTS,NFS_LOCAL_CLIENTS);
+    if (!exists(SELF['DEFAULT']) || !is_defined(SELF['DEFAULT'])) {
+        host_lists = list(NFS_CE_HOSTS, NFS_WN_HOSTS, NFS_LOCAL_CLIENTS);
         SELF['DEFAULT'] = dict();
         foreach (i;host_list;host_lists) {
-            if ( is_string(host_list) ) {
+            if (is_string(host_list)) {
                 SELF['DEFAULT'][escape(host_list)] = undef;
-            } else if ( is_list(host_list) ) {
+            } else if (is_list(host_list)) {
                 foreach (j;host;host_list) {
                     SELF['DEFAULT'][escape(host)] = undef;
                 }
-            } else if ( is_dict(host_list) ) {
-                SELF['DEFAULT'] = merge(SELF['DEFAULT'],host_list);
-            } else if ( is_defined(host_list) ) {
+            } else if (is_dict(host_list)) {
+                SELF['DEFAULT'] = merge(SELF['DEFAULT'], host_list);
+            } else if (is_defined(host_list)) {
                 error('Invalid format for one of the NFS_xxx_HOSTS lists');
             };
         };
@@ -964,7 +964,7 @@ variable NFS_CLIENT_HOSTS = {
 # variable NFS_THREADS = dict(
 #    CE_HOST, 16,
 #    SE_HOST_DEFAULT, 16,
-# );
+#);
 variable NFS_THREADS ?= undef;
 
 # This variable, if true, prevents definition of EDG_WL_SCRATCH environment
@@ -999,7 +999,7 @@ variable NFS_DEFAULT_MOUNT_OPTIONS ?= "rw,noatime";
 # If on your WNs you have predefined shared areas where VO managers can
 # pre-install software, then these variables should point to these areas.
 # If you do not have shared areas and each job must install the software,
-# then these variables should contain a dot ( . )
+# then these variables should contain a dot (.)
 #
 # This is an dict where the keys are the VO names (as in the VOS variable)
 # and the value is the absolute path to the area.
@@ -1013,7 +1013,7 @@ variable NFS_DEFAULT_MOUNT_OPTIONS ?= "rw,noatime";
 # variable VO_SW_AREAS ?= dict(
 #                                  "alice", "/home/alicesgm",
 #                                  "atlas", "/home/atlassgm",
-#                                 );
+#);
 #
 # For backward compatibility, defaults to WN_AREA if defined.
 # WN_AREA use is deprecated.
@@ -1039,7 +1039,7 @@ variable VO_SW_AREAS ?= WN_AREA;
 # variable VO_HOMES ?= dict("DEFAULT", "/home/@VONAME@",
 #                            "alice", "/home2/@VONAME@",
 #                            "atlas", "/home3",
-#                           );
+#);
 #
 
 variable VO_HOMES ?= undef;
@@ -1095,11 +1095,11 @@ variable MATLAB_INSTALL_DIR ?= undef;
 # don't know what version it is.
 variable CE_RUNTIMEENV = {
     ce_runtimeenv = SELF;
-    if ( is_dict(MATLAB_INSTALL_DIR) ) {
+    if (is_dict(MATLAB_INSTALL_DIR)) {
         foreach (version_e;path;MATLAB_INSTALL_DIR) {
-            if ( version_e != 'DEFAULT' ) {
+            if (version_e != 'DEFAULT') {
                 tag = 'MATLAB_' + to_uppercase(unescape(version_e));
-                if ( index(tag,SELF) < 0 ) {
+                if (index(tag, SELF) < 0) {
                     ce_runtimeenv = append(tag);
                 };
             };
@@ -1138,7 +1138,7 @@ variable FTS_SERVER_TRANSFER_SERVICE_PATH ?= '/glite-data-transfer-fts';
 
 variable WORKER_NODES ?= undef;
 variable WORKER_NODES_DICT = {
-    if ( exists(WORKER_NODES) && is_defined(WORKER_NODES) && (length(WORKER_NODES) > 0 ) ) {
+    if (exists(WORKER_NODES) && is_defined(WORKER_NODES) && (length(WORKER_NODES) > 0)) {
         foreach (i;wn;WORKER_NODES) {
             SELF[wn] = '';
         };
@@ -1177,12 +1177,12 @@ variable WN_CPUS_DEF ?= 1;     # Assume any CPU as at least one core...
 # If an explicit number of cores have been defined in WN_CPUS, use it
 # instead of the number configured in HW description.
 variable WN_CPU_CONFIG = {
-    if ( (index(FULL_HOSTNAME,CE_HOSTS) < 0) && (FULL_HOSTNAME != LRMS_SERVER_HOST) ) {
+    if ((index(FULL_HOSTNAME, CE_HOSTS) < 0) && (FULL_HOSTNAME != LRMS_SERVER_HOST)) {
         return(undef);
     };
 
     foreach (i;wn;WORKER_NODES) {
-        if ( exists(DB_MACHINE[escape(wn)]) ) {
+        if (exists(DB_MACHINE[escape(wn)])) {
             wn_hw = create(DB_MACHINE[escape(wn)]);
         } else {
             error(wn + ": hardware not found in machine database");
@@ -1190,19 +1190,19 @@ variable WN_CPU_CONFIG = {
         cpu_num = length(wn_hw['cpu']);
         core_num = 0;
         slot_num = 0;
-        if ( cpu_num > 0 ) {
-            if ( is_defined(WN_CPUS[wn]) ) {
+        if (cpu_num > 0) {
+            if (is_defined(WN_CPUS[wn])) {
                 core_num = WN_CPUS[wn];
                 slot_num = core_num;
-            } else if ( is_defined(wn_hw['cpu'][0]['cores']) ) {
+            } else if (is_defined(wn_hw['cpu'][0]['cores'])) {
                 core_num = cpu_num * wn_hw['cpu'][0]['cores'];
                 slot_num = core_num;
 
                 # Take SMT into account when calculating slots
-                if ( is_defined(wn_hw['cpu'][0]['max_threads']) && wn_hw['cpu'][0]['max_threads']  ) {
+                if (is_defined(wn_hw['cpu'][0]['max_threads']) && wn_hw['cpu'][0]['max_threads']) {
                     # TODO: Only apply this if SMT is enabled system-wide
                     slot_num = cpu_num * wn_hw['cpu'][0]['max_threads'];
-                } else if ( is_defined(wn_hw['cpu'][0]['hyperthreading']) && wn_hw['cpu'][0]['hyperthreading']  ) {
+                } else if (is_defined(wn_hw['cpu'][0]['hyperthreading']) && wn_hw['cpu'][0]['hyperthreading']) {
                     slot_num = slot_num * 2;
                 };
             } else {
@@ -1214,7 +1214,7 @@ variable WN_CPU_CONFIG = {
             'cpus', cpu_num,
             'cores', core_num,
             'slots', slot_num,
-        );
+);
     };
 
     debug('WN_CPU_CONFIG='+to_string(SELF));
