@@ -427,7 +427,7 @@ variable CE_USE_SSH ?= undef;
 #   - torque2 : Torque v2 with MAUI
 #   - condor : HTCondor
 # Default is torque1 if CE_BATCH_SYS is defined to pbs (backward compatibility)
-variable CE_BATCH_NAME ?= if (exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(CE_BATCH_SYS, "^(lcg)?pbs$"))) {
+variable CE_BATCH_NAME ?= if (exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(CE_BATCH_SYS, "^(lcg)?pbs$")) {
     'torque1';
 } else {
     if (is_defined(CE_BATCH_SYS) && (CE_BATCH_SYS == "condor")) {
