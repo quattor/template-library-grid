@@ -4,7 +4,7 @@ structure template vo/params/gaussian;
 'account_prefix' ?= 'gauvk';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.cyf-kr.edu.pl',
+    dict('name', 'voms.cyf-kr.edu.pl',
           'host', 'voms.cyf-kr.edu.pl',
           'port', 15001,
           'adminport', 8443,

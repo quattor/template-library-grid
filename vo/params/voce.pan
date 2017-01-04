@@ -4,16 +4,16 @@ structure template vo/params/voce;
 'account_prefix' ?= 'vocsv';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms1.grid.cesnet.cz',
+    dict('name', 'voms1.grid.cesnet.cz',
           'host', 'voms1.grid.cesnet.cz',
           'port', 7001,
           'adminport', 8443,
+          'type', list('voms-only'),
          ),
-    nlist('name', 'voms2.grid.cesnet.cz',
+    dict('name', 'voms2.grid.cesnet.cz',
           'host', 'voms2.grid.cesnet.cz',
           'port', 7001,
           'adminport', 8443,
-          'type', list('voms-only'),
          ),
 );
 

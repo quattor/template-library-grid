@@ -9,18 +9,18 @@ values = any string
 default = emi
 required = no
 }
-variable REPOSITORY_GRID_VARIANT ?= 'emi';
+variable REPOSITORY_GRID_VARIANT ?= 'umd';
 @{
 desc = defines the variant of the grid repository to use for third party RPMs (typically emi or umd).\
  This is controlled by a variable distinct from other grid repositories: default should be appropriate.\
  The full repository template name will be built appending the version, os, arch. 
 values = any string
-default = emi
+default = umd
 required = no
 }
 variable REPOSITORY_GRID_THIRD_PARTY_VARIANT ?= 'emi';
-variable REPOSITORY_GRID_PREFIX ?= REPOSITORY_GRID_VARIANT + '_3_0_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
-variable REPOSITORY_GRID_THIRD_PARTY_PREFIX ?= REPOSITORY_GRID_THIRD_PARTY_VARIANT + '_3_0_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
+variable REPOSITORY_GRID_PREFIX ?= REPOSITORY_GRID_VARIANT + '_4_0_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
+variable REPOSITORY_GRID_THIRD_PARTY_PREFIX ?= REPOSITORY_GRID_THIRD_PARTY_VARIANT + '_4_0_' + OS_VERSION_PARAMS['major'] + '_' + PKG_ARCH_DEFAULT;
 
 @{
 desc = defines the repository to use for WLCG RPMs.

@@ -2,7 +2,7 @@
 unique template features/mysql/server;
 
 # Include RPMs for MySQL server
-'/software/packages/{mysql-server}' = nlist();
+'/software/packages/{mariadb-server}' = nlist();
 
 # ---------------------------------------------------------------------------- 
 # chkconfig
@@ -13,14 +13,8 @@ include { 'components/chkconfig/config' };
 # ---------------------------------------------------------------------------- 
 # Enable and start MySQL service
 # ---------------------------------------------------------------------------- 
-"/software/components/chkconfig/service/mysqld/on" = ""; 
-"/software/components/chkconfig/service/mysqld/startstop" = true; 
-
-
-# ---------------------------------------------------------------------------- 
-# accounts
-# ---------------------------------------------------------------------------- 
-include { 'users/mysql' };
+"/software/components/chkconfig/service/mariadbd/on" = ""; 
+"/software/components/chkconfig/service/mariadbd/startstop" = true; 
 
 
 # ---------------------------------------------------------------------------- 
@@ -40,9 +34,9 @@ include { 'users/mysql' };
 include { 'components/etcservices/config' };
 
 "/software/components/etcservices/entries" = 
-  push("mysql 3306/tcp");
+  push("mariadb 3306/tcp");
 "/software/components/etcservices/entries" = 
-  push("mysql 3306/udp");
+  push("mariadb 3306/udp");
 
 
 # ---------------------------------------------------------------------------- 

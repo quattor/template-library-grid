@@ -4,7 +4,7 @@ structure template vo/params/vo.ingv.it;
 'account_prefix' ?= 'ingfup';
 
 'voms_servers' ?= list(
-    nlist('name', 'vomsmania.cnaf.infn.it',
+    dict('name', 'vomsmania.cnaf.infn.it',
           'host', 'vomsmania.cnaf.infn.it',
           'port', 15002,
           'adminport', 8443,

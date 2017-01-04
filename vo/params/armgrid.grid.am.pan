@@ -4,7 +4,7 @@ structure template vo/params/armgrid.grid.am;
 'account_prefix' ?= 'armstk';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.am',
+    dict('name', 'voms.grid.am',
           'host', 'voms.grid.am',
           'port', 15000,
           'adminport', 8443,
@@ -12,7 +12,7 @@ structure template vo/params/armgrid.grid.am;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/armgrid.grid.am/Role=VO-Admin',
           'suffix', 's',
           'suffix2', 's',

@@ -4,7 +4,7 @@ structure template vo/params/atlas.ac.il;
 'account_prefix' ?= 'atlsdq';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.hep.tau.ac.il',
+    dict('name', 'voms.hep.tau.ac.il',
           'host', 'voms.hep.tau.ac.il',
           'port', 15000,
           'adminport', 8443,

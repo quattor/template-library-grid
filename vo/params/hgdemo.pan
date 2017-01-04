@@ -4,7 +4,7 @@ structure template vo/params/hgdemo;
 'account_prefix' ?= 'hgdsai';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.auth.gr',
+    dict('name', 'voms.grid.auth.gr',
           'host', 'voms.grid.auth.gr',
           'port', 15030,
           'adminport', 8443,
@@ -12,7 +12,7 @@ structure template vo/params/hgdemo;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/hgdemo/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',

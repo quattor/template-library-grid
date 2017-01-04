@@ -4,9 +4,9 @@ structure template vo/params/ipv6.hepix.org;
 'account_prefix' ?= 'ipvfum';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms2.cnaf.infn.it',
+    dict('name', 'voms2.cnaf.infn.it',
           'host', 'voms2.cnaf.infn.it',
-          'port', 15002,
+          'port', 15013,
           'adminport', 8443,
          ),
 );

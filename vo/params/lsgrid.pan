@@ -4,7 +4,7 @@ structure template vo/params/lsgrid;
 'account_prefix' ?= 'lsgsrc';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.sara.nl',
+    dict('name', 'voms.grid.sara.nl',
           'host', 'voms.grid.sara.nl',
           'port', 30018,
           'adminport', 8443,

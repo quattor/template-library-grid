@@ -4,7 +4,7 @@ structure template vo/params/trgridd;
 'account_prefix' ?= 'trgti';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ulakbim.gov.tr',
+    dict('name', 'voms.ulakbim.gov.tr',
           'host', 'voms.ulakbim.gov.tr',
           'port', 15054,
           'adminport', 8443,

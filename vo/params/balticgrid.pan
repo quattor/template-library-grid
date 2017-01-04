@@ -4,7 +4,7 @@ structure template vo/params/balticgrid;
 'account_prefix' ?= 'balvq';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.balticgrid.org',
+    dict('name', 'voms.balticgrid.org',
           'host', 'voms.balticgrid.org',
           'port', 15000,
           'adminport', 8443,

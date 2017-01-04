@@ -163,15 +163,15 @@ variable ARGUS_STARTUP_CONTENTS = {
   contents;
 };
 
-'/software/components/filecopy/services' =
-  npush(escape(ARGUS_STARTUP_FILE),
-        nlist('config', ARGUS_STARTUP_CONTENTS,
-              'owner', 'root',
-              'perms', '0755',
-       )
-  );
-
-
-'/software/components/chkconfig/service/argus/on' = '';
-'/software/components/chkconfig/service/argus/startstop' = true;
+#'/software/components/filecopy/services' =
+#  npush(escape(ARGUS_STARTUP_FILE),
+#        nlist('config', ARGUS_STARTUP_CONTENTS,
+#              'owner', 'root',
+#              'perms', '0755',
+#       )
+#  );
+#
+#
+#'/software/components/chkconfig/service/argus/on' = '';
+#'/software/components/chkconfig/service/argus/startstop' = true;
 

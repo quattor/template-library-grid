@@ -13,7 +13,6 @@ function hhmmss_to_secs = {
 };
 
 # convert torque size to bytes
-include 'pan/units';
 function torque_size_to_bytes = {
     if (ARGC != 1) {
         error('only one argument expected');
@@ -23,19 +22,19 @@ function torque_size_to_bytes = {
     };
     if (match(ARGV[0], 'tb')) {
         size = split('tb', ARGV[0]);
-        return(to_long(size[0]) * TiB);
+        return(to_long(size[0]) * 1099511627776);
     };
     if (match(ARGV[0], 'gb')) {
         size = split('gb', ARGV[0]);
-        return(to_long(size[0]) * GiB);
+        return(to_long(size[0]) * 1073741824);
     };
     if (match(ARGV[0], 'mb')) {
         size = split('mb', ARGV[0]);
-        return(to_long(size[0]) * MiB);
+        return(to_long(size[0]) * 1048576);
     };
     if (match(ARGV[0], 'kb')) {
         size = split('kb', ARGV[0]);
-        return(to_long(size[0]) * KiB);
+        return(to_long(size[0]) * 1024);
     };
     if (match(ARGV[0], 'b')) {
         size = split('b', ARGV[0]);

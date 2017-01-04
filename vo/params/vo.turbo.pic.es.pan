@@ -4,9 +4,9 @@ structure template vo/params/vo.turbo.pic.es;
 'account_prefix' ?= 'tursws';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms01.pic.es',
+    dict('name', 'voms01.pic.es',
           'host', 'voms01.pic.es',
-          'port', 15004,
+          'port', 15005,
           'adminport', 8443,
          ),
 );

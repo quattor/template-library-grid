@@ -82,6 +82,14 @@ variable DPMMGR_UID?=970;
 		self[escape('dpm::params::enable_space_reporting')] = true;
 	};
 
+	if(is_defined(DOME_ENABLED) && DOME_ENABLED){
+		self[escape('dpm::params::enable_dome')] = true;
+	};
+
+	if(is_defined(DOME_FLAVOUR) && DOME_FLAVOUR){
+		self[escape('dpm::params::enable_domeadapter')] = true;
+	};
+
 	self;
 };
 

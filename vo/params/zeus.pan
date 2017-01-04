@@ -4,7 +4,7 @@ structure template vo/params/zeus;
 'account_prefix' ?= 'zeud';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid-voms.desy.de',
+    dict('name', 'grid-voms.desy.de',
           'host', 'grid-voms.desy.de',
           'port', 15112,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/zeus;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/zeus/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',
          ),
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/zeus/Role=production',
           'suffix', 'p',
           'suffix2', 'p',

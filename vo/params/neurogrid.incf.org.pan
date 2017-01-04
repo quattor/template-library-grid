@@ -4,7 +4,7 @@ structure template vo/params/neurogrid.incf.org;
 'account_prefix' ?= 'neufvr';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.gridpp.ac.uk',
+    dict('name', 'voms.gridpp.ac.uk',
           'host', 'voms.gridpp.ac.uk',
           'port', 15025,
           'adminport', 8443,

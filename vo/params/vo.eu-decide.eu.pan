@@ -4,7 +4,7 @@ structure template vo/params/vo.eu-decide.eu;
 'account_prefix' ?= 'eudtao';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ct.infn.it',
+    dict('name', 'voms.ct.infn.it',
           'host', 'voms.ct.infn.it',
           'port', 15002,
           'adminport', 8443,

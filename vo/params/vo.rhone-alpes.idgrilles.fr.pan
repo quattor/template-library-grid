@@ -4,7 +4,7 @@ structure template vo/params/vo.rhone-alpes.idgrilles.fr;
 'account_prefix' ?= 'rhorua';
 
 'voms_servers' ?= list(
-    nlist('name', 'cclcgvomsli01.in2p3.fr',
+    dict('name', 'cclcgvomsli01.in2p3.fr',
           'host', 'cclcgvomsli01.in2p3.fr',
           'port', 15011,
           'adminport', 8443,
@@ -12,7 +12,7 @@ structure template vo/params/vo.rhone-alpes.idgrilles.fr;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/vo.rhone-alpes.idgrilles.fr/Role=VO-Software-Manager',
           'suffix', 's',
           'suffix2', 's',

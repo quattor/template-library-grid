@@ -4,7 +4,7 @@ structure template vo/params/bg-edu.grid.acad.bg;
 'account_prefix' ?= 'bgesdk';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ipp.acad.bg',
+    dict('name', 'voms.ipp.acad.bg',
           'host', 'voms.ipp.acad.bg',
           'port', 15002,
           'adminport', 8443,

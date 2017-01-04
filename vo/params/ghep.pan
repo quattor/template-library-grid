@@ -4,7 +4,7 @@ structure template vo/params/ghep;
 'account_prefix' ?= 'ghetx';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid-voms.desy.de',
+    dict('name', 'grid-voms.desy.de',
           'host', 'grid-voms.desy.de',
           'port', 15105,
           'adminport', 8443,

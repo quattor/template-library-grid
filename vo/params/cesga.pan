@@ -4,7 +4,7 @@ structure template vo/params/cesga;
 'account_prefix' ?= 'ceste';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.egi.cesga.es',
+    dict('name', 'voms.egi.cesga.es',
           'host', 'voms.egi.cesga.es',
           'port', 15110,
           'adminport', 8443,

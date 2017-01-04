@@ -4,7 +4,7 @@ structure template vo/params/ops.ndgf.org;
 'account_prefix' ?= 'opstbi';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ndgf.org',
+    dict('name', 'voms.ndgf.org',
           'host', 'voms.ndgf.org',
           'port', 15010,
           'adminport', 8443,

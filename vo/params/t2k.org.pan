@@ -4,30 +4,32 @@ structure template vo/params/t2k.org;
 'account_prefix' ?= 't2kswm';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.gridpp.ac.uk',
+    dict('name', 'voms.gridpp.ac.uk',
           'host', 'voms.gridpp.ac.uk',
           'port', 15003,
           'adminport', 8443,
          ),
-    nlist('name', 'voms02.gridpp.ac.uk',
+    dict('name', 'voms02.gridpp.ac.uk',
           'host', 'voms02.gridpp.ac.uk',
           'port', 15003,
           'adminport', 8443,
+          'type', list('voms-only'),
          ),
-    nlist('name', 'voms03.gridpp.ac.uk',
+    dict('name', 'voms03.gridpp.ac.uk',
           'host', 'voms03.gridpp.ac.uk',
           'port', 15003,
           'adminport', 8443,
+          'type', list('voms-only'),
          ),
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/t2k.org/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',
          ),
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/t2k.org/Role=production',
           'suffix', 'p',
           'suffix2', 'p',

@@ -4,7 +4,7 @@ structure template vo/params/vo.formation.idgrilles.fr;
 'account_prefix' ?= 'forrzk';
 
 'voms_servers' ?= list(
-    nlist('name', 'cclcgvomsli01.in2p3.fr',
+    dict('name', 'cclcgvomsli01.in2p3.fr',
           'host', 'cclcgvomsli01.in2p3.fr',
           'port', 15012,
           'adminport', 8443,

@@ -4,7 +4,7 @@ structure template vo/params/hungrid;
 'account_prefix' ?= 'hunsc';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid11.kfki.hu',
+    dict('name', 'grid11.kfki.hu',
           'host', 'grid11.kfki.hu',
           'port', 15000,
           'adminport', 8443,

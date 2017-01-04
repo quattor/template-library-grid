@@ -4,7 +4,7 @@ structure template vo/params/desy;
 'account_prefix' ?= 'desra';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid-voms.desy.de',
+    dict('name', 'grid-voms.desy.de',
           'host', 'grid-voms.desy.de',
           'port', 15104,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/desy;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', '',
+    dict('description', '',
           'fqan', '/desy/Role=lcgadim',
           'suffix', 'ira',
           'suffix2', 'rhyqmcf',
          ),
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/desy/Role=production',
           'suffix', 'p',
           'suffix2', 'p',

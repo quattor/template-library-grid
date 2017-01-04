@@ -180,16 +180,6 @@ include 'components/filecopy/config';
                                                      );
   };
 
-  # The Modified startup script functions
-  # Note: this is to allow a nagios probe for the services. Should be rather fixed in the release
-  if( is_defined(XROOTD_MODIFIED_STARTUP_FUNCTIONS) && XROOTD_MODIFIED_STARTUP_FUNCTIONS ) {
-    SELF[escape('/etc/rc.d/init.d/xrootd-functions')] = nlist(
-                'config',file_contents('personality/se_dpm/templ/xrootd-functions.templ'),
-                'owner', 'root:root',
-                'perms', '0755',);
-  };
-
-
   SELF;
 };
 

@@ -4,7 +4,7 @@ structure template vo/params/vo.grid.auth.gr;
 'account_prefix' ?= 'grirby';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.auth.gr',
+    dict('name', 'voms.grid.auth.gr',
           'host', 'voms.grid.auth.gr',
           'port', 15140,
           'adminport', 8443,
@@ -12,7 +12,7 @@ structure template vo/params/vo.grid.auth.gr;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/vo.grid.auth.gr/Role=SW-Admin',
           'suffix', 's',
           'suffix2', 's',

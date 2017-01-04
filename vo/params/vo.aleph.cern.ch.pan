@@ -4,8 +4,8 @@ structure template vo/params/vo.aleph.cern.ch;
 'account_prefix' ?= 'aletig';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms-admin.cern.ch',
-          'host', 'voms-admin.cern.ch',
+    dict('name', 'voms.cern.ch',
+          'host', 'voms.cern.ch',
           'port', 15013,
           'adminport', 8443,
          ),

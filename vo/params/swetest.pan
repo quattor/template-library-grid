@@ -4,7 +4,7 @@ structure template vo/params/swetest;
 'account_prefix' ?= 'swese';
 
 'voms_servers' ?= list(
-    nlist('name', 'swevo.ific.uv.es',
+    dict('name', 'swevo.ific.uv.es',
           'host', 'swevo.ific.uv.es',
           'port', 14000,
           'adminport', 8443,

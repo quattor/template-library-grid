@@ -4,13 +4,13 @@ structure template vo/params/earth.vo.ibergrid.eu;
 'account_prefix' ?= 'eartvg';
 
 'voms_servers' ?= list(
-    nlist('name', 'ibergrid-voms.ifca.es',
+    dict('name', 'ibergrid-voms.ifca.es',
           'host', 'ibergrid-voms.ifca.es',
           'port', 40011,
           'adminport', 8443,
           'type', list('voms-only'),
          ),
-    nlist('name', 'voms01.ncg.ingrid.pt',
+    dict('name', 'voms01.ncg.ingrid.pt',
           'host', 'voms01.ncg.ingrid.pt',
           'port', 40011,
           'adminport', 8443,
@@ -18,17 +18,17 @@ structure template vo/params/earth.vo.ibergrid.eu;
 );
 
 'voms_mappings' ?= list(
-#    nlist('description', '',
+#    dict('description', '',
 #          'fqan', '/earth.vo.ibergrid.eu/Portugal',
 #          'suffix', 'rutvg',
 #          'suffix2', 'vgiumov',
 #         ),
-#    nlist('description', '',
+#    dict('description', '',
 #          'fqan', '/earth.vo.ibergrid.eu/Spain',
 #          'suffix', 'rrtvg',
 #          'suffix2', 'ufpjjma',
 #         ),
-#    nlist('description', '',
+#    dict('description', '',
 #          'fqan', '/earth.vo.ibergrid.eu/Spain/meteo',
 #          'suffix', 'rxtvg',
 #          'suffix2', 'vkzmjlt',
