@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e # halt script on error
+
+# Retrieve last version of create-vanilla-SCDB from GitHub
+echo "Downloading create-vanilla-SCDB from GitHub..."
+rm -f /tmp/create-vanilla-SCDB.sh
+wget -q https://raw.githubusercontent.com/quattor/scdb/master/utils/scdb/create-vanilla-SCDB.sh -O /tmp/create-vanilla-SCDB.sh
+chmod u+x /tmp/create-vanilla-SCDB.sh
+
+/tmp/create-vanilla-SCDB.sh -F --continuous-integration HEAD
