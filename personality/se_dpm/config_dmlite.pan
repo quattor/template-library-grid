@@ -60,7 +60,7 @@ include 'components/dirperm/config';
 #       order of the configuration file must be used to ensure the appropriate load order.
 #       This configuration file is normally loaded first.
 #
-variable contents = {
+variable DMLITE_ADAPTER_CONFIG_CONTENTS ?= {
     this = '';
     # Ignore versions before 1.8.7 as dmlite was not available
     if ( DPM_VERSION == '1.8.7' ) {
@@ -85,7 +85,7 @@ variable contents = {
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
     SELF[escape('/etc/dmlite.conf.d/adapter.conf')] = nlist(
-        'config', contents,
+        'config', DMLITE_ADAPTER_CONFIG_CONTENTS,
         'owner', DPM_USER,
         'group', DPM_GROUP,
         'perms', '0640',
@@ -105,6 +105,4 @@ include 'components/filecopy/config';
 # dmlite configuration specific to head node if needed
 # Be sure to use the same condition as the one used to select which plugin to load in adapter.conf
 include if ( SEDPM_IS_HEAD_NODE && (SEDPM_DB_TYPE == 'mysql') ) 'personality/se_dpm/server/config_dmlite';
-
-
 
