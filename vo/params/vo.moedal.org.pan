@@ -4,7 +4,7 @@ structure template vo/params/vo.moedal.org;
 'account_prefix' ?= 'moefwk';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms2.cern.ch',
+    dict('name', 'voms2.cern.ch',
           'host', 'voms2.cern.ch',
           'port', 15017,
           'adminport', 8443,

@@ -4,7 +4,7 @@ structure template vo/params/eubrazilcc.eu;
 'account_prefix' ?= 'eubfwd';
 
 'voms_servers' ?= list(
-    nlist('name', 'eubrazilcc-voms.i3m.upv.es',
+    dict('name', 'eubrazilcc-voms.i3m.upv.es',
           'host', 'eubrazilcc-voms.i3m.upv.es',
           'port', 15000,
           'adminport', 8443,

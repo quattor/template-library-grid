@@ -1,7 +1,7 @@
 
 unique template vo/site/vos_account_prefix;
 
-variable VOS_ACCOUNT_PREFIX = nlist("vo.agata.org", "aga",
+variable VOS_ACCOUNT_PREFIX = dict("vo.agata.org", "aga",
                                     "alice", "ali",
                                     "atlas", "atl",
                                     "astro.vo.eu-egee.org", "astro",

@@ -4,7 +4,7 @@ structure template vo/params/xenon.biggrid.nl;
 'account_prefix' ?= 'xenfuy';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.sara.nl',
+    dict('name', 'voms.grid.sara.nl',
           'host', 'voms.grid.sara.nl',
           'port', 30008,
           'adminport', 8443,
@@ -12,7 +12,7 @@ structure template vo/params/xenon.biggrid.nl;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/xenon.biggrid.nl/Role=sgm',
           'suffix', 's',
           'suffix2', 's',

@@ -4,7 +4,7 @@ structure template vo/params/ukqcd;
 'account_prefix' ?= 'ukqh';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid-voms.desy.de',
+    dict('name', 'grid-voms.desy.de',
           'host', 'grid-voms.desy.de',
           'port', 15002,
           'adminport', 8443,

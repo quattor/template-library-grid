@@ -28,10 +28,10 @@ include { if_exists(VOS_BASE_GID_TEMPLATE) };
 # Normally already done in config.tpl when this template is called from it.
 include { if_exists(VOS_ALIASES_TEMPLATE) };
 
-variable VOS_ACCOUNT_PREFIX ?= nlist();
-variable VOS_BASE_UID ?= nlist();
-variable VOS_BASE_GID ?= nlist();
-variable VOS_ALIASES ?= nlist();
+variable VOS_ACCOUNT_PREFIX ?= dict();
+variable VOS_BASE_UID ?= dict();
+variable VOS_BASE_GID ?= dict();
+variable VOS_ALIASES ?= dict();
 
 include { 'vo/functions' };
 

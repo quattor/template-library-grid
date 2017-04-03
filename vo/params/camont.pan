@@ -4,7 +4,7 @@ structure template vo/params/camont;
 'account_prefix' ?= 'camelg';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.gridpp.ac.uk',
+    dict('name', 'voms.gridpp.ac.uk',
           'host', 'voms.gridpp.ac.uk',
           'port', 15025,
           'adminport', 8443,
@@ -12,7 +12,7 @@ structure template vo/params/camont;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/camont/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',

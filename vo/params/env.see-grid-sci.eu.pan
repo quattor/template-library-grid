@@ -4,7 +4,7 @@ structure template vo/params/env.see-grid-sci.eu;
 'account_prefix' ?= 'envsgs';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ipp.acad.bg',
+    dict('name', 'voms.ipp.acad.bg',
           'host', 'voms.ipp.acad.bg',
           'port', 15001,
           'adminport', 8443,

@@ -4,7 +4,7 @@ structure template vo/params/moldyngrid;
 'account_prefix' ?= 'molsee';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.org.ua',
+    dict('name', 'voms.grid.org.ua',
           'host', 'voms.grid.org.ua',
           'port', 15110,
           'adminport', 443,
@@ -12,12 +12,12 @@ structure template vo/params/moldyngrid;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/moldyngrid/Role=VO-Admin',
           'suffix', 's',
           'suffix2', 's',
          ),
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/moldyngrid/Role=production',
           'suffix', 'p',
           'suffix2', 'p',

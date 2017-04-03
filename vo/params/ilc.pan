@@ -4,7 +4,7 @@ structure template vo/params/ilc;
 'account_prefix' ?= 'ilcre';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid-voms.desy.de',
+    dict('name', 'grid-voms.desy.de',
           'host', 'grid-voms.desy.de',
           'port', 15110,
           'adminport', 8443,
@@ -12,17 +12,17 @@ structure template vo/params/ilc;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'pilot',
+    dict('description', 'pilot',
           'fqan', '/ilc/Role=pilot',
           'suffix', 'pilot',
           'suffix2', 'pilot',
          ),
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/ilc/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',
          ),
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/ilc/Role=production',
           'suffix', 'p',
           'suffix2', 'p',

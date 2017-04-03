@@ -4,12 +4,12 @@ structure template vo/params/see;
 'account_prefix' ?= 'seesw';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.hellasgrid.gr',
+    dict('name', 'voms.hellasgrid.gr',
           'host', 'voms.hellasgrid.gr',
           'port', 15010,
           'adminport', 8443,
          ),
-    nlist('name', 'voms2.hellasgrid.gr',
+    dict('name', 'voms2.hellasgrid.gr',
           'host', 'voms2.hellasgrid.gr',
           'port', 15010,
           'adminport', 8443,

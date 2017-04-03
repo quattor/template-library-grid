@@ -4,7 +4,7 @@ structure template vo/params/vo.africa-grid.org;
 'account_prefix' ?= 'afrfyh';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ct.infn.it',
+    dict('name', 'voms.ct.infn.it',
           'host', 'voms.ct.infn.it',
           'port', 15004,
           'adminport', 8443,

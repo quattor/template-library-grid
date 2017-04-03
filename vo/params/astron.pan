@@ -4,7 +4,7 @@ structure template vo/params/astron;
 'account_prefix' ?= 'astrf';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.sara.nl',
+    dict('name', 'voms.grid.sara.nl',
           'host', 'voms.grid.sara.nl',
           'port', 30013,
           'adminport', 8443,

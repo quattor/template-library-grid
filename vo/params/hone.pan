@@ -4,7 +4,7 @@ structure template vo/params/hone;
 'account_prefix' ?= 'honrb';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid-voms.desy.de',
+    dict('name', 'grid-voms.desy.de',
           'host', 'grid-voms.desy.de',
           'port', 15106,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/hone;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/hone/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',
          ),
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/hone/Role=production',
           'suffix', 'p',
           'suffix2', 'p',

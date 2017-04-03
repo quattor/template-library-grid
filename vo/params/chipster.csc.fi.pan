@@ -4,7 +4,7 @@ structure template vo/params/chipster.csc.fi;
 'account_prefix' ?= 'chifwe';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.fgi.csc.fi',
+    dict('name', 'voms.fgi.csc.fi',
           'host', 'voms.fgi.csc.fi',
           'port', 15010,
           'adminport', 8443,

@@ -4,7 +4,7 @@ structure template vo/params/lagoproject.org;
 'account_prefix' ?= 'lagfww';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ciemat.es',
+    dict('name', 'voms.ciemat.es',
           'host', 'voms.ciemat.es',
           'port', 15001,
           'adminport', 8443,

@@ -4,13 +4,13 @@ structure template vo/params/eo-grid.ikd.kiev.ua;
 'account_prefix' ?= 'eogscw';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid.org.ua',
+    dict('name', 'grid.org.ua',
           'host', 'grid.org.ua',
           'port', 15002,
           'adminport', 8443,
           'type', list('voms-only'),
          ),
-    nlist('name', 'voms.grid.ikd.kiev.ua',
+    dict('name', 'voms.grid.ikd.kiev.ua',
           'host', 'voms.grid.ikd.kiev.ua',
           'port', 15001,
           'adminport', 8443,

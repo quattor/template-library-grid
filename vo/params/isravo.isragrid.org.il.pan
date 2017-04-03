@@ -4,7 +4,7 @@ structure template vo/params/isravo.isragrid.org.il;
 'account_prefix' ?= 'isrfvy';
 
 'voms_servers' ?= list(
-    nlist('name', 'ngi-il-voms3.isragrid.org.il',
+    dict('name', 'ngi-il-voms3.isragrid.org.il',
           'host', 'ngi-il-voms3.isragrid.org.il',
           'port', 15001,
           'adminport', 8443,

@@ -4,12 +4,12 @@ structure template vo/params/virgo;
 'account_prefix' ?= 'virb';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms-01.pd.infn.it',
+    dict('name', 'voms-01.pd.infn.it',
           'host', 'voms-01.pd.infn.it',
           'port', 15009,
           'adminport', 8443,
          ),
-    nlist('name', 'voms.cnaf.infn.it',
+    dict('name', 'voms.cnaf.infn.it',
           'host', 'voms.cnaf.infn.it',
           'port', 15009,
           'adminport', 8443,

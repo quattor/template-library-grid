@@ -4,7 +4,7 @@ structure template vo/params/vo.aginfra.eu;
 'account_prefix' ?= 'agifud';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ipb.ac.rs',
+    dict('name', 'voms.ipb.ac.rs',
           'host', 'voms.ipb.ac.rs',
           'port', 15005,
           'adminport', 8443,

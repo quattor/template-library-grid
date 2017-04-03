@@ -4,7 +4,7 @@ structure template vo/params/esr;
 'account_prefix' ?= 'esrv';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.sara.nl',
+    dict('name', 'voms.grid.sara.nl',
           'host', 'voms.grid.sara.nl',
           'port', 30001,
           'adminport', 8443,
@@ -12,22 +12,22 @@ structure template vo/params/esr;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/esr/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',
          ),
-    nlist('description', 'protecting files originating from ESA',
+    dict('description', 'protecting files originating from ESA',
           'fqan', '/esr/eobs',
           'suffix', 'zv',
           'suffix2', 'tnlqka',
          ),
-    nlist('description', 'protecting ecmwf data',
+    dict('description', 'protecting ecmwf data',
           'fqan', '/esr/eobs/ecmwf',
           'suffix', 'fv',
           'suffix2', 'crjmmrx',
          ),
-    nlist('description', 'protect source code for SpecFEM3D software',
+    dict('description', 'protect source code for SpecFEM3D software',
           'fqan', '/esr/specfem',
           'suffix', 'cv',
           'suffix2', 'yaynzcg',

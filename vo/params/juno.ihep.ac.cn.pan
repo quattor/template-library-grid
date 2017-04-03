@@ -4,7 +4,7 @@ structure template vo/params/juno.ihep.ac.cn;
 'account_prefix' ?= 'junfwi';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ihep.ac.cn',
+    dict('name', 'voms.ihep.ac.cn',
           'host', 'voms.ihep.ac.cn',
           'port', 15008,
           'adminport', 8443,

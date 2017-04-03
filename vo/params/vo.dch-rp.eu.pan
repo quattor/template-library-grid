@@ -4,7 +4,7 @@ structure template vo/params/vo.dch-rp.eu;
 'account_prefix' ?= 'dchfvx';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ct.infn.it',
+    dict('name', 'voms.ct.infn.it',
           'host', 'voms.ct.infn.it',
           'port', 15009,
           'adminport', 8443,

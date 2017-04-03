@@ -4,7 +4,7 @@ structure template vo/params/verce.eu;
 'account_prefix' ?= 'verfvs';
 
 'voms_servers' ?= list(
-    nlist('name', 'verce-voms.scai.fraunhofer.de',
+    dict('name', 'verce-voms.scai.fraunhofer.de',
           'host', 'verce-voms.scai.fraunhofer.de',
           'port', 15000,
           'adminport', 8443,
@@ -12,7 +12,7 @@ structure template vo/params/verce.eu;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/verce.eu/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',

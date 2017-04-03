@@ -117,7 +117,7 @@ variable VOS_SITE_PARAMS = {
       debug('Ensuring VO '+vo+' pool accounts will be unlocked for gsissh access');
       if ( !exists(SELF[vo]['unlock_accounts']) ) {
         if ( !exists(SELF[vo]) ) {
-        SELF[vo] = nlist();
+        SELF[vo] = dict();
         };
         SELF[vo]["unlock_accounts"] = FULL_HOSTNAME;
       };
@@ -126,7 +126,7 @@ variable VOS_SITE_PARAMS = {
   if ( is_defined(SELF) ) {
     SELF;
   } else {
-    nlist();
+    dict();
   };
 };
 

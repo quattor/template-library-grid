@@ -4,7 +4,7 @@ structure template vo/params/vo.pic.es;
 'account_prefix' ?= 'picrry';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms01.pic.es',
+    dict('name', 'voms01.pic.es',
           'host', 'voms01.pic.es',
           'port', 15001,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/vo.pic.es;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'test group 1',
+    dict('description', 'test group 1',
           'fqan', '/vo.pic.es/vo.pic.es/group01',
           'suffix', 'rsrry',
           'suffix2', 'zpgbddb',
          ),
-    nlist('description', 'test group 2',
+    dict('description', 'test group 2',
           'fqan', '/vo.pic.es/vo.pic.es/group02',
           'suffix', 'uorry',
           'suffix2', 'zpgbddc',

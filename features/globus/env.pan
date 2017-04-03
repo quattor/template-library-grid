@@ -57,6 +57,5 @@ include { 'components/profile/config' };
                                                         GLOBUS_LOCATION+'/bin',
                                                        );
 "/software/components/profile/path/LD_LIBRARY_PATH/prepend" = push(GLOBUS_LOCATION+'/lib');
-"/software/components/profile/path/SASL_PATH/prepend" = push(GLOBUS_LOCATION+'/lib/sasl');
 "/software/components/profile/path/MANPATH/prepend" = push(GLOBUS_LOCATION+'/man');
 

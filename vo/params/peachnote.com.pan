@@ -4,12 +4,12 @@ structure template vo/params/peachnote.com;
 'account_prefix' ?= 'peafvf';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms1.egee.cesnet.cz',
+    dict('name', 'voms1.egee.cesnet.cz',
           'host', 'voms1.egee.cesnet.cz',
           'port', 15003,
           'adminport', 8443,
          ),
-    nlist('name', 'voms2.grid.cesnet.cz',
+    dict('name', 'voms2.grid.cesnet.cz',
           'host', 'voms2.grid.cesnet.cz',
           'port', 15003,
           'adminport', 8443,

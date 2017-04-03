@@ -4,7 +4,7 @@ structure template vo/params/vo.panda.gsi.de;
 'account_prefix' ?= 'panshg';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid12.lal.in2p3.fr',
+    dict('name', 'grid12.lal.in2p3.fr',
           'host', 'grid12.lal.in2p3.fr',
           'port', 20022,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/vo.panda.gsi.de;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/vo.panda.gsi.de/Role=SoftwareManager',
           'suffix', 's',
           'suffix2', 's',
          ),
-#    nlist('description', 'SW manager',
+#    dict('description', 'SW manager',
 #          'fqan', '/vo.panda.gsi.de/Role=lcgadmin',
 #          'suffix', 's',
 #          'suffix2', 's',

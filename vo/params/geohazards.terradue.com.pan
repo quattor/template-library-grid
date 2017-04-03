@@ -4,7 +4,7 @@ structure template vo/params/geohazards.terradue.com;
 'account_prefix' ?= 'geofwg';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ba.infn.it',
+    dict('name', 'voms.ba.infn.it',
           'host', 'voms.ba.infn.it',
           'port', 15002,
           'adminport', 8443,

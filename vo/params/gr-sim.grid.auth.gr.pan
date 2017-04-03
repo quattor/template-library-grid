@@ -4,7 +4,7 @@ structure template vo/params/gr-sim.grid.auth.gr;
 'account_prefix' ?= 'grstli';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.hellasgrid.gr',
+    dict('name', 'voms.hellasgrid.gr',
           'host', 'voms.hellasgrid.gr',
           'port', 15005,
           'adminport', 8443,

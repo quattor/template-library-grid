@@ -4,7 +4,7 @@ structure template vo/params/vo.earthserver.eu;
 'account_prefix' ?= 'earfue';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.ct.infn.it',
+    dict('name', 'voms.ct.infn.it',
           'host', 'voms.ct.infn.it',
           'port', 15007,
           'adminport', 8443,

@@ -4,7 +4,7 @@ structure template vo/params/vo.cs.br;
 'account_prefix' ?= 'csbski';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.cat.cbpf.br',
+    dict('name', 'voms.cat.cbpf.br',
           'host', 'voms.cat.cbpf.br',
           'port', 15001,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/vo.cs.br;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'Group test',
+    dict('description', 'Group test',
           'fqan', '/vo.cs.br/group/subgroup/Role=test',
           'suffix', 'ryski',
           'suffix2', 'yzslpiy',
          ),
-    nlist('description', 'Users',
+    dict('description', 'Users',
           'fqan', '/vo.cs.br/all/user/Role=user',
           'suffix', 'rsski',
           'suffix2', 'axyfej',

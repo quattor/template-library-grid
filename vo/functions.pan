@@ -23,7 +23,7 @@ function add_vo_infos = {
 
   vo = ARGV[0];
   vo_params = VO_PARAMS;
-  result = nlist();
+  result = dict();
   auth_uri = list();
   fqan_mapping = list();
   sw_mgr_found = false;
@@ -55,11 +55,11 @@ function add_vo_infos = {
   #
   # Load site defaults if any: they override hardcoded defaults.
   # For DEFAULT entry, there is no default template loaded. The entry must be
-  # either a nlist or a template name.
+  # either a dict or a template name.
   #
   
   if ( is_defined(VOS_SITE_PARAMS["DEFAULT"]) ) {
-    if (is_nlist(VOS_SITE_PARAMS["DEFAULT"])) {
+    if (is_dict(VOS_SITE_PARAMS["DEFAULT"])) {
       site_defaults = VOS_SITE_PARAMS["DEFAULT"];
     } else {
       site_defaults = create(VOS_SITE_PARAMS["DEFAULT"]);
@@ -144,11 +144,11 @@ function add_vo_infos = {
       site_vo_params = create(vo_site_params_template);
     };
   };
-  # Merge parameters specified as a nlist if any.
-  # Every attribute specified in the nlist replaces the same attribute from the template, if present.
-  if ( is_nlist(vo_site_params) ) {
+  # Merge parameters specified as a dict if any.
+  # Every attribute specified in the dict replaces the same attribute from the template, if present.
+  if ( is_dict(vo_site_params) ) {
     if ( !is_defined(site_vo_params) ) {
-      site_vo_params = nlist();
+      site_vo_params = dict();
     };
     foreach (k;v;vo_site_params) {
       site_vo_params[k] = v;
@@ -158,7 +158,7 @@ function add_vo_infos = {
     # Merge all parameters except voms_servers and voms_mappings
     foreach (k;v;site_vo_params) {
       if ( (k != 'voms_servers') && (k != 'voms_mappings') ) {
-        # Some parameters may change from string to list/nlist or vice-versa
+        # Some parameters may change from string to list/dict or vice-versa
         if ( is_defined(vo_params[vo][k]) ) {
           vo_params[vo][k] = undef;
         };
@@ -240,7 +240,7 @@ function add_vo_infos = {
   # Do some normalization and checks on final mapping list
   voms_mappings = list();
   mapping_num = 0;
-  account_mapping_number = nlist();
+  account_mapping_number = dict();
   foreach (i;mapping;voms_mappings_tmp) {
     add_mapping = true;
     # Ensure mapping['enabled'] is defined at this point for ease further processing. Assume enabled by default.
@@ -298,7 +298,7 @@ function add_vo_infos = {
   #
   
   if ( is_defined(VOS_SITE_PARAMS["LOCAL"]) ) {
-    if (is_nlist(VOS_SITE_PARAMS["LOCAL"])) {
+    if (is_dict(VOS_SITE_PARAMS["LOCAL"])) {
       site_defaults = VOS_SITE_PARAMS["LOCAL"];
     } else {
       site_defaults = create(VOS_SITE_PARAMS["LOCAL"]);
@@ -307,7 +307,7 @@ function add_vo_infos = {
       if ( match(k,'account_prefix|base_uid|gid|name|voms_servers|voms_roles|voms_mappings') ) {
         error('Parameter '+k+' not allowed in VO parameter LOCAL entry');
       };
-      # Some parameters may change from string to list/nlist or vice-versa
+      # Some parameters may change from string to list/dict or vice-versa
       if ( is_defined(vo_params[vo][k]) ) {
         vo_params[vo][k] = undef;
       };
@@ -571,7 +571,7 @@ function add_vo_infos = {
             role = fqan;
           };
           debug('FQAN='+fqan+', group='+group+', role='+role+', capability='+capability);
-          mapping['fqan_toks'][fqan_num] = nlist('group', group,
+          mapping['fqan_toks'][fqan_num] = dict('group', group,
                                                  'role', role,
                                                  'capability', capability,
                                                 );
@@ -597,8 +597,8 @@ function add_vo_infos = {
     fqan_filter_tmp = undef;
     if ( is_defined(VO_VOMS_FQAN_FILTER) ) {
       debug('VO_VOMS_FQAN_FILTER='+to_string(VO_VOMS_FQAN_FILTER));
-      if ( !is_nlist(VO_VOMS_FQAN_FILTER) ) {
-        error('VO_VOMS_FQAN_FILTER must be a nlist');
+      if ( !is_dict(VO_VOMS_FQAN_FILTER) ) {
+        error('VO_VOMS_FQAN_FILTER must be a dict');
       };
       if ( exists(VO_VOMS_FQAN_FILTER[vo_name]) ) {
         fqan_filter_tmp = VO_VOMS_FQAN_FILTER[vo_name];
@@ -663,7 +663,7 @@ function add_vo_infos = {
       # Ensure the same FQAN is not mapped to different users.
       # For each FQAN, if an FQAN filter has been defined, mark if it is enabled (true) or disabled (false).
       # If all the FQANs for a mapping are disabled, mark the mapping as disabled.
-      fqan_enabled = nlist();
+      fqan_enabled = dict();
       foreach (j;mapping;voms_mappings) {
         if (  mapping['enabled'] ) {
           mapping['enabled'] = false;
@@ -755,9 +755,9 @@ function add_vo_infos = {
       };
       mapped_user_home = home_attrs['directory'];
       if ( is_defined(mapped_user_home) ) {
-        account_home = nlist('homeDir',mapped_user_home);
+        account_home = dict('homeDir',mapped_user_home);
       } else {
-        account_home = nlist();
+        account_home = dict();
       };
       create_home_dir = home_attrs['create'];
 
@@ -803,7 +803,7 @@ function add_vo_infos = {
           fqan_str = replace('\s*[\[\]]\s*','',to_string(mapping['fqan']));
           if ( mapping['pool_size'] == 1 ) {
             debug('Creating account '+mapped_user+' for mapping '+mapping['description']+': UID='+to_string(role_base_uid));
-            result['accounts']['users'][mapped_user] = merge(nlist('uid', role_base_uid,
+            result['accounts']['users'][mapped_user] = merge(dict('uid', role_base_uid,
                                                                    'groups', list(vo_group),
                                                                    'comment', 'VO '+vo_name+' '+mapping['description']+' ('+fqan_str+')',
                                                                    'createKeys', vo_params[vo]['create_keys'], 
@@ -825,7 +825,7 @@ function add_vo_infos = {
             } else {
               groups = list(vo_group,mapped_user);
             };
-            result['accounts']['users'][mapped_user] = merge(nlist('uid', role_base_uid,
+            result['accounts']['users'][mapped_user] = merge(dict('uid', role_base_uid,
                                                                    'groups', groups,
                                                                    'comment', 'VO '+vo_name+' '+mapping['description']+' ('+fqan_str+')',
                                                                    'createKeys', vo_params[vo]['create_keys'], 
@@ -843,7 +843,7 @@ function add_vo_infos = {
             } else {
               mapping_group_gid = role_base_uid;
             };
-            result['accounts']['groups'][mapped_user] = nlist('gid', mapping_group_gid);
+            result['accounts']['groups'][mapped_user] = dict('gid', mapping_group_gid);
           };
         } else {
           debug('account '+mapped_user+' already exists: not redefined');
@@ -878,13 +878,13 @@ function add_vo_infos = {
             # If role=NULL, add a mapping entry without any role
             role = mapping['fqan_toks'][fqan_num]['role'];
             capability = mapping['fqan_toks'][fqan_num]['capability'];
-            fqan_mapping[length(fqan_mapping)] = nlist('fqan', fqan,
+            fqan_mapping[length(fqan_mapping)] = dict('fqan', fqan,
                                                        'user', user_for_fqan_mapping,
                                                        'group', mapfile_group,
                                                       );
             if ( role == 'NULL' ) {
               fqan_role = fqan + '/Role=' + role;
-              fqan_mapping[length(fqan_mapping)] = nlist('fqan',fqan_role,
+              fqan_mapping[length(fqan_mapping)] = dict('fqan',fqan_role,
                                                          'user',user_for_fqan_mapping,
                                                          'group',mapfile_group,
                                                          );
@@ -892,7 +892,7 @@ function add_vo_infos = {
               fqan_role = fqan;
             };
             if ( capability == 'NULL' ) {
-              fqan_mapping[length(fqan_mapping)] = nlist('fqan',fqan_role+'/Capability='+capability,
+              fqan_mapping[length(fqan_mapping)] = dict('fqan',fqan_role+'/Capability='+capability,
                                                          'user',user_for_fqan_mapping,
                                                          'group',mapfile_group,
                                                         );
@@ -901,7 +901,7 @@ function add_vo_infos = {
             # gridmap file (mkgridmap configuration)
             if ( VO_GRIDMAPFILE_MAP_VOMS_ROLES ) {
               foreach (j;voms_admin_server;voms_admin_servers) {
-                auth_uri[length(auth_uri)] = nlist('uri', 'vomss://'+voms_admin_server+'/voms/'+vo_name+'?'+fqan,
+                auth_uri[length(auth_uri)] = dict('uri', 'vomss://'+voms_admin_server+'/voms/'+vo_name+'?'+fqan,
                                                    'user',user_for_fqan_mapping,
                                                   );
               };
@@ -926,22 +926,22 @@ function add_vo_infos = {
     if ( !is_defined(fqan_filter) || 
          (is_defined(fqan_enabled[escape('/')]) && fqan_enabled[escape('/')]) ) {    
       # LCMAPS
-      fqan_mapping[length(fqan_mapping)] = nlist('fqan','/'+vo_name,
+      fqan_mapping[length(fqan_mapping)] = dict('fqan','/'+vo_name,
                                                  'user','.'+vo_params[vo]['account_prefix'],
                                                  'group',vo_group
                                                  );
-      fqan_mapping[length(fqan_mapping)] = nlist('fqan','/'+vo_name+'/Role=NULL',
+      fqan_mapping[length(fqan_mapping)] = dict('fqan','/'+vo_name+'/Role=NULL',
                                                  'user','.'+vo_params[vo]['account_prefix'],
                                                  'group',vo_group
                                                 );
-      fqan_mapping[length(fqan_mapping)] = nlist('fqan','/'+vo_name+'/Role=NULL/Capability=NULL',
+      fqan_mapping[length(fqan_mapping)] = dict('fqan','/'+vo_name+'/Role=NULL/Capability=NULL',
                                                  'user','.'+vo_params[vo]['account_prefix'],
                                                  'group',vo_group,
                                                 );
                                                 
       # gridmap file
       foreach (j;voms_admin_server;voms_admin_servers) {
-        auth_uri[length(auth_uri)] = nlist('uri', 'vomss://'+voms_admin_server+'/voms/'+vo_name+'?/'+vo_name,
+        auth_uri[length(auth_uri)] = dict('uri', 'vomss://'+voms_admin_server+'/voms/'+vo_name+'?/'+vo_name,
                                            'user', '.'+vo_params[vo]['account_prefix'],
                                           );
       };
@@ -955,13 +955,13 @@ function add_vo_infos = {
       };
       pool_home = home_attrs['directory'];
       if ( is_defined(pool_home) ) {
-        account_home = nlist('homeDir',pool_home);
+        account_home = dict('homeDir',pool_home);
       } else {
-        account_home = nlist();
+        account_home = dict();
       };
       create_home_dir = home_attrs['create'];
       result['shared_homes'] = home_attrs['shared'];
-      result['accounts']['users'][vo_params[vo]['account_prefix']] = merge(nlist('uid', base_uid_pool,
+      result['accounts']['users'][vo_params[vo]['account_prefix']] = merge(dict('uid', base_uid_pool,
                                                                                  'groups', list(vo_group),
                                                                                  'comment', 'VO '+vo_name+' pool account',
                                                                                  'poolSize', vo_params[vo]['pool_size'],
@@ -986,7 +986,7 @@ function add_vo_infos = {
 
 
   # Create VO group
-  result['accounts']['groups'][vo_group] = nlist('gid', vo_gid);
+  result['accounts']['groups'][vo_group] = dict('gid', vo_gid);
 
 
   # Create SW manager account if not already done during VOMS role processing as we need it to set permissions of some files/areas.
@@ -1008,12 +1008,12 @@ function add_vo_infos = {
     home_attrs = vo_get_dir_attrs(vo,vo_params[vo],vo_params[vo]['sw_manager_suffix'],true,undef,vo_params[vo]['is_prefix']);
     sw_mgr_home = home_attrs['directory'];
     if ( is_defined(sw_mgr_home) ) {
-      account_home = nlist('homeDir',sw_mgr_home);
+      account_home = dict('homeDir',sw_mgr_home);
     } else {
-      account_home = nlist();
+      account_home = dict();
     };
     create_home_dir = home_attrs['create'];
-    result['accounts']['users'][sw_mgr_user] = merge(nlist('uid', vo_params[vo]['base_uid']+vo_params[vo]['sw_manager_offset'],
+    result['accounts']['users'][sw_mgr_user] = merge(dict('uid', vo_params[vo]['base_uid']+vo_params[vo]['sw_manager_offset'],
                                                          'groups', list(vo_group),
                                                          'comment', 'VO '+vo_name+' '+vo_params[vo]['sw_manager_descr'],
                                                          'createKeys', vo_params[vo]['create_keys'], 
@@ -1046,12 +1046,12 @@ function add_vo_infos = {
   #
   
   result['voinfo']['paths'] = list(
-    nlist('path', VO_SW_TAGS_DIR+'/'+vo_name,
+    dict('path', VO_SW_TAGS_DIR+'/'+vo_name,
           'owner', sw_mgr_user+':'+sw_mgr_group,
           'perm', dir_perm,
           'type', 'd'
          ),
-    nlist('path', VO_SW_TAGS_DIR+'/'+vo_name+'/'+vo_name+'.list',
+    dict('path', VO_SW_TAGS_DIR+'/'+vo_name+'/'+vo_name+'.list',
           'owner', sw_mgr_user+':'+sw_mgr_group,
           'perm', file_perm,
           'type', 'f'
@@ -1088,7 +1088,7 @@ function add_vo_infos = {
       if ( !exists(result['swarea']['paths']) ) {
         result['swarea']['paths'] = list();
       };
-      result['swarea']['paths'][length(result['swarea']['paths'])] = nlist('path',  result['swarea']['name'],
+      result['swarea']['paths'][length(result['swarea']['paths'])] = dict('path',  result['swarea']['name'],
                                                                            'owner', sw_mgr_user+':'+sw_mgr_group,
                                                                            'perm', dir_perm,
                                                                            'type', 'd',
@@ -1120,12 +1120,12 @@ function add_vo_infos = {
         error(function_name+' : no certificate found in '+cert_template+' for VOMS server '+voms_server['name']);
       };
       if ( is_defined(vo_cert_params["oldcert"]) ) {
-        oldcert = nlist('oldcert',vo_cert_params["oldcert"]);
+        oldcert = dict('oldcert',vo_cert_params["oldcert"]);
       } else {
-        oldcert = nlist();
+        oldcert = dict();
       };
       
-      result['vomsclient']['servers'][length(result['vomsclient']['servers'])] = merge(nlist('host', voms_server['host'],
+      result['vomsclient']['servers'][length(result['vomsclient']['servers'])] = merge(dict('host', voms_server['host'],
                                                                                              'port', voms_server['port'],
                                                                                              'cert', vo_cert_params["cert"],
                                                                                             ),
@@ -1158,13 +1158,13 @@ function combine_vo_accounts = {
   };
   
   if ( !exists(SELF["groups"]) || 
-       !is_nlist(SELF["groups"]) ) {
-    SELF["groups"] = nlist();
+       !is_dict(SELF["groups"]) ) {
+    SELF["groups"] = dict();
   };
 
   if ( !exists(SELF["users"]) || 
-       !is_nlist(SELF["users"]) ) {
-    SELF["users"] = nlist();
+       !is_dict(SELF["users"]) ) {
+    SELF["users"] = dict();
   };
 
   foreach (k;v;ARGV[0]) {
@@ -1199,8 +1199,8 @@ function combine_gridmapdir_poolaccounts = {
   };
   
   if ( !exists(SELF["poolaccounts"]) || 
-       !is_nlist(SELF["poolaccounts"]) ) {
-    SELF["poolaccounts"] = nlist();
+       !is_dict(SELF["poolaccounts"]) ) {
+    SELF["poolaccounts"] = dict();
   };
     
   foreach (k;v;ARGV[0]) {
@@ -1301,8 +1301,8 @@ function combine_wlconfig_networkserver = {
   };
   
   if ( !exists(SELF["networkServer"]) || 
-       !is_nlist(SELF["networkServer"]) ) {
-    SELF["networkServer"] = nlist();
+       !is_dict(SELF["networkServer"]) ) {
+    SELF["networkServer"] = dict();
   };
   
   if ( is_defined(SELF["networkServer"]['DLICatalog']) ) {
@@ -1348,8 +1348,8 @@ function combine_vomsclient_vos = {
     error(function_name+" : "+comp_base+" must exist");
   };
   
-  if ( !exists(SELF['vos']) || !is_nlist(SELF['vos']) ) {
-    SELF['vos'] = nlist();
+  if ( !exists(SELF['vos']) || !is_dict(SELF['vos']) ) {
+    SELF['vos'] = dict();
   };
   
   foreach (k;v;ARGV[0]) {
@@ -1401,7 +1401,7 @@ function combine_system_vo = {
   if ( is_defined(SELF) ) {
     SELF;
   } else {
-    nlist();
+    dict();
   };
 };
 
@@ -1433,7 +1433,7 @@ function combine_vo_env = {
   };
 
   if ( !exists(SELF["env"]) || !is_defined(SELF["env"]) ) {
-    SELF["env"] = nlist();
+    SELF["env"] = dict();
   };
 
   # For each VO, set the software directory, the default SE, and
@@ -1485,7 +1485,7 @@ function combine_vo_env = {
 #
 function vo_get_dir_attrs = {
   function_name = 'vo_get_dir_attrs';
-  result = nlist();
+  result = dict();
   result['shared'] = false;
   result['directory'] = undef;
   sw_mgr_home = false;
@@ -1602,11 +1602,6 @@ function vo_get_dir_attrs = {
           debug(mnt_point+' is not a NFS-served FS or is not served by '+FULL_HOSTNAME);
           result['create'] = false;
         };
-      } else if (dir_not_home && is_boolean(CVMFS_CLIENT_ENABLED) && CVMFS_CLIENT_ENABLED && match(e_mnt_point, 'cvmfs')) {
-        debug(mnt_point+' is a CVMFS file system');
-        ok = false;
-        result['shared'] = true;
-        result['create'] = false;
       } else {
         toks = matches(mnt_point, '(.+)/([\w\.\-]+)');
         if ( length(toks) >= 2 ) {
@@ -1624,12 +1619,12 @@ function vo_get_dir_attrs = {
 # Add VO config to Yaim
 #
 function add_vos_to_yaim = {
-    x = nlist();
+    x = dict();
     if ( ! exists( VO_CONFIG ) ) {
         error("Required variable VO_CONFIG was not defined");
     }
-    else if ( ! is_nlist( VO_CONFIG ) ) {
-        error("VO_CONFIG is not an nlist");
+    else if ( ! is_dict( VO_CONFIG ) ) {
+        error("VO_CONFIG is not an dict");
     }
     else if ( length( VO_CONFIG ) == 0 ) {
         error("VO_CONFIG is empty");
@@ -1637,8 +1632,8 @@ function add_vos_to_yaim = {
     if ( ! exists( VOMS_SERVERS ) ) {
         error("Required variable VOMS_SERVERS was not defined");
     }
-    else if ( ! is_nlist( VOMS_SERVERS ) ) {
-        error("VOMS_SERVERS is not an nlist");
+    else if ( ! is_dict( VOMS_SERVERS ) ) {
+        error("VOMS_SERVERS is not an dict");
     };
     
     # Copy VO information and define VOMS info
@@ -1678,7 +1673,7 @@ function add_vos_to_yaim = {
 #
 function add_voms_certs = {
   vomsdir = '/etc/grid-security/vomsdir';
-    if ( exists( VOMS_SERVERS ) && is_nlist( VOMS_SERVERS ) ) {
+    if ( exists( VOMS_SERVERS ) && is_dict( VOMS_SERVERS ) ) {
         # check per VOMS server if a certificate has been defined
         # and include it if that is the case
         foreach( srv; cfg; VOMS_SERVERS ) {
@@ -1690,7 +1685,7 @@ function add_voms_certs = {
         };
     }
     else {
-        debug("[add_voms_certs] VOMS_SERVERS is not defined or not an nlist"); 
+        debug("[add_voms_certs] VOMS_SERVERS is not defined or not an dict"); 
     };
     SELF;
 };

@@ -4,17 +4,17 @@ structure template vo/params/vo.landslides.mossaic.org;
 'account_prefix' ?= 'lanfuh';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.gridpp.ac.uk',
+    dict('name', 'voms.gridpp.ac.uk',
           'host', 'voms.gridpp.ac.uk',
           'port', 15502,
           'adminport', 8443,
          ),
-    nlist('name', 'voms02.gridpp.ac.uk',
+    dict('name', 'voms02.gridpp.ac.uk',
           'host', 'voms02.gridpp.ac.uk',
           'port', 15502,
           'adminport', 8443,
          ),
-    nlist('name', 'voms03.gridpp.ac.uk',
+    dict('name', 'voms03.gridpp.ac.uk',
           'host', 'voms03.gridpp.ac.uk',
           'port', 15502,
           'adminport', 8443,

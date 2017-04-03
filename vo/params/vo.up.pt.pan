@@ -4,7 +4,7 @@ structure template vo/params/vo.up.pt;
 'account_prefix' ?= 'uppriw';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.up.pt',
+    dict('name', 'voms.up.pt',
           'host', 'voms.up.pt',
           'port', 15000,
           'adminport', 8443,

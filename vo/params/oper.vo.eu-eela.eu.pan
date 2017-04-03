@@ -4,13 +4,13 @@ structure template vo/params/oper.vo.eu-eela.eu;
 'account_prefix' ?= 'operzq';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms-eela.ceta-ciemat.es',
+    dict('name', 'voms-eela.ceta-ciemat.es',
           'host', 'voms-eela.ceta-ciemat.es',
           'port', 15004,
           'adminport', 8443,
           'type', list('voms-only'),
          ),
-    nlist('name', 'voms.eela.ufrj.br',
+    dict('name', 'voms.eela.ufrj.br',
           'host', 'voms.eela.ufrj.br',
           'port', 15004,
           'adminport', 8443,
@@ -18,12 +18,12 @@ structure template vo/params/oper.vo.eu-eela.eu;
 );
 
 'voms_mappings' ?= list(
-#    nlist('description', 'Software Manager',
+#    dict('description', 'Software Manager',
 #          'fqan', '/oper.vo.eu-eela.eu/oper.vo.eu-eela.eu/LCGAdmin',
 #          'suffix', 'rlrzq',
 #          'suffix2', 'raxydzg',
 #         ),
-#    nlist('description', 'Production',
+#    dict('description', 'Production',
 #          'fqan', '/oper.vo.eu-eela.eu/oper.vo.eu-eela.eu/production',
 #          'suffix', 'rnrzq',
 #          'suffix2', 'yzjcbsy',

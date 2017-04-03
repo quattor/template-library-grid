@@ -4,7 +4,7 @@ structure template vo/params/eli-np.eu;
 'account_prefix' ?= 'elifwz';
 
 'voms_servers' ?= list(
-    nlist('name', 'tbit02.nipne.ro',
+    dict('name', 'tbit02.nipne.ro',
           'host', 'tbit02.nipne.ro',
           'port', 15003,
           'adminport', 8443,

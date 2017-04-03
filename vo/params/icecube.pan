@@ -4,7 +4,7 @@ structure template vo/params/icecube;
 'account_prefix' ?= 'icerk';
 
 'voms_servers' ?= list(
-    nlist('name', 'grid-voms.desy.de',
+    dict('name', 'grid-voms.desy.de',
           'host', 'grid-voms.desy.de',
           'port', 15106,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/icecube;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/icecube/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',
          ),
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/icecube/Role=production',
           'suffix', 'p',
           'suffix2', 'p',

@@ -2,10 +2,10 @@
 
 unique template vo/site/aliases;
 
-# VOS_ALIASES is a nlist where key is the name used to refer to the VO (the alias)
+# VOS_ALIASES is a dict where key is the name used to refer to the VO (the alias)
 # and the value is the real VO name (must match a template in vo/params).
 
-variable VOS_ALIASES ?= nlist(
+variable VOS_ALIASES ?= dict(
   'agata',	'vo.agata.org',
   'apc',	'vo.apc.univ-paris7.fr',
   'astro',	'astro.vo.eu-egee.org',

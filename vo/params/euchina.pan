@@ -4,7 +4,7 @@ structure template vo/params/euchina;
 'account_prefix' ?= 'eucur';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms2.cnaf.infn.it',
+    dict('name', 'voms2.cnaf.infn.it',
           'host', 'voms2.cnaf.infn.it',
           'port', 15017,
           'adminport', 8443,

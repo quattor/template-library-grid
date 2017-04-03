@@ -4,7 +4,7 @@ structure template vo/params/nw_ru;
 'account_prefix' ?= 'nwrto';
 
 'voms_servers' ?= list(
-    nlist('name', 'gt1.pnpi.nw.ru',
+    dict('name', 'gt1.pnpi.nw.ru',
           'host', 'gt1.pnpi.nw.ru',
           'port', 15000,
           'adminport', 8443,

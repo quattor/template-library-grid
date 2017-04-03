@@ -4,7 +4,7 @@ structure template vo/params/vo.dirac.ac.uk;
 'account_prefix' ?= 'dirfwm';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.gridpp.ac.uk',
+    dict('name', 'voms.gridpp.ac.uk',
           'host', 'voms.gridpp.ac.uk',
           'port', 15002,
           'adminport', 8443,

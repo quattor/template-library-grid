@@ -4,7 +4,7 @@ structure template vo/params/pvier;
 'account_prefix' ?= 'pvij';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.grid.sara.nl',
+    dict('name', 'voms.grid.sara.nl',
           'host', 'voms.grid.sara.nl',
           'port', 30000,
           'adminport', 8443,
@@ -12,7 +12,7 @@ structure template vo/params/pvier;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/pvier/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',

@@ -4,7 +4,7 @@ structure template vo/params/gridifin.ro;
 'account_prefix' ?= 'grifwc';
 
 'voms_servers' ?= list(
-    nlist('name', 'tbit02.nipne.ro',
+    dict('name', 'tbit02.nipne.ro',
           'host', 'tbit02.nipne.ro',
           'port', 15005,
           'adminport', 8443,

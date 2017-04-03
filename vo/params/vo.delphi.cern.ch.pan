@@ -4,7 +4,7 @@ structure template vo/params/vo.delphi.cern.ch;
 'account_prefix' ?= 'delszo';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.cern.ch',
+    dict('name', 'voms.cern.ch',
           'host', 'voms.cern.ch',
           'port', 15002,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/vo.delphi.cern.ch;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/vo.delphi.cern.ch/Role=production',
           'suffix', 'p',
           'suffix2', 'p',
          ),
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/vo.delphi.cern.ch/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',

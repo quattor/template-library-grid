@@ -4,7 +4,7 @@ structure template vo/params/afigrid.cl;
 'account_prefix' ?= 'afifwn';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.fis.puc.cl',
+    dict('name', 'voms.fis.puc.cl',
           'host', 'voms.fis.puc.cl',
           'port', 15000,
           'adminport', 8443,

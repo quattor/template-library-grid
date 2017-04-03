@@ -4,7 +4,7 @@ structure template vo/params/dech;
 'account_prefix' ?= 'dectw';
 
 'voms_servers' ?= list(
-    nlist('name', 'glite-io.scai.fraunhofer.de',
+    dict('name', 'glite-io.scai.fraunhofer.de',
           'host', 'glite-io.scai.fraunhofer.de',
           'port', 15000,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/dech;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'Admin: VO administrators',
+    dict('description', 'Admin: VO administrators',
           'fqan', '/dech/Role=VO',
           'suffix', 'dtw',
           'suffix2', 'alnrocr',
          ),
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/dech/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',

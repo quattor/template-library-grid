@@ -4,7 +4,7 @@ structure template vo/params/argo;
 'account_prefix' ?= 'argtb';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.cnaf.infn.it',
+    dict('name', 'voms.cnaf.infn.it',
           'host', 'voms.cnaf.infn.it',
           'port', 15012,
           'adminport', 8443,
@@ -12,12 +12,12 @@ structure template vo/params/argo;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/argo/Role=ProductionManager',
           'suffix', 'p',
           'suffix2', 'p',
          ),
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/argo/Role=SoftwareManager',
           'suffix', 's',
           'suffix2', 's',

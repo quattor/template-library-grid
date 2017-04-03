@@ -4,7 +4,7 @@ structure template vo/params/lz;
 'account_prefix' ?= 'lzfwo';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms.hep.wisc.edu',
+    dict('name', 'voms.hep.wisc.edu',
           'host', 'voms.hep.wisc.edu',
           'port', 15002,
           'adminport', 8443,

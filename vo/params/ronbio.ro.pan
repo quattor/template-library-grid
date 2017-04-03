@@ -4,7 +4,7 @@ structure template vo/params/ronbio.ro;
 'account_prefix' ?= 'ronfwj';
 
 'voms_servers' ?= list(
-    nlist('name', 'tbit02.nipne.ro',
+    dict('name', 'tbit02.nipne.ro',
           'host', 'tbit02.nipne.ro',
           'port', 15004,
           'adminport', 8443,

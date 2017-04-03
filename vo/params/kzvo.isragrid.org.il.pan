@@ -4,7 +4,7 @@ structure template vo/params/kzvo.isragrid.org.il;
 'account_prefix' ?= 'kzvfvc';
 
 'voms_servers' ?= list(
-    nlist('name', 'ngi-il-voms3.isragrid.org.il',
+    dict('name', 'ngi-il-voms3.isragrid.org.il',
           'host', 'ngi-il-voms3.isragrid.org.il',
           'port', 15002,
           'adminport', 8443,

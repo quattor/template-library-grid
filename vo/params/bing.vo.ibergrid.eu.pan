@@ -4,7 +4,7 @@ structure template vo/params/bing.vo.ibergrid.eu;
 'account_prefix' ?= 'binspa';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms01.ncg.ingrid.pt',
+    dict('name', 'voms01.ncg.ingrid.pt',
           'host', 'voms01.ncg.ingrid.pt',
           'port', 40004,
           'adminport', 8443,

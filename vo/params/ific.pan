@@ -4,7 +4,7 @@ structure template vo/params/ific;
 'account_prefix' ?= 'ifitk';
 
 'voms_servers' ?= list(
-    nlist('name', 'swevo.ific.uv.es',
+    dict('name', 'swevo.ific.uv.es',
           'host', 'swevo.ific.uv.es',
           'port', 14001,
           'adminport', 8443,

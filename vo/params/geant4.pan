@@ -4,13 +4,13 @@ structure template vo/params/geant4;
 'account_prefix' ?= 'geasy';
 
 'voms_servers' ?= list(
-    nlist('name', 'lcg-voms2.cern.ch',
+    dict('name', 'lcg-voms2.cern.ch',
           'host', 'lcg-voms2.cern.ch',
           'port', 15007,
           'adminport', 8443,
           'type', list('voms-only'),
          ),
-    nlist('name', 'voms2.cern.ch',
+    dict('name', 'voms2.cern.ch',
           'host', 'voms2.cern.ch',
           'port', 15007,
           'adminport', 8443,
@@ -18,12 +18,12 @@ structure template vo/params/geant4;
 );
 
 'voms_mappings' ?= list(
-    nlist('description', 'SW manager',
+    dict('description', 'SW manager',
           'fqan', '/geant4/Role=lcgadmin',
           'suffix', 's',
           'suffix2', 's',
          ),
-    nlist('description', 'production',
+    dict('description', 'production',
           'fqan', '/geant4/Role=production',
           'suffix', 'p',
           'suffix2', 'p',

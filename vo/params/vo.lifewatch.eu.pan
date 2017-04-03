@@ -4,7 +4,7 @@ structure template vo/params/vo.lifewatch.eu;
 'account_prefix' ?= 'liffvl';
 
 'voms_servers' ?= list(
-    nlist('name', 'ibergrid-voms.ifca.es',
+    dict('name', 'ibergrid-voms.ifca.es',
           'host', 'ibergrid-voms.ifca.es',
           'port', 15002,
           'adminport', 8443,

@@ -4,12 +4,12 @@ structure template vo/params/vo.elixir-europe.org;
 'account_prefix' ?= 'elifyt';
 
 'voms_servers' ?= list(
-    nlist('name', 'voms1.grid.cesnet.cz',
+    dict('name', 'voms1.grid.cesnet.cz',
           'host', 'voms1.grid.cesnet.cz',
           'port', 15032,
           'adminport', 8443,
          ),
-    nlist('name', 'voms2.grid.cesnet.cz',
+    dict('name', 'voms2.grid.cesnet.cz',
           'host', 'voms2.grid.cesnet.cz',
           'port', 15032,
           'adminport', 8443,
