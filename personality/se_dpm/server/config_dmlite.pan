@@ -52,7 +52,7 @@ include if ( DMLITE_MEMCACHE_ENABLED ) 'features/memcached/config';
 #
 # /etc/dmlite.conf.d/mysql.conf
 #
-variable contents = {
+variable DMLITE_MYSQL_CONFIG_CONTENTS ?= {
     "LoadPlugin plugin_mysql_dpm /usr/" + library + "/dmlite/plugin_mysql.so\n" +
     "MySqlHost " + DPM_MYSQL_SERVER + "\n" +
     "MySqlUsername " + DPM_DB_PARAMS['user'] + "\n" +
@@ -66,7 +66,7 @@ variable contents = {
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = if (is_boolean(DMLITE_ENABLED) && DMLITE_ENABLED) {
     SELF[escape('/etc/dmlite.conf.d/mysql.conf')] = nlist(
-        'config', contents,
+        'config', DMLITE_MYSQL_CONFIG_CONTENTS,
         'owner', DPM_USER,
         'group', DPM_GROUP,
         'perms', '0640',
@@ -81,7 +81,7 @@ include 'components/filecopy/config';
 #
 # /etc/dmlite.conf.d/zmemcache.conf
 #
-variable contents = {
+variable DMLITE_MEMCACHE_CONFIG_CONTENTS ?= {
   if ( DMLITE_MEMCACHE_ENABLED ) {
     "LoadPlugin plugin_memcache /usr/" + library + "/dmlite/plugin_memcache.so\n" +
     "MemcachedServer localhost:" + to_string(MEMCACHED_PORT) + "\n" +
@@ -99,7 +99,7 @@ variable contents = {
 
 '/software/components/filecopy/services' = if ( is_boolean(DMLITE_ENABLED) && DMLITE_ENABLED ) {
     SELF[escape('/etc/dmlite.conf.d/zmemcache.conf')] = nlist(
-        'config', contents,
+        'config', DMLITE_MEMCACHE_CONFIG_CONTENTS,
         'owner', 'root',
         'group', 'root',
         'perms', '0644',
