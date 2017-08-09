@@ -11,7 +11,7 @@ variable HEP_OSLIBS ?= true;
 variable HEP_OSLIBS_MAPPING ?= dict(
     'sl5', 'HEP_OSlibs_SL5',
     'sl6', 'HEP_OSlibs_SL6',
-    'el7', 'HEP_OSlibs_SL7',
+    'el7', 'HEP_OSlibs',
 );
 
 "/software/packages" = {
