@@ -4,7 +4,7 @@ unique template personality/cream_ce/monitor;
 # Not yet usable as pan can't bind
 # to a variable
 #
-variable CREAM_MONITORING_BASE_DIR  ?= "/etc/glite-cream-ce-utils";
+variable CREAM_MONITORING_BASE_DIR  ?= "/etc/glite-ce-cream-utils";
 variable CREAM_MONITORING_CONF_FILE ?= "glite_cream_load_monitor.conf";
 
 #############################
@@ -41,9 +41,9 @@ type cream_monitoring = {
   "PendingCmds" : long
 };
 
-bind '/software/components/metaconfig/services/{/etc/glite-ce-cream-ce-utils/glite_cream_load_monitor.conf}/contents' = cream_monitoring;
+bind '/software/components/metaconfig/services/{/etc/glite-ce-cream-utils/glite_cream_load_monitor.conf}/contents' = cream_monitoring;
 
-prefix '/software/components/metaconfig/services/{/etc/glite-ce-cream-ce-utils/glite_cream_load_monitor.conf}';
+prefix '/software/components/metaconfig/services/{/etc/glite-ce-cream-utils/glite_cream_load_monitor.conf}';
 
 'module' = 'tiny';
 'mode'   = 0644;
