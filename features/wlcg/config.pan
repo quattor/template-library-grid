@@ -20,7 +20,7 @@ variable HEP_OSLIBS_MAPPING ?= dict(
             pkg_repl(HEP_OSLIBS_MAPPING[OS_VERSION_PARAMS['major']]);
         } else {
             error(format("No HEP_OSlibs mapping defined for an OS whose major \
-                          version is %s.",OS_VERSION_PARAMS['major']));
+version is %s.", OS_VERSION_PARAMS['major']));
         };
     };
     SELF;
