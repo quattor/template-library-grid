@@ -43,22 +43,24 @@ type cream_monitoring = {
 
 bind '/software/components/metaconfig/services/{${CREAM_MONITORING_CONF_FILE}}/contents' = cream_monitoring;
 
-prefix '/software/components/metaconfig/services/{/etc/glite-ce-cream-utils/glite_cream_load_monitor.conf}';
-
-'module' = 'tiny';
-'mode'   = 0644;
-'owner'  = 'root';
-'group'  = 'root';
-
-'contents/Load1'       = CREAM_MONITORING_LOAD1;
-'contents/Load5'       = CREAM_MONITORING_LOAD5;
-'contents/Load15'      = CREAM_MONITORING_LOAD15;
-'contents/MemUsage'    = CREAM_MONITORING_MEMUSAGE;
-'contents/SwapUsage'   = CREAM_MONITORING_SWAPUSAGE;
-'contents/FDNum'       = CREAM_MONITORING_FDNUM;
-'contents/DiskUsage'   = CREAM_MONITORING_DISKUSAGE;
-'contents/FTPConn'     = CREAM_MONITORING_FTPCONN;
-'contents/FDTomcatNum' = CREAM_MONITORING_FDTOMCAT;
-'contents/ActiveJobs'  = CREAM_MONITORING_ACTIVE_JOBS;
-'contents/PendingCmds' = CREAM_MONITORING_PENDING_CMD;
-
+'/software/components/metaconfig/services' = merge(SELF, dict(
+    escape(CREAM_MONITORING_CONF_FILE), dict(
+        'module', 'tiny',
+        'mode', 0644,
+        'owner', 'root',
+        'group', 'root',
+        'contents', dict(
+            'Load1', CREAM_MONITORING_LOAD1,
+            'Load5', CREAM_MONITORING_LOAD5,
+            'Load15', CREAM_MONITORING_LOAD15,
+            'MemUsage', CREAM_MONITORING_MEMUSAGE,
+            'SwapUsage', CREAM_MONITORING_SWAPUSAGE,
+            'FDNum', CREAM_MONITORING_FDNUM,
+            'DiskUsage', CREAM_MONITORING_DISKUSAGE,
+            'FTPConn', CREAM_MONITORING_FTPCONN,
+            'FDTomcatNum', CREAM_MONITORING_FDTOMCAT,
+            'ActiveJobs', CREAM_MONITORING_ACTIVE_JOBS,
+            'PendingCmds', CREAM_MONITORING_PENDING_CMD,
+        ),
+    ),
+));
