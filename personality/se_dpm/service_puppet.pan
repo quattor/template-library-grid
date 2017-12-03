@@ -19,6 +19,8 @@ variable SEDPM_IS_HEAD_NODE ?= if( FULL_HOSTNAME == DPM_HOSTS['dpm'][0] ) {
                                  false;
                                };
 
+variable SEDPM_PUPPET_USE_LEGACY ?= false;
+
 #Removing pool accounts
 include 'personality/se_dpm/puppet/no_pool_accounts';
 
@@ -33,7 +35,16 @@ include 'personality/se_dpm/puppet/puppetconf';
 
 include 'personality/se_dpm/rpms/config';
 
-'/software/packages/{mysql-server}' = if( SEDPM_IS_HEAD_NODE ){nlist()}else{null};
+'/software/packages/' = {
+  if(SEDPM_IS_HEAD_NODE){
+    if( match(OS_VERSION_PARAMS['major'], '[es]l[56]')){
+      SELF[escape('mysql-server')]=dict();
+    }else{
+      SELF[escape('mariadb-server')]=dict();
+    };
+  };
+  SELF;
+};
 
 '/software/packages/{dmlite-plugins-memcache}' = if(SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED){nlist()}else{null};
 

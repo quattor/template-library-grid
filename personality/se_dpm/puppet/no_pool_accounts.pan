@@ -11,7 +11,6 @@ unique template personality/se_dpm/puppet/no_pool_accounts;
         SELF;
 };
 
-'/software/components/mkgridmapdir/active' = false;
 
 '/system/vo' = {
         foreach(i;vo;SELF){
