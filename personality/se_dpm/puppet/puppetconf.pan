@@ -37,7 +37,7 @@ variable DPMMGR_GID ?= 970;
 
 function set_yaml_boolean = {
 
-    yes = 'yes';  
+    yes = 'yes';
     no = 'no';
 
     if(ARGC >= 3 && !is_null(ARGV[2]))no = ARGV[2];

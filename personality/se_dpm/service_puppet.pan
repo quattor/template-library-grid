@@ -46,9 +46,9 @@ include 'personality/se_dpm/rpms/config';
     SELF;
 };
 
-'/software/packages/{dmlite-plugins-memcache}' = if(SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED){nlist()}else{null};
+'/software/packages/{dmlite-plugins-memcache}' = if(SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED){dict()}else{null};
 
-'/software/packages/{memcached}' = if(SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED){nlist()}else{null};
+'/software/packages/{memcached}' = if(SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED){dict()}else{null};
 
 include if(FULL_HOSTNAME == DPM_HOSTS['dpm'][0]){'personality/se_dpm/puppet/bdii'};
 
