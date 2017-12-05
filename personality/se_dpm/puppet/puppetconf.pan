@@ -19,39 +19,39 @@ variable DOME_ENABLED ?= false;
 variable DOME_FLAVOUR ?= false;
 variable DMLITE_TOKEN_PASSWORD ?= 'mytokenpassword';
 
-variable DPM_LOG_LEVEL?=0;
-variable DPM_DISK_LOG_LEVEL?=DPM_LOG_LEVEL;
-variable DPM_HEAD_LOG_LEVEL?=DPM_LOG_LEVEL;
+variable DPM_LOG_LEVEL ?= 0;
+variable DPM_DISK_LOG_LEVEL ?= DPM_LOG_LEVEL;
+variable DPM_HEAD_LOG_LEVEL ?= DPM_LOG_LEVEL;
 
 '/software/components/puppet/modules' ?= dict();
 
 '/software/components/puppet/modules' = {
-  if(DPM_PUPPET_MODULE != 'NONE'){
-    SELF[escape(DPM_PUPPET_MODULE)] = dict('version',DPM_PUPPET_MODULE_VERSION);
-  };
-  SELF;
+    if(DPM_PUPPET_MODULE != 'NONE'){
+        SELF[escape(DPM_PUPPET_MODULE)] = dict('version', DPM_PUPPET_MODULE_VERSION);
+    };
+    SELF;
 };
 
-variable DPMMGR_UID?=970;
-variable DPMMGR_GID?=970;
+variable DPMMGR_UID ?= 970;
+variable DPMMGR_GID ?= 970;
 
 function set_yaml_boolean = {
-  
-  yes='yes';  
-  no='no';
-  
-  if(ARGC>=3 && !is_null(ARGV[2]))no=ARGV[2];
-  if(ARGC>=2 && !is_null(ARGV[1]))yes=ARGV[1];  
 
-  ret=no;
-  if(!is_null(ARGV[0]) && ARGV[0]){ret=yes};
+    yes = 'yes';  
+    no = 'no';
 
-  ret;
+    if(ARGC >= 3 && !is_null(ARGV[2]))no = ARGV[2];
+    if(ARGC >= 2 && !is_null(ARGV[1]))yes = ARGV[1];
+
+    ret = no;
+    if(!is_null(ARGV[0]) && ARGV[0]){ret = yes};
+
+    ret;
 };
 
 prefix '/software/components/puppet/hieradata';
 
-'{classes}' = set_yaml_boolean(FULL_HOSTNAME==DPM_HOSTS['dpm'][0],'dpm::headnode','dpm::disknode');
+'{classes}' = set_yaml_boolean(FULL_HOSTNAME == DPM_HOSTS['dpm'][0], 'dpm::headnode', 'dpm::disknode');
 
 '{dpm::params::localdomain}' = SITE_DOMAIN;
 '{dpm::params::headnode_fqdn}' = DPM_HOSTS['dpm'][0];
@@ -72,7 +72,7 @@ prefix '/software/components/puppet/hieradata';
 
 '{dpm::params::xrd_report}' = if(is_defined(XROOTD_REPORTING_OPTIONS)){XROOTD_REPORTING_OPTIONS}else{null};
 '{dpm::params::xrootd_monitor}' = if(is_defined(XROOTD_MONITORING_OPTIONS)){XROOTD_MONITORING_OPTIONS}else{null};
-'{dpm::params::site_name}' = if(is_defined(XROOTD_SITE_NAME)){XROOTD_SITE_NAME}else{null}; 
+'{dpm::params::site_name}' = if(is_defined(XROOTD_SITE_NAME)){XROOTD_SITE_NAME}else{null};
 
 
 '{dpm::params::webdav_enabled}' = set_yaml_boolean(HTTPS_ENABLED);
@@ -82,7 +82,7 @@ prefix '/software/components/puppet/hieradata';
 
 '{dpm::params::configure_dome}' = set_yaml_boolean(DOME_ENABLED);
 '{dpm::params::configure_domeadapter}' = set_yaml_boolean(DOME_FLAVOUR);
-	
+
 '{dpm::params::configure_bdii}' = 'no';
 '{dpm::params::configure_default_filesystem}' = 'no';
 '{dpm::params::configure_default_pool}' = 'no';
