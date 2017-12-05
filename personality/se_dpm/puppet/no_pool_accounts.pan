@@ -22,10 +22,10 @@ include 'components/accounts/config';
             };
         };
         foreach(j; role; vo['voms']){
-             simple_role = matches(role['user'], '^\.(\S+)$');
-             if(length(simple_role) > 1 ){
-                 role['user'] = simple_role[1];
-             };
+            simple_role = matches(role['user'], '^\.(\S+)$');
+            if(length(simple_role) > 1 ){
+                role['user'] = simple_role[1];
+            };
         };
     };
     SELF;
