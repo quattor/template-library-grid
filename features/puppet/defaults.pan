@@ -19,7 +19,7 @@ include 'components/puppet/config';
     };
 
     # Defaults for version > 4
-    if(pkg_compare_version(version,'4.0.0') != PKG_VERSION_LESS){
+    if(pkg_compare_version(version, '4.0.0') != PKG_VERSION_LESS){
         SELF['hieraconf_file'] = '/etc/puppetlabs/code/environments/production/hiera.yaml';
         SELF['puppet_cmd'] = '/opt/puppetlabs/bin/puppet';
         SELF['puppetconf_file'] = '/etc/puppetlabs/puppet/puppet.conf';
@@ -27,7 +27,7 @@ include 'components/puppet/config';
 
     # Defaults for version > 5
     if(pkg_compare_version(version, '5.0.0') != PKG_VERSION_LESS){
-        SELF['nodefiles'] = dict(escape("quattor_default.pp"), 
+        SELF['nodefiles'] = dict(escape("quattor_default.pp"),
             dict("contents", "lookup('classes', Array[String], 'unique').include"));
         SELF['modulepath'] = '/etc/puppetlabs/code/environments/production/modules';
         SELF['nodefiles_path'] = '/etc/puppetlabs/code/environments/production/manifests';
@@ -35,18 +35,18 @@ include 'components/puppet/config';
             "version", 5,
             "hierarchy", list(
                 dict(
-	            "name", "quattor",
-	            "path", "quattor.yaml",
-	        )
+                    "name", "quattor",
+                    "path", "quattor.yaml",
+                )
             ),
-            "defaults",dict(
+            "defaults", dict(
                 "datadir", "/etc/puppetlabs/code/environments/production/data",
-	        "data_hash", "yaml_data",
+                "data_hash", "yaml_data",
             ),
         );
         SELF['hieradata_file'] = '/etc/puppetlabs/code/environments/production/data/quattor.yaml';
     };
-  
+
     SELF;
 };
 
