@@ -13,11 +13,7 @@ variable VOMS_XROOTD_EXTENSION_ENABLED ?= true;
 
 variable XROOTD_FEDERATION_SITE_CONFIG ?= null;
 
-variable SEDPM_IS_HEAD_NODE ?= if( FULL_HOSTNAME == DPM_HOSTS['dpm'][0] ) {
-    true;
-}else{
-    false;
-};
+variable SEDPM_IS_HEAD_NODE ?= FULL_HOSTNAME == DPM_HOSTS['dpm'][0];
 
 variable SEDPM_PUPPET_USE_LEGACY ?= false;
 
@@ -38,9 +34,9 @@ include 'personality/se_dpm/rpms/config';
 '/software/packages' = {
     if(SEDPM_IS_HEAD_NODE){
         if( match(OS_VERSION_PARAMS['major'], '[es]l[56]')){
-            SELF[escape('mysql-server')] = dict();
+            pkg_repl('mysql-server');
         }else{
-            SELF[escape('mariadb-server')] = dict();
+            pkg_repl('mariadb-server');
         };
     };
     SELF;
@@ -54,9 +50,6 @@ include if(FULL_HOSTNAME == DPM_HOSTS['dpm'][0]){'personality/se_dpm/puppet/bdii
 
 include 'components/profile/config';
 
-"/software/components/profile/env" = {
-    SELF["DPM_HOST"] = DPM_HOSTS['dpm'][0];
-    SELF["DPNS_HOST"] = DPM_HOSTS['dpm'][0];
-    SELF;
-};
-
+prefix '/software/components/profile/env';
+'DPM_HOST' = DPM_HOSTS['dpm'][0];
+'DPNS_HOST' = DPM_HOSTS['dpm'][0];
