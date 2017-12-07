@@ -60,8 +60,8 @@ prefix '/software/components/puppet/hieradata';
 # xrootd conf
 '{dpm::params::dpm_xrootd_fedredirs}' = XROOTD_FEDERATION_PARAMS;
 '{dpm::params::xrd_report}' = if (is_defined(XROOTD_REPORTING_OPTIONS)) XROOTD_REPORTING_OPTIONS else null;
-'{dpm::params::xrootd_monitor}' = if (is_defined(XROOTD_MONITORING_OPTIONS)) XROOTD_MONITORING_OPTIONS else null ;
-'{dpm::params::site_name}' = if (is_defined(XROOTD_SITE_NAME)) XROOTD_SITE_NAME else null ;
+'{dpm::params::xrootd_monitor}' = if (is_defined(XROOTD_MONITORING_OPTIONS)) XROOTD_MONITORING_OPTIONS else null;
+'{dpm::params::site_name}' = if (is_defined(XROOTD_SITE_NAME)) XROOTD_SITE_NAME else null;
 
 # enable/disable options
 '{dpm::params::webdav_enabled}' = if (HTTPS_ENABLED) 'yes' else 'no';
