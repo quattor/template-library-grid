@@ -13,6 +13,6 @@ include { 'components/cron/config' };
     'frequency', '0 5 * * *',
     'name',      'purgeCreamRunning',
     'user',      'root',
-  ),  
+  ),
 );
 

@@ -71,7 +71,7 @@ include { 'components/cron/config' };
     "user","root",
     "frequency", "5 0 * * *", #run right after midnight
     "command", SCRIPT));
-    
+
 include { 'components/altlogrotate/config' };
 "/software/components/altlogrotate/entries/apel_hostingcluster_specrecords_fix" =
   nlist("pattern", "/var/log/apel_hostingcluster_specrecords_fix.ncm-cron.log",

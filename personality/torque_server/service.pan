@@ -55,10 +55,10 @@ include { 'personality/bdii/service' };
 # Ensure that the host certificates have the correct permissions.
 include { 'features/security/host_certs' };
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include { 'features/ldconf/config' };
 
-# Globus sysconfig files. 
+# Globus sysconfig files.
 include { 'features/globus/sysconfig' };
 include { 'features/edg/sysconfig' };
 # Add accepted CAs
@@ -67,11 +67,11 @@ include { 'security/cas' };
 # Update the certificate revocation lists.
 include { 'features/fetch-crl/config' };
 
-# Authorization via grid mapfile. 
+# Authorization via grid mapfile.
 include { 'features/mkgridmap/standard' };
 
 # GridFTP is needed for experiments to publish
-# their run time tags. 
+# their run time tags.
 include { 'features/gridftp/service' };
 
 # PBS accounting.

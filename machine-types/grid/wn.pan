@@ -1,4 +1,4 @@
-# This is a wrapper template for a workernode 
+# This is a wrapper template for a workernode
 # to enable a build speedup using profile cloning, also
 # known as 'clone speedup' or 'dummy WN'
 

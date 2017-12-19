@@ -7,23 +7,23 @@ variable GRIDFTP_PORT = 2811;
 variable GRIDFTP_MAX_CONNECTIONS ?= 150;
 
 include { 'features/gridftp/rpms/config' };
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # chkconfig
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/chkconfig/config' };
 
-"/software/components/chkconfig/service/globus-gridftp/on" = ""; 
+"/software/components/chkconfig/service/globus-gridftp/on" = "";
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # accounts
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'users/gridftp' };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # iptables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/iptables/config' };
 
 # Inbound port(s).
@@ -39,25 +39,25 @@ include { 'components/iptables/config' };
 # Outbound port(s).
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # etcservices
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/etcservices/config' };
 
-"/software/components/etcservices/entries" = 
+"/software/components/etcservices/entries" =
   push("gridftp "+to_string(GRIDFTP_PORT)+"/tcp");
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # cron
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 #include { 'components/cron/config' };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # altlogrotate
-# ---------------------------------------------------------------------------- 
-#include { 'components/altlogrotate/config' }; 
+# ----------------------------------------------------------------------------
+#include { 'components/altlogrotate/config' };
 
 "/software/components/altlogrotate/entries/gridftp-lcas_lcmaps" =
   nlist("pattern", "/var/log/gridftp-lcas_lcmaps.log",
@@ -71,9 +71,9 @@ include { 'components/etcservices/config' };
         );
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # globuscfg
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/globuscfg/config' };
 
 include { 'features/globus/base' };
@@ -116,7 +116,7 @@ variable GLOBUSCFG_FIX_EXE ?= "/usr/sbin/globuscfg_fix";
   );
 
 #work around configuration file path, which cannot be specified in globuscfg component
-#variable GLOBUS_GRIDFTP_CFGFILE ?= GLOBUS_LOCATION + "/etc/gridftp.conf";  
+#variable GLOBUS_GRIDFTP_CFGFILE ?= GLOBUS_LOCATION + "/etc/gridftp.conf";
 #"/software/components/symlink/links" =
 #  push(nlist("name", GLOBUS_GRIDFTP_CFGFILE,
 #             "target", "/etc/gridftp.conf",

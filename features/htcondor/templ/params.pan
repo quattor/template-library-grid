@@ -12,7 +12,7 @@ EOF
      foreach(group;value;values){
        if(group!="default"){
          txt = txt + 'IfThenElse( PolicyGroup == "' + group +'",'+ to_string(value) +',\'+"\n";
-	 count=count+1; 
+	 count=count+1;
        };
      };
      txt=txt+to_string(values["default"]);

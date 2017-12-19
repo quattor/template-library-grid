@@ -10,7 +10,7 @@ include { 'personality/px/rpms' };
 # Ensure that the host certificates have the correct permissions.
 include { 'features/security/host_certs' };
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include { 'features/ldconf/config' };
 
 # gLite and Globus sysconfig and environment variables.
@@ -34,7 +34,7 @@ include { 'personality/bdii/service' };
 # Configure Globus
 include { 'features/globus/base' };
 
-# Include the proxy configuration. 
+# Include the proxy configuration.
 include { 'personality/px/config' };
 
 # Configure the information provider.

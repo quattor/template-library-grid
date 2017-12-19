@@ -170,7 +170,7 @@ variable SEDPM_IS_HEAD_NODE = {
 #  - This is the DPM internal protocol so RFIO daemon MUST run on every disk server,
 #    whether RFIO is used an access protocol or not.
 #  - Use of SURL with RFIO requires a RFIO daemon on the head node even though
-#    this is not a disk server. 
+#    this is not a disk server.
 variable DPM_ACCESS_PROTOCOLS ?= list('gsiftp','rfio');
 variable DPM_USE_LEGACY_PROTOCOL_OPTIONS ?= false;
 variable TEST = if ( length(DPM_ACCESS_PROTOCOLS) == 0 ) error('No access protocol configured in DPM configuration');
@@ -218,7 +218,7 @@ variable DMLITE_ENABLED = {
     false;
   } else {
     true;
-  }; 
+  };
 };
 
 # Define variables for main protocols to help with GIP configuration in particular.
@@ -299,16 +299,16 @@ include 'components/filecopy/config';
   SELF;
 };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # iptables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 variable DPM_IPTABLES_RULES ?= {
   if ( !is_null(SELF) ) {
     dpm_config = value('/software/components/dpmlfc');
     # Use an nlist to handle duplicates in case of any (should not)
     port_list = nlist();
-  
+
     # For each element in dpmlfc configuration, check if it is a service (if an
     # entry exists in DPM_PORTS) and, if yes, get the corresponding ports from
     # DPM_PORTS (ports in dpmlfc configuration are set to DPM_PORTS contents) if
@@ -322,7 +322,7 @@ variable DPM_IPTABLES_RULES ?= {
         };
       };
     };
-    
+
     if ( length(port_list) > 0 ) {
       foreach (port;v;port_list) {
         SELF[length(SELF)] = nlist("command", "-A",

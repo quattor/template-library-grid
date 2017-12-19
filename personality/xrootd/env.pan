@@ -31,7 +31,7 @@ variable XROOTD_SITE_NAME ?= {
 # there are several federations configured with monitoring enabled.
 variable XROOTD_MONITORING_OPTIONS ?= 'all flush io 30s ident 5m fstat 60 lfn ops xfr 5 mbuff 8k rbuff 4k rnums 3 window 5s';
 # Other default values for monitoring and reporting
-variable XROOTD_MONITORING_EVENTS ?= list('files','io','info','user','redir'); 
+variable XROOTD_MONITORING_EVENTS ?= list('files','io','info','user','redir');
 variable XROOTD_REPORTING_OPTIONS ?= 'every 60s all -buff -poll sync';
 # Monitoring destinations: both must be lists
 variable XROOTD_MONITORING_DESTINATIONS ?= undef;
@@ -46,7 +46,7 @@ variable XROOTD_SECURITY_GSI_PARAMS ?= {
   SELF["gmapopt"] = 10;
   SELF["key"] = "/etc/grid-security/dpmmgr/dpmkey.pem";
   SELF["md"] = "sha256:sha1";
-  if ( VOMS_XROOTD_EXTENSION_ENABLED ) { 
+  if ( VOMS_XROOTD_EXTENSION_ENABLED ) {
     SELF["vomsfun"] = "/usr/lib64/libXrdSecgsiVOMS.so";
   } else {
     SELF["vomsat"] = 0;

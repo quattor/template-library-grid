@@ -26,7 +26,7 @@ include 'repository/config/htcondor';
 
 include 'components/filecopy/config';
 
-'/software/components/filecopy/services' = {	    
+'/software/components/filecopy/services' = {
   # Put the cluster Key file
   SELF[escape(CONDOR_CONFIG['pwd_file']+'.encoded')] =
     nlist('config', CONDOR_CONFIG['pwd_hash'],
@@ -40,14 +40,14 @@ include 'components/filecopy/config';
 
     SELF[escape(file['path'])] = nlist('config', dummy['text'],
 				       'restart', file['restart'] ,
-				       'backup',false, 
+				       'backup',false,
 	                               );
   };
 
-		
+
   SELF[escape(CONDOR_CONFIG['cfgdir'] + '/condor_config.local')] = nlist('config', CONDOR_CONFIG['config.local'],
 				     	                                 'restart', CONDOR_CONFIG['restart'] ,
-				     	                                 'backup',false, 
+				     	                                 'backup',false,
 					                                 );
 
   if(CONDOR_CONFIG['strict']){
@@ -55,7 +55,7 @@ include 'components/filecopy/config';
     SELF[escape(CONDOR_CONFIG['cfgdir']+'/quattor_cleaning_script.sh')] = nlist('config', script['text'],
 										'backup',false,
 										'perms','0775',
-										 );    
+										 );
   };
 
   if(CONDOR_CONFIG['intel_mic']){
@@ -66,7 +66,7 @@ include 'components/filecopy/config';
       'perms','0775',
     );
   };
-  
+
 
 
   SELF;

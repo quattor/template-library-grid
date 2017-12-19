@@ -34,7 +34,7 @@ include { 'components/filecopy/config' };
 
 
 # Run very frequently to ensure a prompt reaction if the problem occurs
-"/software/components/cron/entries" = 
+"/software/components/cron/entries" =
   push(nlist(
     "name","glite-wms-ism-monitoring",
     "user","root",
@@ -43,7 +43,7 @@ include { 'components/filecopy/config' };
                      WMS_MONITOR_ISM_SCRIPT,
            ));
 
-"/software/components/altlogrotate/entries/glite-wms-ism-monitoring" = 
+"/software/components/altlogrotate/entries/glite-wms-ism-monitoring" =
   nlist("pattern", "/var/log/glite-wms-ism-monitoring",
         "compress", true,
         "missingok", true,

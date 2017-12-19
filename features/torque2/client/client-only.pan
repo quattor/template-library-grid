@@ -26,9 +26,9 @@ include { 'features/torque2/config' };
 
 include { 'features/torque2/munge/config' };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # pbsclient
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/pbsclient/config' };
 "/software/components/pbsclient/behaviour" = "OpenPBS";
 "/software/components/pbsclient/restricted" = list(TORQUE_SERVER_HOST);

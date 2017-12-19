@@ -8,7 +8,7 @@ include { 'components/accounts/config' };
 
 include { 'users/infosys' };
 
-"/software/components/accounts/groups/edguser" = 
+"/software/components/accounts/groups/edguser" =
   nlist("gid", 995);
 
 "/software/components/accounts/users/edguser" = nlist(

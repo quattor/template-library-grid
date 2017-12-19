@@ -22,7 +22,7 @@ include {'components/filecopy/config'};
 
 '/software/components/filecopy/services/{/usr/bin/condor-accounting-fix}' = nlist(
                                 'config', file_contents('features/accounting/apel/condor-accounting-fix'),
-                                'perms', '0755',                                         
+                                'perms', '0755',
 );
 
 include {'components/spma/config'};
@@ -50,7 +50,7 @@ include { 'components/cron/config' };
 #
 # altlogrotate
 #
-include { 'components/altlogrotate/config' }; 
+include { 'components/altlogrotate/config' };
 '/software/components/altlogrotate/entries/' = {
 	SELF[ APEL_PARSE_CRON_NAME ]= nlist(
     	      'pattern', '/var/log/'+APEL_PARSE_CRON_NAME+'.ncm-cron.log',

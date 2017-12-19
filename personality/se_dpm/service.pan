@@ -8,7 +8,7 @@ variable DPM_USE_PUPPET_CONFIG ?= false;
 # Ensure that the host certificates have the correct permissions.
 include 'features/security/host_certs';
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include 'features/ldconf/config';
 
 # EDG, LCG, and Globus sysconfig files and environment variables
@@ -23,7 +23,7 @@ include 'security/cas';
 include 'features/fetch-crl/config';
 
 
-# Authorization via grid mapfile. 
+# Authorization via grid mapfile.
 include 'features/mkgridmap/standard';
 include 'features/mkgridmap/lcgdm';
 

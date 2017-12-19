@@ -17,10 +17,10 @@ include { 'personality/lfc/config' };
 # Ensure that the host certificates have the correct permissions.
 include { 'features/security/host_certs' };
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include { 'features/ldconf/config' };
 
-# EDG, LCG, and Globus sysconfig files. 
+# EDG, LCG, and Globus sysconfig files.
 include { 'features/globus/sysconfig' };
 
 
@@ -30,7 +30,7 @@ include { 'security/cas' };
 # Update the certificate revocation lists.
 include { 'features/fetch-crl/config' };
 
-# Authorization via grid mapfile. 
+# Authorization via grid mapfile.
 include { 'features/mkgridmap/lcgdm' };
 
 # Configure BDII or GRIS, whatever is appropriate

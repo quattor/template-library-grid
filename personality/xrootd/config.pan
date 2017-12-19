@@ -181,7 +181,7 @@ include { 'components/xrootd/config' };
                                                              'owner', DPM_USER+':'+DPM_GROUP,
                                                              'perms', '0400',
                                                             );
-    
+
     SELF[escape(XROOTD_HOST_CERT_DIR+'/dpmcert.pem')] = nlist('source', SITE_DEF_HOST_CERT,
                                                               'owner', DPM_USER+':'+DPM_GROUP,
                                                               'perms', '0644',
@@ -219,7 +219,7 @@ include { 'components/xrootd/config' };
 };
 
 include { 'components/dirperm/config' };
-'/software/components/dirperm/paths' = 
+'/software/components/dirperm/paths' =
   push(nlist('path',XROOTD_INSTALL_LOG,
              'owner',DPM_USER+':'+DPM_GROUP,
              'perm','0755',
@@ -227,7 +227,7 @@ include { 'components/dirperm/config' };
        )
   );
 
-'/software/components/dirperm/paths' = 
+'/software/components/dirperm/paths' =
   push(nlist('path',XROOTD_SPOOL_DIR,
              'owner',DPM_USER+':'+DPM_GROUP,
              'perm','0755',
@@ -235,7 +235,7 @@ include { 'components/dirperm/config' };
        )
   );
 
-'/software/components/dirperm/paths' = 
+'/software/components/dirperm/paths' =
   push(nlist('path',XROOTD_HOST_CERT_DIR,
              'owner',DPM_USER+':'+DPM_GROUP,
              'perm','0750',

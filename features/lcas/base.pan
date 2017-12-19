@@ -31,10 +31,10 @@ variable GLITE_GRID_ENV_PROFILE ?= '/etc/profile.d/grid-env.sh';
 # Include LCAS RPMs
 include 'features/lcas/rpms';
 
- 
-# ---------------------------------------------------------------------------- 
+
+# ----------------------------------------------------------------------------
 # First, build LCAS configuration in variables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 # LCAS paths
 variable LCAS_DB_FILE ?= LCAS_CONFIG_DIR+"/lcas.db";
@@ -44,7 +44,7 @@ variable LCAS_MODULE_PATH ?= LCAS_LIB_DIR+"/lcas";
 # Module order has no impact on LCAS decisions: use a dict for easy tweaking of module parameters in
 # other templates.
 variable LCAS_MODULES ?= {
-    # Banned users.  Ensure DNs are double-quoted. 
+    # Banned users.  Ensure DNs are double-quoted.
     SELF['userban'] = dict();
     SELF['userban']['path'] = LCAS_MODULE_PATH+"/lcas_userban.mod";
     SELF['userban']['args'] = "ban_users.db";
@@ -61,7 +61,7 @@ variable LCAS_MODULES ?= {
         "content", banned_users,
     );
 
-    # Defined time slots. 
+    # Defined time slots.
     if ( LCAS_TIMESLOTS_ENABLE ) {
         SELF['timeslots'] = dict();
         SELF['timeslots']['path'] = LCAS_MODULE_PATH+"/lcas_timeslots.mod";
@@ -77,7 +77,7 @@ variable LCAS_MODULES ?= {
     SELF['voms']['path'] = LCAS_MODULE_PATH+"/lcas_voms.mod";
     SELF['voms']['args'] = '"-vomsdir /etc/grid-security/vomsdir -certdir ' + SITE_DEF_CERTDIR +
         ' -authfile ' + SITE_DEF_GRIDMAP + ' -authformat simple -use_user_dn"';
-  
+
     # Allowed users.
     # lcas_userallow ignores its argument and always uses grid-mapfile as its input file: argument defined
     # for sake of clarity.
@@ -86,15 +86,15 @@ variable LCAS_MODULES ?= {
         SELF['userallow']['path'] = LCAS_MODULE_PATH+"/lcas_userallow.mod";
         SELF['userallow']['args'] = SITE_DEF_GRIDMAP;
     };
-  
+
     SELF;
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Add LCAS configuration to ncm-lcas configuration, taking care that
 # several LCAS configuration can coexist on one node.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include 'components/lcas/config';
 '/software/components/lcas/db' = {
     if ( is_list(SELF) ) {
@@ -112,9 +112,9 @@ include 'components/lcas/config';
     SELF;
 };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Define LCAS debug and logging level (default is very verbose)
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include 'components/profile/config';
 '/software/components/profile' = component_profile_add_env(
     GLITE_GRID_ENV_PROFILE, dict(

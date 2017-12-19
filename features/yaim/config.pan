@@ -75,14 +75,14 @@ variable YAIM_USERSCONF = {
 variable YAIM_GROUPSCONF_LOCAL ?= null;
 variable YAIM_GROUPSCONF = {
     x = "";
-    
+
     foreach ( i; vocfg; VO_CONFIG ) {
         if ( exists( vocfg['mapping'] ) ) {
             foreach ( j; rolegroup; vocfg['mapping'] ) {
                 x = x + yaim_group_line( rolegroup ) + "\n";
             };
         };
-        
+
     };
     x;
 };

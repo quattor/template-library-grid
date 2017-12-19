@@ -115,10 +115,10 @@ variable BLPARSER_LRMS_PARAMS = {
       params['logLevel'] = BLPARSER_LOG_LEVEL['DEFAULT'];
     };
   };
-  
+
   debug('BLPARSER_LRMS_PARAMS: '+to_string(SELF));
 
   SELF;
-}; 
+};
 
 

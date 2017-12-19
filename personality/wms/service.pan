@@ -45,11 +45,11 @@ include 'users/edguser';
 include 'users/edginfo';
 
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include 'features/ldconf/config';
 
 # LCMAPS : we need a different lcmaps config file for WMS and GridFTP...
-include 'features/lcmaps/wms'; 
+include 'features/lcmaps/wms';
 
 # Configuration for LCAS.
 include 'features/lcas/base';
@@ -71,7 +71,7 @@ include 'features/gridftp/service';
 variable NODE_USE_RESOURCE_BDII = true;
 variable BDII_TYPE ?= "resource";
 
-# Configure BDII 
+# Configure BDII
 include 'personality/bdii/service';
 
 # Add MySQL server.
@@ -80,7 +80,7 @@ include 'features/mysql/server';
 # Configure basic permissions for gLite
 include 'features/grid/dirperms';
 
-# Authorization via grid mapfile. 
+# Authorization via grid mapfile.
 include 'features/mkgridmap/standard';
 
 # Configure the information provider.
@@ -93,7 +93,7 @@ include 'features/java/config';
 # Configure Condor
 include 'features/condor/config';
 
-# Configure WMS environment variables. 
+# Configure WMS environment variables.
 include 'features/wms/client';
 
 # Add WMS server configuration

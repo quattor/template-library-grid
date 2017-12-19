@@ -88,14 +88,14 @@ variable LFC_DB_PARAMS = {
   };
   SELF;
 };
-"/software/components/dpmlfc/options/lfc/db/configfile" ?= LFC_DB_PARAMS['configfile']; 
-"/software/components/dpmlfc/options/lfc/db/user" ?= LFC_DB_PARAMS['user']; 
-"/software/components/dpmlfc/options/lfc/db/password" ?= LFC_DB_PARAMS['password']; 
+"/software/components/dpmlfc/options/lfc/db/configfile" ?= LFC_DB_PARAMS['configfile'];
+"/software/components/dpmlfc/options/lfc/db/user" ?= LFC_DB_PARAMS['user'];
+"/software/components/dpmlfc/options/lfc/db/password" ?= LFC_DB_PARAMS['password'];
 "/software/components/dpmlfc/options/lfc/db/server" ?= if ( is_defined(LFC_DB_PARAMS['server']) ) {
-                                                         LFC_DB_PARAMS['server']; 
+                                                         LFC_DB_PARAMS['server'];
                                                        } else {
-                                                         null; 
-                                                       }; 
+                                                         null;
+                                                       };
 
 
 # Configure LFC services
@@ -138,7 +138,7 @@ include { 'components/mysql/config' };
   SELF;
 };
 
-	
+
 # Define service port numbers to match site parameters if not explicitly defined
 "/software/components/dpmlfc" = {
   # Each service is described as a list of nlist. Port option is in the nlist.
@@ -159,9 +159,9 @@ include { 'components/mysql/config' };
   SELF;
 };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Define VO to configure in LFC namespace
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 "/software/components/dpmlfc/vos" = {
   foreach (i;vo;VOS) {
     if ( is_defined(VO_INFO[vo]['name']) ) {
@@ -179,16 +179,16 @@ include { 'components/mysql/config' };
   };
 };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # iptables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 variable LFC_IPTABLES_RULES ?= {
   if ( !is_null(SELF) ) {
     lfc_config = value('/software/components/dpmlfc');
     # Use an nlist to handle duplicates in case of any (should not)
     port_list = nlist();
-    
+
     # For each element in dpmlfc configuration, check if it is a service (if an
     # entry exists in LFC_PORTS) and, if yes, get the corresponding ports from
     # LFC_PORTS (ports in dpmlfc configuration are set to LFC_PORTS contents) if
@@ -202,7 +202,7 @@ variable LFC_IPTABLES_RULES ?= {
         };
       };
     };
-    
+
     if ( length(port_list) > 0 ) {
       foreach (port;v;port_list) {
         SELF[length(SELF)] = nlist("command", "-A",

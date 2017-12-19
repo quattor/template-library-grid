@@ -23,7 +23,7 @@ include { VOMS_CONFIG_SITE };
 # Add glite user
 include { 'users/glite' };
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include { 'features/ldconf/config' };
 
 # Include standard environmental variables.

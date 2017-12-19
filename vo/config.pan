@@ -196,7 +196,7 @@ include { 'components/dirperm/config' };
 
 # Configure environment variables for each VOs
 
-variable PROFILE_ENV_INCLUDE = if ( NODE_VO_PROFILE_ENV ) { 
+variable PROFILE_ENV_INCLUDE = if ( NODE_VO_PROFILE_ENV ) {
                                  "components/profile/config";
                                } else {
                                  null;
@@ -210,7 +210,7 @@ variable SE_HOST_DEFAULT_SC3 ?= null;
                                    if ( exists(SELF) && is_defined(SELF) ) {
                                      SELF;
                                    } else {
-                                     null;          
+                                     null;
                                    };
                                  };
 
@@ -226,7 +226,7 @@ variable SE_HOST_DEFAULT_SC3 ?= null;
                                     };
 
 # Configure gridmapdir
-variable GRIDMAPDIR_INCLUDE = if ( NODE_VO_GRIDMAPDIR_CONFIG ) { 
+variable GRIDMAPDIR_INCLUDE = if ( NODE_VO_GRIDMAPDIR_CONFIG ) {
                                 "components/gridmapdir/config";
                             } else {
                                 null;
@@ -240,14 +240,14 @@ include { GRIDMAPDIR_INCLUDE };
                                     };
 
 # Set an explicit list of VOs for mkgridmap if GSISSH_SERVER_ENABLED
-variable MKGRIDMAP_INCLUDE = if ( GSISSH_SERVER_ENABLED ) { 
+variable MKGRIDMAP_INCLUDE = if ( GSISSH_SERVER_ENABLED ) {
                                "components/mkgridmap/config";
                              } else {
                                undef;
                              };
 include { MKGRIDMAP_INCLUDE };
 '/software/components/mkgridmap' = {
-  if ( is_defined(MKGRIDMAP_INCLUDE) ) { 
+  if ( is_defined(MKGRIDMAP_INCLUDE) ) {
     SELF['voList'] = NODE_VO_ACCOUNT_LIST;
   };
   if ( is_defined(SELF) ) {
@@ -258,7 +258,7 @@ include { MKGRIDMAP_INCLUDE };
 };
 
 # Configure Workload Manager
-variable WLCONFIG_INCLUDE = if ( NODE_VO_WLCONFIG ) { 
+variable WLCONFIG_INCLUDE = if ( NODE_VO_WLCONFIG ) {
                                 "components/wlconfig/config";
                             } else {
                                 null;
@@ -269,9 +269,9 @@ include { WLCONFIG_INCLUDE };
                                   } else {
                                       null;
                                   };
-                                                
+
 # Configure VOMS client
-variable VOMSCLIENT_CONFIG = if ( NODE_VO_VOMSCLIENT ) { 
+variable VOMSCLIENT_CONFIG = if ( NODE_VO_VOMSCLIENT ) {
                                "features/security/vomsclient";
                              } else {
                                null;
@@ -288,5 +288,5 @@ include { VOMSCLIENT_INCLUDE };
                                     } else {
                                       null;
                                     };
-                                                
-                                                
+
+

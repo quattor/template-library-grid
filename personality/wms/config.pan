@@ -12,7 +12,7 @@ variable WMS_LOCATION ?= EMI_LOCATION;
 variable WMS_LOCATION_LOG ?= '/var/log/wms';
 variable WMS_LOCATION_TMP ?= EMI_LOCATION_TMP;
 variable WMS_LOCATION_SBIN ?= '/usr/sbin';
-variable WMS_CONFIG_DIR ?= WMS_LOCATION_ETC + '/glite-wms'; 
+variable WMS_CONFIG_DIR ?= WMS_LOCATION_ETC + '/glite-wms';
 
 
 ## Use LB_MYSQL_ADMINUSER/PWD both on WMS and LB to ensure consistency if they are on the same node
@@ -47,7 +47,7 @@ variable WMS_LB_SERVER ?= {
   if(is_string(WMS_LB_SERVER_HOST)) {
     # specify the double quotes, so that we can use lists of LB Servers
     lb_server='"' + WMS_LB_SERVER_HOST + ':' + to_string(WMS_LB_SERVER_PORT) + '"';
-  } else {		
+  } else {
     if(is_list(WMS_LB_SERVER_HOST) ) {
       foreach(k;host;WMS_LB_SERVER_HOST) {
         if(! is_string(host) ) {
@@ -244,7 +244,7 @@ variable WMS_MAX_INPUT_SANDBOX_SIZE ?= 10000000;
 #-----------------------------------------------------------------------------
 
 variable WMS_WMPROXY_LOG_LEVEL ?= WMS_LOG_LEVEL_DEFAULT;
-# Apache LogLevel: emerg, alert, crit, error, warn, notice, info, debug 
+# Apache LogLevel: emerg, alert, crit, error, warn, notice, info, debug
 variable WMS_WMPROXY_APACHE_LOG_LEVEL ?= if ( WMS_WMPROXY_LOG_LEVEL <= 5 ) {
                                            'warn';
                                          } else {
@@ -322,7 +322,7 @@ variable WMS_ICE_WORKDIR ?= WMS_LOCATION_VAR + '/ice';
 variable WMS_ICE_LISTENER_ENABLED ?= false;
 variable WMS_ICE_LEASE_UPDATER_ENABLED ?= false;
 variable WMS_ICE_LEASE_DELTA_TIME ?= 0;
-# ICE input queue format : use jobdir 
+# ICE input queue format : use jobdir
 variable WMS_ICE_INPUT_TYPE = 'jobdir';
 variable WMS_ICE_INPUT ?= WMS_ICE_WORKDIR + '/jobdir';
 
@@ -366,8 +366,8 @@ variable WMS_HOST_CERT ?= WMS_CERT_DIR + "/" + "hostcert.pem";
 variable WMS_X509_PROXY ?= EMI_LOCATION_VAR + '/glite/wms.proxy';
 
 include 'components/chkconfig/config';
-"/software/components/chkconfig/service/globus-gridftp/on" = ""; 
-"/software/components/chkconfig/service/globus-gridftp/startstop" = true; 
+"/software/components/chkconfig/service/globus-gridftp/on" = "";
+"/software/components/chkconfig/service/globus-gridftp/startstop" = true;
 
 include 'features/globus/sysconfig';
 #"/software/components/sysconfig/files/globus/LCMAPS_DB_FILE" = "/etc/lcmaps/lcmaps.db.gridftp";
@@ -559,19 +559,19 @@ include 'components/glitestartup/config';
   };
 };
 
-'/software/components/glitestartup/services' = {  
+'/software/components/glitestartup/services' = {
   services = SELF;
 
   foreach (i;service;WMS_SERVICES) {
     service = 'glite-wms-' + service;
     services = glitestartup_mod_service(service);
   };
-  
+
   foreach (i;service;WMS_AUX_SERVICES) {
     service = 'glite-' + service;
     services = glitestartup_mod_service(service);
   };
-  
+
   if ( is_defined(services) && (length(services) > 0) ) {
     services;
   } else {
@@ -684,7 +684,7 @@ include 'components/altlogrotate/config';
         "copytruncate", true,
   );
 
-"/software/components/altlogrotate/entries/httpd-wmproxy-access" = 
+"/software/components/altlogrotate/entries/httpd-wmproxy-access" =
   nlist("pattern", "/var/log/wms/httpd-wmproxy-access*.log",
         "compress", true,
         "frequency", "daily",
@@ -694,7 +694,7 @@ include 'components/altlogrotate/config';
         "copytruncate", true,
   );
 
-"/software/components/altlogrotate/entries/httpd-wmproxy-errors" = 
+"/software/components/altlogrotate/entries/httpd-wmproxy-errors" =
   nlist("pattern", "/var/log/wms/httpd-wmproxy-errors*.log",
         "compress", true,
         "frequency", "daily",
@@ -704,7 +704,7 @@ include 'components/altlogrotate/config';
         "copytruncate", true,
   );
 
-"/software/components/altlogrotate/entries/wmproxy" = 
+"/software/components/altlogrotate/entries/wmproxy" =
   nlist("pattern", "/var/log/wms/wmproxy_events*.log",
         "compress", true,
         "frequency", "daily",

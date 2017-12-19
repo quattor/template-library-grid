@@ -80,7 +80,7 @@ variable GLEXEC_CMD_PREFIX=CE_BATCH_SYS;
 
 #Defaults:tomcat        passwd_tries=0
 "/software/components/sudo/general_options" = {
-  next_record = length(SELF); 
+  next_record = length(SELF);
   SELF[next_record]['options']['passwd_tries'] = 0;
   SELF[next_record]['user'] = TOMCAT_USER;
 

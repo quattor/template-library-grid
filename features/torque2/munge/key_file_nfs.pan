@@ -10,9 +10,9 @@ variable NFS_MOUNT_POINTS ={
 	if(is_defined(TORQUE_SERVER_HOST) && (TORQUE_SERVER_HOST != FULL_HOSTNAME)){
         SELF['mountedFS'][escape('/etc/munge')] =  nlist('nfsPath',TORQUE_SERVER_HOST+':/etc/munge',
                                                     'nfsVersion', NFS_DEFAULT_VERSION);
-	
+
 	}else{
-	SELF['servedFS'][escape('/etc/munge')] = nlist('localPath','/etc/munge','nfsVersion',NFS_DEFAULT_VERSION);	
+	SELF['servedFS'][escape('/etc/munge')] = nlist('localPath','/etc/munge','nfsVersion',NFS_DEFAULT_VERSION);
 	};
         SELF;
 };

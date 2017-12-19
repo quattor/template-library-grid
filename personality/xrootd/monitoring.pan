@@ -91,7 +91,7 @@ variable XROOTD_REPORTING_DESTINATIONS = {
     reporting_options = XROOTD_REPORTING_OPTIONS;
     SELF['reportingOptions'] =  host_list + ' ' + reporting_options;
   };
-  SELF; 
+  SELF;
 };
 
 
