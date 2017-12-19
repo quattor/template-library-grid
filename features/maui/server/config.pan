@@ -15,7 +15,7 @@ variable MAUI_CONFIG_DIR ?= '/var/spool/maui';
 # wait for several job events in this interval that will be processed in
 # 1 pass resulting in better MAUI efficiency and better scheduling
 # decisions.
-# RMPOLLINTERVAL is the interval between 2 MAUI initiated queries of 
+# RMPOLLINTERVAL is the interval between 2 MAUI initiated queries of
 # Torque for new jobs. This acts as a catch-all mechanism and should not
 # be set to low if there is a large number of jobs in queue or burst
 # submissions.
@@ -26,9 +26,9 @@ variable MAUI_CONFIG_DIR ?= '/var/spool/maui';
 # consumption is high with a large number of jobs in queue and MAUI is
 # no longer responding.
 #
-# DEFERTIME : This is the time maui will wait before trying to reschedule a job which 
+# DEFERTIME : This is the time maui will wait before trying to reschedule a job which
 # couldn't initially be scheduled because of a lack of resources.
-# Set to something short if short and short-deadline jobs are 
+# Set to something short if short and short-deadline jobs are
 # supported on your site but not too short if you have many job slots
 # (must be correlated to scheduling time and let the chance for the pb
 # to be fixed in some ways, for example by pbs-monitoring running every
@@ -59,14 +59,14 @@ variable MAUI_SERVER_CONFIG_DEFAULT = nlist('ADMIN1', 'root',
                                             'SERVERPORT', 40559,
                                             'SERVERMODE', 'NORMAL',
                                            );
-   
+
 
 # Job priority parameters.
 #
-# Fair-share policy parameters.  The base scheduling policy for jobs 
+# Fair-share policy parameters.  The base scheduling policy for jobs
 # uses fair-share scheduling with a correction applied for jobs staying
 # a long time in queue.  This doesn't preclude short and short-
-# deadline jobs from executing immediately when reservations are 
+# deadline jobs from executing immediately when reservations are
 # available.
 variable MAUI_SERVER_POLICY ?= nlist();
 variable MAUI_SERVER_POLICY_DEFAULT = nlist(
@@ -86,8 +86,8 @@ variable MAUI_SERVER_POLICY_DEFAULT = nlist(
                                             'QUEUETIMEWEIGHT', 0,
                                             'XFACTORWEIGHT', 10,
                                            );
-   
-        
+
+
 # MAUI resource manager configuration
 variable MAUI_SERVER_RMCFG ?= nlist();
 variable MAUI_SERVER_RMCFG_DEFAULT ?= nlist('base', 'TYPE=PBS',
@@ -149,26 +149,26 @@ variable MAUI_USE_HW_CONFIG ?= if ( is_defined(TORQUE_USE_HW_CONFIG ) )
 variable MAUI_MONITORING_POSTPONED ?= false;
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # chkconfig
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/chkconfig/config' };
 
-"/software/components/chkconfig/service/maui/on" = ""; 
-"/software/components/chkconfig/service/maui/startstop" = true; 
-"/software/components/chkconfig/service/pbs_sched/off" = ""; 
-"/software/components/chkconfig/service/pbs_sched/startstop" = true; 
+"/software/components/chkconfig/service/maui/on" = "";
+"/software/components/chkconfig/service/maui/startstop" = true;
+"/software/components/chkconfig/service/pbs_sched/off" = "";
+"/software/components/chkconfig/service/pbs_sched/startstop" = true;
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # accounts
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 #include { 'features/maui/server/user' };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # iptables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 #include { 'components/iptables/config' };
 
 # Inbound port(s).
@@ -176,33 +176,33 @@ include { 'components/chkconfig/config' };
 # Outbound port(s).
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # etcservices
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/etcservices/config' };
 
-"/software/components/etcservices/entries" = 
+"/software/components/etcservices/entries" =
   push("maui 15004/tcp");
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # cron
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 #include { 'components/cron/config' };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # altlogrotate
-# ---------------------------------------------------------------------------- 
-#include { 'components/altlogrotate/config' }; 
+# ----------------------------------------------------------------------------
+#include { 'components/altlogrotate/config' };
 
 
-# ---------------------------------------------------------------------------- 
-# Build MAUI configuration from MAUI_SERVER_xxx variables, with 
+# ----------------------------------------------------------------------------
+# Build MAUI configuration from MAUI_SERVER_xxx variables, with
 # MAUI_SERVER_CONFIG_SITE added at the end of configuration file.
 # For backward compatibility, if MAUI_CONFIG already exists just use it.
-# ---------------------------------------------------------------------------- 
-include { 'components/maui/config' }; 
+# ----------------------------------------------------------------------------
+include { 'components/maui/config' };
 
 variable MAUI_CONFIG ?= {
   config = '';
@@ -226,7 +226,7 @@ variable MAUI_CONFIG ?= {
       server_rmcfg[param] = val;
     };
   };
-  
+
   config = config + "\n#Server main parameters\n";
   foreach (param;val;server_config) {
     if ( is_string(val) ) {
@@ -246,8 +246,8 @@ variable MAUI_CONFIG ?= {
     };
     config = config + "RMCFG[" + param + "]\t\t" + valstr + "\n";
   };
-   
-  config = config + "\n# Job priority parameters\n";  
+
+  config = config + "\n# Job priority parameters\n";
   foreach (param;val;server_policy) {
     if ( is_string(val) ) {
       valstr = val;
@@ -258,11 +258,11 @@ variable MAUI_CONFIG ?= {
   };
   config = config + "\n";
 
-  config = config + "\n# Site specific parameters\n";  
+  config = config + "\n# Site specific parameters\n";
   if ( is_defined(MAUI_SERVER_CONFIG_SITE) ) {
     config = config + MAUI_SERVER_CONFIG_SITE;
   };
-  
+
   # maui_def_part allows to keep track that an explicit default partition
   # has been configured (instead of MAUI default 'DEFAULT')
   if ( exists(MAUI_WN_PART_DEF) && is_defined(MAUI_WN_PART_DEF) && (length(MAUI_WN_PART_DEF) > 0) ) {
@@ -304,7 +304,7 @@ variable MAUI_CONFIG ?= {
     config = config + "# By default, allow access to NO partitions.\n";
     config = config + "SYSCFG[base] PLIST=\n\n";
   };
-  
+
   config = config + "\n# Define parameters and partitions for each VO (group).\n";
   group_part = '';
   foreach (group_name;group_params;group_list_params) {
@@ -378,10 +378,10 @@ variable MAUI_CONFIG ?= {
       config = config + "NODECFG[DEFAULT]" + node_config + "\n\n";
     };
   };
-  
+
   foreach (k;wn;WORKER_NODES) {
     node_config = '';
-    
+
     # Determine node partition
     if ( exists(MAUI_WN_PART[wn]) ) {
       wn_part = MAUI_WN_PART[wn];
@@ -397,7 +397,7 @@ variable MAUI_CONFIG ?= {
       };
       node_config = node_config + " PARTITION=" + wn_part;
     };
-    
+
     # Add other node-specific characteristics
     if ( is_defined(MAUI_NODE_PARAMS[wn]) ) {
       foreach (param;value;MAUI_NODE_PARAMS[wn]) {
@@ -414,7 +414,7 @@ variable MAUI_CONFIG ?= {
     if ( length(node_config) > 0 ) {
       config = config + "NODECFG[" + wn + "]" + node_config + "\n\n";
     };
-    
+
     # Compute the number of slots dedicated to SR.
     if ( MAUI_USE_HW_CONFIG && exists(WN_CPU_CONFIG[wn]['slots']) && is_defined(WN_CPU_CONFIG[wn]['slots']) ) {
       process_slots = to_long(WN_CPU_CONFIG[wn]['slots']);
@@ -446,7 +446,7 @@ variable MAUI_CONFIG ?= {
     };
 
     if ( MAUI_STANDING_RESERVATION_ENABLED ) {
-      if ( exists(MAUI_STANDING_RESERVATION_CLASSES[wn]) && is_defined(MAUI_STANDING_RESERVATION_CLASSES[wn]) ) { 
+      if ( exists(MAUI_STANDING_RESERVATION_CLASSES[wn]) && is_defined(MAUI_STANDING_RESERVATION_CLASSES[wn]) ) {
         sr_classlist = MAUI_STANDING_RESERVATION_CLASSES[wn];
       } else {
         sr_classlist = MAUI_STANDING_RESERVATION_CLASSES['DEFAULT'];
@@ -474,7 +474,7 @@ variable MAUI_CONFIG ?= {
 "/software/components/maui/contents" ?= MAUI_CONFIG;
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Define a cron job to ensure that MAUI is running properly
 # Define MAUI_MONITORING_TEMPLATE to null to suppress installation of this script.
 # If MAUI_MONITORING_POSTPONED is true, don't configure it now. This flag is used

@@ -12,13 +12,13 @@ function add_ce_runtime_env = {
     return(SELF);
   };
 
-  tag_nlist = nlist(); 
+  tag_nlist = nlist();
   if ( is_list(SELF) ) {
     foreach(i;v;SELF) {
       tag_nlist[v] = '';
     };
   };
- 
+
   arg_num = 0;
   while ( arg_num < ARGC ) {
     if ( is_list(ARGV[arg_num]) ) {
@@ -36,7 +36,7 @@ function add_ce_runtime_env = {
     };
     arg_num = arg_num + 1;
   };
-  
+
   # Rewrite SELF list with tags in alphabetical order.
   # This is done by overwriting existing entries: the new list is at least
   # as long as the original one.

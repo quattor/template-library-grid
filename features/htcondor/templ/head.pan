@@ -19,7 +19,7 @@ MAX_HISTORY_ROTATIONS = 10
 
 EOF
 	foreach(i;opt;CONDOR_CONFIG['options']['head']){
-		txt = txt +  opt['name'] + ' = ' + opt['value'] + "\n"; 
+		txt = txt +  opt['name'] + ' = ' + opt['value'] + "\n";
 	};
 	txt;
 };

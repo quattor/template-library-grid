@@ -1,7 +1,7 @@
 structure template features/htcondor/templ/groups;
 
 'text' = {
-       
+
   # building the GROUP_NAMES entry
 
   submit_attrs = '';

@@ -20,7 +20,7 @@ variable NFS_VIRTUAL_ROOT_EXPORT_OPTS ?= 'fsid=0,'+NFS_V4_EXPORT_COMMON_OPTS;
 # file system (escaped) specifying the default to apply to this particular file system.
 # By default, enable root squashing on all file systems, except home directory parents
 # (required for account configuration). Entries explicitly set by a site are not overwritten.
-# These defaults don't apply to hosts with specific rights defined, like CE. 
+# These defaults don't apply to hosts with specific rights defined, like CE.
 
 variable NFS_DEFAULT_RIGHTS = {
   if ( exists(SELF['DEFAULT']) && is_defined(SELF['DEFAULT']) ) {
@@ -74,8 +74,8 @@ variable SITE_NFS_ACL  ?= {
     } else if ( exists(NFS_CLIENT_HOSTS['DEFAULT']) && is_defined(NFS_CLIENT_HOSTS['DEFAULT']) ) {
       entry = 'DEFAULT';
     } else {
-      error('DEFAULT entry missing or invalid in NFS_CLIENT_HOSTS'); 
-    }; 
+      error('DEFAULT entry missing or invalid in NFS_CLIENT_HOSTS');
+    };
     foreach (host;nfs_rigths;NFS_CLIENT_HOSTS[entry]) {
       if ( is_defined(nfs_rigths) ) {
         export_options = nfs_rigths;
@@ -129,7 +129,7 @@ include { 'components/filecopy/config' };
 
 include { 'components/nfs/config' };
 
-"/software/components/nfs" = { 
+"/software/components/nfs" = {
   if ( !exists(SELF['exports']) || !is_defined(SELF['exports']) ) {
     SELF['exports'] = list();
   };
@@ -152,14 +152,14 @@ include { 'components/nfs/config' };
     } else {
       error('SITE_NFS_ACL has an invalid type: must be a list or nlist');
     };
-    
+
     # NFS v3
-    if ( !is_defined(params['nfsVersion']) || (params['nfsVersion'] == '3') ) { 
+    if ( !is_defined(params['nfsVersion']) || (params['nfsVersion'] == '3') ) {
       debug('Exporting FS '+params['localPath']+' for NFS v3');
       SELF['exports'][length(SELF['exports'])] = nlist("path",params['localPath'],
                                                        "hosts",acl_entry);
     };
-    
+
     # NFS v4
     if ( !is_defined(params['nfsVersion']) || (params['nfsVersion'] == '4') ) {
       if ( !nfsv4_virtual_root_added ) {
@@ -185,9 +185,9 @@ include { 'components/nfs/config' };
                                                      "mountpoint", export_path,
                                                      "fstype","none",
                                                      "options","bind");
-      
+
     };
-  }; 
+  };
 
   SELF;
 };

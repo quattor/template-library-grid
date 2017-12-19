@@ -5,9 +5,9 @@ variable GLITE_LOCATION ?= "/opt/glite";
 # FIXME: This is currently a hardcoded configuration.  This should
 # be taken over by the gLite configuration component.
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # filecopy
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/filecopy/config' };
 
 variable FTS_SERVER_PORT ?= 8443;
@@ -35,7 +35,7 @@ variable FTS_SERVER_URL ?= {
   } else {
     url = undef
   };
-  
+
   url;
 };
 
@@ -43,7 +43,7 @@ variable FTS_SERVER_URL ?= {
 
 variable CONTENTS = {
   contents = '';
-  
+
   contents = <<EOF;
 <?xml version="1.0" encoding="UTF-8"?>
 
@@ -67,12 +67,12 @@ contents = contents + <<EOF;
 
 </services>
 EOF
-  
+
   contents;
 };
 
 
-# Add this file to the configuration. 
+# Add this file to the configuration.
 "/software/components/filecopy/services" =
   npush(escape(GLITE_LOCATION+"/etc/services.xml"),
         nlist("config",CONTENTS,

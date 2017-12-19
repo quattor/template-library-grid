@@ -10,10 +10,10 @@ variable SEDPM_INFO_USER ?= if ( is_defined(GIP_USER) ) {
                             };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Proxy for resource BDII : a cron entry + a startup script to ensure
 # a valid proxy exists at boot time.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include 'components/cron/config';
 
 # Cron job to create hostproxy for GIP user (used by dynamic plugin)
@@ -54,10 +54,10 @@ variable DPM_HOSTPROXY_STARTUP_CONTENTS = "#!/bin/sh\n" +
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # altlogrotate
-# ---------------------------------------------------------------------------- 
-include 'components/altlogrotate/config'; 
+# ----------------------------------------------------------------------------
+include 'components/altlogrotate/config';
 
 "/software/components/altlogrotate/entries" = {
   SELF[DPM_HOSTPROXY_CRON] = nlist("pattern", "/var/log/"+DPM_HOSTPROXY_CRON+".ncm-cron.log",

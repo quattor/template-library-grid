@@ -4,20 +4,20 @@ variable GSISSH_PORT ?= 1975;
 
 include { 'features/gsissh/server/rpms' };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # chkconfig
 # Ensure sshd is running too.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/chkconfig/config' };
-"/software/components/chkconfig/service/gsisshd/on" = ""; 
-"/software/components/chkconfig/service/gsisshd/startstop" = true; 
-"/software/components/chkconfig/service/sshd/on" = ""; 
-"/software/components/chkconfig/service/sshd/startstop" = true; 
+"/software/components/chkconfig/service/gsisshd/on" = "";
+"/software/components/chkconfig/service/gsisshd/startstop" = true;
+"/software/components/chkconfig/service/sshd/on" = "";
+"/software/components/chkconfig/service/sshd/startstop" = true;
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # iptables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/iptables/config' };
 # Inbound port(s).
 "/software/components/iptables/filter/rules" = push(
@@ -32,11 +32,11 @@ include { 'components/iptables/config' };
 # Outbound port(s).
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # etcservices
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/etcservices/config' };
-"/software/components/etcservices/entries" = 
+"/software/components/etcservices/entries" =
     push("gsisshd "+to_string(GSISSH_PORT)+"/tcp"
 );
 

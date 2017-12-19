@@ -13,5 +13,5 @@ include { 'features/gip/base' };
     if (! is_list(SELF)) {
         error('/software/components/gip2/external must be an list');
     };
-    append(escape(GIP_LDIF_DIR + '/default.ldif')); 
+    append(escape(GIP_LDIF_DIR + '/default.ldif'));
 };

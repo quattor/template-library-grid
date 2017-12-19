@@ -2,7 +2,7 @@
 unique template features/mpi/config;
 
 # Include the rpms only if necessary.  Unfortunately, because of dependencies
-# on the machine-type rpms, dummy rpms must be installed if MPI isn't 
+# on the machine-type rpms, dummy rpms must be installed if MPI isn't
 # wanted.
 include {
   if (ENABLE_MPI) {

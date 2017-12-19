@@ -1,4 +1,4 @@
- 
+
 unique template defaults/grid/config;
 
 include { 'defaults/grid/functions' };
@@ -8,39 +8,39 @@ include { 'defaults/grid/functions' };
 include { if_exists('update/init') };
 
 
-# This file defines a set of global variables for configuring the 
+# This file defines a set of global variables for configuring the
 # LCG/EGEE software.  Where the variables have sensible defaults,
 # real values are given.  Others which must be changed are defined
 # as 'undef'.  These will generate errors if you use them without
-# redefining the value. 
+# redefining the value.
 
 # This template should be included after any of your customizations
 # but before using any of the standard LCG/EGEE templates in your
-# machine definitions. 
+# machine definitions.
 
 # Default architecture
 variable PKG_ARCH_DEFAULT ?= 'x86_64';
 variable PKG_ARCH_GLITE ?= PKG_ARCH_DEFAULT;
 
 # SOURCE TREE LOCATIONS ---------------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
 # Define the root locations of the MW software trees. These
-# are used in many configuration files and for setting the ld.so.conf 
+# are used in many configuration files and for setting the ld.so.conf
 # libraries.  You do not redefine these unless you install the LCG/EGEE
-# software in non-standard locations. 
+# software in non-standard locations.
 
 # Installation root for the software.  Most of the grid software packages
-# install by default in /opt. 
+# install by default in /opt.
 
 variable INSTALL_ROOT ?= "";
 
-# Location of Globus software. 
+# Location of Globus software.
 
 variable GLOBUS_LOCATION ?= INSTALL_ROOT+'/usr';
 variable GLOBUS_LOCATION_ETC ?= '/etc';
 
-# Location of the gLite software. 
+# Location of the gLite software.
 
 variable GLITE_LOCATION       ?= '/usr';
 variable GLITE_LOCATION_BIN   ?= GLITE_LOCATION+'/bin';
@@ -51,7 +51,7 @@ variable GLITE_LOCATION_LOG   ?= '/var/log/glite';
 variable GLITE_LOCATION_TMP   ?= '/tmp';
 
 # Location of EMI software
- 
+
 variable EMI_LOCATION         ?= '';
 variable EMI_LOCATION_ETC     ?= '/etc';
 variable EMI_LOCATION_LOG     ?= '/var/log/emi';
@@ -63,7 +63,7 @@ variable GLITE_GRID_ENV_PROFILE ?= '/etc/profile.d/grid-env.sh';
 
 
 # SECURITY LOCATIONS ------------------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
 # Constants used for security-related files and directories.  Change these
 # only if you keep these in non-standard locations.
@@ -82,20 +82,20 @@ variable SITE_DEF_GROUPMAP     ?= INSTALL_ROOT+"/etc/lcmaps/groupmapfile";
 variable SITE_DPMLFC_GRIDMAP      ?= "/etc/lcgdm-mapfile";
 
 # SITE DEFINITIONS --------------------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
-# The contact email for the site.  The standard configuration uses this 
+# The contact email for the site.  The standard configuration uses this
 # value where site support contacts are needed.  This must be a valid
-# email address. 
+# email address.
 
 variable SITE_EMAIL ?= undef;
 
-# The name of the site.  This must be the same name as listed in the 
+# The name of the site.  This must be the same name as listed in the
 # GOC database.  This is a string.
 
 variable SITE_NAME ?= undef;
 
-# The site's geographical location (City, State, Country).  This is a 
+# The site's geographical location (City, State, Country).  This is a
 # string.
 
 variable SITE_LOC ?= undef;
@@ -107,7 +107,7 @@ variable SITE_LOC ?= undef;
 variable SITE_LAT ?= undef;
 variable SITE_LONG ?= undef;
 
-# The URL pointing to the site's web page. 
+# The URL pointing to the site's web page.
 
 variable SITE_WEB ?= undef;
 
@@ -117,7 +117,7 @@ variable SITE_WEB ?= undef;
 
 variable SITE_DOMAIN ?= undef;
 
-# The version of the installed grid software. 
+# The version of the installed grid software.
 variable SITE_VERSION ?= "EMI_3";
 
 # The contents of this list is added to SITE_OTHER_INFO if defined and non empty.
@@ -133,15 +133,15 @@ variable SITE_OTHER_INFO_DEFAULT ?= nlist('GRID', 'EGEE',
 
 variable SITE_OTHER_INFO ?= undef;
 
-# Installation date of the software.  Format is year, month, day, 
-# hour, minutes, and seconds (with one hundredths given).  For 
+# Installation date of the software.  Format is year, month, day,
+# hour, minutes, and seconds (with one hundredths given).  For
 # example, 20050821120000Z.  (The 'Z' means GMT.)  This is a string.
 
 variable INSTALL_DATE ?= undef;
 
 
 # SERVICE LOCATIONS -------------------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
 # Computing element (gatekeeper, may be a list) host and LRMS server.
 # By default LRMS server is the first CE listed in CE_HOSTS.
@@ -181,19 +181,19 @@ variable BLPARSER_HOST ?= LRMS_SERVER_HOST;
 variable SITE_BDII_HOST ?= CE_HOST;
 
 # List of all site's SEs.  The default is the first listed unless changed.
-# This must be a nlist with one entry per SE (fully qualified name), the value being a 
+# This must be a nlist with one entry per SE (fully qualified name), the value being a
 # nlist defining SE params. Valid SE params are :
 #   - type (required) : SE_classic, SE-dpm, SE_dcache
 #   - arch (optional) : used to define GlueSEArchitecture. Defaults to 'multidisk'.
 #                       Default normally appropriate.
 #   - accessPoint (optional except for Classic SE) : common root of all VO areas
-#                       (e.g. /var/storage/LCG for a classic SE)          
+#                       (e.g. /var/storage/LCG for a classic SE)
 #
 variable SE_HOSTS ?= undef;
 
 # If SE_HOSTS exists as a list (old format), convert to a nlist.
-# (of strings) even if you have only one.  The values 
-# must be fully qualified host names. 
+# (of strings) even if you have only one.  The values
+# must be fully qualified host names.
 variable SE_HOST_NAMES = if ( is_defined(SE_HOSTS) && is_list(SE_HOSTS) ) {
                            foreach (i;v;SE_HOSTS) {
                              if ( exists(SE_TYPES[v]) && is_defined(SE_TYPES[v]) ) {
@@ -225,7 +225,7 @@ variable SE_HOSTS = if ( is_null(SE_HOST_NAMES) ) {
                     };
 variable SE_HOSTS ?= SE_HOST_NAMES;
 
-# A site's File Catalog (LFC).  
+# A site's File Catalog (LFC).
 variable LFC_PORT ?= 5010;
 variable LFC_DLI_PORT ?= 8085;
 variable LFC_HOST ?= undef;
@@ -249,11 +249,11 @@ variable BDII_HOST ?= undef;
 variable TOP_BDII_HOST ?= BDII_HOST;
 
 # The registry for R-GMA.  There is currently exactly one of these. Do
-# not change the value below unless you are running on a separate grid. 
+# not change the value below unless you are running on a separate grid.
 
 variable REG_HOST ?= "lcgic01.gridpp.rl.ac.uk";
 
-# GRIS port.  This is used to publish information from services.  
+# GRIS port.  This is used to publish information from services.
 
 variable GRIS_PORT ?= 2135;
 
@@ -261,10 +261,10 @@ variable GRIS_PORT ?= 2135;
 variable RLS_PORT ?= 5010;
 variable DLI_PORT ?= 8085;
 
-# The location of a VO BOX on a site. 
+# The location of a VO BOX on a site.
 variable VOBOX_HOST ?= undef;
 
-# A X509 to Kerberos Authentication Server.  Used at sites with 
+# A X509 to Kerberos Authentication Server.  Used at sites with
 # experiment software under AFS.
 variable GSSKLOG_HOST ?= undef;
 
@@ -277,22 +277,22 @@ variable GLITE_GRID_ENV_PROFILE ?= '/etc/profile.d/grid-env.sh';
 
 
 # GSISSH CONFIGURATION ----------------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 variable GSISSH_PORT ?= 1975;
 
 
 # MYPROXY CONFIGURATION ---------------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
-# If you run a MyProxy server, you need to provide the list of DNs for 
+# If you run a MyProxy server, you need to provide the list of DNs for
 # the trusted resource brokers.  The RBs use the MyProxy server for proxy
-# renewal. This must be a list of strings. 
+# renewal. This must be a list of strings.
 
 variable GRID_TRUSTED_BROKERS ?= undef;
 
 
 # SUPPORTED VIRTUAL ORGANIZATIONS -----------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
 # This is a list of the supported virtual organizations.  At a minimum,
 # you must support "dteam".  This must be a list of strings.  (Usually the
@@ -308,7 +308,7 @@ variable VOS ?= list("dteam",
 # Value is the name of a structure template defining parameters.
 variable VOS_SITE_PARAMS ?= nlist(
                                  );
-                                 
+
 variable ALLVOS_INCLUDE ?= if ( is_string(VOS) && (VOS == 'ALL') ) {
                               if_exists('vo/params/allvos');
                             } else {
@@ -333,7 +333,7 @@ variable VOS = VOS_TMP;
 
 
 # MON BOX PARAMETERS (R-GMA) ----------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
 # A "monitoring" box.  Contains the site's R-GMA server and usually
 # the GridIce monitoring server.  The R-GMA server is required for a
@@ -342,7 +342,7 @@ variable VOS = VOS_TMP;
 variable MON_HOST ?= undef;
 
 # The password for the MySQL database on the MON box.  Choose something
-# which will not be easy to guess. 
+# which will not be easy to guess.
 
 variable MON_MYSQL_PASSWORD ?= undef;
 
@@ -354,14 +354,14 @@ variable WMSLB_MYSQL_PASSWORD ?= undef;
 variable WMS_OUTPUT_STORAGE_DEFAULT ?= '${HOME}/JobOutput';
 
 # STORAGE ELEMENT PARAMETERS ----------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
-# Whether or not RFIO is an enabled protocol for the SE.  This is a 
+# Whether or not RFIO is an enabled protocol for the SE.  This is a
 # boolean value. This is normally defined by SE configuration templates
 # with the appropriate value for the SE type used.
 variable RFIO_ENABLED ?= undef;
 
-# The root area for the VO-specific storage areas.  If these are not 
+# The root area for the VO-specific storage areas.  If these are not
 # available from a single root, then changes in the default templates
 # must be made.  These are strings.
 
@@ -369,7 +369,7 @@ variable SE_STORAGE_DIR ?= undef;
 variable SEDPM_STORAGE_DIR ?= undef;
 
 # List of the storage directories for the SEs.  This should contain
-# the list (strings) of the directories above. 
+# the list (strings) of the directories above.
 
 variable SE_STORAGE_DIRS ?= undef;
 
@@ -385,7 +385,7 @@ variable SRMV2_2_PORT ?= 8446;
 
 
 # COMPUTING ELEMENT PARAMETERS --------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
 # Export the home areas as an NFS volume.
 # This value is normally defined during VO configuration according to
@@ -430,11 +430,11 @@ variable CE_BATCH_NAME ?= if ( exists(CE_BATCH_SYS) &&
                             } else {
                                 undef;
                             };
-                          };                             
+                          };
 
 
 # LCAS/LCMAPS PARAMETERS --------------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 
 variable LCAS_FLAVOR ?= 'glite';
 variable LCMAPS_FLAVOR ?= 'glite';
@@ -470,7 +470,7 @@ variable CE_TORQUE ?= if ( exists(CE_BATCH_SYS) &&
                       };
 
 # Set GIP_CE_USE_MAUI to true if you want to use MAUI to collect data about CE usage,
-# instead of Torque. Required to support advanced MAUI features like 
+# instead of Torque. Required to support advanced MAUI features like
 # standing reservations.
 # When using MAUI-based GIP, it is possible to run GIP plugins on the
 # Torque/MAUI server and cache the output for later retrieval by GIP.
@@ -499,12 +499,12 @@ variable CE_CPU_SPEED ?= undef;
 variable CE_SMPSIZE ?= undef;
 
 # CPU Performance (SpecInt 2000 and SpecFloat 2000).
-# Benchmarks at http://www.specbench.org/osg/cpu2000/results/cint2000.html 
+# Benchmarks at http://www.specbench.org/osg/cpu2000/results/cint2000.html
 
 variable CE_SI00 ?= undef;
 variable CE_SF00 ?= undef;
 
-# Operating system information. 
+# Operating system information.
 variable CE_OS ?= undef;
 variable CE_OS_RELEASE ?= undef;
 variable CE_OS_VERSION ?= if ( is_defined(CE_OS) && (CE_OS == "Scientific Linux") ) {
@@ -544,9 +544,9 @@ variable CE_CLOSE_SE_LIST ?= if ( exists(SE_HOST_DEFAULT) && is_defined(SE_HOST_
 # SE_HOST_DEFAULT_SC3 is deprecated
 #variable SE_HOST_DEFAULT_SC3 ?= SE_HOST_DEFAULT;
 
-# Network connectivity from worker nodes.  These should either be 
-# the strings "TRUE" or "FALSE".   The defaults assume the normal case 
-# where outbound IP connectivity is permitted, but not inbound. 
+# Network connectivity from worker nodes.  These should either be
+# the strings "TRUE" or "FALSE".   The defaults assume the normal case
+# where outbound IP connectivity is permitted, but not inbound.
 variable CE_OUTBOUNDIP ?= "TRUE";
 variable CE_INBOUNDIP  ?= "FALSE";
 
@@ -571,30 +571,30 @@ variable CE_RUNTIMEENV ?= add_ce_runtime_env(CE_RUNTIMEENV_DEFAULT, CE_RUNTIMEEN
 #   - 'Closed' : enabled=false, started=false
 variable CE_STATUS ?= 'Production';
 
-# CE_KEEP_RUNNING_QUEUES is a list of queues that must be kept running even 
+# CE_KEEP_RUNNING_QUEUES is a list of queues that must be kept running even
 # when draining/closing the CE.
 # Default : dteam, ops
 variable CE_KEEP_RUNNING_QUEUES ?= list('dteam', 'ops');
-                                         
+
 # NOTE; that the default configuration assumes that there is one
 # queue per VO.  If you want to change this default, define the
-# variable CE_QUEUES.  
-# 
+# variable CE_QUEUES.
+#
 # This must contain an nlist with the vos value defined.  The
 # vos key must contain a list with the names of the authorized
-# VOs. 
+# VOs.
 #
-# The CE_QUEUES variable may also contain an attributes key.  
+# The CE_QUEUES variable may also contain an attributes key.
 # If defined it must contain an nlist with the specific queue
-# attributes.  These will be merged with the values in 
-# CE_QUEUE_DEFAULTS. 
+# attributes.  These will be merged with the values in
+# CE_QUEUE_DEFAULTS.
 # Default list of queues is defined in the LRMS configuration template.
 
 variable CE_QUEUES ?= undef;
 
-# Queues to configure for non grid usage : they will not be advertized 
+# Queues to configure for non grid usage : they will not be advertized
 # into the BDII and there will be no job manager associated with them.
-# The structure of CE_LOCAL_QUEUES is the same as CE_QUEUES except that 
+# The structure of CE_LOCAL_QUEUES is the same as CE_QUEUES except that
 # key for queue names is 'qname' instead of 'vos'.
 variable CE_LOCAL_QUEUES ?= undef;
 
@@ -606,7 +606,7 @@ variable CE_LOCAL_QUEUES ?= undef;
 # the default value that applies to all VOs.
 # A list is required if there are several close SEs, a string can be
 # used when there is only one close SE.
-# If the variable is a nlist, keys are VO names or DEFAULT. 
+# If the variable is a nlist, keys are VO names or DEFAULT.
 # For the queue, only DEFAULT entry is taken into account.
 # For the VO view, the VO entry has priority if it exists.
 # It is valid not having a close SE defined, there may be several
@@ -618,7 +618,7 @@ variable CE_VO_CLOSE_SE = {
     if ( exists(CE_CLOSE_SE_LIST) && is_defined(CE_CLOSE_SE_LIST) ) {
       if ( is_string(CE_CLOSE_SE_LIST) || is_list(CE_CLOSE_SE_LIST) ) {
         close_se = CE_CLOSE_SE_LIST;
-      } else if ( is_nlist(CE_CLOSE_SE_LIST) ) { 
+      } else if ( is_nlist(CE_CLOSE_SE_LIST) ) {
         if ( exists(CE_CLOSE_SE_LIST[vo]) && is_defined(CE_CLOSE_SE_LIST[vo]) ) {
           close_se = CE_CLOSE_SE_LIST[vo];
         };
@@ -637,7 +637,7 @@ variable CE_VO_CLOSE_SE = {
         SELF[vo] = close_se;
       } else {
         error('Invalid close SE for VO '+vo+' : must be a string or list');
-      }; 
+      };
     } else {
       SELF[vo] = undef;
     };
@@ -650,7 +650,7 @@ variable CE_VO_CLOSE_SE = {
 # 2 variables can be used to define a default SE :
 #   - CE_DEFAULT_SE_LIST : a string or nlist of strings
 #   - CE_CLOSE_SE_LIST : a list or nlist of list
-# If the variable is a nlist, keys are VO names or DEFAULT. 
+# If the variable is a nlist, keys are VO names or DEFAULT.
 # For the VO-independent default SE, only DEFAULT entry is taken into account.
 # It is valid not having a default SE defined.
 variable CE_DEFAULT_SE = {
@@ -682,7 +682,7 @@ variable CE_DEFAULT_SE = {
       error('CE_CLOSE_SE_LIST must be either a string, a list or a nlist');
     };
   };
-  
+
   if ( is_defined(ce_default_se) && (length(ce_default_se) > 0) ) {
     if ( is_string(ce_default_se) ) {
       return(ce_default_se);
@@ -727,7 +727,7 @@ variable CE_VO_DEFAULT_SE = {
     if ( !is_defined(se_default) ) {
       se_default = CE_DEFAULT_SE;
     };
-    
+
     if ( is_defined(se_default) && (length(se_default) > 0) ) {
       SELF[vo] = se_default;
     } else {
@@ -765,18 +765,18 @@ variable GRIDMAPDIR_SHARED_SERVER ?= if ( is_defined(GRIDMAPDIR_SHARED_PATH) &&
 variable GRIDMAPDIR_SHARED_CLIENTS ?= CE_HOSTS;
 
 # BDII CONFIGURATION ------------------------------------------------------
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 variable BDII_PORT ?= 2170;
 variable BDII_PASSWD ?= undef;
 
 # URL of a file containing information system references for all sites.
-# This is used for a "top-level" BDII associated usually with a resource 
-# broker.  The value below is the default for production sites. 
+# This is used for a "top-level" BDII associated usually with a resource
+# broker.  The value below is the default for production sites.
 variable BDII_UPDATE_URL ?= "http://lcg-bdii-conf.cern.ch/bdii-conf/bdii.conf";
 
-# This is the nlist of GRIS URLs on a site for collecting service and 
+# This is the nlist of GRIS URLs on a site for collecting service and
 # status information.  This must be a nlist where the keys are (arbitrary)
-# names of services and the value is an LDAP URL.  
+# names of services and the value is an LDAP URL.
 #
 # For example:
 # variable BDII_URLS = nlist("CE","ldap://ce.example.org:2135/mds-vo-name=local,o=grid");
@@ -784,14 +784,14 @@ variable BDII_URLS ?= undef;
 
 
 # GLOBUS DEFINITIONS --------------------------------------------------------
-# --------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------
 
 variable GLOBUS_TCP_PORT_RANGE_MIN ?= '20000';
 variable GLOBUS_TCP_PORT_RANGE_MAX ?= '25000';
 
 
 # NFS DEFINITIONS -----------------------------------------------------------
-# --------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------
 
 # WN_SHARED_AREAs is a nlist containing 1 entry for each file system shared
 # between CE and WNs. Generally the filesystem is shared by NFS but this is
@@ -814,18 +814,18 @@ variable GLOBUS_TCP_PORT_RANGE_MAX ?= '25000';
 # Listing a shared filesystem, even if not managed by Quattor allows to
 # the batch system to take advantage of the shared filesystem.
 #
-# Warning : Filesystem mount point must be escaped. 
+# Warning : Filesystem mount point must be escaped.
 #
 # For backward compatibility, if WN_SHARED_AREAS is undefined :
 #    - If WN_NFS_AREAS is defined, WN_NFS_AREAS is used.
 #    - If CE_NFS_ENABLED (deprecated) is true, it is initialized with one
 #      entry for /home using CE_HOST as NFS server.
 #
-variable WN_SHARED_AREAS ?= 
+variable WN_SHARED_AREAS ?=
   if ( exists(WN_NFS_AREAS) && is_defined(WN_NFS_AREAS) ) {
     WN_NFS_AREAS;
   } else {
-    if ( exists(CE_NFS_ENABLED) && is_defined(CE_NFS_ENABLED) && CE_NFS_ENABLED ) {    
+    if ( exists(CE_NFS_ENABLED) && is_defined(CE_NFS_ENABLED) && CE_NFS_ENABLED ) {
       nlist(escape("/home"),CE_HOST);
     } else {
       undef;
@@ -861,15 +861,15 @@ variable NFS_CLIENT_ENABLED = NFS_CLIENT_ENABLED_TMP;
 #   - NFS_WN_HOSTS : list of WN hosts requiring access to NFS server (default is WN_HOSTS)
 #   - NFS_LOCAL_CLIENTS : list of other local hosts requiring access to NFS server
 #
-# Both of these variables can be a string, a list or a nlist. A string value is 
+# Both of these variables can be a string, a list or a nlist. A string value is
 # interpreted as a list with one element. When specified as a list or string, the value must be a
 # regexp matching name of nodes that must be given access to NFS server. The access right is the value
-# of NFS_DEFAULT_RIGHTS. When specified as a nlist, the key must be an escaped regexp and the value is 
+# of NFS_DEFAULT_RIGHTS. When specified as a nlist, the key must be an escaped regexp and the value is
 # the access rights.
 #
 # When possible, this is recommended to replace default value for NFS_WN_HOSTS by one or several regexps
 # matching WN names.
-# 
+#
 
 # Export options for CE hosts.
 # NFS_CE_HOSTS is a nlist where the key must be the escaped host name.
@@ -919,10 +919,10 @@ variable NFS_LOCAL_CLIENTS ?= if ( exists(LOCAL_NFS_CLIENT) && is_defined(LOCAL_
 variable NFS_CLIENT_HOSTS = {
   if ( !exists(SELF['DEFAULT']) || !is_defined(SELF['DEFAULT']) ) {
     host_lists = list(NFS_CE_HOSTS,NFS_WN_HOSTS,NFS_LOCAL_CLIENTS);
-    SELF['DEFAULT'] = nlist(); 
+    SELF['DEFAULT'] = nlist();
     foreach (i;host_list;host_lists) {
       if ( is_string(host_list) ) {
-        SELF['DEFAULT'][escape(host_list)] = undef; 
+        SELF['DEFAULT'][escape(host_list)] = undef;
       } else if ( is_list(host_list) ) {
         foreach (j;host;host_list) {
           SELF['DEFAULT'][escape(host)] = undef;
@@ -941,14 +941,14 @@ variable NFS_CLIENT_HOSTS = {
 # file system (escaped) specifying the default to apply to this particular file system.
 # By default, enable root squashing on all file systems, except home directory parents
 # (required for account configuration).
-# These defaults don't apply to hosts with specific rights defined, like CE. 
+# These defaults don't apply to hosts with specific rights defined, like CE.
 # Default value for this variable is defined in NFS server configuration (features/nfs/server/config)
 
 # NFS_DEFAULT_RIGHTS must contain a DEFAULT entry and may contain one entry per
 # file system (escaped) specifying the default to apply to this particular file system.
 # By default, enable root squashing on all file systems, except home directory parents
 # (required for account configuration).
-# These defaults don't apply to hosts with specific rights defined, like CE. 
+# These defaults don't apply to hosts with specific rights defined, like CE.
 # Default value for this variable is defined in NFS server configuration (features/nfs/server/config)
 
 
@@ -974,10 +974,10 @@ variable NFS_CLIENT_HOSTS = {
 # );
 variable NFS_THREADS ?= undef;
 
-# This variable, if true, prevents definition of EDG_WL_SCRATCH environment 
+# This variable, if true, prevents definition of EDG_WL_SCRATCH environment
 # variable to a local directory when /home is NFS mounted.
 # It is strongly advised to keep this variable to false, as having
-# EDG_WL_SCRATCH on a NFS area with a large number of workers can 
+# EDG_WL_SCRATCH on a NFS area with a large number of workers can
 # result in significant performance penalty on WNs and NFS server.
 variable WN_NFS_WL_SCRATCH ?= false;
 
@@ -997,12 +997,12 @@ variable NFS_DEFAULT_MOUNT_OPTIONS ?= "rw,noatime";
 # mount options for a filesystem. Key must be the mount point escaped, as
 # in WN_SHARED_AREAS
 # variable NFS_MOUNT_OPTS = nlist();
-                         
+
 
 # VO SPEFICIC AREAS  --------------------------------------------------------
-# --------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------
 
-# Area for the installation of the experiment software 
+# Area for the installation of the experiment software
 # If on your WNs you have predefined shared areas where VO managers can
 # pre-install software, then these variables should point to these areas.
 # If you do not have shared areas and each job must install the software,
@@ -1036,18 +1036,18 @@ variable VO_SW_AREAS ?= WN_AREA;
 # will be suffixed by the role account suffix or by the pool account number
 #
 # Directory parent for accounts may contain the following values: @VONAME@ and
-# @VOALIAS@ which will respectively be expanded to the VO full name or the 
+# @VOALIAS@ which will respectively be expanded to the VO full name or the
 # VO alias.
 #
 # This variable is ignored for VO software manager if there is an entry for the
-# VO in VO_SWMGR_HOMES. 
+# VO in VO_SWMGR_HOMES.
 #
 # Example : use /home/voname for all VOs except ALICE and Atlas
 # variable VO_HOMES ?= nlist("DEFAULT", "/home/@VONAME@",
 #                            "alice", "/home2/@VONAME@",
 #                            "atlas", "/home3",
 #                           );
-#                           
+#
 
 variable VO_HOMES ?= undef;
 
@@ -1057,7 +1057,7 @@ variable VO_HOMES ?= undef;
 # accounts. This is ignored on a machine where NFS_SERVER_ENABLED is false.
 # Default is not to relocate for backward compatibility but this is strongly
 # advise to define it.
-# 
+#
 variable VO_HOMES_NFS_ROOT ?= undef;
 
 # Area to use for VO software manager home directory.
@@ -1073,9 +1073,9 @@ variable VO_HOMES_NFS_ROOT ?= undef;
 #
 
 
-                         
+
 # USER INTERFACE DEFINITIONS ------------------------------------------------
-# --------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------
 
 # MyProxy server :
 # MY_PROXY_SERVER is a legacy name, use it if defined.
@@ -1086,14 +1086,14 @@ variable MYPROXY_DEFAULT_SERVER ?= PX_HOST;
 
 
 # MPI SUPPORT ---------------------------------------------------------------
-# --------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------
 
 # Disable by default
 variable ENABLE_MPI ?= false;
 
 
 # MatLab SUPPORT ------------------------------------------------------------
-# --------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------
 
 # This variable lists the MatLab installed versions
 variable MATLAB_INSTALL_DIR ?= undef;
@@ -1117,7 +1117,7 @@ variable CE_RUNTIMEENV = {
 
 
 # APEL SUPPORT --------------------------------------------------------------
-# --------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------
 
 # The following variables have default values defined in APEL-related templates.
 # They are listed here just for reference.
@@ -1128,7 +1128,7 @@ variable CE_RUNTIMEENV = {
 
 
 # FTS SUPPORT ---------------------------------------------------------------
-# --------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------
 
 variable FTS_SERVER_HOST ?= undef;
 variable FTS_SERVER_PORT ?= 8443;
@@ -1136,11 +1136,11 @@ variable FTS_SERVER_TRANSFER_SERVICE_PATH ?= '/glite-data-transfer-fts';
 
 
 # WORKER NODE DEFINITIONS  --------------------------------------------------
-# --------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------
 
 # WORKER_NODES must contain a list of fully qualified host names of all of the WNs
-# on the CE. 
-# From this list, a nlist is built to ease some configuration operations. 
+# on the CE.
+# From this list, a nlist is built to ease some configuration operations.
 
 variable WORKER_NODES ?= undef;
 variable WORKER_NODES_NLIST = {
@@ -1186,7 +1186,7 @@ variable WN_CPU_CONFIG = {
   if ( (index(FULL_HOSTNAME,CE_HOSTS) < 0) && (FULL_HOSTNAME != LRMS_SERVER_HOST) ) {
     return(undef);
   };
-  
+
   foreach (i;wn;WORKER_NODES) {
     if ( exists(DB_MACHINE[escape(wn)]) ) {
       wn_hw = create(DB_MACHINE[escape(wn)]);
@@ -1218,7 +1218,7 @@ variable WN_CPU_CONFIG = {
                      'slots', slot_num,
                     );
   };
-  
+
   debug('WN_CPU_CONFIG='+to_string(SELF));
   SELF;
 };

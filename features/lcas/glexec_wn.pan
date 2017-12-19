@@ -4,18 +4,18 @@
 
 unique template features/lcas/glexec_wn;
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Include LCAS standard configuration
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'features/lcas/base' };
 
 variable LCAS_GLEXEC_DB_FILE ?= LCAS_CONFIG_DIR + '/lcas-glexec.db';
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # First, build glexec LCAS configuration in variables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 variable LCAS_GLEXEC_MODULES ?= {
-  # Banned users.  Ensure DNs are double-quoted. 
+  # Banned users.  Ensure DNs are double-quoted.
   if (GLEXEC_SCAS_ENABLED || GLEXEC_ARGUS_ENABLED) {
     SELF['userban'] = LCAS_MODULES['userban'];
   } else {
@@ -27,10 +27,10 @@ variable LCAS_GLEXEC_MODULES ?= {
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Add LCAS configuration to ncm-lcas configuration, taking care that
 # several LCAS configuration can coexist on one node.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/lcas/config' };
 '/software/components/lcas/db' = {
   if ( is_list(SELF) ) {
@@ -50,9 +50,9 @@ include { 'components/lcas/config' };
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Define LCAS debug and logging level (default is very verbose)
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/profile/config' };
 '/software/components/profile' = component_profile_add_env(GLITE_GRID_ENV_PROFILE,
                                                            nlist('LCAS_DEBUG_LEVEL', to_string(LCAS_DEBUG_LEVEL),

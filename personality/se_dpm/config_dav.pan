@@ -86,7 +86,7 @@ include 'components/filecopy/config';
 
 #
 # Hack to modify fetch-crl cron to reload Apache
-# FIXME: replace by a cleaner mechanism when https://bugzilla.nikhef.nl/show_bug.cgi?id=27 has 
+# FIXME: replace by a cleaner mechanism when https://bugzilla.nikhef.nl/show_bug.cgi?id=27 has
 #        been addressed.
 #
 variable contents = <<EOF;

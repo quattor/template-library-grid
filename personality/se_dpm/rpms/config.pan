@@ -35,7 +35,7 @@ variable DMLITE_MEMCACHE_ENABLED ?= false;
   pkg_repl('lcgdm-dav');
   pkg_repl('lcgdm-dav-server');
 
-  
+
 
   if ( SEDPM_IS_HEAD_NODE ) {
     pkg_repl('bdii');

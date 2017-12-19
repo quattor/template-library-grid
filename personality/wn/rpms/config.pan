@@ -15,6 +15,6 @@ variable ATLAS_SUPPORT ?= true;
     # Not available on all sites
 #    SELF[{'cvmfs-init-scripts'}] = nlist();
   };
-  SELF; 
+  SELF;
 };
 

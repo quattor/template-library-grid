@@ -4,7 +4,7 @@ unique template features/lb/env;
 
 variable LB_PROFILE_SCRIPT ?= EMI_LOCATION + '/etc/lb.conf';
 
-# Use same variable names and default values for WMS and LB to ensure consistency if both 
+# Use same variable names and default values for WMS and LB to ensure consistency if both
 # run on the same machine, whichever is included first.
 variable WMS_CERT_DIR ?= GLITE_USER_HOME + "/.certs" ;
 variable WMS_HOST_KEY ?= WMS_CERT_DIR + "/" + "hostkey.pem";

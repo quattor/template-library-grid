@@ -124,7 +124,7 @@ do
         fi
         ;;
 
-    # -diagOutput: name of file where to store ouput of mdiag command used to 
+    # -diagOutput: name of file where to store ouput of mdiag command used to
     # test MAUI for later processing by GIP plugins.
     -diagOutput)
         shift
@@ -136,7 +136,7 @@ do
           exit 1
         fi
         ;;
-        
+
     # -force: restart MAUI if it is alive but not responding to user commands.
     # Not that this is a normal situation when MAUI is overloaded that normally
     # does not require a restart.
@@ -182,7 +182,7 @@ do
       usage
       exit 1
       ;;
-      
+
   esac
   shift
 done
@@ -217,7 +217,7 @@ else
       restart_maui=1
     else
       if [ ${force_restart} -eq 0 ]
-      then 
+      then
          echo "`date` - MAUI running (pid=$mauipid) but not responding (use -force to restart it)."
       else
          echo "`date` - MAUI running (pid=$mauipid) but not responding. Killing and restarting..."
@@ -260,7 +260,7 @@ else
   fi
 fi
 
-# If running GIP plugins in cache mode, checked the existing GIP plugin 
+# If running GIP plugins in cache mode, checked the existing GIP plugin
 # outputs are not obsolete. Else delete them. Iterate over all plugins.
 # This check must be done whether MAUI is running properly or not.
 if [ ${run_gip_wrappers} -eq 1 ]
@@ -317,7 +317,7 @@ EOF
         if ( plugin == 'ce' ) {
           command = command + ' --diagnose-output ' + MAUI_MONITORING_DIAG_OUTPUT;
         };
-        contents = "#!/bin/sh\n" + 
+        contents = "#!/bin/sh\n" +
                "export PYTHONPATH=/usr/lib/python:${PYTHONPATH}\n" + command + "\n";
         SELF[escape(MAUI_MONITORING_GIP_PLUGIN_WRAPPER[plugin])] = nlist('config', contents,
                                                                          'owner', 'root:root',

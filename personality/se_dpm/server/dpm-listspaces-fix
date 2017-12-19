@@ -5,37 +5,37 @@ This script is an alternative to dpm-qryconf and dpm-getspacemd. It allows to
 display information about both pools and space reservations.
 
 This script is also a GIP provider (and not a plug-in), when used with option
---gip, generating information related to DPM storage areas (GlueSA) and 
-associated VO specific information (GlueVOInfo). Information on current 
+--gip, generating information related to DPM storage areas (GlueSA) and
+associated VO specific information (GlueVOInfo). Information on current
 configuration is collected through DPM Python API.
 
 GlueSA entries describes non-overlapping storage areas. There is one entry per
-statically reserved spaces and one entry for the non-reserved space. In each 
+statically reserved spaces and one entry for the non-reserved space. In each
 GlueSA, ReservedSpace described the SRM reserved space if any and TotalSpace
-describes the actually available space (servers drained or down are not taken 
+describes the actually available space (servers drained or down are not taken
 into account). For GlueSA associated with DPM pools, pool capacity as returned
-by DPM is reduced by the the amount of reserved space (reported in GlueSAs 
+by DPM is reduced by the the amount of reserved space (reported in GlueSAs
 associated with space tokens) in the pool.
 
-If the space area is usable (shared) by several VOs, there is only one 
-corresponding GlueSA and one entry for each VO/FQAN in ACBR. Unreserved space 
-areas sitting on different DPM pools have distinct GlueSA entries. 
+If the space area is usable (shared) by several VOs, there is only one
+corresponding GlueSA and one entry for each VO/FQAN in ACBR. Unreserved space
+areas sitting on different DPM pools have distinct GlueSA entries.
 GlueSAPath is not defined in GlueSA.
 
-A GlueVOInfo entry is created for each VO/GlueSA combination defining the 
+A GlueVOInfo entry is created for each VO/GlueSA combination defining the
 following attributes :
     - GlueVOInfoPath : home directory for the VO
     - GlueVOInfoTag : space token (description) associated with the GlueSA,
                       if any
     - GlueChunkKey  : GlueSALocalID/GlueSEUniqueID of the associated SA
-    
-For unreserved space, if there is several GlueSA corresponding to different 
+
+For unreserved space, if there is several GlueSA corresponding to different
 DPM pools, there is one distinct GlueVOInfo for each GlueSA/VO combination.
 
-DISCLAIMER : the output of this script is not intended to be parseable. 
-             Formatting is subject to change. If you interested in getting 
-             values displayed by this script, you are advised to use DPM 
-             Python API. This script may be used as an example on how to 
+DISCLAIMER : the output of this script is not intended to be parseable.
+             Formatting is subject to change. If you interested in getting
+             values displayed by this script, you are advised to use DPM
+             Python API. This script may be used as an example on how to
              use it...
 """
 
@@ -51,17 +51,17 @@ from optparse import OptionParser
 
 # Function to write debug messages according to verbosity
 # verbosity is set with option --verbose.
-    
+
 verbosity = 0
 def debug(level,msg):
   if level <= verbosity:
     sys.stderr.write("%s\n" % msg)
-      
-      
+
+
 try:
   import dpm
 except:
-  python_version_toks = re.match('(?P<major>\d\.\d)',sys.version) 
+  python_version_toks = re.match('(?P<major>\d\.\d)',sys.version)
   python_version = python_version_toks.group('major')
   lcg_location = os.getenv('LCG_LOCATION')
   if not lcg_location:
@@ -86,10 +86,10 @@ except:
 class SA:
   """
   Class handling a generic SA description that can be used both with pools and space tokens.
-  
+
   'type' attribute is 0 for pool-related SAs, 1 for reserved space.
   """
-  
+
   def __init__(self,name,acbr,total,free,reserved=None,type=0,resid=None,linkedSA=None,lifetime=None,retention=None,latency=None,
                defsize=None,max_lifetime=None,def_pintime=None,max_pintime=None,fss_policy=None,rs_policy=None,gc_start_thresh=None,
                gc_stop_thresh=None,gc_policy=None,mig_policy=None,space_type=None,server=None,allVos=False):
@@ -297,7 +297,7 @@ class SA:
     acbr = ''
     for fqan in self.glueACBR():
       acbr += "GlueSAAccessControlBaseRule: %s\n" % fqan
-    
+
     # Valid values for GlueSAType are permanent, volatile, durable.
     # Assume an undefined type is in fact permanent.
     if str(self.space_type) == 'Any':
@@ -355,7 +355,7 @@ class SA:
         voinfo_id = vo + ':' + self.name
 
         # Do not define a tag if there is no space token defined. This allows selecting unreserved SA with a LDAP
-        # filter like : 
+        # filter like :
         # '(&(&(ObjectClass=GlueVOInfo)(GlueChunkKey=*grid05.lal.in2p3.fr)(GlueVOInfoAccessControlBaseRule=*dteam))(!(GLueVOInfoTag=*)))'
         if self.type == 1:
           voinfo_tag = "GlueVOInfoTag: "+self.name+"\n"
@@ -364,7 +364,7 @@ class SA:
         acbr = ''
         for fqan in self.glueACBR(self.vo_list[vo]):
           acbr += "GlueVOInfoAccessControlBaseRule: %s\n" % fqan
-      
+
         print "dn: GlueVOInfoLocalID="+voinfo_id+",GlueSALocalID="+self.sa_id+",GlueSEUniqueID="+self.server.name+",mds-vo-name=resource,o=grid\n" + \
               "objectClass: GlueSATop\n" + \
               "objectClass: GlueVOInfo\n" + \
@@ -423,7 +423,7 @@ class SA:
             "Glue2StorageShareCapacityReservedSize: "+reserved.GB()+"\n" + \
             "Glue2StorageShareCapacityStorageShareForeignKey: "+share_id+"\n" + \
             ""
-          
+
   # Compute SA total,installed,used,free,reserved space for a given SA.
   # Used by methods producing Glue v1 and GLUE v2 information.
   def glueSACharacteristics(self):
@@ -431,7 +431,7 @@ class SA:
       suffix = ''
     else:
       suffix = 's'
-      
+
     if self.type == 1:
       sa_descr = "Reserved space for VO%s %s (space token %s)" % (suffix,self.vo_str(),self.name)
       total,free,used,unavailable = self.reservationSpace()
@@ -470,9 +470,9 @@ class SA:
         debug(1,"Pool %s: total (%s) - int(%s) < free (%s). Fix free to smallest value" % (self.name,total,used,free))
         free = total - int(used)
       reserved = Size(0)
-    
+
     return total,reserved,free,used,installed,sa_descr
-    
+
   # Use a dictionary for linkedSA for easier duplicate elimination in case of tokens
   # and for faster access to linked SA name.
   # If sa is None, return an empty dictionnary
@@ -509,7 +509,7 @@ class SA:
     # Don't take into account pool unavailableUsed as we don't know which reservation is affected.
     used = self.reserved - self.free
     # Check if there is enough online free space to fulfill reservation free space.
-    # There is a potential problem only if the free space in the pool is negative as 
+    # There is a potential problem only if the free space in the pool is negative as
     # a result of unavailable file systems.
     if int(pool_free) < 0:
       unavailable = free - self.linkedSA[pool_name].FSFree
@@ -552,7 +552,7 @@ class SA:
     # Return line one by one
     for line in st_list_str:
       yield(line)
-  
+
   # acbrStr is a generator returning list of tokens in line of str_max_len characters
   def acbrStr(self,details=False,allVos=False,str_max_len=50):
     # Create a list of string of str_max_len characters
@@ -577,7 +577,7 @@ class SA:
         elif len(acbr_list_str[i]) > prefix_len:
           acbr_list_str[i] += ', '
         prefix_len = 0
-  
+
         if self.server.fqanInVoList(fqan):
           acbr_list_str[i] += fqan
         else:
@@ -587,11 +587,11 @@ class SA:
 
     if parenthesis:
       acbr_list_str[i] += ')'
-      
+
     # Return line one by one
     for line in acbr_list_str:
       yield(line)
-  
+
   # Generator returning each FQAN in Glue ACBR format.
   # An FQAN is skipped if the corresponding VO is not configured
   # or if there is an entry defined for the whole VO.
@@ -658,7 +658,7 @@ class SA:
     else:
       debug(1,'WARNING: aggregatedSpace() called for a reservation. Ignoring...')
       return Size(0),Size(0),Size(0)
-    
+
 # Class FS describes a DPM file system.
 # Class attribues are derived from DPM dpm_fs structure returned by dpm_getpoolfs.
 #
@@ -680,7 +680,7 @@ class FS:
     self.total = Size(fs.capacity)
     self.free = Size(fs.free)
     self.status = Status(fs.status)
-    
+
   def display(self,header=False,ident=4,details=False):
     used = self.total - self.free
     if int(self.total) == 0:
@@ -694,7 +694,7 @@ class FS:
       print prefix+"%-40s%-8s%10s%10s%10s" % ('File System','Status','Capacity','Used','Free')
       print prefix+"-----------------------------------------------------------------------------------"
     print prefix+"%-40s%-8s%10s%10s%10s (%.1f%%)" % (self.server+':'+self.fs,self.status, self.total,used,self.free,free_percent)
-   
+
   # Return unavailable space if file system is disabled or read-only.
   # There is a separate count of unavailable free and used space
   def unavailSpace(self):
@@ -711,7 +711,7 @@ class FS:
       debug(0,"FATAL: Unknown file system status %d for %s:%s" % (self.status,self.server,self.fs))
       sys.exit(10)
     return free,used
-     
+
 
 # Class to represent a DPM server.
 # VO configured on the server are stored internally as a dictionnary for easier
@@ -753,13 +753,13 @@ class DPMServer:
     self.interface = {}
     self.version = 'unset'
     self.emi_version = self.getEMIVersion()
-    if self.name ==  socket.getfqdn():    
+    if self.name ==  socket.getfqdn():
       self.core_services.append(StorageService('dpm'))
       self.core_services.append(StorageService('dpns'))
-  
+
       version_with_age = dpm.dpm_ping(socket.getfqdn())[1]
       self.version = version_with_age.split('-')[0]
-  
+
       # self.access is a dictionary with 1 entry per protocol name supported.
       # The value for each protocol is a dictionnary with key 'port' and 'version'
       # required and key 'security' optional (or None) for unsecure protocols.
@@ -791,7 +791,7 @@ class DPMServer:
           semantics='http://xrootd.org/doc/prod/XRdv299.pdf')
         if params.enabled():
           self.interface['xroot'] = params
-      
+
       # Define server status.
       # Server is considered up and running if DPM, DPNS and at least one of the control protocols
       # are up and running.
@@ -807,22 +807,22 @@ class DPMServer:
         self.status = 'Production'
       else:
         self.status = 'Closed'
-  
+
   # Add a VO in configured VO list.
   # VO are entered as keys in a dictionnary for easier lookup later.
   def addVO(self,vo):
     self.vo_list[vo] = ''         # Value is meaningless
-  
+
   # Returns list of configured VO as an ordered list
   def voList(self):
     vo_list = self.vo_list.keys()
     vo_list.sort()
     return vo_list
-  
+
   # Return VO home path in the server namespace
   def getVOHome(self,vo):
     return self.vo_home_root + "/" + vo
-  
+
   # Check if FQAN belongs to a configured VO
   def fqanInVoList(self,fqan):
     fqan_toks = fqan.split('/',1)
@@ -830,7 +830,7 @@ class DPMServer:
       return True
     else:
       return False
-  
+
   # Compute total/used space based on configured pools and reservations.
   # Pool list must be a list of SA, not a dictionnary.
   def setSpace(self,pool_list):
@@ -841,7 +841,7 @@ class DPMServer:
       self.capacity += total
       self.used += used
     self.free = self.capacity - self.used
-    
+
   # Returns the version of the EMI distribution, as read from /etc/emi-version.
   # Requires the package emi-version to be installed to work.
   def getEMIVersion(self):
@@ -929,7 +929,7 @@ class DPMServer:
       else:
         security = 'unset'
       max_streams = 0
-        
+
       for glue_version in glue_versions:
         if glue_version == 'v1':
           print "dn: GlueSEAccessProtocolLocalID="+protocol_localid+",GlueSEUniqueID="+self.name+",mds-vo-name=resource,o=grid\n" + \
@@ -1103,7 +1103,7 @@ class StorageService:
     else:
       self.service = name
       self.config = name
-      
+
   # Check if a service is enabled
   def enabled(self):
     if (os.system('/sbin/chkconfig %s >/dev/null 2>&1' % self.service) == 0) and os.path.exists('/etc/sysconfig/'+self.config):
@@ -1112,7 +1112,7 @@ class StorageService:
       debug(1,"Service %s not configured" % (self.service))
       enabled = False
     return enabled
-      
+
   # Return true if the status is running
   def running(self):
     debug(1,"Checking if service %s is running..." % (self.service))
@@ -1121,7 +1121,7 @@ class StorageService:
     else:
       up = True
     return up
-  
+
   # Return service status as a string
   def status(self):
     if self.running():
@@ -1129,7 +1129,7 @@ class StorageService:
     else:
       status = 'Closed'
     return status
-    
+
 
 # Class to represent a control protocol (eg. SRM).
 # Inherits from StorageService.
@@ -1156,7 +1156,7 @@ class ControlProtocol(StorageService):
     else:
       print "ERROR: invalid control protocol '%s' (internal error)" % name
       sys.exit(20)
-      
+
 # Class to represent an interface (eg. webdav or xrootd)
 class Interface(StorageService):
   def __init__(self,name=None,protocol=None,port=None,version=None,semantics=None):
@@ -1174,7 +1174,7 @@ class Interface(StorageService):
 class Size:
   def __init__(self,i):
     self.value = i
-    
+
   def __add__(self,size):
     # If argument is not a Size instance, assume it is a numeric type
     if type(size) == type(self):
@@ -1182,7 +1182,7 @@ class Size:
     else:
       size_val = size
     return(Size(self.value+size_val))
-           
+
   def __iadd__(self,size):
     # If argument is not a Size instance, assume it is a numeric type
     if type(size) == type(self):
@@ -1191,7 +1191,7 @@ class Size:
       size_val = size
     self.value += size_val
     return self
-           
+
   def __sub__(self,size):
     # If argument is not a Size instance, assume it is a numeric type
     if type(size) == type(self):
@@ -1199,7 +1199,7 @@ class Size:
     else:
       size_val = size
     return(Size(self.value-size_val))
-  
+
   def __isub__(self,size):
     # If argument is not a Size instance, assume it is a numeric type
     if type(size) == type(self):
@@ -1251,7 +1251,7 @@ class Size:
           new_size = sizef / base**i
           if new_size >= 1:
             break
-          else:      
+          else:
             i -= 1
       return "%.2f%s" % (new_size, suffixes[i])
     else:
@@ -1275,7 +1275,7 @@ class Size:
 class LifeTime:
   def __init__(self,lifetime):
     self.value = lifetime       # Lifetime is in seconds
-    
+
   def __str__(self):
     if not self.value:
       timestr = 'Undefined'
@@ -1285,8 +1285,8 @@ class LifeTime:
       days,tmp = divmod(self.value, 86400)
       hours,tmp = divmod(tmp, 3600)
       minutes,seconds = divmod(tmp, 60)
-      timestr = "%d-%2.2d:%2.2d:%2.2d" % (days,hours,minutes,seconds)    
-    return timestr    
+      timestr = "%d-%2.2d:%2.2d:%2.2d" % (days,hours,minutes,seconds)
+    return timestr
 
   # GLUE 1.x requires time in seconds
   def glue(self):
@@ -1304,7 +1304,7 @@ class LifeTime:
 class Retention:
   def __init__(self,retention):
     self.value = retention
-    
+
   def __str__(self):
     if self.value == 'C':
       valuestr = 'Custodial'
@@ -1322,7 +1322,7 @@ class Retention:
 class Latency:
   def __init__(self,latency):
     self.value = latency
-    
+
   def __str__(self):
     if self.value == 'N':
       valuestr = 'Nearline'
@@ -1337,7 +1337,7 @@ class Latency:
 class SpaceType:
   def __init__(self,space_type):
     self.value = space_type
-   
+
   def __str__(self):
     if self.value == '-':
       valuestr = 'Any'
@@ -1368,7 +1368,7 @@ class SpaceType:
 class Status:
   def __init__(self,status):
     self.value = status
-    
+
   def __int__(self):
     return self.value
 
@@ -1391,7 +1391,7 @@ class Status:
 # Unavailable space is not taken into calculations.
 #
 # FIXME: ACBR of pools is not taken into account because of difficulties with dpns_getgrpbygids
-  
+
 def buildLegacySA(sa_list,vo_list):
   debug(1,"\nGenerating Glue 1.2 compatible GlueSA...")
   for vo in vo_list:
@@ -1467,7 +1467,7 @@ options, args = parser.parse_args()
 
 if options.verbose:
   verbosity = options.verbose
-  
+
 if options.version:
   debug (0,"Version %s written by %s" % (__version__,__author__))
   debug (0,__doc__)
@@ -1478,7 +1478,7 @@ if options.version:
 if options.gip_mode and (options.pools or options.reservations) and not options.verbose:
   debug(0,"ERROR: --pools and --reservations are not compatible with --gip, except if -v is specified")
   sys.exit(1)
-  
+
 if options.children:
   if not options.pools:
     debug(0,"ERROR: -children requires --pools")
@@ -1486,7 +1486,7 @@ if options.children:
   elif options.reservations:
     debug(0,"ERROR: --children conflicts with --reservations")
     sys.exit(1)
-    
+
 if options.parents:
   if not options.reservations:
     debug(0,"ERROR: --parents requires --reservations")
@@ -1494,7 +1494,7 @@ if options.parents:
   elif options.pools:
     debug(0,"ERROR: --parents conflicts with --pools")
     sys.exit(1)
-    
+
 if options.legacy_mode and not options.gip_mode:
   debug(0,"WARNING: --legacy is ignored without --gip")
 
@@ -1520,7 +1520,7 @@ if options.glue_v1:
   glue_versions['v1'] = True
 if options.glue_v2:
   glue_versions['v2'] = True
-  
+
 # Initialize DPM environment
 if options.dpns_server:
   dpns_server = options.dpns_server
@@ -1571,7 +1571,7 @@ if dpm_domain:
 else:
   debug(0,"ERROR: unable to get DPM domain name. Check configuration or use --domain")
   sys.exit(1)
-  
+
 dpm_home_name = "/dpm/%s/%s" % (dpm_domain,dpns_basedir)
 debug (1, "DPM root = %s" % dpm_home_name)
 
@@ -1702,7 +1702,7 @@ else:
 #       };
 #
 # Total size of space reservation is g_space. t_space only contains the value requested by the user and is
-# not updated later (with updatespace). 
+# not updated later (with updatespace).
 
 debug(1,"\nCollecting information about space reservations...")
 tok_res, tokens = dpm.dpm_getspacetoken('')
@@ -1760,7 +1760,7 @@ else:
 
 
 # Display requested information if the appropriate format.
-# For GIP mode, Create one GlueSA per DPM pool or space token and one GlueVOInfo for each VO with access to 
+# For GIP mode, Create one GlueSA per DPM pool or space token and one GlueVOInfo for each VO with access to
 # the pool or ST. GlueSATotalxxxx is set based on actually usable space (readonly and disbled servers ignored
 # for free space). GlueSAReservedxxxx is set based on reserved space size for space tokens and undefined for pools.
 # GlueSA ACBR set to DPM ACL if defined else to the list of supported VOs.
@@ -1772,7 +1772,7 @@ if options.parents:
   for reservation in options.reservations:
     for parent_name in reservation_list[reservation].linkedSA.keys():
       options.pools.append(parent_name)
-    
+
 header = True
 if options.pools and not ('--all' in options.pools):
   options.pools.sort()
@@ -1791,7 +1791,7 @@ elif options.pools or not options.reservations:
     header = False
 
 # Tokens
-    
+
 if options.children:
   options.reservations = []
   for pool in options.pools:

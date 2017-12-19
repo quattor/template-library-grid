@@ -5,18 +5,18 @@
 
 unique template features/lcmaps/glexec;
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Include standard LCMAPS configuration file after redefining
 # policy order to match glexec-specific LCMAPS configuration file order
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 
 include { 'features/lcmaps/base' };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Build LCMAPS configuration in variables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 # LCMAPS paths.
 variable LCMAPS_GLEXEC_DB_FILE ?= LCMAPS_CONFIG_DIR+"/lcmaps.db.glexec";
@@ -93,10 +93,10 @@ variable LCMAPS_GLEXEC_POLICIES ?= list (
           ),
 );
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Add LCMAPS configuration to ncm-lcmaps configuration, taking care that
 # several LCMAPS configuration can coexist on one node.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/lcmaps/config' };
 '/software/components/lcmaps/config' = {
   if ( is_list(SELF) ) {
@@ -112,9 +112,9 @@ include { 'components/lcmaps/config' };
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Define LCMAPS debug and logging level (default is very verbose)
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/profile/config' };
 '/software/components/profile' = component_profile_add_env(GLITE_GRID_ENV_PROFILE,
                                                            nlist('LCMAPS_DEBUG_LEVEL', to_string(LCMAPS_DEBUG_LEVEL),
