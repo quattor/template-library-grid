@@ -11,7 +11,7 @@ include { 'components/mkgridmap/config' };
 
 variable MKGRIDMAP_BIN ?= GLITE_LOCATION_SBIN;
 variable MKGRIDMAP_CONF_DIR ?= GLITE_LOCATION_ETC;
-variable MKGRIDMAP_LCMAPS_DIR ?= GLITE_LOCATION_ETC+'/lcmaps/'; 
+variable MKGRIDMAP_LCMAPS_DIR ?= GLITE_LOCATION_ETC+'/lcmaps/';
 variable MKGRIDMAP_DEF_CONF ?= MKGRIDMAP_CONF_DIR+"/edg-mkgridmap.conf";
 
 # Update gridmap file every 30mn on a UI as it relies only on gridmap file

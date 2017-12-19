@@ -304,13 +304,13 @@ function handleDaemons()
     $CMD_HANDLER $DAEMON $EXEC "$XROOTD_USER" "$XROOTD_GROUP" $INSTANCE "$OPTS"
     RETURN_CODE=$?
     if [ "x$CMD_HANDLER" = "xstatusOfTheDaemon" ]; then
-    #Changing the return code handling in the case of "status" call 
+    #Changing the return code handling in the case of "status" call
     # 0: if all daemons are running
     # 3: if some daemon is stopped and there are no crashed demons
     # 1: if some daemon has crashed
 	if test $STATUS = 0; then
 	    STATUS=$RETURN_CODE;
-	else 
+	else
 	    if test $STATUS = 3; then
 		if test $RETURN_CODE -ne 0; then
 		    STATUS=$RETURN_CODE;
@@ -321,7 +321,7 @@ function handleDaemons()
 		fi
 	    fi
 	fi
-    else	
+    else
 	if test $RETURN_CODE -ne 0; then
 	    STATUS=1
 	fi

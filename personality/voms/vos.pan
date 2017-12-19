@@ -44,12 +44,12 @@ include { 'components/filecopy/config' };
     'config', CONTENTS,
     'owner', 'root:root',
     'perms', '0755',
-    'restart', if (VOMS_TOMCAT_RESTART_CONFIG) { '/var/run/quattor/create-voms.sh'; } else { null; }    
+    'restart', if (VOMS_TOMCAT_RESTART_CONFIG) { '/var/run/quattor/create-voms.sh'; } else { null; }
 );
 
-#/usr/sbin/voms-admin-configure install --dbtype mysql \ 
-#--vo test_vo_mysql --createdb --deploy-database \ 
-#--dbauser root --dbapwd pwd \ 
-#--dbusername voms_admin_20 --dbpassword pwd \ 
-#--port 54322 --mail-from ciccio@cnaf.infn.it \ 
+#/usr/sbin/voms-admin-configure install --dbtype mysql \
+#--vo test_vo_mysql --createdb --deploy-database \
+#--dbauser root --dbapwd pwd \
+#--dbusername voms_admin_20 --dbpassword pwd \
+#--port 54322 --mail-from ciccio@cnaf.infn.it \
 #–smtp-host iris.cnaf.infn.it

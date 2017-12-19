@@ -84,7 +84,7 @@ variable VO_SW_AREAS = {
 };
 
 # This variable is true if home directories are on a shared filesystem
-# Consider that all the VOs have the same configuration.	
+# Consider that all the VOs have the same configuration.
 variable CE_SHARED_HOMES ?= {
   shared_homes = false;
   foreach(k;v;VO_INFO) {

@@ -12,7 +12,7 @@ include 'components/wmslb/config';
 # Delete envScript property to prevent wmslb updating the profile script. This will be done
 # by ncm-profile but env resource is still defined for ncm-wmslb to allow schema validation.
 '/software/components/wmslb/envScript' = null;
- 
+
 # Define environment variables required by LB
 include 'features/lb/env';
 
@@ -50,12 +50,12 @@ include 'features/lb/glitestartup';
 '/software/components/glitestartup/dependencies/pre' = glitestartup_add_dependency(list('wmslb'));
 '/software/components/glitestartup/services' = {
   services = SELF;
-  
+
   foreach (i;service;LB_SERVICES) {
     service = 'glite-lb-' + service;
     services = glitestartup_mod_service(service);
   };
-  
+
   if ( is_defined(services) && (length(services) > 0) ) {
     return(services);
   } else {

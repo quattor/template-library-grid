@@ -9,7 +9,7 @@ include { 'personality/vobox/rpms' };
 # Ensure that the host certificates have the correct permissions.
 include { 'features/security/host_certs' };
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include { 'features/ldconf/config' };
 
 # Include standard environmental variables.
@@ -23,7 +23,7 @@ include { 'security/cas' };
 include { 'features/fetch-crl/config' };
 
 
-# Authorization via grid mapfile. 
+# Authorization via grid mapfile.
 include { 'features/mkgridmap/standard' };
 
 # Configure classads library

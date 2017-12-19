@@ -25,7 +25,7 @@ include { 'users/glexec' };
 
 
 #-----------------------------------------------------------------------------
-# Create some directories 
+# Create some directories
 #-----------------------------------------------------------------------------
 
 '/software/components/dirperm/paths' = {

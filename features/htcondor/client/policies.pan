@@ -3,7 +3,7 @@ unique template features/htcondor/client/policies;
 variable CONDOR_CONFIG={
 
   #
-  # Prepare parameters: 
+  # Prepare parameters:
   #  - they are written in "parametrs" conf file and are used for implements rules etc
   #  - they are also used for defining the BDII pubblication
   #  - they have a default value and some non-default value for some policy groups
@@ -18,7 +18,7 @@ variable CONDOR_CONFIG={
     );
   };
 
-  # Create limits  
+  # Create limits
   if(!is_defined(SELF['params'])){
     SELF['params']=nlist();
   };
@@ -29,10 +29,10 @@ variable CONDOR_CONFIG={
     };
     if(!is_defined(SELF['params'][param]['default'])){
       SELF['params'][param]['default']=default;
-    };    
+    };
   };
 
-  # 
+  #
   # Garbage collector rules
   #
 
@@ -46,15 +46,15 @@ variable CONDOR_CONFIG={
     	'HoldRule', 'JobStatus == 5 && time() - EnteredCurrentStatus > 3600*48',
 	    'WCTRule',  '(JobStatus == 2)&&(($(MAXWALLTIME)>0)&&((time() - EnteredCurrentStatus) > (60*$(MAXWALLTIME))))'
     );
-  };  
+  };
 
-  # Create the policy rules 
+  # Create the policy rules
   foreach(j;rule;SELF['default_gc_rules']){
     if(!is_defined(SELF['gc_rules'][j])){
       SELF['gc_rules'][j]=rule;
-    };	
+    };
   };
-  
+
 
   SELF;
 };
@@ -73,9 +73,9 @@ variable GIP_CE_LDIF_PARAMS = {
         if(!is_defined(SELF['extra_glue2'][share])){
           SELF['extra_glue2'][share]=nlist();
         };
-        SELF['extra_glue2'][share][param]=list(to_string(value));    
+        SELF['extra_glue2'][share][param]=list(to_string(value));
       };
-    }; 
+    };
   };
 
 

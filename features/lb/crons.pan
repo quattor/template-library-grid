@@ -8,7 +8,7 @@ include { 'components/altlogrotate/config' };
 
 # glite-wms-purge storage is run only if needed Monday-Saturday and unconditonnally on Sunday
 # This cron also takes care of renewing proxy used by WMS services.
-"/software/components/cron/entries" = 
+"/software/components/cron/entries" =
   push(nlist(
     "name","glite-lb-export",
     "user",GLITE_USER,
@@ -17,18 +17,18 @@ include { 'components/altlogrotate/config' };
                  'GLITE_LB_EXPORT_BKSERVER', FULL_HOSTNAME,
                  'GLITE_LB_EXPORT_ENABLED', 'false',
                  'GLITE_LB_EXPORT_PURGE_ARGS', '"--cleared 2d --aborted 15d --cancelled 15d --other 60d -s"',
-                ), 
+                ),
     "command", ". " + LB_PROFILE_SCRIPT + ";"+
                GLITE_LOCATION+"/sbin/glite-lb-export.sh"
             ));
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # altlogrotate
-# ---------------------------------------------------------------------------- 
-include { 'components/altlogrotate/config' }; 
+# ----------------------------------------------------------------------------
+include { 'components/altlogrotate/config' };
 
-"/software/components/altlogrotate/entries/glite-lb-export" = 
+"/software/components/altlogrotate/entries/glite-lb-export" =
   nlist("pattern", "/var/log/glite-lb-export.ncm-cron.log",
         "compress", true,
         "missingok", true,

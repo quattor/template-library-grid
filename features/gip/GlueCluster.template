@@ -28,7 +28,7 @@ objectClass: GlueSchemaVersion
 GlueChunkKey: unset
 GlueHostApplicationSoftwareRunTimeEnvironment: unset
 GlueHostArchitectureSMPSize: unset
-GlueHostArchitecturePlatformType: unset 
+GlueHostArchitecturePlatformType: unset
 GlueHostBenchmarkSF00: unset
 GlueHostBenchmarkSI00: unset
 GlueHostMainMemoryRAMSize: unset

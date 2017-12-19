@@ -67,29 +67,29 @@ variable DPM_DB_PARAMS = {
   };
   SELF;
 };
-"/software/components/dpmlfc/options/dpm/db/configfile" ?= DPM_DB_PARAMS['configfile']; 
-"/software/components/dpmlfc/options/dpm/db/user" ?= DPM_DB_PARAMS['user']; 
-"/software/components/dpmlfc/options/dpm/db/password" ?= DPM_DB_PARAMS['password']; 
+"/software/components/dpmlfc/options/dpm/db/configfile" ?= DPM_DB_PARAMS['configfile'];
+"/software/components/dpmlfc/options/dpm/db/user" ?= DPM_DB_PARAMS['user'];
+"/software/components/dpmlfc/options/dpm/db/password" ?= DPM_DB_PARAMS['password'];
 "/software/components/dpmlfc/options/dpm/db/server" ?= if ( is_defined(DPM_DB_PARAMS['server']) ) {
-                                                         DPM_DB_PARAMS['server']; 
+                                                         DPM_DB_PARAMS['server'];
                                                        } else {
-                                                         null; 
-                                                       }; 
+                                                         null;
+                                                       };
 "/software/components/dpmlfc/options/dpm/db/infoUser" ?= if ( is_defined(DPM_DB_PARAMS['infoUser']) ) {
-                                                         DPM_DB_PARAMS['infoUser']; 
+                                                         DPM_DB_PARAMS['infoUser'];
                                                        } else {
-                                                         null; 
-                                                       }; 
+                                                         null;
+                                                       };
 "/software/components/dpmlfc/options/dpm/db/infoPwd" ?= if ( is_defined(DPM_DB_PARAMS['infoPwd']) ) {
-                                                         DPM_DB_PARAMS['infoPwd']; 
+                                                         DPM_DB_PARAMS['infoPwd'];
                                                        } else {
-                                                         null; 
-                                                       }; 
+                                                         null;
+                                                       };
 "/software/components/dpmlfc/options/dpm/db/infoFile" ?= if ( is_defined(DPM_DB_PARAMS['infoFile']) ) {
-                                                         DPM_DB_PARAMS['infoFile']; 
+                                                         DPM_DB_PARAMS['infoFile'];
                                                        } else {
-                                                         null; 
-                                                       }; 
+                                                         null;
+                                                       };
 
 
 include { if (DPM_MYSQL_SERVER == FULL_HOSTNAME) {
@@ -125,7 +125,7 @@ include { if (DPM_MYSQL_SERVER == FULL_HOSTNAME) {
 };
 
 
-# Check if a site specific version of GIP DPM plugin is used and configure it if needed 
+# Check if a site specific version of GIP DPM plugin is used and configure it if needed
 
 include 'components/filecopy/config';
 
@@ -140,7 +140,7 @@ include GIP_SCRIPT_DPM_DYNAMIC_CONFIG;
   };
   SELF;
 };
-    
+
 prefix '/software/components/filecopy/services/{/usr/bin/dpm-listspaces-fix}';
 'config'= file_contents('personality/se_dpm/server/dpm-listspaces-fix');
 'owner' = 'root:root';

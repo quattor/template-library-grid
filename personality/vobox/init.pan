@@ -16,7 +16,7 @@ variable VOBOX_OPERATION_VOS_GSISSH ?= false;
 # Default: SW manager, except for ops (production). Ensure the specfic value defined for
 # this node is taken first.
 variable VO_VOMS_FQAN_FILTER = {
-  if ( !is_defined(SELF['DEFAULT']) ) { 
+  if ( !is_defined(SELF['DEFAULT']) ) {
     SELF['DEFAULT'] = 'SW manager';
   };
   debug('VO_GRIDMAPFILE_FQAN_FILTER='+to_string(SELF));

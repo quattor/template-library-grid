@@ -58,7 +58,7 @@ endstat()	{
 convert_dn()	{
     # Only convert when it contains CN=
     if echo "$1"|grep -q "^/";then
-	# Looks like an FQAN 
+	# Looks like an FQAN
 	echo "\"$1\""
     elif echo "$1"|grep -q "CN=";then
 	# Looks like a DN
@@ -119,7 +119,7 @@ tmp3=$(mktemp $template) # output of overall loop, use file in case of failure
 for alias in $aliases ; do
     # Dump XML
     run_curl $alias > $tmp1
-    # Check curl did not fail and that we got a HTTP 200 code 
+    # Check curl did not fail and that we got a HTTP 200 code
     if [ $? != 0 -o -z "$(grep 'http_code=200' $tmp1)" ] ;then
 	rm $tmp1 $tmp2 $tmp3
 	error "Cannot download XACML for $alias from $host"

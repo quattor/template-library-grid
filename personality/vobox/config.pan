@@ -139,7 +139,7 @@ include { 'components/altlogrotate/config' };
                                                                        'log', nlist('disabled', true),
                                                                       );
       # Logrotate
-      SELF['altlogrotate']['entries'][script_name] = 
+      SELF['altlogrotate']['entries'][script_name] =
                                      nlist('pattern', VOBOX_VO_DIRS_ROOT+'/'+vo+'/log/events.log',
                                            'compress', true,
                                            'missingok', true,
@@ -165,7 +165,7 @@ include { 'components/sysctl/config' };
 "/software/components/sysctl/variables/{net.core.netdev_max_backlog}" = to_string(VOBOX_TCP_MAX_BACKLOG);
 
 # Configuration de gsisshd (gsi-openssh-server)
-# En gLite 3.2 la config etait faite par les scripts 
+# En gLite 3.2 la config etait faite par les scripts
 # /opt/globus/setup/gsi_openssh_setup/{setup-openssh,setup-openssh.pl} de
 # gsiopenssh-VDT1.10.1x86_64_rhap_5-4.3.x86_64 . Ce RPM n'existe plus ?
 # Donc je fais la config par filecopy (/etc/gsissh/sshd_config)

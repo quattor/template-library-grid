@@ -1,7 +1,7 @@
 unique template features/accounting/dgas/gatekeeper;
 
 #include requirements
-include { 'components/dirperm/config' };	
+include { 'components/dirperm/config' };
 include { 'components/filecopy/config' };
 include { 'components/sysconfig/config' };
 
@@ -28,7 +28,7 @@ include { if_exists('update/config') };
 	dirparms;
 };
 
-# Adding a post-dependency to dirperm : this will avoïd RPM updates from breaking the above rights, 
+# Adding a post-dependency to dirperm : this will avoïd RPM updates from breaking the above rights,
 #   which would then result in a silent failure of the accounting (which is very hard to debug !)
 #test pour accounting
 "/software/components/spma/dependencies/post" = list("dirperm");
@@ -40,11 +40,11 @@ variable CONTENTS= GATEKEEPER_DGAS_DIR + "\n" ;
 	npush( escape("/etc/sysconfig/dgas-add-record.conf"),
  		nlist('config',CONTENTS,'owner','root:root','perms', '0644') ,
  	);
- 	
+
 #Add a required variable to globus configuration
-#Since SYSCONFIG component is not exporting variables, and globus init is 
+#Since SYSCONFIG component is not exporting variables, and globus init is
 #not doing the proper thing we have to use the epilogue
- 
+
 '/software/components/sysconfig/files/globus/epilogue' = {
 	tmp = "export GATEKEEPER_DGAS_DIR='" + GATEKEEPER_DGAS_DIR + "'\n";
 	if( is_defined(SELF) ) tmp=  tmp + SELF;
@@ -55,7 +55,7 @@ variable CONTENTS= GATEKEEPER_DGAS_DIR + "\n" ;
 include { 'components/profile/config' };
 '/software/components/profile' = component_profile_add_env(
   GLITE_GRID_ENV_PROFILE, nlist(
-    'GATEKEEPER_DGAS_DIR', GATEKEEPER_DGAS_DIR,    
+    'GATEKEEPER_DGAS_DIR', GATEKEEPER_DGAS_DIR,
     )
   );
 

@@ -8,7 +8,7 @@ unique template personality/se_dpm/puppet/federations;
      };
      if(is_defined(XROOTD_FEDERATION_PARAMS['atlas'])){
        pkg_repl('xrootd-server-atlas-n2n-plugin');
-     };                        
+     };
   };
   SELF;
 };

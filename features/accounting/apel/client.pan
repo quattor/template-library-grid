@@ -7,11 +7,11 @@ variable APEL_ENABLED ?= true;
 variable APEL_CLIENT_TIME_HOUR ?= '3';
 variable APEL_CLIENT_TIME_MINUTE ?= '30';
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Cron entry for APEL publisher
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/cron/config' };
-include { 'components/altlogrotate/config' }; 
+include { 'components/altlogrotate/config' };
 
 "/software/components/cron/entries" =
   push_if(APEL_ENABLED,nlist(
@@ -23,7 +23,7 @@ include { 'components/altlogrotate/config' };
 	)
 );
 
-"/software/components/altlogrotate/entries/apelclient" = 
+"/software/components/altlogrotate/entries/apelclient" =
   nlist("pattern", "/var/log/apelclient.ncm-cron.log",
         "compress", true,
         "missingok", true,
@@ -37,9 +37,9 @@ include { 'components/altlogrotate/config' };
         "rotate", 2);
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # APEL configuration
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 #Configuration file
 
@@ -64,7 +64,7 @@ include {'components/metaconfig/config'};
             'ldap_port', 2170,
         ),
         'joiner', nlist(
-            'enabled', true, 
+            'enabled', true,
             'local_jobs', false,
         ),
         'unloader', nlist(
@@ -77,7 +77,7 @@ include {'components/metaconfig/config'};
          ),
          'ssm', nlist(
          	'enabled', true,
-         ), 
+         ),
         'logging', nlist(
             'logfile', '/var/log/apel/client.log',
             'level', 'INFO',

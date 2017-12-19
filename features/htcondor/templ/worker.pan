@@ -8,7 +8,7 @@ DAEMON_LIST = $(DAEMON_LIST) STARTD
 EOF
 
   foreach(i;opt;CONDOR_CONFIG['options']['worker']){
-    txt = txt +  opt['name'] + ' = ' + opt['value'] + "\n"; 
+    txt = txt +  opt['name'] + ' = ' + opt['value'] + "\n";
   };
 
   txt = txt + format("MULTICORE=%s\n",CONDOR_CONFIG["multicore"]);
@@ -25,7 +25,7 @@ EOF
     };
   };
 
-  txt = txt + format("DRAIN=%s\n",drain);	
+  txt = txt + format("DRAIN=%s\n",drain);
 
   txt = txt + format("OFFLINE=%s\n",offline);
 

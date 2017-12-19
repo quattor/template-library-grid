@@ -42,7 +42,7 @@ variable NFS_CLIENT_DEFAULT_VERSION = {
 variable NFS_MOUNT_POINTS = {
   SELF['mountedFS'] = nlist();
   SELF['servedFS'] = nlist();
-  
+
   if ( is_defined(WN_SHARED_AREAS) ) {
     if ( ! is_nlist(WN_SHARED_AREAS) ) {
       error("WN_SHARED_AREAS must be a nlist");
@@ -53,12 +53,12 @@ variable NFS_MOUNT_POINTS = {
   } else {
     return(SELF);
   };
-  
+
   foreach (e_mnt_point;mnt_path;WN_SHARED_AREAS) {
     mnt_point = unescape(e_mnt_point);
     if ( !match(mnt_point,'^/') ) {
       error('Mount point must start with / ('+mnt_point+')');
-    }; 
+    };
     # An undefined or empty mnt_path means mount must not be handled by NFS templates.
     # Value of WN_SHARED_AREAS entries are parsed and split in 3 tokens:
     #   - An optional protocol followed by ://. If empty, assume NFS if host name is defined.
@@ -77,7 +77,7 @@ variable NFS_MOUNT_POINTS = {
           nfs_shared_area = false;
         };
       };
-  
+
       if ( nfs_shared_area ) {
         debug('mnt_path_toks='+to_string(mnt_path_toks));
         mnt_host = mnt_path_toks[2];
@@ -102,7 +102,7 @@ variable NFS_MOUNT_POINTS = {
           debug('NFS old format : using default NFS version ('+NFS_DEFAULT_VERSION+')');
           nfs_version = NFS_DEFAULT_VERSION;
         };
-  
+
         # FS served by this machine
         if ( mnt_host == FULL_HOSTNAME ) {
           if ( length(mnt_path_toks[3]) == 0 ) {
@@ -112,11 +112,11 @@ variable NFS_MOUNT_POINTS = {
           };
           SELF['servedFS'][e_mnt_point] = nlist('localPath',mnt_path,
                                                 'nfsVersion', nfs_version);
-    
+
         # FS to be NFS mounted on this machine
 
         } else {
-          # FIXME: following code is commented out because host names are specified as export regexp that are 
+          # FIXME: following code is commented out because host names are specified as export regexp that are
           # not compatible with PAN regexp (use of '*' and '?' wildcards that need to be substituted for match())
           # host list contained in NFS_CLIENT_HOSTS for each file system is a nlist where the key is a regexp matching
           # the host name
@@ -135,13 +135,13 @@ variable NFS_MOUNT_POINTS = {
           #  };
           #  ok = next(host_list,e_regexp,v);
           #};
-      
+
           if ( is_defined(mnt_path_toks[3]) && (length(mnt_path_toks[3]) > 0) ) {
             mnt_path = mnt_host + ':' + mnt_path_toks[3];
           } else {
             mnt_path = mnt_host + ':' + mnt_point;
           };
-          
+
           # Define NFS version to use if undef
           if ( !is_defined(nfs_version) ) {
             if ( is_defined(NFS_CLIENT_VERSION[FULL_HOSTNAME]) ) {
@@ -159,14 +159,14 @@ variable NFS_MOUNT_POINTS = {
                 };
                 ok = next(NFS_CLIENT_DEFAULT_VERSION,regexp_e,version);
               };
-              
+
               if ( not_found ) {
                 nfs_version = NFS_CLIENT_DEFAULT_VERSION['DEFAULT'];
                 debug('Setting NFS version to default ('+nfs_version+')');
               };
             };
           };
-          
+
           SELF['mountedFS'][e_mnt_point] =  nlist('nfsPath',mnt_path,
                                                   'nfsVersion', nfs_version);
           if ( exists(NFS_MOUNT_OPTS[e_mnt_point]) && is_defined(NFS_MOUNT_OPTS[e_mnt_point]) ) {
@@ -174,13 +174,13 @@ variable NFS_MOUNT_POINTS = {
           } else {
             SELF['mountedFS'][e_mnt_point]['options'] = NFS_DEFAULT_MOUNT_OPTIONS;
           };
-        }; 
-      }; 
+        };
+      };
     };
-  }; 
+  };
 
   debug('NFS_MOUNT_POINTS = '+to_string(NFS_MOUNT_POINTS));
-  SELF;  
+  SELF;
 };
 
 
@@ -193,7 +193,7 @@ variable NFS_SERVER_ENABLED = {
   } else {
     false;
   };
-};                          
+};
 
 
 # Define NFS_CLIENT_ENABLED based on NFS_MOUNT_POINTS['mountedFS'] if not already

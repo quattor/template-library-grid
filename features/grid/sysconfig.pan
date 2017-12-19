@@ -4,9 +4,9 @@ unique template features/grid/sysconfig;
 
 include { 'features/grid/base' };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # sysconfig
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/sysconfig/config' };
 
 '/software/components/sysconfig/files/glite/GLITE_LOCATION'             = GLITE_LOCATION;

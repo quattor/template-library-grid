@@ -5,7 +5,7 @@ variable CONDOR_CONFIG={
   #Define the appropriate config files
   if(!is_defined(SELF['cfgfiles'])){
     SELF['cfgfiles']=list();
-  };	
+  };
 
   # global & security mandatory
   file_list=list('global','security');
@@ -19,7 +19,7 @@ variable CONDOR_CONFIG={
 
 include {
   if(index(FULL_HOSTNAME,CE_HOSTS) < 0){
-    'features/htcondor/client/worker';	   	 
+    'features/htcondor/client/worker';
   }else{
     'features/htcondor/client/ce';
   };

@@ -5,11 +5,11 @@ structure template features/htcondor/templ/security;
 
      if(!is_defined(CONDOR_CONFIG)){
 	error('CONDOR_CONFIG must be defined.')
-     }; 
+     };
 
      if(!is_defined(CONDOR_CONFIG['allow'])){
 	error('CONDOR_CONFIG[allow] must be defindes ad the DNS/IP domain authorizied to joing the cluster.');
-     }; 
+     };
 
 
 
@@ -20,9 +20,9 @@ structure template features/htcondor/templ/security;
      txt =  <<EOF;
 
 EOF
-     txt = txt + "ALLOW_WRITE = " + CONDOR_CONFIG['allow']; 
+     txt = txt + "ALLOW_WRITE = " + CONDOR_CONFIG['allow'];
 
-     txt = txt + <<EOF; 
+     txt = txt + <<EOF;
 
 # This is to enforce password authentication
 SEC_DAEMON_AUTHENTICATION = required
@@ -39,6 +39,6 @@ ALLOW_DAEMON = condor_pool@*
 TRUST_UID_DOMAIN = TRUE
 
 EOF
-	
+
    txt;
 };

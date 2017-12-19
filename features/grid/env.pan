@@ -15,9 +15,9 @@ variable DEFAULT_DPM_HOST ?= if ( is_defined(DPM_HOST) ) {
 include { 'features/grid/base' };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # profile
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/profile/config' };
 
 # Register gLite location in /system/glite
@@ -50,7 +50,7 @@ include { 'components/profile/config' };
 '/software/components/profile/path/MANPATH/append' = push(GLITE_LOCATION+'/share/man');
 
 # Information System Location
-'/software/components/profile/env/LCG_GFAL_INFOSYS' ?= 
+'/software/components/profile/env/LCG_GFAL_INFOSYS' ?=
   if(is_defined(TOP_BDII_LIST))
     TOP_BDII_LIST
   else

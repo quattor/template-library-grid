@@ -379,7 +379,7 @@ variable CRL_UPDATE_MILLIS ?= '3600000';
                hostcert="TOMCAT_HOSTCERT_LOCATION"
                hostkey="TOMCAT_HOSTKEY_LOCATION"
                updateinterval="CRL_UPDATE_MILLIS"
-               clientAuth="true" sslProtocol="TLS" 
+               clientAuth="true" sslProtocol="TLS"
                crlcheckingmode="require"/>
     <Engine name="Catalina" defaultHost="localhost">
       <Host name="localhost" appBase="webapps" />

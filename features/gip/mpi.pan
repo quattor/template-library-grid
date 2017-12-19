@@ -9,7 +9,7 @@ variable MPI_RUNTIMEENV = {
   # until the RB supports multi-cpu jobs without the MPICH job type.  This
   # must be set even if MPICH isn't supported at the site!
   #SELF[length(SELF)] = "MPICH";
-  
+
   # Mark the site as supporting MPI-START.
   SELF[length(SELF)] = "MPI-START";
 
@@ -18,7 +18,7 @@ variable MPI_RUNTIMEENV = {
 #  SELF[length(SELF)] = "LAM-"+MPI_LAM_VERSION;
 #  SELF[length(SELF)] = "MPICH";
 #  SELF[length(SELF)] = "MPICH-"+MPI_MPICH_VERSION;
-  
+
   # MPI-2 implementations.
   SELF[length(SELF)] = "OPENMPI";
   SELF[length(SELF)] = "OPENMPI-"+MPI_OPENMPI_VERSION;
@@ -32,7 +32,7 @@ variable MPI_RUNTIMEENV = {
     SELF[length(SELF)] = "MPI_SHARED_HOME";
   };
 
-  SELF; 
+  SELF;
 };
 
 variable CE_RUNTIMEENV = {
