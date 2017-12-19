@@ -61,7 +61,7 @@ required = no
 include 'repository/config/quattor';
 variable YUM_HTCONDOR_REPOSITORY_LIST ?= {
     if ( !is_null(YUM_HTCONDOR_REPOSITORY_LIST) ) {
-        append('htcondor');
+        append(HTCONDOR_YUM_REPOSITORY_NAME);
     };
 };
 
