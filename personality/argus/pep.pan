@@ -1,6 +1,6 @@
 unique template personality/argus/pep;
 
-# Unique identifier  for the PEP 
+# Unique identifier  for the PEP
 variable PEP_ENTITY_ID ?= 'http://' + PEP_HOST + '/pepd';
 
 # PEP admin service port

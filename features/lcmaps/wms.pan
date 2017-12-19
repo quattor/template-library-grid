@@ -2,15 +2,15 @@
 # It is based on lcmaps.db.template provided by RPM glite-wms-wmproxy-3.1.26-1.
 #
 # Note that the standard lcmaps configuration must also be installed for
-# GridFTP... 
+# GridFTP...
 
 unique template features/lcmaps/wms;
 
 include { 'features/lcmaps/base' };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Build LCMAPS configuration in variables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 # LCMAPS paths.
 # Be careful with changing these parameters.  When using a non default name,
@@ -136,10 +136,10 @@ variable LCMAPS_GRIDFTP_POLICIES ?= list (
 );
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Add LCMAPS configuration to ncm-lcmaps configuration, taking care that
 # several LCMAPS configuration can coexist on one node.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 include { 'components/lcmaps/config' };
 

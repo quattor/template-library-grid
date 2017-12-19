@@ -27,7 +27,7 @@ variable CONDOR_CONFIG = {
   if(!is_defined(SELF['pwd_file'])){
     SELF['pwd_file'] = '/var/lib/condor/condor_credential';
   };
-	 
+
   if(!is_defined(SELF['cfgdir'])){
     SELF['cfgdir'] = '/etc/condor';
   };
@@ -38,7 +38,7 @@ variable CONDOR_CONFIG = {
 
   # Default, all other file under SELF['cfgdir']/config.d will be removed
   if(!is_defined(SELF['strict'])){
-    SELF['strict'] = true; 
+    SELF['strict'] = true;
   };
 
   if(!is_defined(SELF['restart'])){
@@ -47,10 +47,10 @@ variable CONDOR_CONFIG = {
     }else{
       enforce = 'exit 0';
     };
-		
+
     SELF['restart'] = '(' + enforce + ')&&(!(service condor status) || condor_reconfig)';
   };
- 
+
   if(!is_defined(SELF['cfgfiles'])){
     SELF['cfgfiles'] = list();
   };
@@ -62,7 +62,7 @@ variable CONDOR_CONFIG = {
     };
 
     if(!is_defined(file['path'])){
-      file['path'] = SELF['cfgdir'] + '/config.d/' + SELF['cfgprefix'] + '.' + to_string(i) + '.' + file['name'] + '.conf'; 
+      file['path'] = SELF['cfgdir'] + '/config.d/' + SELF['cfgprefix'] + '.' + to_string(i) + '.' + file['name'] + '.conf';
     };
 
     if(!is_defined(file['contents'])){
@@ -73,7 +73,7 @@ variable CONDOR_CONFIG = {
       file['restart'] = SELF['restart'];
     };
   };
-	
+
   #Default config local file is empty
   if(!is_defined(SELF['config.local'])){
     SELF['config.local'] = '';
@@ -98,6 +98,6 @@ variable CONDOR_CONFIG = {
   if (!is_defined(SELF['allow'])) {
       SELF['allow'] = "*."+SITE_DOMAIN;
   };
-  SELF; 
+  SELF;
 };
 

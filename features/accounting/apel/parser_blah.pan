@@ -24,7 +24,7 @@ include { 'components/cron/config' };
 #
 # altlogrotate
 #
-include { 'components/altlogrotate/config' }; 
+include { 'components/altlogrotate/config' };
 '/software/components/altlogrotate/entries/apel-pbs-log-parser' = nlist(
     'pattern', '/var/log/apel-pbs-log-parser.ncm-cron.log',
     'compress', true,

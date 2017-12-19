@@ -16,8 +16,8 @@ variable GIP_PROVIDER_WRAPPER_LB ?= 'glite-info-service-lbserver';
         service_owner_cmd = service_owner_cmd + ' echo ' + vo + ';';
         service_acbr_cmd = service_acbr_cmd + ' echo VO:' + vo + ';';
     };
-  
-    SELF['confFiles'][escape(GIP_PROVIDER_SERVICE_CONF_LB)] = 
+
+    SELF['confFiles'][escape(GIP_PROVIDER_SERVICE_CONF_LB)] =
         "init = "+GIP_PROVIDER_SERVICE_INIT_LB+"\n" +
         "service_type = "+GIP_PROVIDER_SERVICE_TYPE_LB+"\n" +
         "get_version = rpm -qa | grep 'glite-lb-server-[0-9]' | cut -d- -f4\n" +

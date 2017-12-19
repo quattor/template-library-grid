@@ -42,7 +42,7 @@ variable GRIDMAPDIR_MOUNT_POINTS = {
         };
 
   debug('gridmapdir-related NFS configuration: '+to_string(SELF));
-  SELF;  
+  SELF;
 };
 
 
@@ -64,7 +64,7 @@ variable NFS_MOUNT_POINTS = {
       SELF['servedFS'] = GRIDMAPDIR_MOUNT_POINTS['servedFS'];
     }
   };
-  
+
   if ( is_defined(GRIDMAPDIR_MOUNT_POINTS['mountedFS']) ) {
     if ( is_defined(SELF['mountedFS']) ) {
       SELF['mountedFS'] = merge(SELF['mountedFS'],GRIDMAPDIR_MOUNT_POINTS['mountedFS']);
@@ -84,7 +84,7 @@ variable NFS_SERVER_ENABLED = {
   } else {
     false;
   };
-};                          
+};
 
 # Define NFS_CLIENT_ENABLED based on NFS_MOUNT_POINTS['mountedFS'] if not already
 # explicitly disabled to prevent NFS mount of FS in WN_SHARED_AREAS.

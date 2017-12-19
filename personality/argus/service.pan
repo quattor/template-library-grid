@@ -14,10 +14,10 @@ include { 'personality/argus/rpms/config' };
 # Ensure that the host certificates have the correct permissions.
 include { 'features/security/host_certs' };
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include { 'features/ldconf/config' };
 
-# LCG and Globus sysconfig files. 
+# LCG and Globus sysconfig files.
 include { 'features/globus/sysconfig' };
 #include { 'features/lcg/sysconfig' };
 

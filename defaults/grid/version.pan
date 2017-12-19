@@ -1,6 +1,6 @@
 # This template defines gLite major version and default update.
 # Included very early in the configuration.
-  
+
 unique template defaults/grid/version;
 
 # gLite major version (used mainly to tune OS configuration).

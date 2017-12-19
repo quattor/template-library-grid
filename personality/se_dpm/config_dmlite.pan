@@ -99,7 +99,7 @@ include 'components/filecopy/config';
     append('filecopy');
   };
   SELF;
-}; 
+};
 
 
 # dmlite configuration specific to head node if needed

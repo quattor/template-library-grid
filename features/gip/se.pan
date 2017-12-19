@@ -119,7 +119,7 @@ variable GIP_SE_VOS_FULL = {
         srm_minor = '.2';
       };
       provider_conf_file = GIP_PROVIDER_SERVICE_CONF_BASE + '-' + srm_major + srm_minor + '.conf';
-      # To help identifying SE per subsite, e.g. for FTS channel configuration       
+      # To help identifying SE per subsite, e.g. for FTS channel configuration
       if ( exists(BDII_SUBSITE) &&
            is_defined(BDII_SUBSITE) &&
            (length(BDII_SUBSITE) > 0) ) {
@@ -133,7 +133,7 @@ variable GIP_SE_VOS_FULL = {
         service_owner_cmd = service_owner_cmd + ' echo ' + vo + ';';
         service_acbr_cmd = service_acbr_cmd + ' echo VO:' + vo + ';';
       };
-      
+
       SELF['confFiles'][escape(provider_conf_file)] = "init = "+GIP_PROVIDER_SUBSERVICE[se_type]+" init v"+to_string(srm_major)+"\n" +
                                                       "service_type = "+params['serviceType']+"\n" +
                                                       "get_version = echo $GLITE_INFO_SERVICE_VERSION\n" +
@@ -148,20 +148,20 @@ variable GIP_SE_VOS_FULL = {
                                                       "get_data = echo "+service_data+"\n" +
                                                       "get_services = echo\n";
       SELF['provider']['glite-info-service-srm' + '-' + srm_major + srm_minor] =
-        "#!/bin/sh\n" + 
+        "#!/bin/sh\n" +
         "# Ensure provider is using the right name for DPM head node\n" +
         "export DPM_HOST=" + FULL_HOSTNAME + "\n" +
             GIP_PROVIDER_SERVICE + ' ' + provider_conf_file + ' ' + SITE_NAME + ' ' + unique_id + "\n";
 
       # Glue v2
       SELF['provider']['glite-info-service-srm' + '-' + srm_major + srm_minor + '-glue2'] =
-          "#!/bin/sh\n" + 
+          "#!/bin/sh\n" +
           "# Ensure provider is using the right name for DPM head node\n" +
           "export DPM_HOST=" + FULL_HOSTNAME + "\n" +
               GIP_PROVIDER_SERVICE + '-glue2 ' + provider_conf_file + ' ' + SITE_NAME + ' ' + unique_id + "\n";
     };
   };
-  
+
   if ( is_defined(SELF) ) {
     SELF;
   } else {
@@ -196,7 +196,7 @@ variable GIP_SE_VOS_FULL = {
     se_arch = 'multidisk';
   };
 
-  entries[escape('dn: GlueSEUniqueID='+FULL_HOSTNAME)] = 
+  entries[escape('dn: GlueSEUniqueID='+FULL_HOSTNAME)] =
     nlist(
          'GlueSEName',                  list(SITE_NAME+':'+se_type),
          'GlueSEPort',                  list(to_string(GSIFTP_PORT)),
@@ -215,13 +215,13 @@ variable GIP_SE_VOS_FULL = {
          );
 
   if (GSIFTP_ENABLED) {
-    entries[escape('dn: GlueSEAccessProtocolLocalID=gsiftp, GlueSEUniqueID='+FULL_HOSTNAME)] = 
+    entries[escape('dn: GlueSEAccessProtocolLocalID=gsiftp, GlueSEUniqueID='+FULL_HOSTNAME)] =
       nlist(
            'GlueSEAccessProtocolType',              list('gsiftp'),
            'GlueSEAccessProtocolEndpoint',          list('gsiftp://'+FULL_HOSTNAME+':'+to_string(GSIFTP_PORT)),
            'GlueSEAccessProtocolCapability',        list('file transfer'),
            'GlueSEAccessProtocolVersion',           list('1.0.0'),
-           'GlueSEAccessProtocolPort',              list(to_string(GSIFTP_PORT)), 
+           'GlueSEAccessProtocolPort',              list(to_string(GSIFTP_PORT)),
            'GlueSEAccessProtocolSupportedSecurity', list('GSI'),
            'GlueSEAccessProtocolMaxStreams',        list('999'),
            'GlueChunkKey',                          list('GlueSEUniqueID='+FULL_HOSTNAME),
@@ -229,13 +229,13 @@ variable GIP_SE_VOS_FULL = {
   };
 
   if (DCAP_ENABLED) {
-    entries[escape('dn: GlueSEAccessProtocolLocalID=gsidcap, GlueSEUniqueID='+FULL_HOSTNAME)] = 
+    entries[escape('dn: GlueSEAccessProtocolLocalID=gsidcap, GlueSEUniqueID='+FULL_HOSTNAME)] =
       nlist(
            'GlueSEAccessProtocolType',              list('gsidcap'),
            'GlueSEAccessProtocolEndpoint',          list(endpoint),
            'GlueSEAccessProtocolCapability',        list('byte access'),
            'GlueSEAccessProtocolVersion',           list('1.0.0'),
-           'GlueSEAccessProtocolPort',              list(to_string(DCAP_PORT)), 
+           'GlueSEAccessProtocolPort',              list(to_string(DCAP_PORT)),
            'GlueSEAccessProtocolSupportedSecurity', list('GSIDCAP'),
            'GlueSEAccessProtocolMaxStreams',        list('999'),
            'GlueChunkKey',                          list('GlueSEUniqueID='+FULL_HOSTNAME),
@@ -243,20 +243,20 @@ variable GIP_SE_VOS_FULL = {
   };
 
   if (RFIO_ENABLED) {
-    entries[escape('dn: GlueSEAccessProtocolLocalID=rfio, GlueSEUniqueID='+FULL_HOSTNAME)] = 
+    entries[escape('dn: GlueSEAccessProtocolLocalID=rfio, GlueSEUniqueID='+FULL_HOSTNAME)] =
       nlist(
            'GlueSEAccessProtocolType',              list('rfio'),
            'GlueSEAccessProtocolEndpoint',          list(endpoint),
            'GlueSEAccessProtocolCapability',        list('byte access'),
            'GlueSEAccessProtocolVersion',           list('1.0.0'),
-           'GlueSEAccessProtocolPort',              list(to_string(RFIO_PORT)), 
+           'GlueSEAccessProtocolPort',              list(to_string(RFIO_PORT)),
            'GlueSEAccessProtocolSupportedSecurity', list('RFIO'),
            'GlueSEAccessProtocolMaxStreams',        list('999'),
            'GlueChunkKey',                          list('GlueSEUniqueID='+FULL_HOSTNAME),
            );
   };
 
-  entries[escape('dn: GlueSEControlProtocolLocalID='+protocol+', GlueSEUniqueID='+FULL_HOSTNAME)] = 
+  entries[escape('dn: GlueSEControlProtocolLocalID='+protocol+', GlueSEUniqueID='+FULL_HOSTNAME)] =
     nlist(
          'GlueSEControlProtocolType',             list(protocol),
          'GlueSEControlProtocolEndpoint',         list(endpoint),

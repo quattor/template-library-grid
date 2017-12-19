@@ -1,7 +1,7 @@
 structure template features/htcondor/templ/global;
 
 'text' = {
- 
+
     #Parameters validation
 
      if(!is_defined(CONDOR_CONFIG)){
@@ -18,7 +18,7 @@ structure template features/htcondor/templ/global;
 # See features/htcondor/templ/cluster_conf in your quattor config.
 EOF
 
-    txt = txt + "UID_DOMAIN = " + CONDOR_CONFIG['domain'];    
+    txt = txt + "UID_DOMAIN = " + CONDOR_CONFIG['domain'];
 
     txt = txt + <<EOF;
 
@@ -43,6 +43,6 @@ REQUIRE_LOCAL_CONFIG_FILE = False
 DAEMON_LIST = MASTER
 
 EOF
-	
+
    txt;
 };

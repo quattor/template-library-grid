@@ -16,10 +16,10 @@ variable CONDOR_CONFIG={
   if(!is_defined(SELF['stdsubgroups'])){
     SELF['stdsubgroups'] = list('admin','prod','pilot','default');
   };
-	
+
   if(!is_defined(SELF['groups'])){
     SELF['groups'] = nlist();
-  };	
+  };
 
   # Add, if needed, the list of standard groups and subgroups
   foreach(i;group;SELF['stdgroups']){
@@ -29,29 +29,29 @@ variable CONDOR_CONFIG={
     foreach(j;subgroup;SELF['stdsubgroups']){
       if(!is_defined(SELF['groups'][group + '.' + subgroup])){
         SELF['groups'][group + '.' + subgroup] = nlist();
-      };			
+      };
     };
   };
 
   # Defaults for the group_defaults entry.
   if(!is_defined(SELF['group_defaults'])){
     SELF['group_defaults'] = nlist();
-  };		
+  };
 
   # Accept group to use more than there quota
   if(!is_defined(SELF['group_defaults']['accept_surplus'])){
     SELF['group_defaults']['accept_surplus'] = true;
-  };		
+  };
 
   # Accept group to use more than there quota
   if(!is_defined(SELF['group_defaults']['autoregroup'])){
     SELF['group_defaults']['autoregroup'] = false;
-  };		
+  };
 
   # Default quota for a group
   if(!is_defined(SELF['group_defaults']['quota'])){
     SELF['group_defaults']['quota'] = 0.1;
-  };		
+  };
 
   # Now build the groups structure
   foreach(i;group;SELF['groups']){
@@ -61,7 +61,7 @@ variable CONDOR_CONFIG={
 
     if(!is_defined(group['quota'])){
       group['quota'] = SELF['group_defaults']['quota'];
-    };				
+    };
   };
 
   # Finally if the list of group regexps is not defined... create a default one
@@ -90,27 +90,27 @@ prefix '/software/components/filecopy/services';
 '{/usr/libexec/condor_local_submit_attributes.sh}' = {
   SELF['config']=file_contents('features/htcondor/templ/condor_local_submit_attributes.sh');
   SELF['perms']='0755';
-  SELF; 
+  SELF;
 };
 
 '{/etc/condor/groups_list}' = {
   dummy=create('features/htcondor/templ/groups_list');
   SELF['config']=dummy['text'];
   SELF['perms']='0644';
-  SELF; 
+  SELF;
 };
 
 '{/etc/condor/groups_mapping.xml}' = {
   dummy=create('features/htcondor/templ/groups_mapping');
   SELF['config']=dummy['text'];
   SELF['perms']='0664';
-  SELF; 
+  SELF;
 };
 
 '{/usr/libexec/matching_regexps}' = {
   SELF['config']=file_contents('features/htcondor/templ/matching_regexps');
   SELF['perms']='0755';
-  SELF; 
+  SELF;
 };
 
 include 'components/spma/config';

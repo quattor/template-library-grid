@@ -22,7 +22,7 @@ function yaim_mapping = {
     foreach (i;nt;ARGV[0]) {
         nodetypes[nt] = true;
     };
-    
+
     #
     # generic part
     #

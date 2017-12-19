@@ -1,15 +1,15 @@
 unique template features/nfs/client/fstab;
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # nfs
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/nfs/config' };
 
 
 # Add file systems to mount
 
-"/software/components/nfs/mounts" = { 
+"/software/components/nfs/mounts" = {
   foreach (e_mnt_point;params;NFS_MOUNT_POINTS['mountedFS']) {
     if ( is_defined(params["nfsVersion"]) && (params["nfsVersion"] == '4') ) {
       fstype = 'nfs4';

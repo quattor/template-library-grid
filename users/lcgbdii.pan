@@ -8,7 +8,7 @@ unique template users/lcgbdii;
 # -----------------------------------------------------------------------------
 include { 'components/accounts/config' };
 
-"/software/components/accounts/groups/lcgbdii" = 
+"/software/components/accounts/groups/lcgbdii" =
   nlist("gid", 996);
 
 "/software/components/accounts/users/lcgbdii" = nlist(

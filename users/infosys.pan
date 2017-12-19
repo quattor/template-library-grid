@@ -6,7 +6,7 @@ unique template users/infosys;
 # -----------------------------------------------------------------------------
 include { 'components/accounts/config' };
 
-"/software/components/accounts/groups/infosys" = 
+"/software/components/accounts/groups/infosys" =
   nlist("gid", 997);
 
 

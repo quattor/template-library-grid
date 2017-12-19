@@ -20,7 +20,7 @@ variable WMS_CRON_PURGESTORAGE_PARTIAL_AGE_THRESHOLD ?= WMS_CRON_PURGESTORAGE_AG
 include { 'components/cron/config' };
 include { 'components/altlogrotate/config' };
 
-"/software/components/cron/entries" = 
+"/software/components/cron/entries" =
   push(
     nlist(
       "name", "glite-wms-check-daemons",
@@ -54,7 +54,7 @@ variable WMS_CRON_PARTIAL_TARGET_OPTION = if ( is_defined(WMS_CRON_PURGESTORAGE_
                                           } else {
                                             '';
                                           };
-"/software/components/cron/entries" = 
+"/software/components/cron/entries" =
   push(
     nlist(
       "name", "glite-wms-purgestorage-partial",
@@ -71,7 +71,7 @@ variable WMS_CRON_PARTIAL_TARGET_OPTION = if ( is_defined(WMS_CRON_PURGESTORAGE_
 
 # Execute the 'purger' command on each Sunday (sun) forcing removal of dag nodes,
 # orphan dag nodes without performing any status checking (threshold of 2 weeks).
-"/software/components/cron/entries" = 
+"/software/components/cron/entries" =
   push(
     nlist(
       "name", "glite-wms-purgestorage-full",
@@ -85,7 +85,7 @@ variable WMS_CRON_PARTIAL_TARGET_OPTION = if ( is_defined(WMS_CRON_PURGESTORAGE_
     )
   );
 
-"/software/components/cron/entries" = 
+"/software/components/cron/entries" =
   push(
     nlist(
       "name", "glite-wms-wmproxy-purge-proxycache",
@@ -99,7 +99,7 @@ variable WMS_CRON_PARTIAL_TARGET_OPTION = if ( is_defined(WMS_CRON_PURGESTORAGE_
     )
   );
 
-"/software/components/cron/entries" = 
+"/software/components/cron/entries" =
   push(
     nlist(
       "name", "glite-wms-wmproxy-purge-proxycache_keys",
@@ -125,13 +125,13 @@ variable WMS_CRON_PARTIAL_TARGET_OPTION = if ( is_defined(WMS_CRON_PURGESTORAGE_
     )
   );
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # altlogrotate
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
-include { 'components/altlogrotate/config' }; 
+include { 'components/altlogrotate/config' };
 
-"/software/components/altlogrotate/entries/glite-wms-check-daemons" = 
+"/software/components/altlogrotate/entries/glite-wms-check-daemons" =
   nlist("pattern", WMS_LOCATION_LOG + "/glite-wms-check-daemons.ncm-cron.log",
         "compress", true,
         "missingok", true,
@@ -158,7 +158,7 @@ include { 'components/altlogrotate/config' };
         "ifempty", true,
         "rotate", 1);
 
-"/software/components/altlogrotate/entries/glite-wms-purgestorage-partial" = 
+"/software/components/altlogrotate/entries/glite-wms-purgestorage-partial" =
   nlist("pattern", WMS_LOCATION_LOG+'/glite-wms-purgestorage-partial.ncm-cron.log',
         "compress", true,
         "missingok", true,
@@ -167,7 +167,7 @@ include { 'components/altlogrotate/config' };
         "ifempty", true,
         "rotate", 1);
 
-"/software/components/altlogrotate/entries/glite-wms-purger.log" = 
+"/software/components/altlogrotate/entries/glite-wms-purger.log" =
   nlist("pattern", WMS_LOCATION_LOG+'/'+WMS_PURGER_LOG,
         "compress", true,
         "missingok", true,
@@ -176,7 +176,7 @@ include { 'components/altlogrotate/config' };
         "ifempty", true,
         "rotate", 1);
 
-"/software/components/altlogrotate/entries/glite-wms-purgestorage-full" = 
+"/software/components/altlogrotate/entries/glite-wms-purgestorage-full" =
   nlist("pattern", WMS_LOCATION_LOG+'/glite-wms-purgestorage-full.ncm-cron.log',
         "compress", true,
         "missingok", true,
@@ -185,7 +185,7 @@ include { 'components/altlogrotate/config' };
         "ifempty", true,
         "rotate", 1);
 
-"/software/components/altlogrotate/entries/glite-wms-wmproxy-purge-proxycache" = 
+"/software/components/altlogrotate/entries/glite-wms-wmproxy-purge-proxycache" =
   nlist("pattern", WMS_LOCATION_LOG+'/glite-wms-wmproxy-purge-proxycache.ncm-cron.log',
         "compress", true,
         "missingok", true,
@@ -194,7 +194,7 @@ include { 'components/altlogrotate/config' };
         "ifempty", true,
         "rotate", 1);
 
-"/software/components/altlogrotate/entries/glite-wms-wmproxy-purge-proxycache_keys" = 
+"/software/components/altlogrotate/entries/glite-wms-wmproxy-purge-proxycache_keys" =
   nlist("pattern", WMS_LOCATION_LOG+'/glite-wms-wmproxy-purge-proxycache_keys.ncm-cron.log',
         "compress", true,
         "missingok", true,

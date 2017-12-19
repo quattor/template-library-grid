@@ -102,7 +102,7 @@ include { 'features/gip/base' };
         };
     };
     SELF[escape(GIP_SCRIPTS_CONF_DIR + '/site-urls.conf')] = urls;
-    SELF;        
+    SELF;
 };
 
 # Create /etc/bdii/gip/glite-info-site-defaults.conf used by provider templates
@@ -196,7 +196,7 @@ EOF
 
 include {'components/filecopy/config'};
 '/software/components/filecopy/services' = {
-    if (length(BDII_SUBSITE) != 0) { 
+    if (length(BDII_SUBSITE) != 0) {
         SELF[escape('/usr/local/sbin/patch-site-glue1.tpl.sh')] = nlist(
             'config', CONTENTS,
             'perms', '0744',
