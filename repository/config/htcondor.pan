@@ -6,7 +6,7 @@
 
 unique template repository/config/htcondor;
 
-include { 'quattor/functions/repository' };
+include 'quattor/functions/repository';
 
 @{
 desc =  if true, use devel repository instead of stable
@@ -27,11 +27,11 @@ required = no
 }
 variable HTCONDOR_YUM_REPOSITORY_NAME ?= {
     if ( REPOSITORY_HTCONDOR_DEVEL_ENABLED ) {
-      condor_devel = 'devel_';
+        condor_devel = 'devel_';
     } else {
-      condor_devel = '';
+        condor_devel = '';
     };
-    format('htcondor_%s%s',condor_devel,OS_VERSION_PARAMS['major']);
+    format('htcondor_%s%s', condor_devel, OS_VERSION_PARAMS['major']);
 };
 
 @{
@@ -41,15 +41,15 @@ default = YUM_SNAPSHOT_DATE
 required = no
 }
 variable YUM_HTCONDOR_SNAPSHOT_DATE ?= if ( is_null(YUM_HTCONDOR_SNAPSHOT_DATE) ) {
-                                       debug(format('%s: YUM_HTCONDOR_SNAPSHOT_DATE set to null, ignoring YUM snapshot',OBJECT));
-                                       SELF;
-                                     } else if ( is_defined(YUM_SNAPSHOT_DATE) ) {
-                                       debug(format('%s: YUM_HTCONDOR_SNAPSHOT_DATE undefined, using YUM_SNAPSHOT_DATE (%s)',OBJECT,YUM_SNAPSHOT_DATE));
-                                       YUM_SNAPSHOT_DATE;
-                                     } else {
-                                       debug(format('%s: YUM_HTCONDOR_SNAPSHOT_DATE undefined, ignoring YUM snapshot',OBJECT));
-                                       undef;
-                                     };
+    debug(format('%s: YUM_HTCONDOR_SNAPSHOT_DATE set to null, ignoring YUM snapshot', OBJECT));
+    SELF;
+} else if ( is_defined(YUM_SNAPSHOT_DATE) ) {
+    debug(format('%s: YUM_HTCONDOR_SNAPSHOT_DATE undefined, using YUM_SNAPSHOT_DATE (%s)', OBJECT, YUM_SNAPSHOT_DATE));
+    YUM_SNAPSHOT_DATE;
+} else {
+    debug(format('%s: YUM_HTCONDOR_SNAPSHOT_DATE undefined, ignoring YUM snapshot', OBJECT));
+    undef;
+};
 
 @{
 desc =  list of repository to load specified as a list of templates describing the repositories
@@ -58,16 +58,16 @@ values = list of strings, each string being a template name. Non existing templa
 default = htcondor
 required = no
 }
-include { 'repository/config/quattor' };
+include 'repository/config/quattor';
 variable YUM_HTCONDOR_REPOSITORY_LIST ?= {
-  if ( !is_null(YUM_HTCONDOR_REPOSITORY_LIST) ) {
-    append('htcondor');
-  };
+    if ( !is_null(YUM_HTCONDOR_REPOSITORY_LIST) ) {
+        append(HTCONDOR_YUM_REPOSITORY_NAME);
+    };
 };
 
 # If HTCONDOR_REPOSITORY_LIST is undefined, let the site do what is appropriate
 '/software/repositories' = if ( is_defined(YUM_HTCONDOR_REPOSITORY_LIST) ) {
-                             add_repositories(YUM_HTCONDOR_REPOSITORY_LIST,YUM_HTCONDOR_SNAPSHOT_NS);
-                           } else {
-                             SELF;
-                           };
+    add_repositories(YUM_HTCONDOR_REPOSITORY_LIST, YUM_HTCONDOR_SNAPSHOT_NS);
+} else {
+    SELF;
+};
