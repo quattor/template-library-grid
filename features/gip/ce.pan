@@ -33,7 +33,7 @@ variable CE_OS_FAMILY ?= 'linux';
 
 @{
 desc = define VO shares to be applied to each CE
-values = percentage 
+values = percentage
 default = none
 required = no
 }
@@ -211,9 +211,9 @@ variable GIP_CE_SERVICE_PARAMS = nlist(
 
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Add RPMs that are required by GIP on CE to update dynamic information
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 '/software/packages' = {
   pkg_repl('glite-ce-cream-utils');
   pkg_repl('glite-info-provider-service');
@@ -226,17 +226,17 @@ variable GIP_CE_SERVICE_PARAMS = nlist(
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # HTCondor: add required scripts not part of official RPMs
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 # Necessary only the GIP_CLUSTER_PUBLISHER_HOST (generally LRMS_SERVER_HOST)
 include  if( (CE_BATCH_SYS == 'condor') && (FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST) ) 'features/gip/ce-condor-plugins';
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Compute several variables summarizing the configuration
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 variable CE_DATADIR ?= 'unset';
 
@@ -293,7 +293,7 @@ variable CE_BATCH_SYS_LIST ?= {
       };
     };
   };
-  
+
   # Update value for some specific job managers
   foreach (jobmanager;lrms;SELF) {
     if ( match(lrms, 'lcgpbs|torque') ) {
@@ -325,7 +325,7 @@ variable CE_CPU_CONFIG = {
   };
   SELF;
 };
-   
+
 # Build the command to use to run the MAUI-based GIP plugins. Depending if it is run directly by the GIP or
 # used in cache mode, this wrapper will be configured as a GIP plugin or as a script to be run by some other
 # scripts (generally maui-monitoring).
@@ -377,20 +377,20 @@ variable GIP_CE_PLUGIN_COMMAND = {
                                                     );
     };
   };
-  
+
   SELF;
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Configure GIP plugins used to update dynamic information
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 "/software/components/gip2/plugin" = {
   if ( is_defined(SELF) && !is_nlist(SELF) ) {
     error('/software/components/gip2/plugin must be an nlist');
   };
-  
+
   # iterate over supported batch systems
   if ( is_defined(CE_BATCH_SYS_LIST) && (length(CE_BATCH_SYS_LIST) > 0) ) {
     contents = "";
@@ -414,7 +414,7 @@ variable GIP_CE_PLUGIN_COMMAND = {
 
       } else if ( lrms == "remotepbs" ) {
         contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-remotepbs "+REMOTEPBS_REMOTE_HOST+
-                                                                             " "+REMOTEPBS_REMOTE_PORT+"\n";   
+                                                                             " "+REMOTEPBS_REMOTE_PORT+"\n";
       } else if ( lrms == "pbs" ) {
         # When using MAUI-based GIP plugin, GIP wrapper runs the plugin directly if not using the cache mode
         # or just read the cache file if used in cache mode.
@@ -429,7 +429,7 @@ variable GIP_CE_PLUGIN_COMMAND = {
             if ( is_defined(LRMS_SERVER_HOST) ) {
                 contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-pbs " + GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif "+LRMS_SERVER_HOST+"\n";
             } else {
-                contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-pbs " + GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif "+CE_HOST+"\n";  
+                contents = contents + LCG_INFO_SCRIPTS_DIR +"/lcg-info-dynamic-pbs " + GIP_LDIF_DIR + "/static-file-CE-"+lrms+".ldif "+CE_HOST+"\n";
             };
         };
       } else {
@@ -445,7 +445,7 @@ variable GIP_CE_PLUGIN_COMMAND = {
   SELF;
 };
 
-# Plugin to compute number of running jobs and ERT 
+# Plugin to compute number of running jobs and ERT
 "/software/components/gip2/plugin" = {
   # iterate over supported batch systems
   if ( is_defined(CE_BATCH_SYS_LIST) && (length(CE_BATCH_SYS_LIST) > 0) ) {
@@ -513,46 +513,46 @@ variable GIP_CE_VOMAP ?= {
         };
         ldif_file = format("%s/static-file-all-CE-pbs.ldif\n",static_ldif_dir);
         ldif_file_glue2 = format("%s/%s\n",static_ldif_dir,GIP_CE_GLUE2_LDIF_FILES['shares']);
-        contents = 
-          "[Main]\n" + 
+        contents =
+          "[Main]\n" +
           "static_ldif_file: "+ ldif_file +
           "static_glue2_ldif_file_computingshare: "+ldif_file_glue2 +
           "vomap : \n";
-   
+
         foreach (k; vo; GIP_CE_VOMAP) {
           contents = contents + "  " + k + ":" + vo + "\n";
         };
-     
-        contents = contents + 
-          "module_search_path : ../lrms:../ett\n" + 
-          "[LRMS]\n" + 
-          "lrms_backend_cmd: "+ LCG_INFO_SCRIPTS_DIR + "/lrmsinfo-pbs\n" + 
-          "[Scheduler]\n" + 
-          "cycle_time : 0\n" + 
+
+        contents = contents +
+          "module_search_path : ../lrms:../ett\n" +
+          "[LRMS]\n" +
+          "lrms_backend_cmd: "+ LCG_INFO_SCRIPTS_DIR + "/lrmsinfo-pbs\n" +
+          "[Scheduler]\n" +
+          "cycle_time : 0\n" +
           "vo_max_jobs_cmd: "+ LCG_INFO_SCRIPTS_DIR + "/vomaxjobs-maui\n";
-  
+
       } else if ( lrms == "condor" ) {
-        contents = 
-          "[Main]\n" + 
-          "static_ldif_file: " + GIP_LDIF_DIR + "/static-file-all-CE-"+lrms+".ldif\n" + 
+        contents =
+          "[Main]\n" +
+          "static_ldif_file: " + GIP_LDIF_DIR + "/static-file-all-CE-"+lrms+".ldif\n" +
           "vomap : \n";
-   
+
         foreach (k; vo; GIP_CE_VOMAP) {
           contents = contents + "  " + k + ":" + vo + "\n";
         };
-  
-        contents = contents + 
-          "module_search_path : ../lrms:../ett\n" + 
-          "[LRMS]\n" + 
-          "lrms_backend_cmd: "+ LCG_INFO_SCRIPTS_DIR + "/lrmsinfo-condor\n" + 
-          "[Scheduler]\n" + 
+
+        contents = contents +
+          "module_search_path : ../lrms:../ett\n" +
+          "[LRMS]\n" +
+          "lrms_backend_cmd: "+ LCG_INFO_SCRIPTS_DIR + "/lrmsinfo-condor\n" +
+          "[Scheduler]\n" +
           "cycle_time : 0\n";
       };
-      
+
       SELF[escape(GIP_SCRIPTS_CONF_DIR+'/lcg-info-dynamic-scheduler-'+lrms+'.conf')] = contents;
     };
   };
-  
+
   SELF;
 };
 
@@ -582,7 +582,7 @@ variable GIP_CE_LDIF_PARAMS = {
   # can be redefined to change this behaviour).
   # Do not create if CE_FLAVOR is undefined (not a CE).
 
-  if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {    
+  if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {
     # Build service endpoint and associated foreign key for each queue based on CE type
     queue_endpoints = list();
     foreign_keys = list("GlueSiteUniqueID="+SITE_NAME);
@@ -601,7 +601,7 @@ variable GIP_CE_LDIF_PARAMS = {
         } else {
           error(format('Non CREAM CE found (%s): only CREAM CE are supported',ce));
         };
-        
+
         if ( ce_flavor == 'cream' ) {
           # CREAM CE doesn't know about all LCG CE job manager variants...
           jobmanager = lrms;
@@ -613,9 +613,9 @@ variable GIP_CE_LDIF_PARAMS = {
         };
       };
     };
-  
+
     cluster_entries_g1 = nlist();
-    cluster_entries_g1[escape('dn: GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+',Mds-Vo-name=resource,o=grid')] = 
+    cluster_entries_g1[escape('dn: GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+',Mds-Vo-name=resource,o=grid')] =
       nlist(
             "objectClass",               list('GlueClusterTop','GlueCluster','GlueInformationService','GlueKey','GlueSchemaVersion'),
             "GlueClusterName",           list(GIP_CLUSTER_PUBLISHER_HOST),
@@ -625,12 +625,12 @@ variable GIP_CE_LDIF_PARAMS = {
             "GlueSchemaVersionMajor"   , list("1"),
             "GlueSchemaVersionMinor"   , list("3"),
            );
-  
+
     # For GlueHostArchitecturePlatformType, assume the same type as CE until we support several subclusters
     # per cluster.
     average_core_num = to_double(CE_CPU_CONFIG['slots']) / CE_CPU_CONFIG['cpus'];
     hepspec06 = 4 * to_double(CE_SI00) / 1000;
-    cluster_entries_g1[escape('dn: GlueSubClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+', GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+',Mds-Vo-name=resource,o=grid')] = 
+    cluster_entries_g1[escape('dn: GlueSubClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+', GlueClusterUniqueID='+GIP_CLUSTER_PUBLISHER_HOST+',Mds-Vo-name=resource,o=grid')] =
       nlist(
             'objectClass',                      list('GlueClusterTop','GlueSubCluster','GlueHostApplicationSoftware','GlueHostArchitecture',
                                                      'GlueHostBenchmark','GlueHostMainMemory','GlueHostOperatingSystem','GlueHostProcessor',
@@ -667,7 +667,7 @@ variable GIP_CE_LDIF_PARAMS = {
     SELF["glue1"]["lcg-info-static-cluster.conf"]['ldifFile'] = "static-file-Cluster.ldif";
     SELF["glue1"]["lcg-info-static-cluster.conf"]['entries'] = cluster_entries_g1;
   };
-  
+
 
   # Glue CE static information.
   # When using GIP in cache mode and the current node is the LRMS
@@ -682,7 +682,7 @@ variable GIP_CE_LDIF_PARAMS = {
     host_entries_g1 = nlist();
     all_ce_entries_g1 = nlist();
     share_entries_g2 = nlist();
-    
+
     foreach (queue;vos;CE_QUEUES['vos']) {
       if (exists(CE_QUEUES['lrms'][queue])) {
         jobmanager=CE_QUEUES['lrms'][queue];
@@ -697,9 +697,9 @@ variable GIP_CE_LDIF_PARAMS = {
       # GIP_CE_USE_CACHE is true).
       #if ( GIP_CE_USE_CACHE && !is_dict(host_entries_g1[lrms]) ) host_entries_g1[lrms] = dict();
       if ( !is_nlist(host_entries_g1[lrms]) ) host_entries_g1[lrms] = nlist();
-   
+
       # FIXME: cache mode should not be specific to Torque/MAUI...
-      # FIXME: cluster mode (distinct CEs and LRMS master) validation with LRMS other than Torque/MAUI 
+      # FIXME: cluster mode (distinct CEs and LRMS master) validation with LRMS other than Torque/MAUI
       if ( FULL_HOSTNAME == LRMS_SERVER_HOST ) {
         ce_list = CE_HOSTS;
         # Create only if necessary to avoid creating a useless emtpy file
@@ -712,7 +712,7 @@ variable GIP_CE_LDIF_PARAMS = {
       } else {
         ce_list = list(FULL_HOSTNAME);
       };
-      
+
       foreach (i;ce;ce_list) {
         if ( index(ce,CE_HOSTS_LCG) >= 0 ) {
           ce_flavor = 'lcg';
@@ -723,10 +723,10 @@ variable GIP_CE_LDIF_PARAMS = {
           jobmanager = lrms;
           unique_id = ce+':'+to_string(CE_PORT[ce_flavor])+'/cream-'+jobmanager+'-'+queue;
         };
-        
+
         access = list();
         contact = list();
-  
+
         # Try to set up initial GlueCEStateStatus according to defined
         # queue state, else assume default. Assume the same state on all CEs.
         # Will be updated by GIP to reflect the exact status.
@@ -749,33 +749,33 @@ variable GIP_CE_LDIF_PARAMS = {
         } else {
           queue_status = CE_STATUS;
         };
-  
+
         entries_g1 = nlist();
         entries_g2 = nlist();
         foreach (k;vo;vos) {
           vo_name = VO_INFO[vo]['name'];
           rule = "VO:"+ vo_name;
           access[length(access)] = rule;
-  
+
           if ( is_defined(CE_DEFAULT_SE) ) {
             gluese_info_default_se = nlist('GlueCEInfoDefaultSE', list(CE_DEFAULT_SE));
           } else {
             gluese_info_default_se = nlist();
           };
-          
+
           if ( is_defined(CE_VO_DEFAULT_SE[vo]) ) {
             gluese_info_default_se = nlist('GlueCEInfoDefaultSE', list(CE_VO_DEFAULT_SE[vo]));
           };
-  
+
           if ( is_defined(VO_INFO[vo]['swarea']['name']) ) {
             sw_area = nlist('GlueCEInfoApplicationDir', list(VO_INFO[vo]['swarea']['name']));
           } else {
             sw_area = nlist();
           };
-  
+
           #FIXME: use home directory if in a shared area
           shared_data_dir = nlist('GlueCEInfoDataDir', list(CE_DATADIR));
-          
+
           # GLUE1 GlueVOView entry (LDIF, 1/VO/CE)
           entries_g1[escape('dn: GlueVOViewLocalID='+vo_name+',GlueCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] =
                   merge(nlist('objectClass', list('GlueCETop','GlueVOView','GlueCEInfo','GlueCEState','GlueCEAccessControlBase','GlueCEPolicy',
@@ -797,9 +797,9 @@ variable GIP_CE_LDIF_PARAMS = {
                         shared_data_dir,
                        );
         };
-    
+
         # GLUE1 GlueCE entry (LDIF)
-        entries_g1[escape('dn: GlueCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] = 
+        entries_g1[escape('dn: GlueCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] =
                 merge(nlist('objectClass',              list('GlueCETop','GlueCE','GlueCEAccessControlBase','GlueCEInfo','GlueCEPolicy', 'GlueCEState',
                                                              'GlueInformationService','GlueKey','GlueSchemaVersion'),
                             'GlueCEImplementationName',    list(GLUE_CE_IMPLEMENTATION[ce_flavor]),
@@ -809,7 +809,7 @@ variable GIP_CE_LDIF_PARAMS = {
                             'GlueCEUniqueID',              list(unique_id),
                             'GlueCEInfoGatekeeperPort',    list(to_string(CE_PORT[ce_flavor])),
                             # This is a hack to fix a problem affecting WMS/NagiosBox that don't like a InfoHostName
-                            # that doesn't match a CE name... InfoHostName should be FULL_HOSTNAME normally. 
+                            # that doesn't match a CE name... InfoHostName should be FULL_HOSTNAME normally.
                             'GlueCEInfoHostName',          list(ce),
                             'GlueCEInfoLRMSType',          list(lrms),
                             'GlueCEInfoLRMSVersion',       list('not defined'),
@@ -851,7 +851,7 @@ variable GIP_CE_LDIF_PARAMS = {
         if ( ce == FULL_HOSTNAME ) {
           host_entries_g1[lrms] = merge(host_entries_g1[lrms],entries_g1);
         };
-        
+
         # Also add to GLUE1 LDIF file used when cache mode is enabled (several entries in ce_list)
         if ( is_nlist(all_ce_entries_g1[lrms]) ) {
           all_ce_entries_g1[lrms] = merge(all_ce_entries_g1[lrms],entries_g1);
@@ -880,11 +880,11 @@ variable GIP_CE_LDIF_PARAMS = {
           share_entries_g2[lrms] = merge(share_entries_g2[lrms],entries_g2);
         };
 
-               
+
       };           # end of iteration over CEs
-      
+
     };             # end of iteration over queues
-                 
+
     # Create LDIF configuration entries describing CE queues (GlueCE and GlueVOView).
     # FIXME: restore original behaviour when lcg-info-dynamic-scheduler is fixed (https://ggus.eu/index.php?mode=ticket_info&ticket_id=110336).
     #        See other related section at the beginning of this block.
@@ -902,7 +902,7 @@ variable GIP_CE_LDIF_PARAMS = {
     if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {
       foreach (lrms;ce_entries;all_ce_entries_g1) {
         conf_file_g1 = "lcg-info-static-all-CE-"+lrms+".conf";
-        # Use standard location for LDIF file until the lcg-info-dynamic-scheduler issue is fixed and 
+        # Use standard location for LDIF file until the lcg-info-dynamic-scheduler issue is fixed and
         # original behaviour can be restored.
         #SELF['glue1'][conf_file_g1]['ldifFile'] = GIP_VAR_DIR + "/static-file-all-CE-"+lrms+".ldif";
         SELF['glue1'][conf_file_g1]['ldifFile'] = "static-file-all-CE-"+lrms+".ldif";
@@ -916,8 +916,8 @@ variable GIP_CE_LDIF_PARAMS = {
       SELF['glue2']['shares'] = merge(SELF['glue2']['shares'],share_entries);
     };
   };
-     
-      
+
+
   # Glue CE-SE binding static information.
   # Do not create if CE_FLAVOR is undefined (not a CE).
 
@@ -925,7 +925,7 @@ variable GIP_CE_LDIF_PARAMS = {
     # iterate over all defined queues (there is one GlueCE object per queue)
     if ( is_defined(CE_QUEUES['vos']) ) {
       close_se_entries_g1 = nlist();
-      
+
       foreach (queue;vos;CE_QUEUES['vos']) {
         if (exists(CE_QUEUES['lrms'][queue])) {
           jobmanager=CE_QUEUES['lrms'][queue];
@@ -934,7 +934,7 @@ variable GIP_CE_LDIF_PARAMS = {
           jobmanager=CE_BATCH_SYS;
         };
         lrms = CE_BATCH_SYS_LIST[jobmanager];
-    
+
         if ( CE_FLAVOR == 'cream' ) {
           # On CREAM CE, there is no distinction between lcgpbs and pbs. Reset jobmanager to lrms.
           jobmanager = lrms;
@@ -942,7 +942,7 @@ variable GIP_CE_LDIF_PARAMS = {
         } else {
           unique_id = FULL_HOSTNAME+':'+to_string(CE_PORT[CE_FLAVOR])+'/jobmanager-'+jobmanager+'-'+queue;
         };
-          
+
         # Compute close SE list for the current queue by doing union of close SE
         # for all VO authorized to access the queue.
         # CE_VO_CLOSE_SE contains one entry per VO supported on the CE.
@@ -961,26 +961,26 @@ variable GIP_CE_LDIF_PARAMS = {
             queue_close_se_list[length(queue_close_se_list)] = se;
           };
         };
-    
+
         # Define list of SEs usable by this queue
         if ( length(queue_close_se_list) > 0 ) {
-          close_se_entries_g1[escape('dn: GlueCESEBindGroupCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] = 
+          close_se_entries_g1[escape('dn: GlueCESEBindGroupCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] =
                          nlist('objectClass', list('GlueGeneralTop','GlueCESEBindGroup','GlueSchemaVersion'),
                                'GlueCESEBindGroupSEUniqueID', queue_close_se_list,
                                'GlueSchemaVersionMajor', list('1'),
                                'GlueSchemaVersionMinor', list('3'),
                               );
         };
-    
+
         # Define a GlueCESEBindSEUniqueID per SE usable from the queue (close SE list).
         # Some SEs may not be managed locally and thus not be listed into SE_HOSTS.
-        foreach (i;se;queue_close_se_list) {   
+        foreach (i;se;queue_close_se_list) {
           if ( exists(SE_HOSTS[se]) ) {
             params = SE_HOSTS[se];
           } else {
             params = undef;
           };
-          
+
           if ( exists(params['accessPoint']) && is_defined(params['accessPoint']) ) {
             accesspoint = params['accessPoint'];
           } else {
@@ -996,8 +996,8 @@ variable GIP_CE_LDIF_PARAMS = {
               error('No default value for SE Access Point for host '+se+' (type='+params['type']+')');
             };
           };
-          
-          close_se_entries_g1[escape('dn: GlueCESEBindSEUniqueID='+se+',GlueCESEBindGroupCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] =  
+
+          close_se_entries_g1[escape('dn: GlueCESEBindSEUniqueID='+se+',GlueCESEBindGroupCEUniqueID='+unique_id+',Mds-Vo-name=resource,o=grid')] =
             nlist(
                  'objectClass', list('GlueGeneralTop','GlueCESEBind','GlueSchemaVersion'),
                  'GlueSchemaVersionMajor',      list('1'),
@@ -1007,16 +1007,16 @@ variable GIP_CE_LDIF_PARAMS = {
                  'GlueCESEBindCEUniqueID',      list(unique_id),
                  'GlueCESEBindMountInfo',       list(accesspoint),
                  'GlueCESEBindWeight',          list('0'),
-                 );             
-    
+                 );
+
         };
       };
     };
-    
+
     SELF["glue1"]["lcg-info-static-cesebind.conf"]['ldifFile'] = "static-file-CESEBind.ldif";
     SELF["glue1"]["lcg-info-static-cesebind.conf"]['entries'] = close_se_entries_g1;
   };
-  
+
 
   # Create LDIF configuration entries for GLUE2 (general parameters)
   # FIXME: ServingState configuration
@@ -1080,7 +1080,7 @@ variable GIP_CE_LDIF_PARAMS = {
   # FIXME: ProcessorVendor. Define separate Execution Environments for different HW?
   # FIXME: ProcessorModel. Define separate Execution Environments for different HW?
   # FIXME: ProcessorClockSpeed. Define separate Execution Environments for different HW?
-  if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {    
+  if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) {
     glue2_var_prefix = format('ExecutionEnvironment_%s_',GIP_CLUSTER_PUBLISHER_HOST);
     SELF['glue2']['ExecutionEnvironment'] = nlist(glue2_var_prefix+'ArchitecturePlatformType', list(CE_WN_ARCH),
                                                   glue2_var_prefix+'PhysicalCPUs', list(to_string(CE_CPU_CONFIG['cpus'])),
@@ -1136,7 +1136,7 @@ variable GIP_CE_LDIF_PARAMS = {
     foreach (category;dummy;GIP_CE_GLUE2_LDIF_PROCESSORS) {
       # When the host is not also the GIP_CLUSTER_PUBLISHER_HOST (in cluster mode),
       # only the GLUE2ComputingService and the GLUE2ComputingEndpoint must be published.
-      if ( (FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST) || match('endpoint|service',category) ) {    
+      if ( (FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST) || match('endpoint|service',category) ) {
         SELF['ldif']['glue2_'+category]['staticInfoCmd'] = format('%s/%s',GIP_CE_GLUE2_LDIF_PROCESSOR_DIR,GIP_CE_GLUE2_LDIF_PROCESSORS[category]);
         SELF['ldif']['glue2_'+category]['confFile'] = GIP_CE_GLUE2_CONFIG_FILE;
         SELF['ldif']['glue2_'+category]['ldifFile'] = GIP_CE_GLUE2_LDIF_FILES[category];
@@ -1149,7 +1149,7 @@ variable GIP_CE_LDIF_PARAMS = {
 
 
 #---------------------------------------------------------------
-# Configuration of the GlueService information provider for 
+# Configuration of the GlueService information provider for
 # CREAM CE and CEMON service.
 # Do not create if CE_FLAVOR is undefined (not a CE).
 #---------------------------------------------------------------
@@ -1182,8 +1182,8 @@ variable GIP_CE_LDIF_PARAMS = {
             } else {
                 error("Either 'version' or 'version_rpm' must be present in GIP_CE_SERVICE_PARAMS["+service+"]");
             };
-      
-            SELF['confFiles'][escape(service_provider_conf)] = 
+
+            SELF['confFiles'][escape(service_provider_conf)] =
                 "init = "+GIP_PROVIDER_SUBSERVICE[service]+" init\n" +
                 "service_type = "+GIP_CE_SERVICE_PARAMS[service]['type']+"\n" +
                 "get_version = "+service_version_cmd+"\n" +
@@ -1200,12 +1200,12 @@ variable GIP_CE_LDIF_PARAMS = {
                 "get_implementationversion = "+service_version_cmd+"\n" +
                 "get_services = echo\n";
             SELF['provider'][service_provider_wrapper] =
-                "#!/bin/sh\n" + 
+                "#!/bin/sh\n" +
                 GIP_PROVIDER_SERVICE + ' ' + service_provider_conf + ' ' + SITE_NAME + ' ' + service_uniqueid + "\n";
 
             # Glue v2
             SELF['provider'][service_provider_wrapper + '-glue2'] =
-                "#!/bin/sh\n" + 
+                "#!/bin/sh\n" +
                 GIP_PROVIDER_SERVICE + '-glue2 ' + service_provider_conf + ' ' + SITE_NAME + ' ' + service_uniqueid + "\n";
         };
     };

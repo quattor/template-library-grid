@@ -16,7 +16,7 @@ variable SANDBOX_MOUNT_POINTS = {
     foreach (ce;mpoint;CREAM_SANDBOX_MPOINTS) {
       if ( !is_defined(CREAM_SANDBOX_SHARED_FS) ||
            (is_defined(CREAM_SANDBOX_SHARED_FS[ce]) && match(CREAM_SANDBOX_SHARED_FS[ce],'^nfs')) ||
-           (!is_defined(CREAM_SANDBOX_SHARED_FS[ce]) && is_defined(CREAM_SANDBOX_SHARED_FS['DEFAULT']) && 
+           (!is_defined(CREAM_SANDBOX_SHARED_FS[ce]) && is_defined(CREAM_SANDBOX_SHARED_FS['DEFAULT']) &&
                                                                                match(CREAM_SANDBOX_SHARED_FS[ce],'^nfs')) ) {
         if ( is_defined(CREAM_SANDBOX_DIRS[ce]) ) {
           sandbox_path = CREAM_SANDBOX_DIRS[ce];
@@ -26,7 +26,7 @@ variable SANDBOX_MOUNT_POINTS = {
         if ( !exists(sandbox_path) ) {
           error('CREAM CE '+ce+' sandbox directory undefined (check variable CREAM_SANDBOX_MPOINTS)');
         };
-        
+
         # If current node is the CE the sandbox directory belongs to, configure NFS exports
         nfs_version = NFS_DEFAULT_VERSION;
         e_mnt_point = escape(mpoint);
@@ -56,7 +56,7 @@ variable SANDBOX_MOUNT_POINTS = {
   };
 
   debug('CREAM sandbox configured for NFS sharing = '+to_string(SELF));
-  SELF;  
+  SELF;
 };
 
 
@@ -78,7 +78,7 @@ variable NFS_MOUNT_POINTS = {
       SELF['servedFS'] = SANDBOX_MOUNT_POINTS['servedFS'];
     }
   };
-  
+
   if ( is_defined(SANDBOX_MOUNT_POINTS['mountedFS']) ) {
     if ( is_defined(SELF['mountedFS']) ) {
       SELF['mountedFS'] = merge(SELF['mountedFS'],SANDBOX_MOUNT_POINTS['mountedFS']);
@@ -98,7 +98,7 @@ variable NFS_SERVER_ENABLED = {
   } else {
     false;
   };
-};                          
+};
 
 # Define NFS_CLIENT_ENABLED based on NFS_MOUNT_POINTS['mountedFS'] if not already
 # explicitly disabled to prevent NFS mount of FS in WN_SHARED_AREAS.

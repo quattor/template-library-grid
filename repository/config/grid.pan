@@ -1,10 +1,10 @@
 unique template repository/config/grid;
- 
+
 include { 'quattor/functions/repository' };
 
 @{
 desc = defines the variant of the grid RPM repository to use (typically emi or umd).\
- The full repository template name will be built appending the version, os, arch. 
+ The full repository template name will be built appending the version, os, arch.
 values = any string
 default = emi
 required = no
@@ -13,7 +13,7 @@ variable REPOSITORY_GRID_VARIANT ?= 'emi';
 @{
 desc = defines the variant of the grid repository to use for third party RPMs (typically emi or umd).\
  This is controlled by a variable distinct from other grid repositories: default should be appropriate.\
- The full repository template name will be built appending the version, os, arch. 
+ The full repository template name will be built appending the version, os, arch.
 values = any string
 default = emi
 required = no

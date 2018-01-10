@@ -1,8 +1,8 @@
 unique template features/gip/argus;
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Glue 2 configuration
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/gip2/config' };
 variable GIP_PROVIDER_SCRIPT ?= 'glite-info-glue2-provider-service-argus';
 variable GIP_PROVIDER_TEMPLATES ?= list(
@@ -43,9 +43,9 @@ include { 'components/filecopy/config' };
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Glue 1 configuration
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 variable GIP_GLUE1_PROVIDER_SCRIPT = 'glite-info-glue1-provider-service-argus';
 variable GIP_GLUE1_PROVIDER_TEMPLATE = list(

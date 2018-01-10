@@ -28,7 +28,7 @@ variable BLPARSER_WITH_UPDATER_NOTIFIER=true;
 
 variable CE_QUEUES ?={
   SELF['vos']['default']=VOS;
-  SELF;		
+  SELF;
 };
 
 # Fixme: a bug in the blah RPM
@@ -37,7 +37,7 @@ include {'components/filecopy/config'};
 '/software/components/filecopy/services/{/usr/libexec/condor_status.sh}' = {
   SELF['source']='/usr/libexec/condor_status.sh.save';
   SELF['perms']='0755';
-  SELF; 
+  SELF;
 };
 
 include {'components/dirperm/config'};

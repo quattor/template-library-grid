@@ -1,4 +1,4 @@
-# 
+#
 # getting X509_USER_PROXY from the SUDO_COMMAD variable is a temporary solution as
 # condor_submit.sh (which calls this script), has a x509userproxy variable defined but not exported.
 # should ask to the developers of glite-ce-blaph to export the variable inside condor_submit.sh

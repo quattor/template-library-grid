@@ -205,7 +205,7 @@ variable PAP_ADMIN_PROPERTIES_CONTENTS = {
 
 
 #-----------------------------------------------------------------------------
-# Policy Generation Script 
+# Policy Generation Script
 #-----------------------------------------------------------------------------
 
 variable POLICY_SCRIPT_FILE ?= '/root/sbin/from-groupmap-to-policy.sh';

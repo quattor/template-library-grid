@@ -8,7 +8,7 @@ include { 'components/accounts/config' };
 
 include { 'users/infosys' };
 
-"/software/components/accounts/groups/rgma" = 
+"/software/components/accounts/groups/rgma" =
   nlist("gid", 993);
 
 "/software/components/accounts/users/rgma" = nlist(

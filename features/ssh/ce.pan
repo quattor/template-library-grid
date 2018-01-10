@@ -4,7 +4,7 @@ unique template features/ssh/ce;
 
 variable CE_PBS_KNOWNHOSTS ?= INSTALL_ROOT+'/etc/edg-pbs-knownhosts.conf';
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Control variables initialization
 # -----------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ variable SSH_HOSTBASED_AUTH ?=
   } else {
     return(CE_USE_SSH);
   };
-  
+
 # Configure also RSH hosts.equiv. Default : false.
 # 3 possible values :
 #    - true : create hosts.equiv with CE and WNs
@@ -47,7 +47,7 @@ variable SSH_HOSTBASED_CONFIG =
 
 # Build list of WNs + CE + TORQUE_SERVER_CLIENTS to be used to produce hosts.equiv and shosts.equiv.
 # Set it to an empty list if SSH_HOSTBASED_CONFIG is false.
- 
+
 variable CE_HOST_LIST = {
   value = '';
 
@@ -109,7 +109,7 @@ variable HOSTS_EQUIV_LIST = {
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # pbsknownhosts
 # -----------------------------------------------------------------------------
 include { 'components/pbsknownhosts/config' };
@@ -120,12 +120,12 @@ include { 'components/pbsknownhosts/config' };
 "/software/components/pbsknownhosts/targets" = list("knownhosts");
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Build SSH client configuration
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/filecopy/config' };
 
-variable SSH_HOSTBASED_CONFIG = 
+variable SSH_HOSTBASED_CONFIG =
  if ((SSH_HOSTBASED_AUTH) || (SSH_HOSTBASED_AUTH_LOCAL)) {
    return("yes");
  } else {
@@ -140,7 +140,7 @@ Protocol 2,1
    PasswordAuthentication yes
    EnableSSHKeysign yes
 EOF
-variable CONTENTS = CONTENTS + 
+variable CONTENTS = CONTENTS +
                     "   HostbasedAuthentication " + SSH_HOSTBASED_CONFIG + "\n";
 
 
@@ -153,9 +153,9 @@ variable CONTENTS = CONTENTS +
        );
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Build SSH server configuration
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/filecopy/config' };
 include { 'components/ssh/config' };
 
@@ -175,8 +175,8 @@ include { 'components/ssh/config' };
 };
 
 # Create shosts.equiv file.
-'/software/components/filecopy/services' = 
-  npush(escape('/etc/ssh/shosts.equiv'), 
+'/software/components/filecopy/services' =
+  npush(escape('/etc/ssh/shosts.equiv'),
         nlist('config', SHOSTS_EQUIV_LIST,
               'owner', 'root:root',
               'perms', '0644',
@@ -190,7 +190,7 @@ include { 'components/ssh/config' };
 
 '/software/components/filecopy/services' =
   if ( is_defined(RSH_HOSTS_EQUIV) ) {
-    npush(escape('/etc/hosts.equiv'), 
+    npush(escape('/etc/hosts.equiv'),
       nlist('config', HOSTS_EQUIV_LIST,
             'owner', 'root:root',
             'perms', '0644',
@@ -214,10 +214,10 @@ include { 'components/cron/config' };
     "command","/usr/sbin/edg-pbs-knownhosts"));
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # altlogrotate
-# ---------------------------------------------------------------------------- 
-include { 'components/altlogrotate/config' }; 
+# ----------------------------------------------------------------------------
+include { 'components/altlogrotate/config' };
 
 "/software/components/altlogrotate/entries/edg-pbs-knownhosts" =
   nlist("pattern", "/var/log/edg-pbs-knownhosts.ncm-cron.log",

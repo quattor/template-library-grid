@@ -270,7 +270,7 @@ retry_copy() # 1 - command, 2 - source, 3 - dest
     do
       if [ -z `ps -p $transfer_watchdog -o pid=` ]; then
         break;
-      fi 
+      fi
       sleep 1
       let "transfer_timeout--"
     done
@@ -323,7 +323,7 @@ doExit() # 1 - status
   if [ -n "$proxy_watchdog" ]
   then
     echo "doExit(): Killing proxy watchdog (pid=$proxy_watchdog)..."
-    kill_with_children $proxy_watchdog 
+    kill_with_children $proxy_watchdog
   fi
   kill -9 -$user_job_pid 2>/dev/null
 
@@ -378,7 +378,7 @@ doReplicaFile()
     echo "$sourcefile    Error: $localf" >> "$filename.tmp"
     exit_status=1
   fi
-  
+
   echo >> "$filename.tmp"
   return $exit_status
 }
@@ -403,7 +403,7 @@ doReplicaFilewithLFN()
       exit_status=1
     fi
   fi
-  
+
   echo >> "$filename.tmp"
   return $exit_status
 }
@@ -452,7 +452,7 @@ doReplicaFilewithLFNAndSE()
     else
       local locallfn=`${edg_rm_command} --vo=${__vo} copyAndRegisterFile "file://${jw_workdir}/$sourcefile" -l "$lfn" 2>&1`
       result=$?
-      if [ $result -eq 0 ]; then 
+      if [ $result -eq 0 ]; then
         echo "$sourcefile    $locallfn" >> "$filename.tmp"
       else
         local localnew=`${edg_rm_command} --vo=${__vo} copyAndRegisterFile "file://${jw_workdir}/$sourcefile" 2>&1`
@@ -462,11 +462,11 @@ doReplicaFilewithLFNAndSE()
         else
           echo "$sourcefile    Error: $localf; $localse; $locallfn; $localnew" >> "$filename.tmp"
           exit_status=1
-        fi    
+        fi
       fi
     fi
   fi
-    
+
   echo >> "$filename.tmp"
   return $exit_status
 }
@@ -549,7 +549,7 @@ function send_partial_file
 
 OSB_transfer()
 {
-  # uncomment this one below if the order in the osb originally 
+  # uncomment this one below if the order in the osb originally
   # specified is not of some relevance to the user
   #sort_by_size __output_file ${jw_workdir}
 
@@ -726,7 +726,7 @@ do
     retry_copy "htcp" "${f}" "file://${jw_workdir}/${file}"
   else
     false
-  fi 
+  fi
   if [ $? != 0 ]; then
     fatal_error "Cannot download ${file} from ${f}"
   fi
@@ -825,7 +825,7 @@ if [ 1 -eq 1 ]; then # dump variable to be set?
     tmp_time_file=`mktemp -q tmp.XXXXXXXXXX`
     if [ $? -ne 0 ]; then
       jw_echo "Cannot generate temporary file"
-      unset tmp_time_file 
+      unset tmp_time_file
     fi
   else
     jw_echo "Cannot find 'time' command"
@@ -901,7 +901,7 @@ if [ -f "$tmp_time_file" -a -n "$time_cmd" ]; then
   log_resource_usage "user" "`grep user $tmp_time_file | cut -d' ' -f 2`" "s"
   log_resource_usage "sys" "`grep sys $tmp_time_file | cut -d' ' -f 2`" "s"
   rm -f "$tmp_time_file"
-fi 
+fi
 
 # customization point #2
 if [ -n "${EMI_LOCAL_CUSTOMIZATION_DIR}" ]; then
@@ -912,7 +912,7 @@ fi
 
 if [ ${__perusal_support} -eq 1 ]; then
   kill -USR2 $send_pid
-  wait $send_pid 
+  wait $send_pid
 fi
 
 if [ ${__output_data} -eq 1 ]; then

@@ -170,7 +170,7 @@ include { 'defaults/grid/config' };
 
 
 # Check if NFS server and/or client should be configured on the current system.
-# This template defines variables NFS_xxx_ENABLED used by other templates. 
+# This template defines variables NFS_xxx_ENABLED used by other templates.
 # Also include NFS-related packages
 include { 'features/nfs/init' };
 include { if ( NFS_CLIENT_ENABLED ) 'rpms/nfs-client' };
@@ -237,12 +237,12 @@ include { if_exists(MONITORING_CONFIG_SITE) };
 
 
 #
-# AII component must be included after much of the other setup. 
+# AII component must be included after much of the other setup.
 #
 include { OS_NS_QUATTOR + 'aii' };
 
 
-# 
+#
 # Add local users if some configured
 #
 variable USER_CONFIG_INCLUDE = if ( exists(USER_CONFIG_SITE) && is_defined(USER_CONFIG_SITE) ) {
@@ -259,12 +259,12 @@ include { USER_CONFIG_INCLUDE };
 include { return(GLITE_BASE_CONFIG_SITE) };
 
 
-# GLITE_OS_POSTCONFIG defines a template that must be executed at the very end of 
+# GLITE_OS_POSTCONFIG defines a template that must be executed at the very end of
 # any gLite machine type.
 # The template is called by machine-types templates.
 variable GLITE_OS_POSTCONFIG ?= OS_NS_OS + 'postconfig';
 
-# Default repository configuration template 
+# Default repository configuration template
 variable PKG_REPOSITORY_CONFIG ?= 'repository/config';
 
 variable PAKITI_ENABLED ?= false;

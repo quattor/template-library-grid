@@ -17,7 +17,7 @@ include { 'components/gip2/config' };
         urls = urls + name + ' ' + url + "\n";
     };
     SELF[escape(GIP_SCRIPTS_CONF_DIR + '/subsite-urls.conf')] = urls;
-    SELF;        
+    SELF;
 };
 
 # Create DNs for subsite entries
@@ -25,24 +25,24 @@ include { 'components/gip2/config' };
 '/software/components/gip2/stubs' = {
     if (!is_nlist(SELF)) {
         error('/software/components/gip2/stubs must be an nlist');
-    };  
+    };
     if (is_nlist(SELF[SITE_LDIF_FILE])) {
         entries = SELF[SITE_LDIF_FILE];
     } else {
         entries = nlist();
-    };  
+    };
     entries[escape('dn: mds-vo-name=' + BDII_SUBSITE_FULL + ',o=grid')] = nlist(
         'objectclass', list('MDS'),
         'mds-vo-name', list(BDII_SUBSITE_FULL),
-    );  
+    );
     # Glue v2
     entries[escape('dn: GLUE2DomainId=' + BDII_SUBSITE_FULL + ',o=glue')] = nlist(
         'objectClass', list('GLUE2Domain'),
         'GLUE2DomainId', list(BDII_SUBSITE_FULL),
     );
     SELF[SITE_LDIF_FILE] = entries;
-    SELF;    
-};      
+    SELF;
+};
 
 # Create subsite providers
 '/software/components/gip2' = {
@@ -77,5 +77,5 @@ include { 'components/gip2/config' };
         '    exit 1' + "\n" +
         'fi' + "\n\n" +
         '${SCRIPT} -c ${CONFIG} -g ' + BDII_SUBSITE_FULL + "\n";
-    SELF;        
+    SELF;
 };

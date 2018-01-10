@@ -123,7 +123,7 @@ include { 'personality/xrootd/env_federation' };
       };
       SELF[federation]['redirectParams'] = params['fedredir'] + ':' + to_string(params['xrd_mgr_port']) + ' ? ' + SELF[federation]['validPathPrefix'];
       if ( is_defined('/software/components/xrootd/options/dpm/dpnsHost') ) {
-        SELF[federation]['localRedirectParams'] = value('/software/components/xrootd/options/dpm/dpnsHost') + ':' + 
+        SELF[federation]['localRedirectParams'] = value('/software/components/xrootd/options/dpm/dpnsHost') + ':' +
                                                      to_string(params['local_port']) + ' ' + SELF[federation]['validPathPrefix'];
       };
 

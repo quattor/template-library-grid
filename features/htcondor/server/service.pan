@@ -4,7 +4,7 @@ variable CONDOR_CONFIG = {
   # Define the appropriate config files
   if(!is_defined(SELF['cfgfiles'])){
     SELF['cfgfiles']=list();
-  };	
+  };
 
   file_list=list('global','security','params','head');
 

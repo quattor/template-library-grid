@@ -12,7 +12,7 @@ include { 'features/wlcg/config' };
 # Add UI RPMs
 include { 'personality/ui/rpms/config' };
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include { 'features/ldconf/config' };
 
 # Include standard environmental variables.

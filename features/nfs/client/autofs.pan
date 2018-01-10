@@ -1,13 +1,13 @@
 unique template features/nfs/client/autofs;
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Build an indirect map for all the specified NFS filesystems.
 # An indirect map is used instead of a direct map because direct map
 # support on Linux (as of SL3/4) is broken and disabled by default.
 # The workaround is to use an indirect map mounted on a special mount
 # point and define symlinks corresponding to user's view of mount point.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/autofs/config' };
 include { 'components/symlink/config' };
 
@@ -18,14 +18,14 @@ variable NFS_MAP_MOUNT_POINT ?= "/grid_mnt";
 
 "/software/components/autofs/maps/grid/mapname" = "/etc/auto.grid";
 "/software/components/autofs/maps/grid/type" = "file";
-"/software/components/autofs/maps/grid/options" = NFS_DEFAULT_MOUNT_OPTIONS+",hard";   # Mount hard 
+"/software/components/autofs/maps/grid/options" = NFS_DEFAULT_MOUNT_OPTIONS+",hard";   # Mount hard
 "/software/components/autofs/maps/grid/mountpoint" = NFS_MAP_MOUNT_POINT;
 
 
 # Define autofs entries based on NFS_MOUNT_POINTS['mountedFS']
 
 variable NFS_MOUNT_POINTS = {
-  foreach (e_mnt_point;params;SELF['mountedFS']) { 
+  foreach (e_mnt_point;params;SELF['mountedFS']) {
     # With indirect map, mount point in the map must be a relative path and
     # cannot contain any '/'. Thus the specified mount point must be rewritten:
     # initial / is removed, other / are replaced by __
@@ -37,7 +37,7 @@ variable NFS_MOUNT_POINTS = {
 };
 
 "/software/components/autofs/maps/grid/entries" = {
-  foreach (e_mnt_point;params;NFS_MOUNT_POINTS['mountedFS']) { 
+  foreach (e_mnt_point;params;NFS_MOUNT_POINTS['mountedFS']) {
     e_autofs_mnt_point = escape(params['mntpoint']);
     if ( !exists(SELF[e_autofs_mnt_point]) || !is_defined(SELF[e_autofs_mnt_point]) ) {
       debug('Mounting FS '+params['nfsPath']+' as '+NFS_MAP_MOUNT_POINT+'/'+params['mntpoint']);
@@ -65,18 +65,18 @@ variable NFS_MOUNT_POINTS = {
       debug('Mount point '+params['mntpoint']+' already defined');
     };
   };
-          
-  SELF;  
+
+  SELF;
 };
 
-"/software/components/autofs/maps/grid/enabled" = 
+"/software/components/autofs/maps/grid/enabled" =
     if ( exists("/software/components/autofs/maps/grid/entries") &&
          length(value("/software/components/autofs/maps/grid/entries")) > 0 ) {
       true;
     } else {
       false;
     };
-    
+
 "/software/components/autofs/maps/grid/preserve" = false;
 
 
@@ -107,7 +107,7 @@ variable AUTOFS_NEEDED = {
 	} else {
 		 false;
 	};
-};		
+};
 "/software/components/accounts/dependencies/pre" = {
 	if( AUTOFS_NEEDED ) {
 	  if ( is_defined(SELF) ) {
@@ -116,7 +116,7 @@ variable AUTOFS_NEEDED = {
 		  SELF[0] = "autofs";
 		}
 	};
-	SELF;	
+	SELF;
 };
 "/software/components/chkconfig/service/" = {
   if( AUTOFS_NEEDED ) {
@@ -127,4 +127,4 @@ variable AUTOFS_NEEDED = {
   SELF;
 };
 
-  
+

@@ -2,9 +2,9 @@ unique template features/gsissh/client/config;
 
 include { 'features/gsissh/client/rpms/config' };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # gsissh
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/gsissh/config' };
 
 "/software/components/gsissh/globus_location" = GLOBUS_LOCATION;

@@ -6,17 +6,17 @@
 
 unique template features/lcmaps/glexec_wn;
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Include standard LCMAPS configuration file after redefining
 # policy order to match glexec-specific LCMAPS configuration file order
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 include { 'features/lcmaps/base' };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Build LCMAPS configuration in variables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 # LCMAPS paths.
 variable LCMAPS_GLEXEC_DB_FILE ?= LCMAPS_CONFIG_DIR+"/lcmaps.db.glexec";
@@ -54,7 +54,7 @@ variable LCMAPS_GLEXEC_MODULES ?= {
       SELF['vomslocalaccount'] = nlist();
       SELF['vomslocalaccount']['path'] = "lcmaps_voms_localaccount.mod";
       SELF['vomslocalaccount']['args'] = " -gridmapfile "+LCMAPS_CONFIG_DIR+"/gridmapfile" +
-                                         " -use_voms_gid "; 
+                                         " -use_voms_gid ";
 
       SELF['vomspoolaccount'] = nlist();
       SELF['vomspoolaccount']['path'] =  "lcmaps_voms_poolaccount.mod";
@@ -65,7 +65,7 @@ variable LCMAPS_GLEXEC_MODULES ?= {
       SELF['localaccount'] = nlist();
       SELF['localaccount']['path'] = "lcmaps_localaccount.mod";
       SELF['localaccount']['args'] = " -gridmapfile "+ SITE_DEF_GRIDMAP;
-    
+
       SELF['poolaccount'] = nlist();
       SELF['poolaccount']['path'] = "lcmaps_poolaccount.mod";
       SELF['poolaccount']['args'] = " -override_inconsistency" +
@@ -188,10 +188,10 @@ variable LCMAPS_GLEXEC_POLICIES ?= {
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Add LCMAPS configuration to ncm-lcmaps configuration, taking care that
 # several LCMAPS configuration can coexist on one node.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/lcmaps/config' };
 '/software/components/lcmaps/config' = {
   if ( is_list(SELF) ) {
@@ -207,9 +207,9 @@ include { 'components/lcmaps/config' };
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Define LCMAPS debug and logging level (default is very verbose)
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/profile/config' };
 '/software/components/profile' = component_profile_add_env(GLITE_GRID_ENV_PROFILE,
                                                            nlist('LCMAPS_DEBUG_LEVEL', to_string(LCMAPS_DEBUG_LEVEL),

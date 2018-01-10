@@ -21,10 +21,10 @@ include 'users/glite';
 # Ensure that the host certificates have the correct permissions.
 include 'features/security/host_certs';
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include 'features/ldconf/config';
 
-# gLite, and Globus sysconfig and environment variables. 
+# gLite, and Globus sysconfig and environment variables.
 include 'features/globus/sysconfig';
 include 'features/globus/env';
 include 'features/grid/sysconfig';
@@ -47,7 +47,7 @@ include 'personality/bdii/service';
 # Configure basic permissions for gLite
 include 'features/grid/dirperms';
 
-# Authorization via grid mapfile. 
+# Authorization via grid mapfile.
 include 'features/mkgridmap/standard';
 
 # Configure the information provider.
@@ -70,7 +70,7 @@ include 'features/lcas/base';
 #include 'features/gridice/base';
 #include 'features/fmon/agent';
 
-# Configure WMS environment variables. 
+# Configure WMS environment variables.
 include 'features/wms/client';
 
 # Configure mysql.

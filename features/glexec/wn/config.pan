@@ -38,7 +38,7 @@ variable GLEXEC_PEPC_ACTIONID ?= "http://glite.org/xacml/action/execute";
 # to the glexec user white list.
 variable GLEXEC_EXTRA_WHITELIST ?= list();
 
-# The list of user that will be allowed to execute glexec 
+# The list of user that will be allowed to execute glexec
 variable GLEXEC_USER_LIST ?= {
   userlist = '';
   foreach(i;vo;VOS) {
@@ -79,7 +79,7 @@ variable GLEXEC_USER_LIST ?= {
 
 # Method used for target proxy file locking; allowed values are flock, fcntl,
 # disabled. Flock does not work on NFS, while fcntl may cause problems on
-# older kernels. 
+# older kernels.
 variable GLEXEC_TARGET_LOCK = {
   if ( is_defined(GLEXEC_TARGET_LOCK) && (GLEXEC_TARGET_LOCK != ''))  {
     if ( GLEXEC_TARGET_LOCK == 'flock' || GLEXEC_TARGET_LOCK == 'fcntl' || GLEXEC_TARGET_LOCK == 'disabled') {
@@ -94,8 +94,8 @@ variable GLEXEC_TARGET_LOCK = {
 
 # Method used for input proxy file locking; allowed values are flock, fcntl,
 # disabled. Flock does not work on NFS, while fcntl may cause problems on
-# older kernels. 
-variable GLEXEC_INPUT_LOCK ?= { 
+# older kernels.
+variable GLEXEC_INPUT_LOCK ?= {
   if ( is_defined(GLEXEC_INPUT_LOCK) && (GLEXEC_INPUT_LOCK != ''))  {
     if ( GLEXEC_INPUT_LOCK == 'flock' || GLEXEC_INPUT_LOCK == 'fcntl' || GLEXEC_INPUT_LOCK == 'disabled') {
       GLEXEC_INPUT_LOCK;
@@ -115,7 +115,7 @@ include { 'features/lcmaps/glexec_wn' };
 
 
 #-----------------------------------------------------------------------------
-# glexec lcas db file 
+# glexec lcas db file
 #-----------------------------------------------------------------------------
 include { 'features/lcas/glexec_wn' };
 
@@ -181,7 +181,7 @@ variable GLEXEC_FILE_PERMS = {
         )
   );
 
-"/software/components/dirperm/paths" = 
+"/software/components/dirperm/paths" =
   push(nlist('path',LCAS_GLEXEC_DB_FILE,
              'owner','root:root',
              'perm',GLEXEC_FILE_PERMS,

@@ -4,9 +4,9 @@ unique template features/wms/client;
 # Default is not to define output storage
 variable WMS_OUTPUT_STORAGE_DEFAULT ?= null;
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # wmsclient
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/wmsclient/config' };
 '/software/components/wmsclient/register_change' = append('/system/vo');
 '/software/components/wmsclient/glite/active' = false;

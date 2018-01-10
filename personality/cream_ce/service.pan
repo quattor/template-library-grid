@@ -88,7 +88,7 @@ include { 'features/ldconf/config' };
 
 # LCG and Globus sysconfig and environment variables
 include { 'features/globus/sysconfig' };
-include { 'features/edg/sysconfig' };  
+include { 'features/edg/sysconfig' };
 
 # Add accepted CAs
 include { 'security/cas' };

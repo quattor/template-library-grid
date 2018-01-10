@@ -6,7 +6,7 @@ unique template users/stage;
 # -----------------------------------------------------------------------------
 include { 'components/accounts/config' };
 
-"/software/components/accounts/groups/stage" = 
+"/software/components/accounts/groups/stage" =
   nlist("gid", 994);
 
 "/software/components/accounts/users/stage" = nlist(

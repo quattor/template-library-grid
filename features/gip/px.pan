@@ -5,8 +5,8 @@ variable PX_HOST ?= FULL_HOSTNAME;
 # Configure GIP provider for services
 include { 'features/gip/base' };
 include { 'components/gip2/config' };
-'/software/components/gip2/provider/glite-info-provider-service-myproxy-wrapper' = 
-    "#!/bin/sh\n" + 
+'/software/components/gip2/provider/glite-info-provider-service-myproxy-wrapper' =
+    "#!/bin/sh\n" +
     "export PATH=/sbin:/bin:/usr/sbin:/usr/bin\n" +
     'export MYPROXY_HOST=' + PX_HOST + "\n" +
     'export MYPROXY_PORT=' + to_string(MYPROXY_PORT) + "\n" +

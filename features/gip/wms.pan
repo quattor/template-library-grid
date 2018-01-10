@@ -16,8 +16,8 @@ variable WMPROXY_RPM ?= 'glite-wms-interface';
         service_owner_cmd = service_owner_cmd + ' echo ' + vo + ';';
         service_acbr_cmd = service_acbr_cmd + ' echo VO:' + vo + ';';
     };
-  
-    SELF['confFiles'][escape(GIP_PROVIDER_SERVICE_CONF_WMS)] = 
+
+    SELF['confFiles'][escape(GIP_PROVIDER_SERVICE_CONF_WMS)] =
         "init = "+GIP_PROVIDER_SERVICE_INIT_WMS+"\n" +
         "service_type = "+GIP_PROVIDER_SERVICE_TYPE_WMS+"\n" +
         "get_version = rpm -q "+ WMPROXY_RPM + " --queryformat '%{version}\\n'\n" +
@@ -33,13 +33,13 @@ variable WMPROXY_RPM ?= 'glite-wms-interface';
         "get_services = echo\n";
     SELF['provider'][GIP_PROVIDER_WRAPPER_WMS] =
         "#!/bin/sh\n" +
-        GIP_PROVIDER_SERVICE + ' ' + GIP_PROVIDER_SERVICE_CONF_WMS + 
+        GIP_PROVIDER_SERVICE + ' ' + GIP_PROVIDER_SERVICE_CONF_WMS +
             ' ' + SITE_NAME + ' ' + GIP_PROVIDER_SERVICE_UNIQUEID_WMS + "\n";
 
     # Glue v2
     SELF['provider'][GIP_PROVIDER_WRAPPER_WMS + '-glue2'] =
-        "#!/bin/sh\n" + 
-        GIP_PROVIDER_SERVICE + '-glue2 ' + GIP_PROVIDER_SERVICE_CONF_WMS + 
+        "#!/bin/sh\n" +
+        GIP_PROVIDER_SERVICE + '-glue2 ' + GIP_PROVIDER_SERVICE_CONF_WMS +
             ' ' + SITE_NAME + ' ' + GIP_PROVIDER_SERVICE_UNIQUEID_WMS + "\n";
 
     SELF;

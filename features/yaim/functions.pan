@@ -4,7 +4,7 @@ include { 'functions/text' };
 
 #
 # yaim_set_queue_access:    evaluate the contents of an nlist(queue,access)
-#                           and add the queues and their access roles 
+#                           and add the queues and their access roles
 #                           to the Yaim config:
 #                               conf/QUEUES
 #                               extra/<Q>_GROUP_ENABLE
@@ -92,7 +92,7 @@ function get_voview_fqans_for_vo = {
             t = t + fqan + " ";
         };
     };
-    t;   
+    t;
 };
 
 
@@ -137,7 +137,7 @@ function yaim_set_node_types = {
         x['nodetype'][v] = true;
         ok = next(nodetypes,k,v);
     };
-    return(x);   
+    return(x);
 };
 
 

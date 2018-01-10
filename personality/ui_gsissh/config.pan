@@ -6,7 +6,7 @@ unique template personality/ui_gsissh/config;
 "/software/components/chkconfig/service/gsisshd/startstop" = true;
 "/software/components/gsissh/server/port" = GSISSH_PORT;
 
-# Change the GLOBUS SXXsshd file, that is read by ncm-gsissh, in order to 
+# Change the GLOBUS SXXsshd file, that is read by ncm-gsissh, in order to
 #   - use gsisshd name
 #   - SOURCE the environment before starting the server
 

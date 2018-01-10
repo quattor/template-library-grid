@@ -66,7 +66,7 @@ include { if ( GLEXEC_WN_ENABLED ) "features/glexec/wn/service" };
 # WN specific configuration
 include { 'personality/wn/config' };
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include { 'features/ldconf/config' };
 
 # Include standard environmental variables.
