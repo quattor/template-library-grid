@@ -1,0 +1,116 @@
+#! /usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dumper;
+use Switch;
+
+open(CONDOR_STATUS,"/usr/bin/condor_status -startd -long|") or die "cannot execute condor_status";
+
+my $totals={
+    'nactive' => 0,
+    'nfree'   => 0,
+    'now'     => time(),
+    'schedCycle' => 26
+};
+
+my $res_info={};
+
+while(<CONDOR_STATUS>){
+    if(/^$/){
+        addResInfo($res_info,$totals);
+        $res_info={};
+        next;
+    }elsif(/^(\S+) = (.+)$/){
+        $res_info->{$1}=$2
+    }else{
+        die "unrecognized classadd def";
+    }
+}
+
+$res_info={};
+
+close CONDOR_STATUS;
+
+printTotals($totals);
+
+open(CONDOR_Q,"/usr/bin/condor_q -global -long|") or die "cannot execute condor_q";
+
+my $job_info={};
+
+while(<CONDOR_Q>){
+   if(/^$/){
+       printJobInfo($job_info);
+       $job_info={};
+       next;
+   }elsif(/^(\S+) = (.+)$/){
+       $job_info->{$1}=$2
+   }else{
+       $job_info={};
+   }
+}
+
+close CONDOR_Q;
+
+sub addResInfo {
+    my $info=shift;
+    my $tot=shift;
+
+#    print "DBP1:",Dumper($info),"\n";
+#    print "DBP1:",Dumper($tot),"\n";
+
+    $tot->{nactive} = $tot->{nactive} + $info->{Cpus};
+    $tot->{nfree} = $tot->{nfree} + $info->{Cpus} unless($info->{State} eq '"Claimed"');
+
+}
+
+sub printTotals{
+    my $tot=shift;
+    foreach my $key (keys(%{$tot})){
+        print "$key\t$tot->{$key}\n"
+    }
+
+}
+
+sub printJobInfo {
+    my $info=shift;
+
+    $info->{User}=~/"(\S+)@(\S+)"/;
+    $info->{user}=$1;
+    $info->{queue}=$2;
+
+    $info->{x509UserProxyVOName}=~/"(\S+)"/;
+    $info->{group}=$1;
+
+    switch($info->{JobStatus}){
+        case [0,1]{$info->{status}='queued'}
+        case 2 {$info->{status}='running'}
+        else {return};
+    };
+
+    if(defined($info->{JobStartDate})){
+        $info->{walltime}=time()-$info->{JobStartDate};
+    }else{
+        $info->{JobStartDate} = $info->{QDate};
+        $info->{walltime}=0.0;
+    }
+
+    $info->{CreamQueue}=~/([^"]+)/;
+    $info->{CreamQueue}=$1;
+
+    print "{'group': '".$info->{group}."', ";
+    print "'name': 'condor_".$info->{ClusterId}."', ";
+    print "'qtime': ".$info->{QDate}.", ";
+    print "'jobid': '".$info->{ClusterId}."', ";
+    print "'queue': '".$info->{CreamQueue}."', ";
+    #print "'queue': 'default',";
+    print "'start': ".$info->{JobStartDate}.", ";
+    print "'state': '".$info->{status}."', ";
+    print "'cpucount': ".$info->{RequestCpus}.", ";
+    print "'user': '".$info->{user}."', ";
+    print "'maxwalltime': 129600,"; #to be fixed
+    print "'startAnchor': 'start_time',";
+    print "'walltime': ".$info->{walltime}." ";
+
+    print "}\n";
+}

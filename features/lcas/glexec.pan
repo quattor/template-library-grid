@@ -6,7 +6,13 @@ unique template features/lcas/glexec;
 
 variable LCAS_GLEXEC_DB_FILE ?= LCAS_CONFIG_DIR + '/lcas-glexec.db';
 
-variable LCAS_GLEXEC_ALLOWED_EXEC_PREFIX = CE_BATCH_SYS;
+variable LCAS_GLEXEC_ALLOWED_EXEC_PREFIX = {
+    if (is_defined(CE_BATCH_SYS)) {
+        CE_BATCH_SYS;
+    } else {
+        error("CE_BATCH_SYS variable need to be defined to compute LCAS_GLEXEC_ALLOWED_EXEC_PREFIX")
+    };
+};
 
 # Executables allowed with glexec
 variable LCAS_GLEXEC_ALLOWED_EXEC ?= list('/bin/cat',
@@ -30,14 +36,14 @@ variable LCAS_GLEXEC_ALLOWED_EXEC ?= list('/bin/cat',
                                           '/etc/glite-ce-cream/cream-glexec.sh',
                                          );
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Include LCAS standard configuration
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'features/lcas/base' };
- 
-# ---------------------------------------------------------------------------- 
+
+# ----------------------------------------------------------------------------
 # First, build glexec LCAS configuration in variables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 
 # Module definitions.
 # Module order has no impact on LCAS decisions: use a nlist for easy tweaking of module parameters in
@@ -55,15 +61,15 @@ variable LCAS_GLEXEC_MODULES ?= {
   SELF['checkexecutable'] = nlist();
   SELF['checkexecutable']['path'] = LCAS_MODULE_PATH+"/lcas_check_executable.mod";
   SELF['checkexecutable']['args'] = '"-exec '+valid_executables+'"';
-    
+
   SELF;
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Add LCAS configuration to ncm-lcas configuration, taking care that
 # several LCAS configuration can coexist on one node.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/lcas/config' };
 '/software/components/lcas/db' = {
   if ( is_list(SELF) ) {
@@ -82,9 +88,9 @@ include { 'components/lcas/config' };
 };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Define LCAS debug and logging level (default is very verbose)
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/profile/config' };
 '/software/components/profile' = component_profile_add_env(GLITE_GRID_ENV_PROFILE,
                                                            nlist('LCAS_DEBUG_LEVEL', to_string(LCAS_DEBUG_LEVEL),

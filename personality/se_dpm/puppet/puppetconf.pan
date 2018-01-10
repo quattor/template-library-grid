@@ -27,7 +27,7 @@ variable DPMMGR_UID?=970;
 		self['classes'] = 'dpm::headnode';
 	}else{
 		self['classes'] = 'dpm::disknode';
-	};	
+	};
 	self[escape('dpm::params::localdomain')] = SITE_DOMAIN;
 	self[escape('dpm::params::headnode_fqdn')] = DPM_HOSTS['dpm'][0];
 
@@ -63,11 +63,11 @@ variable DPMMGR_UID?=970;
 		self[escape('dpm::params::xrootd_monitor')] = XROOTD_MONITORING_OPTIONS;
 	};
 
-	if(is_defined(XROOTD_SITE_NAME)){ 
+	if(is_defined(XROOTD_SITE_NAME)){
 		self[escape('dpm::params::site_name')] = XROOTD_SITE_NAME;
 	};
 
-	if(is_defined(HTTPS_ENABLED) && HTTPS_ENABLED){ 
+	if(is_defined(HTTPS_ENABLED) && HTTPS_ENABLED){
 		self[escape('dpm::params::webdav_enabled')] = true;
 		if(is_defined(DPM_MEMCACHED_ENABLED) && DPM_MEMCACHED_ENABLED){
 				self[escape('dpm::params::memcached_enabled')] = true;

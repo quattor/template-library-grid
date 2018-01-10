@@ -9,7 +9,7 @@ include { 'components/mkgridmap/config' };
 
 
 
-# The command to regenerate the gridmap file. 
+# The command to regenerate the gridmap file.
 variable MKGRIDMAP_CMD = MKGRIDMAP_BIN+"/edg-mkgridmap --conf=" + MKGRIDMAP_DEF_CONF + " --output="+SITE_DEF_GRIDMAP+" --safe";
 
 # Whether to overwrite an existing local grid mapfile with entries
@@ -24,9 +24,9 @@ variable MKGRIDMAP_LOCAL_MAPFILE ?= MKGRIDMAP_CONF_DIR+'/grid-mapfile-local';
 variable MKGRIDMAP_LOCAL_ENTRIES ?= nlist();
 
 
-#---------------------------------------------------------------------------- 
+#----------------------------------------------------------------------------
 # Define a default value for LCMAPS gridmapfile and groupmapfile
-#---------------------------------------------------------------------------- 
+#----------------------------------------------------------------------------
 
 variable LCMAPS_FLAVOR ?= 'glite';
 "/software/components/mkgridmap/lcmaps/flavor" ?= LCMAPS_FLAVOR;
@@ -34,12 +34,12 @@ variable LCMAPS_FLAVOR ?= 'glite';
 "/software/components/mkgridmap/lcmaps/groupmapfile" ?= MKGRIDMAP_LCMAPS_DIR + "groupmapfile";
 
 
-#---------------------------------------------------------------------------- 
-# cron 
-#---------------------------------------------------------------------------- 
+#----------------------------------------------------------------------------
+# cron
+#----------------------------------------------------------------------------
 include { 'components/cron/config' };
 
-# The authorized users can change, so update the gridmap file regularly. 
+# The authorized users can change, so update the gridmap file regularly.
 "/software/components/cron/entries" =
   push(nlist(
     "name","grid-mapfile-update",
@@ -48,12 +48,12 @@ include { 'components/cron/config' };
     "command", MKGRIDMAP_CMD));
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # altlogrotate
-# ---------------------------------------------------------------------------- 
-include { 'components/altlogrotate/config' }; 
+# ----------------------------------------------------------------------------
+include { 'components/altlogrotate/config' };
 
-"/software/components/altlogrotate/entries/grid-mapfile-update" = 
+"/software/components/altlogrotate/entries/grid-mapfile-update" =
   nlist("pattern", "/var/log/grid-mapfile-update.ncm-cron.log",
         "compress", true,
         "missingok", true,
@@ -63,20 +63,20 @@ include { 'components/altlogrotate/config' };
         "rotate", 2);
 
 
-#---------------------------------------------------------------------------- 
+#----------------------------------------------------------------------------
 # mkgridmap
 # Note: VO-related configuration is controlled through VO configuration
-#---------------------------------------------------------------------------- 
+#----------------------------------------------------------------------------
 
 "/software/components/mkgridmap/entries/edg-mapfile" = {
 
-    # mapfile format (edg or lcgdm) 
+    # mapfile format (edg or lcgdm)
     SELF["format"] = "edg";
 
-    # The location of the configuration file. 
+    # The location of the configuration file.
     SELF["mkgridmapconf"] = MKGRIDMAP_DEF_CONF;
 
-    # Set the command for regenerating the gridmap file. 
+    # Set the command for regenerating the gridmap file.
     SELF["command"] = MKGRIDMAP_CMD;
 
     # Overwrite existiong local grid mapfile with entries defined in the configuration

@@ -119,7 +119,7 @@ include { FILESYSTEM_CONFIG_SITE };
 
 
 # Check if NFS server and/or client should be configured on the current system.
-# This template defines variables NFS_xxx_ENABLED used by other templates. 
+# This template defines variables NFS_xxx_ENABLED used by other templates.
 include { 'features/nfs/init' };
 
 
@@ -153,7 +153,7 @@ include { if ( NFS_CLIENT_ENABLED ) 'features/nfs/client/config' };
 
 
 #
-# AII component must be included after much of the other setup. 
+# AII component must be included after much of the other setup.
 #
 include { OS_NS_QUATTOR + 'aii' };
 
@@ -169,4 +169,4 @@ include { WN_CONFIG_NODE };
 
 # Postconfig if defined
 include { PROFILE_CLONING_CLONED_NODE_POSTCONFIG };
- 
+

@@ -8,6 +8,32 @@ variable GLEXEC_WN_ENABLED ?= true;
 
 include { 'components/filecopy/config' };
 
+# TO_BE_FIXED: workaround by Fred for globuscfg component failure in EMI (some features are now useless)
+variable GLOBUSCFG_FIX = "#!/bin/bash\n";
+variable GLOBUSCFG_FIX = GLOBUSCFG_FIX + "mkdir -p ${GLOBUS_LOCATION:=/usr}/setup/globus\n";
+variable GLOBUSCFG_FIX = GLOBUSCFG_FIX + "for i in setup-tmpdirs setup-globus-common; do\n";
+variable GLOBUSCFG_FIX = GLOBUSCFG_FIX + "exe=${GLOBUS_LOCATION}/setup/globus/$i\n";
+variable GLOBUSCFG_FIX = GLOBUSCFG_FIX + "if [ ! -f $exe ]; then\n";
+variable GLOBUSCFG_FIX = GLOBUSCFG_FIX + "echo '#!/bin/bash' > $exe\n";
+variable GLOBUSCFG_FIX = GLOBUSCFG_FIX + "echo 'exit 0' >> $exe\n";
+variable GLOBUSCFG_FIX = GLOBUSCFG_FIX + "chmod 755 $exe\n";
+variable GLOBUSCFG_FIX = GLOBUSCFG_FIX + "fi\n";
+variable GLOBUSCFG_FIX = GLOBUSCFG_FIX + "done\n";
+
+
+variable GLOBUSCFG_FIX_EXE ?= "/usr/sbin/globuscfg_fix";
+"/software/components/filecopy/services" =
+  npush(escape(GLOBUSCFG_FIX_EXE),
+        nlist("config",GLOBUSCFG_FIX,
+              "owner","root",
+              "perms","0755",
+              "restart", GLOBUSCFG_FIX_EXE,
+        )
+  );
+
+#TO_BE_FIXED:END
+
+
 
 ##############################################################################################
 
@@ -40,7 +66,7 @@ include { if ( GLEXEC_WN_ENABLED ) "features/glexec/wn/service" };
 # WN specific configuration
 include { 'personality/wn/config' };
 
-# Modify the loadable library path. 
+# Modify the loadable library path.
 include { 'features/ldconf/config' };
 
 # Include standard environmental variables.

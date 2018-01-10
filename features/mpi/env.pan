@@ -8,15 +8,15 @@ include { 'features/mpi/vars' };
 # to which version of the MPI rpms are installed.  Make sure to keep
 # this file and the rpms file in sync.
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # filecopy
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/filecopy/config' };
 
 variable CONTENTS = <<EOF;
 #!/bin/bash
 
-# Check to make sure there are enough arguments.  Must be at least four 
+# Check to make sure there are enough arguments.  Must be at least four
 # arguments (to be ignored) plus one more for the script to be run.
 if ( [ $# -lt 5 ] ); then
   echo "Modified mpirun: Insufficient number of arguments ($#); exiting..."
@@ -36,15 +36,15 @@ echo "Modified mpirun: Executing command: $@"
 EOF
 
 # Now actually add the file to the configuration.
-"/software/components/filecopy/services" = 
-  npush(escape('/opt/mpi/bin/mpirun'), 
+"/software/components/filecopy/services" =
+  npush(escape('/opt/mpi/bin/mpirun'),
         nlist('config',CONTENTS,
               'perms','0755'),
        );
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # profile
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/profile/config' };
 
 
@@ -54,7 +54,7 @@ include { 'components/profile/config' };
         SELF['MPI_LAM_VERSION'] = MPI_LAM_VERSION;
         SELF['MPI_LAM_PATH'] = '/usr';
     };
-    
+
     if(MPI_USE_OPENMPI) {
         SELF['MPI_OPENMPI_VERSION'] = MPI_OPENMPI_VERSION;
         SELF['MPI_OPENMPI_PATH'] =  MPI_OPENMPI_PATH;
@@ -64,12 +64,12 @@ include { 'components/profile/config' };
         SELF['MPI_MPICH_VERSION'] = MPI_MPICH_VERSION;
         SELF['MPI_MPICH_PATH'] = '/opt/mpich-'+MPI_MPICH_VERSION+MPI_MPICH_EXTRAVERSION;
     };
-    
+
     if (MPI_USE_MPICH2) {
         SELF['MPI_MPICH2_VERSION'] = MPI_MPICH2_VERSION;
         SELF['MPI_MPICH2_PATH'] = MPI_MPICH2_PATH;
     };
-    
+
     SELF;
 };
 
@@ -89,14 +89,6 @@ include { 'components/profile/config' };
 # Do we actually have a shared home?
 '/software/components/profile/env/MPI_SHARED_HOME' = {
   if (CE_SHARED_HOMES) {
-    '1';
-  } else {
-    null;
-  };
-};
-
-'/software/components/profile/env/MPI_SHARED_HOME_PATH' = {
-  if (CE_SHARED_HOMES) {
     '$HOME';
   } else {
     null;
@@ -104,8 +96,7 @@ include { 'components/profile/config' };
 };
 
 # Assume (for now) that ssh host-based authentication is always setup.
-#'/software/components/profile/env/MPI_SSH_HOST_BASED_AUTH' = 'yes';
-'/software/components/profile/env/MPI_SSH_HOST_BASED_AUTH' = 'no';
+'/software/components/profile/env/MPI_SSH_HOST_BASED_AUTH' = 'yes';
 
 # Path-like variables.
 '/software/components/profile/path/PATH/prepend' = push('/opt/mpi/bin');

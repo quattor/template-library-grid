@@ -17,7 +17,6 @@ variable TORQUE_FORCE_MOM_STARTUP ?= false;
 # Must be specified as valid cron values
 variable PBS_MONITORING_INTERVAL_MINUTE ?= "*/15";
 
-
 # include configuration common to client and server
 include { 'features/torque2/config' };
 
@@ -311,42 +310,46 @@ include { 'components/symlink/config' };
         "name", "/usr/bin/qsub",
         "target", "/usr/bin/qsub-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
-    );  
+        "exists", true,
+    );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qhold",
         "target", "/usr/bin/qhold-torque",
         "replace", nlist("link","yes"),
-        "exists", true,         
+        "exists", true,
     );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qrls",
         "target", "/usr/bin/qrls-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
-    );  
+        "exists", true,
+    );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qalter",
         "target", "/usr/bin/qalter-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
+        "exists", true,
     );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qselect",
         "target", "/usr/bin/qselect-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
+        "exists", true,
     );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qdel",
         "target", "/usr/bin/qdel-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
+        "exists", true,
     );
-  };  
+  };
   if ( is_defined(SELF) ) {
     SELF;
   } else {
     null;
   };
 };
+
+# Create LRMS job features files
+variable WN_JOB_FEATURES_ENABLED ?= false;
+include { if (WN_JOB_FEATURES_ENABLED) 'features/torque2/client/job-features' };

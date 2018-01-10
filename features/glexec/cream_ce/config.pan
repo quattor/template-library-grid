@@ -12,7 +12,7 @@ include { 'features/lcmaps/glexec' };
 
 
 #-----------------------------------------------------------------------------
-# glexec lcas db file 
+# glexec lcas db file
 #-----------------------------------------------------------------------------
 include { 'features/lcas/glexec' };
 

@@ -86,15 +86,15 @@ variable PBS_AUTHORIZED_USERS_SCRIPT ?= {
   contents;
 #"#! /bin/bash\nqmgr -c 'set server authorized_users =*@"+CE_HOST+"'\n";
 };
-
+variable TORQUE_MYINIT_SCRIPT ?= TORQUE_CONFIG_DIR + '/myinit.sh';
 "/software/components/filecopy/services" = {
-         SELF[escape("/var/torque/myinit.sh")]=
+         SELF[escape(TORQUE_MYINIT_SCRIPT)]=
         nlist("config",PBS_AUTHORIZED_USERS_SCRIPT,
               "perms", "0700",
-             "owner", "root",
+              "owner", "root",
               "group","root",
-              "restart","/var/torque/myinit.sh",
-	"forceRestart",true,
+              "restart",TORQUE_MYINIT_SCRIPT,
+	      "forceRestart",true,
         );
          SELF;
        };
@@ -103,9 +103,9 @@ variable PBS_AUTHORIZED_USERS_SCRIPT ?= {
 
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # iptables
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/iptables/config' };
 
 # Inbound port(s).
@@ -153,10 +153,10 @@ include { 'components/cron/config' };
     "command", "find "+TORQUE_CONFIG_DIR+"/server_logs -mtime +7 -exec gzip -9 {} \\;"));
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # altlogrotate
-# ---------------------------------------------------------------------------- 
-include { 'components/altlogrotate/config' }; 
+# ----------------------------------------------------------------------------
+include { 'components/altlogrotate/config' };
 
 "/software/components/altlogrotate/entries/server-logs" =
   nlist("pattern", "/var/log/server-logs.ncm-cron.log",
@@ -168,10 +168,10 @@ include { 'components/altlogrotate/config' };
         "rotate", 1);
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # pbsserver
-# ---------------------------------------------------------------------------- 
-include { 'components/pbsserver/config' }; 
+# ----------------------------------------------------------------------------
+include { 'components/pbsserver/config' };
 
 "/software/components/pbsserver/pbsroot" = TORQUE_CONFIG_DIR;
 
@@ -185,7 +185,7 @@ include { 'components/pbsserver/config' };
 # Setup the server attributes.
 "/software/components/pbsserver/server" = {
   SELF['manualconfig'] =  false;
-  
+
   if ( !exists(SELF['attlist']) || !is_defined(SELF['attlist']) ) {
     SELF['attlist'] = nlist();
   };
@@ -217,7 +217,7 @@ include { 'features/torque2/server/build-queue-list' };
 #
 # These queue defaults will be used unless specific
 # attributes are defined in the CE_QUEUES variable.
-# Default values for queue attributes are overriden on 
+# Default values for queue attributes are overriden on
 # a per attribute basis (not per queue).
 #
 variable CE_QUEUE_DEFAULTS ?= nlist(
@@ -236,7 +236,7 @@ variable CE_QUEUE_DEFAULTS ?= nlist(
 #   - 'Production' : enabled=true, started=true (Defaults)
 #   - 'Queuing' (job accepted but not executded) : enabled=true, started=false
 #   - 'Draining' (no new job accepted) : enabled=false, started=true
-#   - 'Closed' : enabled=false, started=false 
+#   - 'Closed' : enabled=false, started=false
 variable CE_QUEUE_STATE_DEFAULTS ?= {
   state_defaults = nlist();
   if ( !exists(CE_STATUS) || !is_defined(CE_STATUS) || (CE_STATUS == 'Production') ) {
@@ -270,7 +270,7 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
     keep_running_state[queue] = nlist('enabled', true,
                                       'started', true,
                                      );
-  };  
+  };
 
   if ( length(CE_LOCAL_QUEUES) > 0 ) {
     qnames = merge(CE_QUEUES['vos'], CE_LOCAL_QUEUES['names']);
@@ -303,7 +303,7 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
           ok_atts = next(atts_defaults, att_name, att_value);
         };
       };
-      # If specific attributes have been specified for the 
+      # If specific attributes have been specified for the
       # current queue, add/replace them to the default attribute values
       if (exists(atts[k]) && is_defined(atts[k])) {
         ok_atts = first(atts[k], att_name, att_value);
@@ -325,7 +325,7 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
 # Setup the nodes.
 # Specific attributes can be set on specific nodes using WN_ATTRS
 # variable. This variable is a nlist with one entry per node plus a default
-# entry (key DEFAULT). DEFAULT entry if present is always applied before 
+# entry (key DEFAULT). DEFAULT entry if present is always applied before
 # node specific entry. Each entry must be a nlist.
 "/software/components/pbsserver/node" = nlist("manualconfig", false);
 "/software/components/pbsserver/node/nodelist" = {
@@ -334,8 +334,8 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
     wn_attrs = WN_ATTRS;
   };
   foreach (i;wn;WORKER_NODES) {
-    if ( TORQUE_USE_HW_CONFIG && exists(WN_CPU_CONFIG[wn]['cores']) && is_defined(WN_CPU_CONFIG[wn]['cores']) ) {
-      process_slots = to_long(WN_CPU_CONFIG[wn]['cores']);
+    if ( TORQUE_USE_HW_CONFIG && exists(WN_CPU_CONFIG[wn]['slots']) && is_defined(WN_CPU_CONFIG[wn]['slots']) ) {
+      process_slots = to_long(WN_CPU_CONFIG[wn]['slots']);
     } else if ( exists(WN_CPUS[wn]) && is_defined(WN_CPUS[wn]) ) {
       process_slots = to_long(WN_CPUS[wn]);
     } else {
@@ -413,7 +413,7 @@ while (<STDIN>) {
     if (m/#PBS\s+-l\s+nodes=(\d+)\s*$/) {
         $line = process_nodes($1);
 
-        # If the line wasn't empty, then multiple CPUs have been 
+        # If the line wasn't empty, then multiple CPUs have been
         # requested.  Mark this as an MPI job.
         if ($line ne '') {
           $line .= "\n#PBS -A mpi\n";
@@ -421,14 +421,14 @@ while (<STDIN>) {
     }
 
     # If there is a queue option, check to see if it is "sdj".
-    # If so, then add the option to not allow such jobs to be 
+    # If so, then add the option to not allow such jobs to be
     # queued.
     if (m/#PBS\s+-q\s+sdj/) {
         $line .= "#PBS -W x=\"FLAGS:NOQUEUE\"\n";
     }
 
 
-    # If there is an existing accounts line, delete it.  The account 
+    # If there is an existing accounts line, delete it.  The account
     # should not be set to the DN, because an internal maui table is
     # filled which prevents standing reservations from being defined.
     if (m/#PBS\s+-A/) {
@@ -444,7 +444,7 @@ while (<STDIN>) {
 sub process_nodes {
     my $nodes = shift;
     my $line = "";
-    
+
     # If the requested number of nodes is 1, just return an empty string.
     if ($nodes == 1) {
       return "";
@@ -578,10 +578,10 @@ EOF
 };
 
 
-# ---------------------------------------------------------------------------- 
-# Include the blparser (batch log parser used by CREAM CE) if the variable 
+# ----------------------------------------------------------------------------
+# Include the blparser (batch log parser used by CREAM CE) if the variable
 # BLPARSER_HOST is defined and matching current node.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 variable BLPARSER_INCLUDE = if ( is_defined(BLPARSER_HOST)  && (BLPARSER_HOST == FULL_HOSTNAME) ) {
                                 debug('Configuring blparser');
                                 'features/blparser/service';
@@ -596,11 +596,11 @@ include { BLPARSER_INCLUDE };
 
 include { 'features/torque2/munge/config' };
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # Define a cron job to ensure that PBS server is running properly.
 # Script created as part of server/client common config : PBS_MONITORING_SCRIPT
 # defined to the name of the created script.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/cron/config' };
 include { 'components/altlogrotate/config' };
 
@@ -641,38 +641,38 @@ include { 'components/symlink/config' };
         "name", "/usr/bin/qsub",
         "target", "/usr/bin/qsub-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
-    );  
+        "exists", true,
+    );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qhold",
         "target", "/usr/bin/qhold-torque",
         "replace", nlist("link","yes"),
-        "exists", true,         
+        "exists", true,
     );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qrls",
         "target", "/usr/bin/qrls-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
-    );  
+        "exists", true,
+    );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qalter",
         "target", "/usr/bin/qalter-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
+        "exists", true,
     );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qselect",
         "target", "/usr/bin/qselect-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
+        "exists", true,
     );
     SELF[length(SELF)] = nlist(
         "name", "/usr/bin/qdel",
         "target", "/usr/bin/qdel-torque",
         "replace", nlist("link","yes"),
-        "exists", true,                       
-    );  
+        "exists", true,
+    );
     SELF;
 } else {
     SELF;

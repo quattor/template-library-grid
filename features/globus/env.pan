@@ -31,12 +31,12 @@ variable GLOBUS_UDP_PORT_RANGE ?= if ( is_defined(SITE_GLOBUS_UDP_RANGE) ) {
                                   };
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # profile
 # Coming from former edg-profile and edg-gpt-profile + /opt/globus/etc/globus-user-env.sh
-# FIXME: source /opt/globus/etc/globus-user-env.sh when ncm-profile supports 
+# FIXME: source /opt/globus/etc/globus-user-env.sh when ncm-profile supports
 #        sourcing other scripts.
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/profile/config' };
 
 '/software/components/profile/env/GLOBUS_LOCATION'          = GLOBUS_LOCATION;
@@ -52,7 +52,7 @@ include { 'components/profile/config' };
                                                            } else {
                                                               return(null);
                                                            };
-                                                                      
+
 "/software/components/profile/path/PATH/prepend" = push(GLOBUS_LOCATION+'/sbin',
                                                         GLOBUS_LOCATION+'/bin',
                                                        );

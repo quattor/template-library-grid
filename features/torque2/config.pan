@@ -10,7 +10,7 @@ variable TORQUE_SERVER_PRIV_HOST ?= if ( exists(CE_PRIV_HOST) ) {
                                     } else {
                                       undef;
                                     };
-                                    
+
 # Directory where configuration/working directories are located
 variable TORQUE_CONFIG_DIR ?= '/var/torque';
 
@@ -26,9 +26,9 @@ include { 'components/etcservices/config' };
 "/software/components/etcservices/entries" = push("pbs_sched 15004/tcp");
 
 
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 # pbsclient (masters must be defined on the server too).
-# ---------------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------
 include { 'components/pbsclient/config' };
 "/software/components/pbsclient/masters" = if ( is_defined(TORQUE_SERVER_PRIV_HOST) ) {
                                              list(TORQUE_SERVER_PRIV_HOST);

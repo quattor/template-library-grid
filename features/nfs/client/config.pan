@@ -13,7 +13,7 @@ variable NFS_CLIENT_TEMPLATE = if ( NFS_AUTOFS ) {
                                  return("features/nfs/client/autofs");
                                } else {
                                  return("features/nfs/client/fstab");
-                               };                               
+                               };
 include { NFS_CLIENT_TEMPLATE };
 
 
@@ -34,6 +34,6 @@ include { NFS_CLIENT_TEMPLATE };
   foreach (i;component;NFS_CLIENT_POSTDEP_SUBSCRIBERS) {
       SELF[component]['dependencies']['post'][length(SELF[component]['dependencies']['post'])] = nfs_component;
   };
-  
+
   SELF;
 };

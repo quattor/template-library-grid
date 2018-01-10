@@ -1,0 +1,112 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use FileHandle;
+use POSIX qw(strftime);
+
+# Parse the command line
+my ($PATH, $LDIF_FILE, $MANAGER) = @ARGV;
+unless ($PATH && $LDIF_FILE)
+{
+    print "Usage: $0 <condor path> <ldif file> [central manager]\n";
+
+    exit 1;
+}
+
+my $fh = new FileHandle $LDIF_FILE
+    or die "Can't open static ldif file: $LDIF_FILE\n";
+my @dns = grep /dn:\s+GlueCEUniqueID=/, <$fh>;
+
+# All the dynamic info goes in here
+my %glue;
+$glue{GlueCEInfoLRMSType} = "condor";
+
+# Figure out the correct central manager
+chomp(my $central_manager = $MANAGER ? $MANAGER : `$PATH/condor_config_val CONDOR_HOST`);
+
+# Condor version
+# Note: this is only the version of this node -- there's probably a
+# whole bunch of different versions running on the pool
+my ($version) = map { /(\d+\.\d+\.\d+)/; $1 }
+    grep /CondorVersion:/, `$PATH/condor_version`;
+$glue{GlueCEInfoLRMSVersion} = $version;
+
+# CPU stats
+# For our purposes CPU := VM
+# It's fine if you have 100 cpus free, but who cares if that can only
+# run one job at a time.  The official definition is:
+#    Number of free CPUs available to a scheduler
+# So I don't think that's entirely wrong.
+my $startd_status = `$PATH/condor_status -pool $central_manager`;
+my ($total_vms, $owner_vms, $idle_vms) =
+    $startd_status =~ /Total\s+(\d+)\s+(\d+)\s+\d+\s+(\d+)/;
+$glue{GlueCEInfoTotalCPUs} = $total_vms;
+$glue{GlueCEPolicyAssignedJobSlots} = $total_vms;
+$glue{GlueCEStateFreeCPUs} = $idle_vms;
+$glue{GlueCEStateFreeJobSlots} = $idle_vms;
+$glue{GlueCEPolicyMaxRunningJobs} = $total_vms;
+$glue{GlueCEPolicyMaxWallClockTime} = '2160'; #To be fixed!! shoud recover the max wct from some policy file
+$glue{GlueCEPolicyMaxCPUTime} = '2160'; #To be fixed!! shoud recover the max cput from some policy file
+$glue{GlueCEStateStatus} = 'Production'; #To be fixed!! shoud recover this frmo conf
+
+# Job stats
+# Held jobs are included as "waiting" since the definition is:
+#    Number of jobs that are in a state different than running
+#my $schedd_status = `$PATH/condor_status -pool $central_manager -schedd`;
+#my ($running_jobs, $idle_jobs, $held_jobs) =
+#    $schedd_status =~ /Total\s+(\d+)\s+(\d+)\s+(\d+)/;
+#$glue{GlueCEStateWaitingJobs} = $idle_jobs + $held_jobs;
+#$glue{GlueCEStateRunningJobs} = $running_jobs;
+#$glue{GlueCEStateTotalJobs} = $idle_jobs + $running_jobs + $held_jobs;
+
+
+#GlueCEPolicyMaxRunningJobs: 1590
+#GlueCEPolicyMaxWallClockTime: 2160
+#GlueCEPolicyMaxCPUTime: 1440
+#GlueCEStateStatus: Production
+
+
+# Time stuff
+# WorstResponseTime is impossible to determine and a reasonable estimate
+#   would required lots of time (15 minutes+) on active pools.
+# EstimatedResponseTime is equally impossible.  Anything here would just
+#   be garbage so it's best if people put it in their static file.
+
+# Output the info
+foreach my $dn (@dns)
+{
+    print "$dn\n";
+    print map { "$_: $glue{$_}\n" } keys %glue;
+}
+
+#Managing the Glue2 stuff
+
+my $fh = new FileHandle '/var/lib/bdii/gip/ldif/ComputingShare.ldif'
+    or die "Can't open static Shares file: /var/lib/bdii/gip/ldif/ComputingShare.ldif\n";
+my @dns2 = grep /dn: GLUE2ShareID=/, <$fh>;
+
+my %glue2;
+
+
+$glue2{GLUE2ComputingShareFreeSlots}= $idle_vms;
+$glue2{GLUE2ComputingShareMaxRunningJobs}= $total_vms;
+$glue2{GLUE2ComputingShareMaxWaitingJobs}= $total_vms*2;
+$glue2{GLUE2ComputingShareMaxTotalJobs}= $total_vms*3;
+$glue2{GLUE2ComputingShareServingState}= 'Production';
+$glue2{GLUE2EntityCreationTime}= strftime '%FT%TZ', gmtime();
+$glue2{GLUE2ComputingShareMaxWallTime}= 2160;   #TO be fixed. All this should be taken from some conf.
+$glue2{GLUE2ComputingShareDefaultWallTime}= 2160;
+$glue2{GLUE2ComputingShareMaxCPUTime}= 1440;
+$glue2{GLUE2ComputingShareDefaultCPUTime}= 1440;
+$glue2{GLUE2ComputingShareMaxSlotsPerJob}= 1;
+$glue2{GLUE2ComputingShareMaxMainMemory}= 2000;
+$glue2{GLUE2ComputingShareMaxVirtualMemory}= 20000;
+
+foreach my $dn (@dns2)
+{
+    print "\n$dn\n";
+    print map { "$_: $glue2{$_}\n" } keys %glue2;
+}
+
+

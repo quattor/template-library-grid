@@ -3,7 +3,14 @@ unique template personality/wn/cleanup-tmpdir;
 include { 'components/cron/config' };
 
 variable CLEANUP_MAX_DAY ?= '+10';
-variable CLEANUP_TMPDIR ?= TORQUE_TMPDIR;
+variable CLEANUP_TMPDIR ?= {
+  if (is_defined(TORQUE_TMPDIR)) {
+    TORQUE_TMPDIR;
+  } else {
+    '/var/lib/condor/execute';
+  };
+};
+
 variable CLEANUP_PRINT ?= true;
 
 variable CLEANUP_PRINT_STRING ?= if ( CLEANUP_PRINT ) {

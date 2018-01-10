@@ -11,7 +11,7 @@ unique template personality/wn/cloning/selector;
 
 # Disable profile cloning by default.
 # For backward compatibility, use USE_DUMMY if defined and if
-# PROFILE_CLONING_ENABLED is not defined. 
+# PROFILE_CLONING_ENABLED is not defined.
 variable USE_DUMMY ?= false;
 variable PROFILE_CLONING_ENABLED ?= USE_DUMMY;
 
@@ -79,21 +79,21 @@ variable PROFILE_CLONING_CLONED_NODE ?= {
         false;
       } else {
         reference_profile = PROFILE_PREFIX + PROFILE_CLONING_REFERENCE_NODE;
-        if ( is_defined(if_exists(reference_profile)) ) { 
+        if ( is_defined(if_exists(reference_profile)) ) {
           debug('Cloning '+OBJECT+' from '+reference_profile);
           true;
         } else {
           debug(PROFILE_CLONING_CURRENT_NODE+' eligible to cloning but reference node profile ('+reference_profile+'.tpl) not found. Cloning disabled');
           false;
         };
-      };  
+      };
     } else {
       debug(PROFILE_CLONING_CURRENT_NODE+' not eligible to profile cloning (regexp='+PROFILE_CLONING_ELIGIBLE_NODES+')');
       false;
     };
   } else {
     false;
-  };  
+  };
 };
 
 
