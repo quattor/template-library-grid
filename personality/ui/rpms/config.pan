@@ -1,4 +1,4 @@
 unique template personality/ui/rpms/config;
 
 # EMI UI
-"/software/packages/{emi-ui}" ?= nlist();
+"/software/packages/{ui}" ?= nlist();
