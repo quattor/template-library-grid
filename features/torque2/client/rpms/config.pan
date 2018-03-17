@@ -5,11 +5,11 @@ variable TORQUE_CLIENT_MOM_ENABLED ?= true;
 
 prefix '/software/packages';
 
-'{emi-version}' ?= nlist();
-'{glite-yaim-torque-client}' ?= nlist();
-'{libtorque}' ?= nlist();
-'{munge}' ?= nlist();
-'{munge-libs}' ?= nlist();
-'{torque}' ?= nlist();
-'{torque-client}' ?= nlist();
-'{torque-mom}' ?= nlist();
+'{emi-version}' ?= dict();
+'{glite-yaim-torque-client}' ?= dict();
+'{libtorque}' ?= dict();
+'{munge}' ?= dict();
+'{munge-libs}' ?= dict();
+'{torque}' ?= dict();
+'{torque-client}' ?= dict();
+'{torque-mom}' ?= dict();

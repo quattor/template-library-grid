@@ -11,7 +11,7 @@ variable NFS_MOUNT_POINTS = {
         SELF['mountedFS'][escape('/etc/munge')] =  dict('nfsPath', TORQUE_SERVER_HOST+':/etc/munge',
                                                         'nfsVersion', NFS_DEFAULT_VERSION);
     } else {
-	SELF['servedFS'][escape('/etc/munge')] = dict('localPath','/etc/munge',
+        SELF['servedFS'][escape('/etc/munge')] = dict('localPath','/etc/munge',
                                                       'nfsVersion',NFS_DEFAULT_VERSION);
     };
     SELF;
@@ -32,7 +32,7 @@ variable MUNGE_KEY_GENERATOR_CONTENT = <<EOF;
         then
            exit 0;
         else
-	   rm -f /etc/munge/munge.key
+           rm -f /etc/munge/munge.key
            create-munge-key;
            /etc/init.d/munge restart;
         fi

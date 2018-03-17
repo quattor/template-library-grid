@@ -15,7 +15,7 @@ variable PBS_MONITORING_NFS_FS ?= {
     };
   };
   nfs_fs_list;
-}; 
+};
 variable PBS_MONITORING_SCRIPT ?= TORQUE_CONFIG_DIR+"/pbs-monitoring";
 
 # When editing take care of the script nfs_fs_list variable setup
@@ -58,7 +58,7 @@ do
       usage
       exit 1
       ;;
-      
+ 
   esac
   shift
 done

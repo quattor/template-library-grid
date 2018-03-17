@@ -2,15 +2,15 @@ unique template features/torque2/server/rpms/config;
 
 prefix '/software/packages';
 
-'{emi-version}' ?= nlist();
-'{glite-yaim-torque-client}' ?= nlist();
-'{glite-yaim-torque-server}' ?= nlist();
-'{glite-yaim-torque-utils}' ?= nlist();
-'{libtorque}' ?= nlist();
-'{maui}' ?= nlist();
-'{maui-client}' ?= nlist();
-'{maui-server}' ?= nlist();
-'{torque}' ?= nlist();
-'{torque-client}' ?= nlist();
-'{torque-mom}' ?= nlist();
-'{torque-server}' ?= nlist();
+'{emi-version}' ?= dict();
+'{glite-yaim-torque-client}' ?= dict();
+'{glite-yaim-torque-server}' ?= dict();
+'{glite-yaim-torque-utils}' ?= dict();
+'{libtorque}' ?= dict();
+'{maui}' ?= dict();
+'{maui-client}' ?= dict();
+'{maui-server}' ?= dict();
+'{torque}' ?= dict();
+'{torque-client}' ?= dict();
+'{torque-mom}' ?= dict();
+'{torque-server}' ?= dict();

@@ -104,14 +104,14 @@ include 'components/profile/config';
     foreach(e_mnt_point;mnt_path;WN_SHARED_AREAS) {
       mnt_point = unescape(e_mnt_point);
       SELF[length(SELF)] = dict("locations",'*.'+DOMAIN+':'+mnt_point,
-                                    "path",mnt_point,
-            	               );
+                                "path",mnt_point,
+                               );
       # When TORQUE_SERVER_PRIV_HOST is defined,
       ## add an explicit entry to $usecp with TORQUE_SERVER_HOST
       if (exists(TORQUE_SERVER_PRIV_HOST) && is_defined(TORQUE_SERVER_PRIV_HOST)) {
               SELF[length(SELF)] = dict("locations",TORQUE_SERVER_HOST+':'+mnt_point,
-                                            "path",mnt_point,
-            	                       );
+                                        "path",mnt_point,
+                                       );
       };
     };
   };
