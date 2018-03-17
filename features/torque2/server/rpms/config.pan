@@ -6,7 +6,6 @@ prefix '/software/packages';
 '{glite-yaim-torque-client}' ?= nlist();
 '{glite-yaim-torque-server}' ?= nlist();
 '{glite-yaim-torque-utils}' ?= nlist();
-'{lcg-pbs-utils}' ?= nlist();
 '{libtorque}' ?= nlist();
 '{maui}' ?= nlist();
 '{maui-client}' ?= nlist();

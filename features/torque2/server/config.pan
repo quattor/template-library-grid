@@ -2,7 +2,7 @@
 
 unique template features/torque2/server/config;
 
-include { 'features/torque2/server/rpms/config' };
+include 'features/torque2/server/rpms/config';
 
 # Assume 1 CPU per machine by default
 variable WN_CPUS_DEF ?= 1;
@@ -10,7 +10,7 @@ variable WN_CPUS_DEF ?= 1;
 variable WN_CPU_SLOTS ?= 2;
 
 # include configuration common to client and server
-include { 'features/torque2/config' };
+include 'features/torque2/config';
 
 # Queues to configure but not to export on the CE
 variable CE_LOCAL_QUEUES ?= undef;
@@ -28,34 +28,33 @@ variable CE_OPERATORS ?= CE_MANAGERS;
 # mail_domain = never is a special value to disable sending of email to users
 # in case of Torque/MAUI errors or when a job is canceled. This doesn't make
 # sense on a grid CE as the users will never read them.
-variable TORQUE_SERVER_ATTRS_DEFAULT = nlist(
-                                             "acl_host_enable", true,
-                                             "acl_hosts", ACL_HOSTS_STRING,
-                                             "default_node", "lcgpro",
-                                             "default_queue", "undefined",
-                                             "job_stat_rate", 300,
-                                             "log_events", 255,
-                                             "log_file_max_size", 200000,     # 200 MB
-                                             "log_file_roll_depth", 10,       # Means 2 GB max per day
-                                             "log_level", 0,
-                                             "mail_from", "adm",
-                                             "managers", '\"'+CE_MANAGERS+'\"',
-                                             "mail_domain", 'never',
-                                             "mom_job_sync", true,
-                                             "node_check_rate", 600,
-                                             "node_pack", false,
-                                             "node_ping_rate", 300,
-                                             "operators", '\"'+CE_OPERATORS+'\"',
-                                             "poll_jobs", true,
-                                             "query_other_jobs", true,
-                                             "scheduler_iteration", 600,
-                                             "scheduling", true,
-                                             "server_name",TORQUE_SERVER_HOST,
-                                             "tcp_timeout", 6,
-                                            );
+variable TORQUE_SERVER_ATTRS_DEFAULT = dict("acl_host_enable", true,
+                                            "acl_hosts", ACL_HOSTS_STRING,
+                                            "default_node", "lcgpro",
+                                            "default_queue", "undefined",
+                                            "job_stat_rate", 300,
+                                            "log_events", 255,
+                                            "log_file_max_size", 200000,     # 200 MB
+                                            "log_file_roll_depth", 10,       # Means 2 GB max per day
+                                            "log_level", 0,
+                                            "mail_from", "adm",
+                                            "managers", '\"'+CE_MANAGERS+'\"',
+                                            "mail_domain", 'never',
+                                            "mom_job_sync", true,
+                                            "node_check_rate", 600,
+                                            "node_pack", false,
+                                            "node_ping_rate", 300,
+                                            "operators", '\"'+CE_OPERATORS+'\"',
+                                            "poll_jobs", true,
+                                            "query_other_jobs", true,
+                                            "scheduler_iteration", 600,
+                                            "scheduling", true,
+                                            "server_name",TORQUE_SERVER_HOST,
+                                            "tcp_timeout", 6,
+                                           );
 
 # variable allowing to customize default server attributes
-variable TORQUE_SERVER_ATTRS ?= nlist();
+variable TORQUE_SERVER_ATTRS ?= dict();
 
 # Use HW configuration to define number of processors
 variable TORQUE_USE_HW_CONFIG ?= true;
@@ -64,12 +63,12 @@ variable TORQUE_USE_HW_CONFIG ?= true;
 # TO_BE_FIXED: hack to setup the correct pbs parameters and allow submission by the CREAMCE
 #
 
-'/software/components/pbsserver/dependencies/post'=push('filecopy');
+'/software/components/pbsserver/dependencies/post' = push('filecopy');
 
 variable PBS_AUTHORIZED_USERS_SCRIPT ?= {
-  command="qmgr -c 'set server authorized_users =*@";
-  command_add="qmgr -c 'set server authorized_users +=*@";
-  tmp_cmd="";
+  command = "qmgr -c 'set server authorized_users =*@";
+  command_add = "qmgr -c 'set server authorized_users +=*@";
+  tmp_cmd = "";
   if ( is_defined(CE_HOSTS) && (length(CE_HOSTS)) > 0 ) {
     foreach(i;ce;CE_HOSTS) {
       if ( tmp_cmd == "" ) {
@@ -88,37 +87,33 @@ variable PBS_AUTHORIZED_USERS_SCRIPT ?= {
 };
 variable TORQUE_MYINIT_SCRIPT ?= TORQUE_CONFIG_DIR + '/myinit.sh';
 "/software/components/filecopy/services" = {
-         SELF[escape(TORQUE_MYINIT_SCRIPT)]=
-        nlist("config",PBS_AUTHORIZED_USERS_SCRIPT,
-              "perms", "0700",
-              "owner", "root",
-              "group","root",
-              "restart",TORQUE_MYINIT_SCRIPT,
-	      "forceRestart",true,
+    SELF[escape(TORQUE_MYINIT_SCRIPT)]=
+    dict("config",PBS_AUTHORIZED_USERS_SCRIPT,
+         "perms", "0700",
+         "owner", "root",
+         "group","root",
+         "restart",TORQUE_MYINIT_SCRIPT,
+         "forceRestart",true,
         );
-         SELF;
-       };
+    SELF;
+};
 
 
-
-
-
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------- 
 # iptables
-# ----------------------------------------------------------------------------
-include { 'components/iptables/config' };
+# ---------------------------------------------------------------------------- 
+include 'components/iptables/config';
 
 # Inbound port(s).
-
 "/software/components/iptables/filter/rules" = push(
-  nlist("command", "-A",
+  dict("command", "-A",
         "chain", "input",
         "protocol", "udp",
         "dst_port", "15001:15004",
         "target", "accept"));
 
 "/software/components/iptables/filter/rules" = push(
-  nlist("command", "-A",
+  dict("command", "-A",
         "chain", "input",
         "protocol", "tcp",
         "dst_port", "15001:15004",
@@ -130,64 +125,61 @@ include { 'components/iptables/config' };
 # Be sure not to start MOM on CE, in case it was started during RPM installation
 # or by mistake
 # ----------------------------------------------------------------------------
-include { 'components/chkconfig/config' };
+include 'components/chkconfig/config';
 
 prefix '/software/components/chkconfig/service';
-'pbs_server/on'        = '';
+'pbs_server/on' = '';
 'pbs_server/startstop' = true;
-
-'pbs_mom/off'          = '';
-'pbs_mom/startstop'    = true;
+'pbs_mom/off' = '';
+'pbs_mom/startstop' = true;
 
 
 # ----------------------------------------------------------------------------
 # cron
 # ----------------------------------------------------------------------------
-include { 'components/cron/config' };
+include 'components/cron/config';
 
-"/software/components/cron/entries" =
-  push(nlist(
-    "name","server-logs",
-    "user","root",
-    "frequency", "33 3 * * *",
-    "command", "find "+TORQUE_CONFIG_DIR+"/server_logs -mtime +7 -exec gzip -9 {} \\;"));
+"/software/components/cron/entries" = push(
+    dict("name","server-logs",
+         "user","root",
+         "frequency", "33 3 * * *",
+         "command", "find "+TORQUE_CONFIG_DIR+"/server_logs -mtime +7 -exec gzip -9 {} \\;")
+);
 
 
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------- 
 # altlogrotate
-# ----------------------------------------------------------------------------
-include { 'components/altlogrotate/config' };
+# ---------------------------------------------------------------------------- 
+include 'components/altlogrotate/config'; 
 
 "/software/components/altlogrotate/entries/server-logs" =
-  nlist("pattern", "/var/log/server-logs.ncm-cron.log",
-        "compress", true,
-        "missingok", true,
-        "frequency", "weekly",
-        "create", true,
-        "ifempty", true,
-        "rotate", 1);
+    dict("pattern", "/var/log/server-logs.ncm-cron.log",
+         "compress", true,
+         "missingok", true,
+         "frequency", "weekly",
+         "create", true,
+         "ifempty", true,
+         "rotate", 1);
 
 
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------- 
 # pbsserver
-# ----------------------------------------------------------------------------
-include { 'components/pbsserver/config' };
+# ---------------------------------------------------------------------------- 
+include 'components/pbsserver/config';
 
 "/software/components/pbsserver/pbsroot" = TORQUE_CONFIG_DIR;
-
 "/software/components/pbsserver/env/PATH" = "/bin:/usr/bin";
 "/software/components/pbsserver/env/LANG" = "C";
 
 # To enable torque to keep track of completed jobs, uncomment this line.
 "/software/components/pbsserver/env/TORQUEKEEPCOMPLETED" = "TRUE";
 
-
 # Setup the server attributes.
 "/software/components/pbsserver/server" = {
   SELF['manualconfig'] =  false;
-
+  
   if ( !exists(SELF['attlist']) || !is_defined(SELF['attlist']) ) {
-    SELF['attlist'] = nlist();
+    SELF['attlist'] = dict();
   };
   foreach (attr;val;TORQUE_SERVER_ATTRS_DEFAULT) {
     SELF['attlist'][attr] = val;
@@ -205,26 +197,23 @@ include { 'components/pbsserver/config' };
 };
 
 
-
-
-
 #
 # Build queue names
 #
-include { 'features/torque2/server/build-queue-list' };
+include 'features/torque2/server/build-queue-list';
 
 
 #
 # These queue defaults will be used unless specific
 # attributes are defined in the CE_QUEUES variable.
-# Default values for queue attributes are overriden on
+# Default values for queue attributes are overriden on 
 # a per attribute basis (not per queue).
 #
-variable CE_QUEUE_DEFAULTS ?= nlist(
-  "queue_type", "Execution",
-  "resources_max.pcput", "24:00:00",
-  "resources_max.walltime", "36:00:00",
-  "resources_default.walltime", "36:00:00",
+variable CE_QUEUE_DEFAULTS ?= dict(
+    "queue_type", "Execution",
+    "resources_max.pcput", "24:00:00",
+    "resources_max.walltime", "36:00:00",
+    "resources_default.walltime", "36:00:00",
 );
 
 
@@ -236,9 +225,9 @@ variable CE_QUEUE_DEFAULTS ?= nlist(
 #   - 'Production' : enabled=true, started=true (Defaults)
 #   - 'Queuing' (job accepted but not executded) : enabled=true, started=false
 #   - 'Draining' (no new job accepted) : enabled=false, started=true
-#   - 'Closed' : enabled=false, started=false
+#   - 'Closed' : enabled=false, started=false 
 variable CE_QUEUE_STATE_DEFAULTS ?= {
-  state_defaults = nlist();
+  state_defaults = dict();
   if ( !exists(CE_STATUS) || !is_defined(CE_STATUS) || (CE_STATUS == 'Production') ) {
     state_defaults["enabled"] = true;
     state_defaults["started"] = true;
@@ -261,16 +250,14 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
 
 # Setup the queues.
 "/software/components/pbsserver/queue" = {
-
-  queuelist = nlist();
-
-  keep_running_state = nlist();
+  queuelist = dict();
+  keep_running_state = dict();
   keep_running_list = CE_KEEP_RUNNING_QUEUES;
   foreach(i;queue;keep_running_list) {
-    keep_running_state[queue] = nlist('enabled', true,
-                                      'started', true,
-                                     );
-  };
+    keep_running_state[queue] = dict('enabled', true,
+                                     'started', true,
+                                    );
+  };  
 
   if ( length(CE_LOCAL_QUEUES) > 0 ) {
     qnames = merge(CE_QUEUES['vos'], CE_LOCAL_QUEUES['names']);
@@ -288,7 +275,7 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
       mylrms=CE_BATCH_SYS;
     };
     if (mylrms=='pbs' || mylrms == 'lcgpbs' || mylrms=='torque') {
-      queuelist[k] = nlist();
+      queuelist[k] = dict();
       queuelist[k]['manualconfig'] = false;
       if ( exists(keep_running_state[k]) ) {
         queuelist[k]['attlist'] = keep_running_state[k];
@@ -303,7 +290,7 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
           ok_atts = next(atts_defaults, att_name, att_value);
         };
       };
-      # If specific attributes have been specified for the
+      # If specific attributes have been specified for the 
       # current queue, add/replace them to the default attribute values
       if (exists(atts[k]) && is_defined(atts[k])) {
         ok_atts = first(atts[k], att_name, att_value);
@@ -311,7 +298,7 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
           queuelist[k]['attlist'][att_name] = att_value;
           ok_atts = next(atts[k], att_name, att_value);
         };
-      queuelist[k]['attlist']['resources_default.walltime'] = queuelist[k]['attlist']['resources_max.walltime'];
+        queuelist[k]['attlist']['resources_default.walltime'] = queuelist[k]['attlist']['resources_max.walltime'];
       };
     };
   };
@@ -324,13 +311,13 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
 
 # Setup the nodes.
 # Specific attributes can be set on specific nodes using WN_ATTRS
-# variable. This variable is a nlist with one entry per node plus a default
-# entry (key DEFAULT). DEFAULT entry if present is always applied before
-# node specific entry. Each entry must be a nlist.
-"/software/components/pbsserver/node" = nlist("manualconfig", false);
+# variable. This variable is a dict with one entry per node plus a default
+# entry (key DEFAULT). DEFAULT entry if present is always applied before 
+# node specific entry. Each entry must be a dict.
+"/software/components/pbsserver/node" = dict("manualconfig", false);
 "/software/components/pbsserver/node/nodelist" = {
-  nodes = nlist();
-  if ( exists(WN_ATTRS) && is_defined(WN_ATTRS) && is_nlist(WN_ATTRS) ) {
+  nodes = dict();
+  if ( exists(WN_ATTRS) && is_defined(WN_ATTRS) && is_dict(WN_ATTRS) ) {
     wn_attrs = WN_ATTRS;
   };
   foreach (i;wn;WORKER_NODES) {
@@ -341,7 +328,7 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
     } else {
       process_slots = to_long(WN_CPUS_DEF);
     };
-    if ( is_nlist(WN_CPU_SLOTS) ) {
+    if ( is_dict(WN_CPU_SLOTS) ) {
       if ( exists(WN_CPU_SLOTS[wn]['value']) && is_defined(WN_CPU_SLOTS[wn]['value']) ) {
         extra_slots = to_double(WN_CPU_SLOTS[wn]['value']);
       } else {
@@ -363,7 +350,7 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
       process_slots = to_long(process_slots * WN_CPU_SLOTS);
     };
     nodes[wn]["manualconfig"] = false;
-    nodes[wn]["attlist"] = nlist(
+    nodes[wn]["attlist"] = dict(
         "np", process_slots,
         "properties", "lcgpro"
     );
@@ -372,14 +359,14 @@ variable CE_QUEUE_STATE_DEFAULTS ?= {
     ok_entries = first(att_entries, e_k, e_v);
     while (ok_entries) {
       if ( exists(wn_attrs[e_v]) && is_defined(wn_attrs[e_v]) ) {
-        if ( is_nlist(wn_attrs[e_v]) ) {
+        if ( is_dict(wn_attrs[e_v]) ) {
           ok_atts = first(wn_attrs[e_v], att_name, att_value);
           while(ok_atts) {
             nodes[wn]["attlist"][att_name] = att_value;
             ok_atts = next(wn_attrs[e_v], att_name, att_value);
           };
         } else {
-          error("WN_ATTR_DEFAULTS entry '"+e_v+" value must be a nlist");
+          error("WN_ATTR_DEFAULTS entry '"+e_v+" value must be a dict");
         };
       };
       ok_entries = next(att_entries, e_k, e_v);
@@ -413,7 +400,7 @@ while (<STDIN>) {
     if (m/#PBS\s+-l\s+nodes=(\d+)\s*$/) {
         $line = process_nodes($1);
 
-        # If the line wasn't empty, then multiple CPUs have been
+        # If the line wasn't empty, then multiple CPUs have been 
         # requested.  Mark this as an MPI job.
         if ($line ne '') {
           $line .= "\n#PBS -A mpi\n";
@@ -421,14 +408,14 @@ while (<STDIN>) {
     }
 
     # If there is a queue option, check to see if it is "sdj".
-    # If so, then add the option to not allow such jobs to be
+    # If so, then add the option to not allow such jobs to be 
     # queued.
     if (m/#PBS\s+-q\s+sdj/) {
         $line .= "#PBS -W x=\"FLAGS:NOQUEUE\"\n";
     }
 
 
-    # If there is an existing accounts line, delete it.  The account
+    # If there is an existing accounts line, delete it.  The account 
     # should not be set to the DN, because an internal maui table is
     # filled which prevents standing reservations from being defined.
     if (m/#PBS\s+-A/) {
@@ -444,7 +431,7 @@ while (<STDIN>) {
 sub process_nodes {
     my $nodes = shift;
     my $line = "";
-
+    
     # If the requested number of nodes is 1, just return an empty string.
     if ($nodes == 1) {
       return "";
@@ -564,7 +551,7 @@ EOF
   submit_filter = undef;
   if ( exists(TORQUE_SUBMIT_FILTER) &&
        is_defined(TORQUE_SUBMIT_FILTER) &&
-       is_nlist(TORQUE_SUBMIT_FILTER) ) {
+       is_dict(TORQUE_SUBMIT_FILTER) ) {
     if ( exists(TORQUE_SUBMIT_FILTER[TORQUE_SERVER_HOST]) && is_defined(TORQUE_SUBMIT_FILTER[TORQUE_SERVER_HOST]) ) {
       submit_filter = TORQUE_SUBMIT_FILTER[TORQUE_SERVER_HOST];
     } else if ( exists(TORQUE_SUBMIT_FILTER['DEFAULT']) && is_defined(TORQUE_SUBMIT_FILTER['DEFAULT']) ) {
@@ -578,36 +565,36 @@ EOF
 };
 
 
-# ----------------------------------------------------------------------------
-# Include the blparser (batch log parser used by CREAM CE) if the variable
+# ---------------------------------------------------------------------------- 
+# Include the blparser (batch log parser used by CREAM CE) if the variable 
 # BLPARSER_HOST is defined and matching current node.
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------- 
 variable BLPARSER_INCLUDE = if ( is_defined(BLPARSER_HOST)  && (BLPARSER_HOST == FULL_HOSTNAME) ) {
                                 debug('Configuring blparser');
                                 'features/blparser/service';
                             } else {
                                 null;
                             };
-include { BLPARSER_INCLUDE };
+include BLPARSER_INCLUDE;
 
 # ----------------------------------------------------------------------------
 # Configuring munge
 # ----------------------------------------------------------------------------
 
-include { 'features/torque2/munge/config' };
+include 'features/torque2/munge/config';
 
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------- 
 # Define a cron job to ensure that PBS server is running properly.
 # Script created as part of server/client common config : PBS_MONITORING_SCRIPT
 # defined to the name of the created script.
-# ----------------------------------------------------------------------------
-include { 'components/cron/config' };
-include { 'components/altlogrotate/config' };
+# ---------------------------------------------------------------------------- 
+include 'components/cron/config';
+include 'components/altlogrotate/config';
 
 variable PBS_MONITORING_SCRIPT ?= undef;
 
 "/software/components/cron/entries" = if ( is_defined(PBS_MONITORING_SCRIPT) ) {
-                                        push(nlist("name","pbs-monitoring",
+                                        push(dict("name","pbs-monitoring",
                                                    "user","root",
                                                    "frequency", "5,20,35,50 * * * *",
                                                    "command", PBS_MONITORING_SCRIPT));
@@ -617,7 +604,7 @@ variable PBS_MONITORING_SCRIPT ?= undef;
 
 "/software/components/altlogrotate/entries" = {
   if ( is_defined(PBS_MONITORING_SCRIPT) ) {
-    SELF['pbs-monitoring'] = nlist("pattern", "/var/log/pbs-monitoring.ncm-cron.log",
+    SELF['pbs-monitoring'] = dict("pattern", "/var/log/pbs-monitoring.ncm-cron.log",
                                    "compress", true,
                                    "missingok", true,
                                    "frequency", "monthly",
@@ -629,50 +616,50 @@ variable PBS_MONITORING_SCRIPT ?= undef;
 };
 
 variable TORQUE_COMMAND_LINKS ?= false;
-include { 'components/symlink/config' };
+include 'components/symlink/config';
 "/software/components/symlink/links" = if (TORQUE_COMMAND_LINKS) {
-    SELF[length(SELF)] = nlist(
+    SELF[length(SELF)] = dict(
         "name", "/usr/bin/qstat",
         "target", "/usr/bin/qstat-torque",
-        "replace", nlist("link","yes"),
+        "replace", dict("link", "yes"),
         "exists", true,
     );
-    SELF[length(SELF)] = nlist(
+    SELF[length(SELF)] = dict(
         "name", "/usr/bin/qsub",
         "target", "/usr/bin/qsub-torque",
-        "replace", nlist("link","yes"),
-        "exists", true,
-    );
-    SELF[length(SELF)] = nlist(
+        "replace", dict("link", "yes"),
+        "exists", true,                       
+    );  
+    SELF[length(SELF)] = dict(
         "name", "/usr/bin/qhold",
         "target", "/usr/bin/qhold-torque",
-        "replace", nlist("link","yes"),
-        "exists", true,
+        "replace", dict("link", "yes"),
+        "exists", true,         
     );
-    SELF[length(SELF)] = nlist(
+    SELF[length(SELF)] = dict(
         "name", "/usr/bin/qrls",
         "target", "/usr/bin/qrls-torque",
-        "replace", nlist("link","yes"),
-        "exists", true,
-    );
-    SELF[length(SELF)] = nlist(
+        "replace", dict("link", "yes"),
+        "exists", true,                       
+    );  
+    SELF[length(SELF)] = dict(
         "name", "/usr/bin/qalter",
         "target", "/usr/bin/qalter-torque",
-        "replace", nlist("link","yes"),
-        "exists", true,
+        "replace", dict("link", "yes"),
+        "exists", true,                       
     );
-    SELF[length(SELF)] = nlist(
+    SELF[length(SELF)] = dict(
         "name", "/usr/bin/qselect",
         "target", "/usr/bin/qselect-torque",
-        "replace", nlist("link","yes"),
-        "exists", true,
+        "replace", dict("link", "yes"),
+        "exists", true,                       
     );
-    SELF[length(SELF)] = nlist(
+    SELF[length(SELF)] = dict(
         "name", "/usr/bin/qdel",
         "target", "/usr/bin/qdel-torque",
-        "replace", nlist("link","yes"),
-        "exists", true,
-    );
+        "replace", dict("link", "yes"),
+        "exists", true,                       
+    );  
     SELF;
 } else {
     SELF;

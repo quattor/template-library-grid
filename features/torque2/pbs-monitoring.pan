@@ -3,7 +3,7 @@
 
 unique template features/torque2/pbs-monitoring;
 
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 
 # Define PBS_MONITORING_NFS_FS to an empty string to disable the NFS file
 # system check
@@ -15,7 +15,7 @@ variable PBS_MONITORING_NFS_FS ?= {
     };
   };
   nfs_fs_list;
-};
+}; 
 variable PBS_MONITORING_SCRIPT ?= TORQUE_CONFIG_DIR+"/pbs-monitoring";
 
 # When editing take care of the script nfs_fs_list variable setup
@@ -58,7 +58,7 @@ do
       usage
       exit 1
       ;;
-
+      
   esac
   shift
 done
@@ -173,7 +173,6 @@ EOF
 # Now actually add the file to the configuration.
 '/software/components/filecopy/services' =
   npush(escape(PBS_MONITORING_SCRIPT),
-        nlist('config',PBS_MONITORING_SCRIPT_CONTENTS,
-              'owner','root:root',
-              'perms', '0755'));
-
+        dict('config',PBS_MONITORING_SCRIPT_CONTENTS,
+             'owner','root:root',
+             'perms', '0755'));

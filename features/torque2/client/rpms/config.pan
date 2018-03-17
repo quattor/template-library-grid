@@ -7,7 +7,6 @@ prefix '/software/packages';
 
 '{emi-version}' ?= nlist();
 '{glite-yaim-torque-client}' ?= nlist();
-'{lcg-pbs-utils}' ?= nlist();
 '{libtorque}' ?= nlist();
 '{munge}' ?= nlist();
 '{munge-libs}' ?= nlist();
