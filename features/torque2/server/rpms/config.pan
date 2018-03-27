@@ -1,16 +1,16 @@
 unique template features/torque2/server/rpms/config;
 
-prefix '/software/packages';
-
-'{emi-version}' ?= dict();
-'{glite-yaim-torque-client}' ?= dict();
-'{glite-yaim-torque-server}' ?= dict();
-'{glite-yaim-torque-utils}' ?= dict();
-'{libtorque}' ?= dict();
-'{maui}' ?= dict();
-'{maui-client}' ?= dict();
-'{maui-server}' ?= dict();
-'{torque}' ?= dict();
-'{torque-client}' ?= dict();
-'{torque-mom}' ?= dict();
-'{torque-server}' ?= dict();
+'/software/packages' = {
+    pkg_repl('emi-version');
+    pkg_repl('glite-yaim-torque-client');
+    pkg_repl('glite-yaim-torque-server');
+    pkg_repl('glite-yaim-torque-utils');
+    pkg_repl('libtorque');
+    pkg_repl('maui');
+    pkg_repl('maui-client');
+    pkg_repl('maui-server');
+    pkg_repl('torque');
+    pkg_repl('torque-client');
+    pkg_repl('torque-mom');
+    pkg_repl('torque-server');
+};
