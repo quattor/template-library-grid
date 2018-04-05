@@ -1,3 +1,10 @@
+# List of RPMs required but not loaded by YUM
+# because HTCondor advertize the libraries but doesn't provide
+# it in a form usable by other tools.
+# This mainly affecot Globus tools and libraries.
+#
+# FIXME: to be reviewed with future versions of HTCondor (problem affecting 8.2/8.3)
+
 unique template features/htcondor/globus-fix;
 
 include 'components/spma/config';
@@ -23,7 +30,6 @@ include 'components/spma/config';
   pkg_repl('globus-xio.x86_64');
   pkg_repl('globus-gass-transfer.x86_64');
   pkg_repl('voms.x86_64');
-  pkg_repl('voms.i686');
 
   SELF;
 };

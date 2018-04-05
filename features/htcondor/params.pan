@@ -17,7 +17,7 @@ variable CONDOR_CONFIG = {
 
   # Condor version is used to a RPM packaging change in condor 8.3
   if (!is_defined(SELF['version'])) {
-     SELF['version'] = '8.2';
+     SELF['version'] = '8.4';
   };
 
   if(!is_defined(SELF['pwd_hash'])){
@@ -82,6 +82,16 @@ variable CONDOR_CONFIG = {
   # Default configuration is *not* enable Multicore
   if (!is_defined(SELF['multicore'])){
       SELF['multicore'] = false;
+  };
+
+  # Default configuration is *not* enable GPU's detection
+  if (!is_defined(SELF['gpu'])){
+      SELF['gpu'] = false;
+  };
+
+  # Default configuration is *not* enable Intel MIC detection
+  if (!is_defined(SELF['intel_mic'])){
+      SELF['intel_mic'] = false;
   };
 
   # Default MaxVacateTime (48 * 60 * 60)
