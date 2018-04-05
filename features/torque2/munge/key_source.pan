@@ -2,8 +2,8 @@ unique template features/torque2/munge/key_source;
 
 variable MUNGE_KEY_SOURCE ?= undef;
 
-include { 'components/filecopy/config' };
-"/software/components/filecopy/services/{/etc/munge/munge.key}" = nlist(
+include 'components/filecopy/config';
+"/software/components/filecopy/services/{/etc/munge/munge.key}" = dict(
     'source', MUNGE_KEY_SOURCE,
     'perms', '0400',
     'owner', 'munge',

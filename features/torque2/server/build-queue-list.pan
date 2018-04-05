@@ -12,8 +12,8 @@ variable TEST = debug(OBJECT+': executing '+TEMPLATE);
 # For backward compatibility, allow CE_QUEUES to be explicitly defined by site.
 # Normally, this should be done using CE_QUEUES_SITE variable.
 variable CE_QUEUES ?= {
-  SELF['vos'] = nlist();
-  SELF['attlist'] = nlist();
+  SELF['vos'] = dict();
+  SELF['attlist'] = dict();
   foreach (k;vo;VOS) {
     # Substitute '-' into '_' in queue name as GIP is not handling properly '-' in queue names and
     # queue appears to be closed.
@@ -46,7 +46,7 @@ variable CE_QUEUES = {
       if ( is_defined(attlist) ) {
         foreach(att;value;attlist) {
           if ( !exists(SELF['attlist'][queue]) ) {
-            SELF['attlist'][queue] = nlist();
+            SELF['attlist'][queue] = dict();
           };
           SELF['attlist'][queue][att] = value;
         };

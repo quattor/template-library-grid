@@ -10,14 +10,14 @@ variable TORQUE_SERVER_PRIV_HOST ?= if ( exists(CE_PRIV_HOST) ) {
                                     } else {
                                       undef;
                                     };
-
+                                    
 # Directory where configuration/working directories are located
 variable TORQUE_CONFIG_DIR ?= '/var/torque';
 
 # ----------------------------------------------------------------------------
 # etcservices
 # ----------------------------------------------------------------------------
-include { 'components/etcservices/config' };
+include 'components/etcservices/config';
 
 "/software/components/etcservices/entries" = push("pbs 15001/tcp");
 "/software/components/etcservices/entries" = push("pbs_mom 15002/tcp");
@@ -26,10 +26,10 @@ include { 'components/etcservices/config' };
 "/software/components/etcservices/entries" = push("pbs_sched 15004/tcp");
 
 
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------- 
 # pbsclient (masters must be defined on the server too).
-# ----------------------------------------------------------------------------
-include { 'components/pbsclient/config' };
+# ---------------------------------------------------------------------------- 
+include 'components/pbsclient/config';
 "/software/components/pbsclient/masters" = if ( is_defined(TORQUE_SERVER_PRIV_HOST) ) {
                                              list(TORQUE_SERVER_PRIV_HOST);
                                            } else {
@@ -42,7 +42,7 @@ include { 'components/pbsclient/config' };
 # ----------------------------------------------------------------------------
 # Configure ssh for communication between CE and WNs
 # ----------------------------------------------------------------------------
-include { if ( TORQUE_CLIENT_MOM_ENABLED ) 'features/ssh/ce' };
+include if ( TORQUE_CLIENT_MOM_ENABLED ) 'features/ssh/ce';
 
 
 # ----------------------------------------------------------------------------
@@ -55,4 +55,4 @@ variable PBS_MONITORING_TEMPLATE ?= if ( is_null(PBS_MONITORING_TEMPLATE) ) {
                                       'features/torque2/pbs-monitoring';
                                     };
 variable DEBUG = debug('PBS_MONITORING_TEMPLATE='+to_string(PBS_MONITORING_TEMPLATE));
-include { PBS_MONITORING_TEMPLATE };
+include PBS_MONITORING_TEMPLATE ;

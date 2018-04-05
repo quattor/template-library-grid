@@ -4,32 +4,28 @@
 
 unique template features/torque2/client/client-only;
 
-variable TORQUE_VERSION ?= if(OS_VERSION_PARAMS['major'] == 'sl5'){
-                                '2.5.9-1.cri';
-                           }else{
-                                '2.5.9-1.cri.el6';
-                           };
+variable TORQUE_VERSION ?= '2.5.9-1.cri.el6';
 
 variable TORQUE_CLIENT_MOM_ENABLED ?= false;
 variable PBS_MONITORING_TEMPLATE ?= null;
 
 # Add RPMs
-include { 'features/torque2/client/rpms/config' };
+include 'features/torque2/client/rpms/config';
 
 
 # include configuration common to client and server
-include { 'features/torque2/config' };
+include 'features/torque2/config';
 
 # ----------------------------------------------------------------------------
 # Configuring munge
 # ----------------------------------------------------------------------------
 
-include { 'features/torque2/munge/config' };
+include 'features/torque2/munge/config';
 
 # ----------------------------------------------------------------------------
 # pbsclient
 # ----------------------------------------------------------------------------
-include { 'components/pbsclient/config' };
+include 'components/pbsclient/config';
 "/software/components/pbsclient/behaviour" = "OpenPBS";
 "/software/components/pbsclient/restricted" = list(TORQUE_SERVER_HOST);
 "/software/components/pbsclient/logEvent" = 255;
