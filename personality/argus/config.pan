@@ -38,14 +38,14 @@ variable PEP_HOME ?= ARGUS_LOCATION + '/pepd';
 #-----------------------------------------------------------------------------
 
 variable PAP_ENABLED = {
-  if (PAP_HOST == FULL_HOSTNAME) {
-    true;
-  } else {
-    false;
-  }
+    if (PAP_HOST == FULL_HOSTNAME) {
+        true;
+    } else {
+        false;
+    }
 };
 
-include { if (PAP_ENABLED) 'personality/argus/pap' };
+include if (PAP_ENABLED) 'personality/argus/pap';
 
 
 #-----------------------------------------------------------------------------
@@ -53,14 +53,14 @@ include { if (PAP_ENABLED) 'personality/argus/pap' };
 #-----------------------------------------------------------------------------
 
 variable PDP_ENABLED = {
-  if (PDP_HOST == FULL_HOSTNAME) {
-    true;
-  } else {
-    false;
-  }
+    if (PDP_HOST == FULL_HOSTNAME) {
+        true;
+    } else {
+        false;
+    }
 };
 
-include { if (PDP_ENABLED) 'personality/argus/pdp' };
+include if (PDP_ENABLED) 'personality/argus/pdp';
 
 
 #-----------------------------------------------------------------------------
@@ -68,28 +68,37 @@ include { if (PDP_ENABLED) 'personality/argus/pdp' };
 #-----------------------------------------------------------------------------
 
 variable PEP_ENABLED = {
-  if (PEP_HOST == FULL_HOSTNAME) {
-    true;
-  } else {
-    false;
-  }
+    if (PEP_HOST == FULL_HOSTNAME) {
+        true;
+    } else {
+        false;
+    }
 };
 
-include { if (PEP_ENABLED) 'personality/argus/pep' };
+include if (PEP_ENABLED) 'personality/argus/pep';
 
 variable ARGUS_SERVICES = {
-  services = nlist();
-  if (PAP_ENABLED) {
-    services['PAP'] = nlist("home",PAP_HOME,"initScript",'/etc/init.d/argus-pap');
-  };
-  if (PDP_ENABLED) {
-    services['PDP'] = nlist("home",PDP_HOME,"initScript",'/etc/init.d/argus-pdp');
-  };
-  if (PEP_ENABLED) {
-    services['PEP'] = nlist("home",PEP_HOME,"initScript",'/etc/init.d/argus-pepd');
-  };
+    services = dict();
+    if (PAP_ENABLED) {
+        services['PAP'] = dict(
+            "home", PAP_HOME,
+            "initScript", '/etc/init.d/argus-pap'
+        );
+    };
+    if (PDP_ENABLED) {
+        services['PDP'] = dict(
+            "home", PDP_HOME,
+            "initScript", '/etc/init.d/argus-pdp'
+        );
+    };
+    if (PEP_ENABLED) {
+        services['PEP'] = dict(
+            "home", PEP_HOME,
+            "initScript", '/etc/init.d/argus-pepd'
+        );
+    };
 
-  services
+    services
 };
 
 
@@ -99,79 +108,82 @@ variable ARGUS_SERVICES = {
 
 variable ARGUS_STARTUP_FILE = '/etc/init.d/argus';
 variable ARGUS_STARTUP_CONTENTS = {
-  contents = "#!/bin/bash\n";
-  contents = contents + '###############################################################################' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   Copyright 2010-2012 by the Quattor team.' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   Startup script for Argus' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   chkconfig: 345 97 97' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   description:  Argus services startup script' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   Version: V1.5' + "\n";
-  contents = contents + '#' + "\n";
-  contents = contents + '#   Date: 15/10/2012' + "\n";
-  contents = contents + '###############################################################################' + "\n";
-  foreach (service;serviceinfo;ARGUS_SERVICES) {
-    contents = contents + service + '_HOME=' + serviceinfo['home'] + "\n";
-    contents = contents + 'export ' + service + '_HOME' + "\n";
-  };
-  contents = contents + "\n";
-  contents = contents + 'if [ `id -u` -ne 0 ]; then' + "\n";
-  contents = contents + '    echo "You need root privileges to run this script"' + "\n";
-  contents = contents + '    exit 1' + "\n";
-  contents = contents + 'fi ' + "\n";
-  contents = contents + "\n";
-  contents = contents + 'case "$1" in' + "\n";
-  contents = contents + '    start)' + "\n";
-  foreach (service;serviceinfo;ARGUS_SERVICES) {
-    contents = contents + '        echo "##### ' + service + ' #####"' + "\n";
-    contents = contents + '        ' + serviceinfo['initScript'] + ' status 2&> /dev/null' + "\n";
-    contents = contents + '        result=$?' + "\n";
-    contents = contents + '        if [ $result -ne 0 ]; then' + "\n";
-    contents = contents + '            echo "Starting ' + service + ': "' + "\n";
-    contents = contents + '            ' + serviceinfo['initScript'] + ' start' + "\n";
-    contents = contents + '            sleep 5' + "\n";
-    contents = contents + '        else' + "\n";
-    contents = contents + '            echo "' + service + ' already running" 1>&2' + "\n";
-    contents = contents + '        fi' + "\n";
-  };
-  contents = contents + '        ;; ' + "\n";
-  contents = contents + '    stop)' + "\n";
-  foreach (service;serviceinfo;ARGUS_SERVICES) {
-    contents = contents + '        echo "##### ' + service + ' #####"' + "\n";
-    contents = contents + '        echo "Shutting down ' + service + ': "' + "\n";
-    contents = contents + '        ' + serviceinfo['initScript'] + ' stop' + "\n";
-  };
-  contents = contents + '        ;;' + "\n";
-  contents = contents + '    status)' + "\n";
-  foreach (service;serviceinfo;ARGUS_SERVICES) {
-    contents = contents + '        echo "##### ' + service + ' #####"' + "\n";
-    contents = contents + '        ' + serviceinfo['initScript'] + ' status' + "\n";
-  };
-  contents = contents + '        ;;' + "\n";
-  contents = contents + '    *)' + "\n";
-  contents = contents + '        echo "Usage: $0 {start|stop|status}"' + "\n";
-  contents = contents + '        exit 1' + "\n";
-  contents = contents + '        ;;' + "\n";
-  contents = contents + 'esac' + "\n";
-  contents = contents + "\n";
-  contents = contents + 'exit 0' + "\n";
+    contents = "#!/bin/bash\n";
+    contents = contents + '###############################################################################' + "\n";
+    contents = contents + '#' + "\n";
+    contents = contents + '#   Copyright 2010-2012 by the Quattor team.' + "\n";
+    contents = contents + '#' + "\n";
+    contents = contents + '#   Startup script for Argus' + "\n";
+    contents = contents + '#' + "\n";
+    contents = contents + '#   chkconfig: 345 97 97' + "\n";
+    contents = contents + '#' + "\n";
+    contents = contents + '#   description:  Argus services startup script' + "\n";
+    contents = contents + '#' + "\n";
+    contents = contents + '#   Version: V1.5' + "\n";
+    contents = contents + '#' + "\n";
+    contents = contents + '#   Date: 15/10/2012' + "\n";
+    contents = contents + '###############################################################################' + "\n";
+    foreach (service; serviceinfo; ARGUS_SERVICES) {
+        contents = contents + service + '_HOME=' + serviceinfo['home'] + "\n";
+        contents = contents + 'export ' + service + '_HOME' + "\n";
+    };
+    contents = contents + "\n";
+    contents = contents + 'if [ `id -u` -ne 0 ]; then' + "\n";
+    contents = contents + '    echo "You need root privileges to run this script"' + "\n";
+    contents = contents + '    exit 1' + "\n";
+    contents = contents + 'fi ' + "\n";
+    contents = contents + "\n";
+    contents = contents + 'case "$1" in' + "\n";
+    contents = contents + '    start)' + "\n";
+    foreach (service; serviceinfo; ARGUS_SERVICES) {
+        contents = contents + '        echo "##### ' + service + ' #####"' + "\n";
+        contents = contents + '        ' + serviceinfo['initScript'] + ' status 2&> /dev/null' + "\n";
+        contents = contents + '        result=$?' + "\n";
+        contents = contents + '        if [ $result -ne 0 ]; then' + "\n";
+        contents = contents + '            echo "Starting ' + service + ': "' + "\n";
+        contents = contents + '            ' + serviceinfo['initScript'] + ' start' + "\n";
+        contents = contents + '            sleep 5' + "\n";
+        contents = contents + '        else' + "\n";
+        contents = contents + '            echo "' + service + ' already running" 1>&2' + "\n";
+        contents = contents + '        fi' + "\n";
+    };
+    contents = contents + '        ;; ' + "\n";
+    contents = contents + '    stop)' + "\n";
+    foreach (service; serviceinfo; ARGUS_SERVICES) {
+        contents = contents + '        echo "##### ' + service + ' #####"' + "\n";
+        contents = contents + '        echo "Shutting down ' + service + ': "' + "\n";
+        contents = contents + '        ' + serviceinfo['initScript'] + ' stop' + "\n";
+    };
+    contents = contents + '        ;;' + "\n";
+    contents = contents + '    status)' + "\n";
+    foreach (service; serviceinfo; ARGUS_SERVICES) {
+        contents = contents + '        echo "##### ' + service + ' #####"' + "\n";
+        contents = contents + '        ' + serviceinfo['initScript'] + ' status' + "\n";
+    };
+    contents = contents + '        ;;' + "\n";
+    contents = contents + '    *)' + "\n";
+    contents = contents + '        echo "Usage: $0 {start|stop|status}"' + "\n";
+    contents = contents + '        exit 1' + "\n";
+    contents = contents + '        ;;' + "\n";
+    contents = contents + 'esac' + "\n";
+    contents = contents + "\n";
+    contents = contents + 'exit 0' + "\n";
 
-  contents;
+    contents;
 };
 
-#'/software/components/filecopy/services' =
-#  npush(escape(ARGUS_STARTUP_FILE),
-#        nlist('config', ARGUS_STARTUP_CONTENTS,
-#              'owner', 'root',
-#              'perms', '0755',
-#       )
-#  );
-#
-#
-#'/software/components/chkconfig/service/argus/on' = '';
-#'/software/components/chkconfig/service/argus/startstop' = true;
+include 'components/filecopy/config';
+'/software/components/filecopy/services' = {
+    npush(escape(ARGUS_STARTUP_FILE),
+        dict(
+            'config', ARGUS_STARTUP_CONTENTS,
+            'owner', 'root',
+            'perms', '0755',
+        )
+    )
+};
+
+include 'components/chkconfig/config';
+'/software/components/chkconfig/service/argus/on' = '';
+'/software/components/chkconfig/service/argus/startstop' = true;
 
