@@ -25,19 +25,18 @@ include 'features/htcondor/client/policies';
 
 variable BLPARSER_WITH_UPDATER_NOTIFIER = true;
 
-variable CE_QUEUES ?= {
-    SELF['vos']['default'] = VOS;
-    SELF;
-};
+variable CE_QUEUES ?= dict(
+    'vos', dict(
+        'default', VOS,
+    ),
+);
 
 # Fixme: a bug in the blah RPM
 include 'components/filecopy/config';
 
-'/software/components/filecopy/services/{/usr/libexec/condor_status.sh}' = {
-    SELF['source'] = '/usr/libexec/condor_status.sh.save';
-    SELF['perms'] = '0755';
-    SELF;
-};
+prefix '/software/components/filecopy/services/{/usr/libexec/condor_status.sh}';
+'source' = '/usr/libexec/condor_status.sh.save';
+'perms' = '0755';
 
 include 'components/dirperm/config';
 
