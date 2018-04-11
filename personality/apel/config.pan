@@ -49,7 +49,7 @@ variable AUTHORIZED_HOSTS ?= {
             'password', APEL_DB_PWD,
             'rights', list('ALL PRIVILEGES'),
         )
-    }
+    };
 
     SELF;
 };

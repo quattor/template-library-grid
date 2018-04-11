@@ -19,22 +19,22 @@ variable PKG_ARCH_TORQUE_MAUI ?= PKG_ARCH_GLITE;
 
 
 # Ensure that the host certificates have the correct permissions.
-include 'features/security/host_certs' };
+include 'features/security/host_certs';
 
 # Do base configuration for GIP before configuring Torque/MAUI
-include 'features/gip/base' };
+include 'features/gip/base';
 
 # Set permissions on key directories, in particular log directory
-include 'features/grid/dirperms' };
+include 'features/grid/dirperms';
 
 
 # When using MAUI, postpone configuration of maui-monitoring after GIP configuration.
 variable MAUI_MONITORING_POSTPONED = true;
-include 'features/torque2/server/service' };
+include 'features/torque2/server/service';
 
 
 # Configure GIP plugin for Torque/MAUI
-include 'features/gip/ce' };
+include 'features/gip/ce';
 
 
 # Configure MAUI monitoring, also used to optionally implement a GIP plugin cache.
