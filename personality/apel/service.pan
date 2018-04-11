@@ -2,7 +2,7 @@
 unique template personality/apel/service;
 
 # Include MON RPMs
-include 'personality/apel/rpms/config'; 
+include 'personality/apel/rpms/config';
 
 # BDII is used to publish information
 #variable NODE_USE_RESOURCE_BDII = true;
