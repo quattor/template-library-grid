@@ -48,7 +48,7 @@ variable LRMS_CLIENT_INCLUDE = {
         if (CE_BATCH_NAME == 'condor') {
             'features/htcondor/client/service';
         } else {
-            'features/'+CE_BATCH_NAME+'/client/service';
+            'features/' + CE_BATCH_NAME + '/client/service';
         }
     } else {
         undef;
