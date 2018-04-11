@@ -37,13 +37,7 @@ variable PEP_HOME ?= ARGUS_LOCATION + '/pepd';
 # PAP Configuration
 #-----------------------------------------------------------------------------
 
-variable PAP_ENABLED = {
-    if (PAP_HOST == FULL_HOSTNAME) {
-        true;
-    } else {
-        false;
-    }
-};
+variable PAP_ENABLED = PAP_HOST == FULL_HOSTNAME;
 
 include if (PAP_ENABLED) 'personality/argus/pap';
 
