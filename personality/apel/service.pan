@@ -2,16 +2,16 @@
 unique template personality/apel/service;
 
 # Include MON RPMs
-include 'personality/apel/rpms/config' };
+include 'personality/apel/rpms/config'; 
 
 # BDII is used to publish information
 #variable NODE_USE_RESOURCE_BDII = true;
 
 # Ensure that the host certificates have the correct permissions.
-include 'features/security/host_certs' };
+include 'features/security/host_certs';
 
 # Modify the loadable library path.
-include 'features/ldconf/config' };
+include 'features/ldconf/config';
 
 # LCG and Globus sysconfig files.
 include 'features/globus/sysconfig';
