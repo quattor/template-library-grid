@@ -27,11 +27,13 @@ include 'features/fetch-crl/config';
 include 'features/mkgridmap/standard';
 include 'features/mkgridmap/lcgdm';
 
-include {
-	if(DPM_USE_PUPPET_CONFIG){
-		'personality/se_dpm/service_puppet';
-	}else{
-		'personality/se_dpm/service_quattor';
-	};
+variable DPM_CONFIG_MODULE_INCLUDE = {
+    if (DPM_USE_PUPPET_CONFIG) {
+        'personality/se_dpm/service_puppet';
+    } else {
+        'personality/se_dpm/service_quattor';
+    };
 };
+
+include DPM_CONFIG_MODULE_INCLUDE;
 

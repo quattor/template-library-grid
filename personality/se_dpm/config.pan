@@ -20,16 +20,16 @@ variable DPM_CHECKDAEMONS_INTERVAL ?= 5;       # Minutes
 # An entry must exists for each DPM service name, else iptables
 # will not be configured properly and the service will be unreachable.
 # Per service variables must be used to customize the port numbers.
-variable DPM_PORTS = nlist(
-  'dpm',         DPM_PORT,
-  'dpns',        DPNS_PORT,
-  'gsiftp',      GSIFTP_PORT,
-  'rfio',        RFIO_PORT,
-  'xrootddisk',  XROOTDDISK_PORT,
-  'xrootdhead',  XROOTDHEAD_PORT,
-  'srmv1',       SRMV1_PORT,
-  'srmv2',       SRMV2_PORT,
-  'srmv22',      SRMV2_2_PORT,
+variable DPM_PORTS = dict(
+    'dpm', DPM_PORT,
+    'dpns', DPNS_PORT,
+    'gsiftp', GSIFTP_PORT,
+    'rfio', RFIO_PORT,
+    'xrootddisk', XROOTDDISK_PORT,
+    'xrootdhead', XROOTDHEAD_PORT,
+    'srmv1', SRMV1_PORT,
+    'srmv2', SRMV2_PORT,
+    'srmv22', SRMV2_2_PORT,
 );
 
 
@@ -48,11 +48,13 @@ required = no
 }
 # Configure default request lifetime, used for request table purging.
 # Set to null to disable request purging.
-variable DPM_REQUEST_MAX_LIFETIME ?= if ( is_null(SELF) ) {
-                                       null;
-                                     } else {
-                                       '6m';
-                                     };
+variable DPM_REQUEST_MAX_LIFETIME ?= {
+    if ( is_null(SELF) ) {
+        null;
+    } else {
+        '6m';
+    };
+};
 
 @{
 desc =  define the max number of DPM threads for "fast" operations.\
@@ -62,11 +64,13 @@ values = a number (>=60 recommended)
 default = 60
 required = no
 }
-variable DPM_FAST_THREADS ?= if ( is_null(SELF) ) {
-                                       null;
-                                     } else {
-                                       60;
-                                     };
+variable DPM_FAST_THREADS ?= {
+    if ( is_null(SELF) ) {
+        null;
+    } else {
+        60;
+    };
+};
 
 @{
 desc =  define the max number of DPM threads for "slow" operations (like DB access).\
@@ -76,11 +80,13 @@ values = a number (>=20 recommended)
 default = 20
 required = no
 }
-variable DPM_SLOW_THREADS ?= if ( is_null(SELF) ) {
-                                       null;
-                                     } else {
-                                       20;
-                                     };
+variable DPM_SLOW_THREADS ?= {
+    if ( is_null(SELF) ) {
+        null;
+    } else {
+        20;
+    };
+};
 
 # Add account dpmmgr
 # User running DPM deamons
@@ -100,67 +106,68 @@ include 'components/dpmlfc/config';
 # EMI GLITE_LOCATION was set to /usr which is not appropriate.
 # TO BE FIXED whend GLITE_LOCATION is really the root of all directory used.
 "/software/components/dpmlfc/options/dpm/installDir" = {
-  if ( INSTALL_ROOT == "" ) {
-    install_dir = '/';
-  } else {
-    install_dir = INSTALL_ROOT;
-  };
-  install_dir;
+    if ( INSTALL_ROOT == "" ) {
+        install_dir = '/';
+    } else {
+        install_dir = INSTALL_ROOT;
+    };
+    install_dir;
 };
-"/software/components/dpmlfc/dependencies/pre" = push("accounts","sysconfig");
+"/software/components/dpmlfc/dependencies/pre" = push("accounts", "sysconfig");
 
 
 # Define DPM hosts for control protocols
 "/software/components/dpmlfc" = {
-  if ( is_defined(DPM_HOSTS) ) {
-    dpm_host_found = false;
-    dpns_host_found = false;
-    foreach (service;host_list;DPM_HOSTS) {
-      if ( service != 'disk' ) {
-        if ( is_list(host_list) && (length(host_list) > 0) ) {
-          if ( !is_defined(SELF[service]) ) {
-            SELF[service] = nlist();
-          };
-          foreach(i;host;host_list) {
-            if ( is_defined(DPM_SERVICE_PARAMS[service]) ) {
-              host_params = DPM_SERVICE_PARAMS[service];
-            } else {
-              host_params = nlist();
+    if ( is_defined(DPM_HOSTS) ) {
+        dpm_host_found = false;
+        dpns_host_found = false;
+        foreach (service; host_list; DPM_HOSTS) {
+            if ( service != 'disk' ) {
+                if ( is_list(host_list) && (length(host_list) > 0) ) {
+                    if ( !is_defined(SELF[service]) ) {
+                        SELF[service] = dict();
+                    };
+                    foreach(i; host; host_list) {
+                        if ( is_defined(DPM_SERVICE_PARAMS[service]) ) {
+                            host_params = DPM_SERVICE_PARAMS[service];
+                        } else {
+                            host_params = dict();
+                        };
+                        # In addition to DPM_SERVICE_PARAMS, a few DPM daemon
+                        # parameters can be specified through variables.
+                        # DPM_SERVICE_PARAMS takes precedence.
+                        if (service == 'dpm') {
+                            if ( !is_defined(host_params['requestMaxAge']) ) {
+                                host_params['requestMaxAge'] = DPM_REQUEST_MAX_LIFETIME;
+                            };
+                            if ( !is_defined(host_params['fastThreads']) ) {
+                                host_params['fastThreads'] = DPM_FAST_THREADS;
+                            };
+                            if ( !is_defined(host_params['slowThreads']) ) {
+                                host_params['slowThreads'] = DPM_SLOW_THREADS;
+                            };
+                        };
+                        SELF[service][host] = host_params;
+                    };
+                } else {
+                    error ("Host list undefined or invalid for DPM service " + service);
+                };
             };
-            # In addition to DPM_SERVICE_PARAMS, a few DPM daemon parameters can be
-            # specified through variables. DPM_SERVICE_PARAMS takes precedence.
-            if (service == 'dpm') {
-              if ( !is_defined(host_params['requestMaxAge']) ) {
-                host_params['requestMaxAge'] = DPM_REQUEST_MAX_LIFETIME;
-              };
-              if ( !is_defined(host_params['fastThreads']) ) {
-                host_params['fastThreads'] = DPM_FAST_THREADS;
-              };
-              if ( !is_defined(host_params['slowThreads']) ) {
-                host_params['slowThreads'] = DPM_SLOW_THREADS;
-              };
-            };
-            SELF[service][host] = host_params;
-          };
-        } else {
-          error ("Host list undefined or invalid for DPM service "+service);
         };
-      };
+    } else {
+        error("DPM_HOSTS undefined");
     };
-  } else {
-    error("DPM_HOSTS undefined");
-  };
-  SELF;
+    SELF;
 };
 variable SEDPM_IS_HEAD_NODE = {
-  if ( !is_list(DPM_HOSTS['dpns']) || (length(DPM_HOSTS['dpns']) == 0) ) {
-    error("DPNS node undefined: DPM_HOSTS['dpns'] list undefined or empty");
-  };
-  if ( DPM_HOSTS['dpns'][0] == FULL_HOSTNAME ) {
-    true;
-  } else {
-    false;
-  };
+    if ( !is_list(DPM_HOSTS['dpns']) || (length(DPM_HOSTS['dpns']) == 0) ) {
+        error("DPNS node undefined: DPM_HOSTS['dpns'] list undefined or empty");
+    };
+    if ( DPM_HOSTS['dpns'][0] == FULL_HOSTNAME ) {
+        true;
+    } else {
+        false;
+    };
 };
 
 
@@ -171,88 +178,103 @@ variable SEDPM_IS_HEAD_NODE = {
 #    whether RFIO is used an access protocol or not.
 #  - Use of SURL with RFIO requires a RFIO daemon on the head node even though
 #    this is not a disk server.
-variable DPM_ACCESS_PROTOCOLS ?= list('gsiftp','rfio');
+variable DPM_ACCESS_PROTOCOLS ?= list('gsiftp', 'rfio');
 variable DPM_USE_LEGACY_PROTOCOL_OPTIONS ?= false;
 variable TEST = if ( length(DPM_ACCESS_PROTOCOLS) == 0 ) error('No access protocol configured in DPM configuration');
 "/software/components/dpmlfc/options/dpm/accessProtocols" ?= DPM_ACCESS_PROTOCOLS;
-"/software/components/dpmlfc/" = {
-  if ( is_list(DPM_HOSTS['disk']) && (length(DPM_HOSTS['disk']) > 0) ) {
-    access_protocols = DPM_ACCESS_PROTOCOLS;
-    if ( index('rfio',DPM_ACCESS_PROTOCOLS) < 0 ) {
-      access_protocols[length(access_protocols)] = 'rfio';
-    };
-    foreach (i;protocol;access_protocols) {
-      if ( protocol == 'https' ) {
-        protocol = 'dav';
-      };
-      # Write common parameters for the protocol into the protocol global options
-      if ( is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
-        SELF['protocols'][protocol]= DPM_SERVICE_PARAMS[protocol];
-      };
-      disk_servers = DPM_HOSTS['disk'];
-      if ( match(protocol, '^dav|rfio$') && (index(DPM_HOSTS['dpns'][0],disk_servers) < 0) ) {
-        disk_servers[length(disk_servers)] = DPM_HOSTS['dpns'][0];
-      };
-      # In legacy ncm-dpmlfc, the options had to be set as node specific options
-      foreach (i;host;disk_servers) {
-        if ( DPM_USE_LEGACY_PROTOCOL_OPTIONS && is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
-          host_params = DPM_SERVICE_PARAMS[protocol];
-        } else {
-          host_params = nlist();
+"/software/components/dpmlfc" = {
+    if ( is_list(DPM_HOSTS['disk']) && (length(DPM_HOSTS['disk']) > 0) ) {
+        access_protocols = DPM_ACCESS_PROTOCOLS;
+        if ( index('rfio', DPM_ACCESS_PROTOCOLS) < 0 ) {
+            access_protocols[length(access_protocols)] = 'rfio';
         };
-        SELF[protocol][host] = host_params;
-      };
-      debug(format('%s: DPM protocol %s config = %s',OBJECT,protocol,to_string(SELF[config_protocol])));
+        foreach (i; protocol; access_protocols) {
+            if ( protocol == 'https' ) {
+                protocol = 'dav';
+            };
+            # Write common parameters for the protocol into the
+            # protocol global options
+            if ( is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
+                SELF['protocols'][protocol] = DPM_SERVICE_PARAMS[protocol];
+            };
+            disk_servers = DPM_HOSTS['disk'];
+            if ( match(protocol, '^dav|rfio$') && (index(DPM_HOSTS['dpns'][0], disk_servers) < 0) ) {
+                disk_servers[length(disk_servers)] = DPM_HOSTS['dpns'][0];
+            };
+            # In legacy ncm-dpmlfc, the options had to be set as node
+            # specific options
+            foreach (i; host; disk_servers) {
+                if ( DPM_USE_LEGACY_PROTOCOL_OPTIONS && is_defined(DPM_SERVICE_PARAMS[protocol]) ) {
+                    host_params = DPM_SERVICE_PARAMS[protocol];
+                } else {
+                    host_params = dict();
+                };
+                SELF[protocol][host] = host_params;
+            };
+            debug(format('%s: DPM protocol %s config = %s', OBJECT, protocol, to_string(SELF[config_protocol])));
+        };
+    } else {
+        error("No disk server defined (DPM_HOSTS['disk'])");
     };
-  } else {
-    error("No disk server defined (DPM_HOSTS['disk'])");
-  };
-  SELF;
+    SELF;
 };
 
 
 # Define if dmlite must be configured: it is almost required except if the only access
 # protocol configured is rfio
 variable DMLITE_ENABLED = {
-  if ( (length(DPM_ACCESS_PROTOCOLS) == 1) && (DPM_ACCESS_PROTOCOLS[0] == 'rfio') ) {
-    false;
-  } else {
-    true;
-  };
+    if ( (length(DPM_ACCESS_PROTOCOLS) == 1) && (DPM_ACCESS_PROTOCOLS[0] == 'rfio') ) {
+        false;
+    } else {
+        true;
+    };
 };
 
-# Define variables for main protocols to help with GIP configuration in particular.
+# Define variables for main protocols to help with GIP configuration
+# in particular.
 
-variable XROOT_ENABLED = if ( index('xroot',DPM_ACCESS_PROTOCOLS) < 0 ) {
-                           false;
-                         } else {
-                           true;
-                         };
-variable HTTPS_ENABLED = if ( index('https',DPM_ACCESS_PROTOCOLS) < 0 ) {
-                           false;
-                         } else {
-                           true;
-                         };
-variable GSIFTP_ENABLED = if ( index('gsiftp',DPM_ACCESS_PROTOCOLS) < 0 ) {
-                           false;
-                         } else {
-                           true;
-                         };
-variable RFIO_ENABLED = if ( index('rfio',DPM_ACCESS_PROTOCOLS) < 0 ) {
-                           false;
-                         } else {
-                           true;
-                         };
-variable SRMV1_ENABLED = if ( is_defined(DPM_HOSTS['srmv1']) ) {
-                           true;
-                         } else {
-                           false;
-                         };
-variable SRMV2_ENABLED = if ( is_defined(DPM_HOSTS['srmv22']) ) {
-                           true;
-                         } else {
-                           false;
-                         };
+variable XROOT_ENABLED = {
+    if ( index('xroot', DPM_ACCESS_PROTOCOLS) < 0 ) {
+        false;
+    } else {
+        true;
+    };
+};
+variable HTTPS_ENABLED = {
+    if ( index('https', DPM_ACCESS_PROTOCOLS) < 0 ) {
+        false;
+    } else {
+        true;
+    };
+};
+variable GSIFTP_ENABLED = {
+    if ( index('gsiftp', DPM_ACCESS_PROTOCOLS) < 0 ) {
+        false;
+    } else {
+        true;
+    };
+};
+variable RFIO_ENABLED = {
+    if ( index('rfio', DPM_ACCESS_PROTOCOLS) < 0 ) {
+        false;
+    } else {
+        true;
+    };
+};
+variable SRMV1_ENABLED = {
+    if ( is_defined(DPM_HOSTS['srmv1']) ) {
+        true;
+    } else {
+        false;
+    };
+};
+variable SRMV2_ENABLED = {
+if ( is_defined(DPM_HOSTS['srmv22']) ) {
+        true;
+    } else {
+        false;
+    };
+};
 
 # Configure https access if needed
 include if ( HTTPS_ENABLED ) 'personality/se_dpm/config_dav';
@@ -263,22 +285,22 @@ include if ( XROOT_ENABLED ) 'personality/se_dpm/config_xrootd';
 
 # Define service port numbers to match site parameters if not explicitly defined
 "/software/components/dpmlfc" = {
-  # Each service is described as a list of nlist. Port option is in the nlist.
-  # Entries in DPM config that are not related to service definition will be ignored
-  # (no matching entry in DPM_PORTS).
-  foreach (service;service_params;SELF) {
-    if ( is_defined(DPM_PORTS[service]) ) {
-      # Need to iterate over all defined nodes for the service as there is no break statement.
-      # This should not have side effect as there should be only one entry per node.
-      foreach (node;node_params;service_params) {
-        debug('DPM host '+to_string(node)+': defining port to '+to_string(DPM_PORTS[service])+' for service '+to_string(service));
-        # Unconditionnaly define service port to match global variable
-        SELF[service][node]['port'] = DPM_PORTS[service];
-      };
+    # Each service is described as a list of dict. Port option is in the dict.
+    # Entries in DPM config that are not related to service definition will be
+    # ignored (no matching entry in DPM_PORTS).
+    foreach (service; service_params; SELF) {
+        if ( is_defined(DPM_PORTS[service]) ) {
+            # Need to iterate over all defined nodes for the service as there
+            # is no break statement. This should not have side effect as there
+            # should be only one entry per node.
+            foreach (node; node_params; service_params) {
+                debug('DPM host ' + to_string(node) + ': defining port to ' + to_string(DPM_PORTS[service]) + ' for service ' + to_string(service));
+                # Unconditionnaly define service port to match global variable
+                SELF[service][node]['port'] = DPM_PORTS[service];
+            };
+        };
     };
-  };
-
-  SELF;
+    SELF;
 };
 
 
@@ -287,16 +309,18 @@ include if ( XROOT_ENABLED ) 'personality/se_dpm/config_xrootd';
 variable SEDPM_HOST_CERT_DIR ?= SITE_DEF_GRIDSEC_ROOT + '/' + DPM_USER;
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
-  SELF[escape(SEDPM_HOST_CERT_DIR+'/dpmkey.pem')] = nlist('source', SITE_DEF_HOST_KEY,
-                                                          'owner', DPM_USER+':'+DPM_GROUP,
-                                                          'perms', '0400',
-                                                         );
+    SELF[escape(SEDPM_HOST_CERT_DIR + '/dpmkey.pem')] = dict(
+        'source', SITE_DEF_HOST_KEY,
+        'owner', DPM_USER + ':' + DPM_GROUP,
+        'perms', '0400',
+    );
 
-  SELF[escape(SEDPM_HOST_CERT_DIR+'/dpmcert.pem')] = nlist('source', SITE_DEF_HOST_CERT,
-                                                           'owner', DPM_USER+':'+DPM_GROUP,
-                                                           'perms', '0644',
-                                                          );
-  SELF;
+    SELF[escape(SEDPM_HOST_CERT_DIR + '/dpmcert.pem')] = dict(
+        'source', SITE_DEF_HOST_CERT,
+        'owner', DPM_USER + ':' + DPM_GROUP,
+        'perms', '0644',
+    );
+    SELF;
 };
 
 # ----------------------------------------------------------------------------
@@ -304,63 +328,55 @@ include 'components/filecopy/config';
 # ----------------------------------------------------------------------------
 
 variable DPM_IPTABLES_RULES ?= {
-  if ( !is_null(SELF) ) {
-    dpm_config = value('/software/components/dpmlfc');
-    # Use an nlist to handle duplicates in case of any (should not)
-    port_list = nlist();
+    if ( !is_null(SELF) ) {
+        dpm_config = value('/software/components/dpmlfc');
+        # Use an dict to handle duplicates in case of any (should not)
+        port_list = dict();
 
-    # For each element in dpmlfc configuration, check if it is a service (if an
-    # entry exists in DPM_PORTS) and, if yes, get the corresponding ports from
-    # DPM_PORTS (ports in dpmlfc configuration are set to DPM_PORTS contents) if
-    # the service runs on current node.
-    foreach (service;port;DPM_PORTS) {
-      if ( is_defined(dpm_config[service]) ) {
-        foreach (node;params;dpm_config[service]) {
-          if ( node == FULL_HOSTNAME ) {
-            port_list[escape(to_string(port))] = '';
-          };
+        # For each element in dpmlfc configuration, check if it is a service
+        # (if an entry exists in DPM_PORTS) and, if yes, get the corresponding
+        # ports from DPM_PORTS (ports in dpmlfc configuration are set to
+        # DPM_PORTS contents) if the service runs on current node.
+        foreach (service; port; DPM_PORTS) {
+            if ( is_defined(dpm_config[service]) ) {
+                foreach (node; params; dpm_config[service]) {
+                    if ( node == FULL_HOSTNAME ) {
+                        port_list[escape(to_string(port))] = '';
+                    };
+                };
+            };
         };
-      };
-    };
 
-    if ( length(port_list) > 0 ) {
-      foreach (port;v;port_list) {
-        SELF[length(SELF)] = nlist("command", "-A",
-                                   "chain", "input",
-                                   "match", "state",
-                                   "state", "NEW",
-                                   "protocol", "tcp",
-                                   "dst_port", unescape(port),
-                                   "target", "accept");
-      };
+        if ( length(port_list) > 0 ) {
+            foreach (port; v; port_list) {
+                SELF[length(SELF)] = dict(
+                    "command", "-A",
+                    "chain", "input",
+                    "match", "state",
+                    "state", "NEW",
+                    "protocol", "tcp",
+                    "dst_port", unescape(port),
+                    "target", "accept"
+                );
+            };
+        };
     };
-  };
-  SELF;
+    SELF;
 };
 
-variable DPM_IPTABLES_INCLUDE = if ( is_defined(DPM_IPTABLES_RULES) && (length(DPM_IPTABLES_RULES) > 0) ) {
-                                  'components/iptables/config';
-                                } else {
-                                  null;
-                                };
+variable DPM_IPTABLES_INCLUDE = {
+    if ( is_defined(DPM_IPTABLES_RULES) && (length(DPM_IPTABLES_RULES) > 0) ) {
+        'personality/se_dpm/iptables';
+    } else {
+        null;
+    };
+};
 include DPM_IPTABLES_INCLUDE;
-"/software/components/iptables/filter/rules" = {
-  rules = list();
-  if ( !is_null(DPM_IPTABLES_INCLUDE) ) {
-    rules = merge(rules,DPM_IPTABLES_RULES);
-  };
-  if ( length(rules) > 0 ) {
-    rules;
-  } else {
-    null;
-  };
-};
-
 
 # ----------------------------------------------------------------------------
 # Set appropriate ownership/permissions on /etc/grid_security/gridmapdir
 # ----------------------------------------------------------------------------
-
+include 'components/gridmapdir/config';
 '/software/components/gridmapdir/group' = DPM_GROUP;
 '/software/components/gridmapdir/perms' = '0775';
 
