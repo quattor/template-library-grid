@@ -5,8 +5,7 @@ include 'quattor/functions/package';
 include 'components/puppet/config';
 
 variable PUPPET_FULLVERSION = {
-    version = '3.0.0';
-    if (is_defined(PUPPET_VERSION)) version = PUPPET_VERSION;
+    version = if (is_defined(PUPPET_VERSION)) PUPPET_VERSION else '3.0.0';
     version = replace('^([0-9]+)$', '$1.0', version); #Pad single to double
     version = replace('^([0-9]+\.[0-9]+)$', '$1.0', version); # Pad double to triple
     version;
