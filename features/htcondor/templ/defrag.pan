@@ -1,7 +1,7 @@
 structure template features/htcondor/templ/defrag;
 
 'text' = {
-       txt = <<EOF;
+    txt = <<EOF;
 
 DAEMON_LIST = $(DAEMON_LIST) DEFRAG
 

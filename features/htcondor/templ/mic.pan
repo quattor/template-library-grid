@@ -1,7 +1,7 @@
 structure template features/htcondor/templ/mic;
 
 'text' = {
-       txt = <<EOF;
+    txt = <<EOF;
 
 if defined MACHINE_RESOURCE_NAMES
   MACHINE_RESOURCE_NAMES = $(MACHINE_RESOURCE_NAMES) Phis
@@ -13,5 +13,4 @@ EOF
 
     txt;
 };
-
 
