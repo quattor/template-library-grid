@@ -1,7 +1,7 @@
 unique template personality/argus/pap;
 
 # List of external PAPS
-variable PAPS ?= nlist();
+variable PAPS ?= dict();
 
 # Unique identifier for the PAP
 variable PAP_ENTITY_ID ?= "http://" + PAP_HOST + "/pap";
@@ -44,105 +44,108 @@ variable PAP_LOCATION_SBIN = PAP_LOCATION + '/sbin';
 
 variable PAP_CONFIG_FILE = PAP_HOME + '/conf/pap_configuration.ini';
 variable PAP_CONFIG_CONTENTS = {
-  contents = "#\n";
-  contents = contents + '# PAP configuration' + "\n";
-  contents = contents + '# ' + "\n";
-  contents = contents + '# Documentation: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthZPAPConfig' + "\n";
-  contents = contents + '# ' + "\n";
-  contents = contents + '[paps]' + "\n";
-  contents = contents + '## Trusted PAPs will be listed here' + "\n";
-  ok = first(PAPS,name,properties);
-  while (ok) {
-    contents = contents + name + '.type = '    + properties['type']               + "\n";
-    contents = contents + name + '.enabled = ' + to_string(properties['enabled']) + "\n";
-    contents = contents + name + '.dn = '      + properties['dn']                 + "\n";
-    contents = contents + name + '.hostname = '+ properties['hostname']           + "\n";
-    contents = contents + name + '.port = '    + to_string(properties['port'])    + "\n";
-    contents = contents + name + '.path = '    + properties['path']               + "\n";
-    contents = contents + name + '.protocol = '+ properties['protocol']           + "\n";
-    contents = contents + name + '.public = '  + to_string(properties['public'])  + "\n";
-    ok = next(PAPS,name,properties);
-  };
-  contents = contents + "\n";
-  contents = contents + '[paps:properties]' + "\n";
-  contents = contents + 'poll_interval = ' + to_string(PAP_POLL_INTERVAL) + "\n";
-  contents = contents + 'ordering = ' + PAP_ORDERING + "\n";
-  contents = contents + "\n";
-  contents = contents + '[repository]' + "\n";
-  contents = contents + 'location = ' + PAP_REPO_LOCATION + "\n";
-  contents = contents + 'consistency_check = ' + PAP_CONSISTENCY_CHECK + "\n";
-  contents = contents + 'consistency_check.repair = ' + PAP_CONSISTENCY_CHECK_REPAIR + "\n";
-  contents = contents + "\n";
-  contents = contents + '[standalone-service]' + "\n";
-  contents = contents + 'entity_id = ' + PAP_ENTITY_ID + "\n";
-  contents = contents + 'hostname = ' + PAP_HOST + "\n";
-  contents = contents + 'port = ' + to_string(PAP_PORT) + "\n";
-  contents = contents + 'shutdown_port = ' + to_string(PAP_SHUTDOWN_PORT) + "\n";
-  if (is_defined(PAP_SHUTDOWN_COMMAND)) {
-   contents = contents + 'shutdown_command = ' + PAP_SHUTDOWN_COMMAND + "\n";
-  };
-  contents = contents + "\n";
-  contents = contents + '[security]' + "\n";
-  contents = contents + 'certificate = ' + SITE_DEF_HOST_CERT + "\n";
-  contents = contents + 'private_key = ' + SITE_DEF_HOST_KEY + "\n";
+    contents = "#\n";
+    contents = contents + '# PAP configuration' + "\n";
+    contents = contents + '# ' + "\n";
+    contents = contents + '# Documentation: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthZPAPConfig' + "\n";
+    contents = contents + '# ' + "\n";
+    contents = contents + '[paps]' + "\n";
+    contents = contents + '## Trusted PAPs will be listed here' + "\n";
+    ok = first(PAPS, name, properties);
+    while (ok) {
+        contents = contents + name + '.type = ' + properties['type'] + "\n";
+        contents = contents + name + '.enabled = ' + to_string(properties['enabled']) + "\n";
+        contents = contents + name + '.dn = ' + properties['dn'] + "\n";
+        contents = contents + name + '.hostname = ' + properties['hostname'] + "\n";
+        contents = contents + name + '.port = ' + to_string(properties['port']) + "\n";
+        contents = contents + name + '.path = ' + properties['path'] + "\n";
+        contents = contents + name + '.protocol = ' + properties['protocol'] + "\n";
+        contents = contents + name + '.public = ' + to_string(properties['public']) + "\n";
+        ok = next(PAPS, name, properties);
+    };
+    contents = contents + "\n";
+    contents = contents + '[paps:properties]' + "\n";
+    contents = contents + 'poll_interval = ' + to_string(PAP_POLL_INTERVAL) + "\n";
+    contents = contents + 'ordering = ' + PAP_ORDERING + "\n";
+    contents = contents + "\n";
+    contents = contents + '[repository]' + "\n";
+    contents = contents + 'location = ' + PAP_REPO_LOCATION + "\n";
+    contents = contents + 'consistency_check = ' + PAP_CONSISTENCY_CHECK + "\n";
+    contents = contents + 'consistency_check.repair = ' + PAP_CONSISTENCY_CHECK_REPAIR + "\n";
+    contents = contents + "\n";
+    contents = contents + '[standalone-service]' + "\n";
+    contents = contents + 'entity_id = ' + PAP_ENTITY_ID + "\n";
+    contents = contents + 'hostname = ' + PAP_HOST + "\n";
+    contents = contents + 'port = ' + to_string(PAP_PORT) + "\n";
+    contents = contents + 'shutdown_port = ' + to_string(PAP_SHUTDOWN_PORT) + "\n";
+    if (is_defined(PAP_SHUTDOWN_COMMAND)) {
+        contents = contents + 'shutdown_command = ' + PAP_SHUTDOWN_COMMAND + "\n";
+    };
+    contents = contents + "\n";
+    contents = contents + '[security]' + "\n";
+    contents = contents + 'certificate = ' + SITE_DEF_HOST_CERT + "\n";
+    contents = contents + 'private_key = ' + SITE_DEF_HOST_KEY + "\n";
 
-  contents;
+    contents;
 };
 
-'/software/components/filecopy/services' =
-  npush(escape(PAP_CONFIG_FILE),
-        nlist('config', PAP_CONFIG_CONTENTS,
-              'owner', 'root',
-              'perms', '0640',
-              'restart', '/sbin/service argus-pap restart',
-       )
-  );
+include 'components/filecopy/config';
 
-include { 'components/metaconfig/config' };
-#include { 'personality/argus/schema-pap' };
+'/software/components/filecopy/services' = {
+    npush(escape(PAP_CONFIG_FILE),
+        dict(
+            'config', PAP_CONFIG_CONTENTS,
+            'owner', 'root',
+            'perms', '0640',
+            'restart', '/sbin/service argus-pap restart',
+        )
+    );
+};
 
-#bind '/software/components/metaconfig/services/{/etc/argus/pap/pap_configuration.ini}/contents' = pap_configuration;
+
+include 'components/metaconfig/config';
+
 prefix '/software/components/metaconfig/services/{/etc/argus/pap/pap_configuration.ini.metaconfig}';
 'module'   = 'tiny';
 'mode'     = 0644;
 'owner'    = 'root';
 'group'    = 'root';
 'contents/paps' = {
-  paps_config = nlist();
-  ok = first(PAPS,name,properties);
-  while (ok) {
-    paps_config[name+".type"]     = properties['type'];
-    paps_config[name+".enabled"]  = properties['enabled'];
-    paps_config[name+".dn"]       = properties['dn'];
-    paps_config[name+".hostname"] = properties['hostname'];
-    paps_config[name+".port"]     = properties['port'];
-    paps_config[name+".path"]     = properties['path'];
-    paps_config[name+".protocol"] = properties['protocol'];
-    paps_config[name+".public"]   = properties['public'];
-    ok = next(PAPS,name,properties);
-  };
-  paps_config;
+    paps_config = dict();
+    ok = first(PAPS, name, properties);
+    while (ok) {
+        paps_config[name + ".type"] = properties['type'];
+        paps_config[name + ".enabled"]  = properties['enabled'];
+        paps_config[name + ".dn"] = properties['dn'];
+        paps_config[name + ".hostname"] = properties['hostname'];
+        paps_config[name + ".port"] = properties['port'];
+        paps_config[name + ".path"] = properties['path'];
+        paps_config[name + ".protocol"] = properties['protocol'];
+        paps_config[name + ".public"] = properties['public'];
+        ok = next(PAPS, name, properties);
+    };
+    paps_config;
 };
 
 'contents/{paps:properties}/pool_interval' = PAP_POLL_INTERVAL;
 'contents/{paps:properties}/ordering' = PAP_ORDERING;
 
-'contents/repository/location'                 = PAP_REPO_LOCATION;
-'contents/repository/consistency_check'        = PAP_CONSISTENCY_CHECK;
+'contents/repository/location' = PAP_REPO_LOCATION;
+'contents/repository/consistency_check' = PAP_CONSISTENCY_CHECK;
 'contents/repository/consistency_check.repair' = PAP_CONSISTENCY_CHECK_REPAIR;
 
-'contents/security/certificate'                = SITE_DEF_HOST_CERT;
-'contents/security/private_key'                = SITE_DEF_HOST_KEY;
+'contents/security/certificate' = SITE_DEF_HOST_CERT;
+'contents/security/private_key' = SITE_DEF_HOST_KEY;
 
-'contents/standalone-service/entity_id'        = PAP_ENTITY_ID;
-'contents/standalone-service/hostname'         = PAP_HOST;
-'contents/standalone-service/port'             = PAP_PORT;
-'contents/standalone-service/shutdown_port'    = PAP_SHUTDOWN_PORT;
+'contents/standalone-service/entity_id' = PAP_ENTITY_ID;
+'contents/standalone-service/hostname' = PAP_HOST;
+'contents/standalone-service/port' = PAP_PORT;
+'contents/standalone-service/shutdown_port' = PAP_SHUTDOWN_PORT;
 'contents/standalone-service' = {
-  if (is_defined(PAP_SHUTDOWN_COMMAND)) {
-    SELF['shutdown_command'] = PAP_SHUTDOWN_COMMAND;
-  };
-  SELF;
+    if (is_defined(PAP_SHUTDOWN_COMMAND)) {
+        SELF['shutdown_command'] = PAP_SHUTDOWN_COMMAND;
+    };
+    SELF;
 };
 
 #-----------------------------------------------------------------------------
@@ -151,31 +154,32 @@ prefix '/software/components/metaconfig/services/{/etc/argus/pap/pap_configurati
 
 variable PAP_AUTHZ_FILE = PAP_HOME + '/conf/pap_authorization.ini';
 variable PAP_AUTHZ_CONTENTS = {
-  contents = '#' + "\n";
-  contents = contents + '# PAP service access control' + "\n";
-  contents = contents + '# ' + "\n";
-  contents = contents + '# Documentation: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthZPAPConfig' + "\n";
-  contents = contents + '# ' + "\n";
-  contents = contents + '[dn]' + "\n";
-  foreach (i;dn;PAP_ADMIN_DN) {
-    contents = contents + '"' + dn + '" : ALL' + "\n";
-  };
-  contents = contents + '"' + PAP_HOST_DN + '" : ALL' + "\n";
-  contents = contents + "\n";
-  contents = contents + '[fqan]' + "\n";
+    contents = '#' + "\n";
+    contents = contents + '# PAP service access control' + "\n";
+    contents = contents + '# ' + "\n";
+    contents = contents + '# Documentation: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthZPAPConfig' + "\n";
+    contents = contents + '# ' + "\n";
+    contents = contents + '[dn]' + "\n";
+    foreach (i; dn; PAP_ADMIN_DN) {
+        contents = contents + '"' + dn + '" : ALL' + "\n";
+    };
+    contents = contents + '"' + PAP_HOST_DN + '" : ALL' + "\n";
+    contents = contents + "\n";
+    contents = contents + '[fqan]' + "\n";
 
-  contents;
+    contents;
 };
 
-'/software/components/filecopy/services' =
-  npush(escape(PAP_AUTHZ_FILE),
-        nlist('config', PAP_AUTHZ_CONTENTS,
-              'owner', 'root',
-              'perms', '0640',
-              'restart', '/sbin/service pap-standalone restart',
-       )
-  );
-
+'/software/components/filecopy/services' = {
+    npush(escape(PAP_AUTHZ_FILE),
+        dict(
+            'config', PAP_AUTHZ_CONTENTS,
+            'owner', 'root',
+            'perms', '0640',
+            'restart', '/sbin/service pap-standalone restart',
+        )
+    );
+};
 
 #-----------------------------------------------------------------------------
 # PAP Admin Client Default Properties
@@ -183,26 +187,27 @@ variable PAP_AUTHZ_CONTENTS = {
 
 variable PAP_ADMIN_PROPERTIES_FILE = PAP_HOME + '/conf/pap-admin.properties';
 variable PAP_ADMIN_PROPERTIES_CONTENTS = {
-  contents = '#' + "\n";
-  contents = contents + '# PAP admin client default properties' + "\n";
-  contents = contents + '# ' + "\n";
-  contents = contents + '# Documentation: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthZPAPConfig' + "\n";
-  contents = contents + '# ' + "\n";
-  contents = contents + 'host=' + PAP_HOST + "\n";
-  contents = contents + 'port=' + to_string(PAP_PORT) + "\n";
+    contents = '#' + "\n";
+    contents = contents + '# PAP admin client default properties' + "\n";
+    contents = contents + '# ' + "\n";
+    contents = contents + '# Documentation: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthZPAPConfig' + "\n";
+    contents = contents + '# ' + "\n";
+    contents = contents + 'host=' + PAP_HOST + "\n";
+    contents = contents + 'port=' + to_string(PAP_PORT) + "\n";
 
-  contents;
+    contents;
 };
 
-'/software/components/filecopy/services' =
-  npush(escape(PAP_ADMIN_PROPERTIES_FILE),
-        nlist('config', PAP_ADMIN_PROPERTIES_CONTENTS,
-              'owner', 'root',
-              'perms', '0644',
-              'restart', '/sbin/service pap-standalone restart',
-       )
-  );
-
+'/software/components/filecopy/services' = {
+    npush(escape(PAP_ADMIN_PROPERTIES_FILE),
+        dict(
+            'config', PAP_ADMIN_PROPERTIES_CONTENTS,
+            'owner', 'root',
+            'perms', '0644',
+            'restart', '/sbin/service pap-standalone restart',
+        )
+    );
+};
 
 #-----------------------------------------------------------------------------
 # Policy Generation Script
@@ -211,7 +216,7 @@ variable PAP_ADMIN_PROPERTIES_CONTENTS = {
 variable POLICY_SCRIPT_FILE ?= '/root/sbin/from-groupmap-to-policy.sh';
 
 variable POLICY_SCRIPT_CONTENTS = {
-  contents = <<EOF;
+    contents = <<EOF;
 #!/bin/sh
 
 # Use specified or default file as input
@@ -242,38 +247,41 @@ echo "    }
 }
 "
 EOF
-  contents = replace('GROUPMAPFILE', LCMAPS_CONFIG_DIR + '/groupmapfile',contents);
+    contents = replace('GROUPMAPFILE', LCMAPS_CONFIG_DIR + '/groupmapfile', contents);
 
-  contents;
+    contents;
 };
 
-"/software/components/filecopy/services" =
-  npush(escape(POLICY_SCRIPT_FILE),
-        nlist("config",POLICY_SCRIPT_CONTENTS,
-              "owner","root:root",
-              "perms","0750",
-       )
-  );
-
+"/software/components/filecopy/services" = {
+    npush(escape(POLICY_SCRIPT_FILE),
+        dict(
+            "config", POLICY_SCRIPT_CONTENTS,
+            "owner", "root:root",
+            "perms", "0750",
+        )
+    );
+};
 
 #-----------------------------------------------------------------------------
 # Fix temporary RPM issues
 #-----------------------------------------------------------------------------
 
-include { 'components/dirperm/config' };
+include 'components/dirperm/config';
 
 '/software/components/dirperm/paths' = {
-  SELF[length(SELF)] = nlist('path', PAP_LOCATION_SBIN,
-                             'owner', 'root:root',
-                             'perm', '0750',
-                             'type', 'd',
-                            );
-  SELF[length(SELF)] = nlist('path', PAP_LOCATION_LOG,
-                             'owner', 'root:root',
-                             'perm', '0750',
-                             'type', 'd',
-                            );
+    SELF[length(SELF)] = dict(
+        'path', PAP_LOCATION_SBIN,
+        'owner', 'root:root',
+        'perm', '0750',
+        'type', 'd',
+    );
+    SELF[length(SELF)] = dict(
+        'path', PAP_LOCATION_LOG,
+        'owner', 'root:root',
+        'perm', '0750',
+        'type', 'd',
+    );
 
-  SELF;
+    SELF;
 };
 

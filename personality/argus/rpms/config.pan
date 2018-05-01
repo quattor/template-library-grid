@@ -1,5 +1,5 @@
 unique template personality/argus/rpms/config;
 
-prefix '/software/packages';
-
-'{argus-authz}' ?= nlist();
+'/software/packages' = {
+    pkg_repl('argus-authz');
+};

@@ -4,16 +4,16 @@ structure template features/htcondor/templ/global;
 
     #Parameters validation
 
-     if(!is_defined(CONDOR_CONFIG)){
-	error('CONDOR_CONFIG must be defined.');
-     };
+    if (!is_defined(CONDOR_CONFIG)) {
+        error('CONDOR_CONFIG must be defined.');
+    };
 
-     if(!is_defined(CONDOR_CONFIG['host'])){
-	error('CONDOR_CONFIG[host] should be defined as the hostname of the head machine of the cluster.');
-     };
+    if (!is_defined(CONDOR_CONFIG['host'])) {
+        error('CONDOR_CONFIG[host] should be defined as the hostname of the head machine of the cluster.');
+    };
 
 
-     txt =  <<EOF;
+    txt =  <<EOF;
 # File managed by quattor. Do Not edit.
 # See features/htcondor/templ/cluster_conf in your quattor config.
 EOF
@@ -44,5 +44,5 @@ DAEMON_LIST = MASTER
 
 EOF
 
-   txt;
+    txt;
 };

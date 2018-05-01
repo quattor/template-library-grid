@@ -2,7 +2,7 @@ unique template personality/se_dpm/config_dmlite;
 
 # Define to 1.8.7 or 1.8.8, as appropriate, is you are not running 1.8.9 or later
 variable DPM_VERSION ?= '1.8.10';
-variable TEST = debug(format('%s: DPM_VERSION=%s',OBJECT,DPM_VERSION));
+variable TEST = debug(format('%s: DPM_VERSION=%s', OBJECT, DPM_VERSION));
 
 #
 # DMLite defaults
@@ -26,11 +26,11 @@ variable library = if (PKG_ARCH_DEFAULT == 'x86_64') {
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
     this = "LoadPlugin plugin_config /usr/" + library + "/dmlite/plugin_config.so\n";
-    if ( (DPM_VERSION >= '1.9') || (DPM_VERSION == '1.8.9') || match(DPM_VERSION,'^1\.8\.1\d$') ) {
+    if ( (DPM_VERSION >= '1.9') || (DPM_VERSION == '1.8.9') || match(DPM_VERSION, '^1\.8\.1\d$') ) {
         this = this + 'LogLevel ' + DMLITE_LOGLEVEL + "\n";
     };
     this = this + "Include /etc/dmlite.conf.d/*.conf\n";
-    SELF[escape('/etc/dmlite.conf')] = nlist(
+    SELF[escape('/etc/dmlite.conf')] = dict(
         'config', this,
         'owner', DPM_USER,
         'group', DPM_GROUP,
@@ -45,7 +45,7 @@ include 'components/filecopy/config';
 #
 include 'components/dirperm/config';
 '/software/components/dirperm/paths' = {
-    append(nlist(
+    append(dict(
         'path', '/etc/dmlite.conf.d',
         'owner', 'root:root',
         'perm', '0755',
@@ -60,13 +60,13 @@ include 'components/dirperm/config';
 #       order of the configuration file must be used to ensure the appropriate load order.
 #       This configuration file is normally loaded first.
 #
-variable contents = {
+variable DMLITE_ADAPTER_CONFIG_CONTENTS ?= {
     this = '';
     # Ignore versions before 1.8.7 as dmlite was not available
     if ( DPM_VERSION == '1.8.7' ) {
-      plugin_fs_io = 'plugin_fs_io';
+        plugin_fs_io = 'plugin_fs_io';
     } else {
-      plugin_fs_io = 'plugin_fs_rfio';
+        plugin_fs_io = 'plugin_fs_rfio';
     };
     if ( SEDPM_IS_HEAD_NODE && (SEDPM_DB_TYPE == 'mysql') ) {
         # Needed by plugin_mysql_dpm loaded in mysql.conf
@@ -84,8 +84,8 @@ variable contents = {
 };
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
-    SELF[escape('/etc/dmlite.conf.d/adapter.conf')] = nlist(
-        'config', contents,
+    SELF[escape('/etc/dmlite.conf.d/adapter.conf')] = dict(
+        'config', DMLITE_ADAPTER_CONFIG_CONTENTS,
         'owner', DPM_USER,
         'group', DPM_GROUP,
         'perms', '0640',
@@ -94,17 +94,17 @@ include 'components/filecopy/config';
     );
     SELF;
 };
+
+include 'components/dpmlfc/config';
 '/software/components/dpmlfc/dependencies/pre' = {
-  if ( index('filecopy',SELF) == -1 ) {
-    append('filecopy');
-  };
-  SELF;
+    if ( index('filecopy', SELF) == -1 ) {
+        append('filecopy');
+    };
+    SELF;
 };
 
 
 # dmlite configuration specific to head node if needed
 # Be sure to use the same condition as the one used to select which plugin to load in adapter.conf
 include if ( SEDPM_IS_HEAD_NODE && (SEDPM_DB_TYPE == 'mysql') ) 'personality/se_dpm/server/config_dmlite';
-
-
 

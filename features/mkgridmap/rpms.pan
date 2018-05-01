@@ -1,3 +1,6 @@
 unique template features/mkgridmap/rpms;
 
-'/software/packages/{edg-mkgridmap}' ?= nlist();
+'/software/packages' = {
+    pkg_repl('edg-mkgridmap');
+    pkg_repl('lcg-expiregridmapdir');
+};

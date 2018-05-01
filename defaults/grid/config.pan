@@ -197,7 +197,7 @@ variable SE_HOSTS ?= undef;
 # (of strings) even if you have only one.  The values
 # must be fully qualified host names.
 variable SE_HOST_NAMES = if (is_defined(SE_HOSTS) && is_list(SE_HOSTS)) {
-    foreach (i;v;SE_HOSTS) {
+    foreach (i; v; SE_HOSTS) {
         if (exists(SE_TYPES[v]) && is_defined(SE_TYPES[v])) {
             if (SE_TYPES[v] == 'disk') {
                 SELF[v] = dict('type', 'SE_classic');
@@ -447,13 +447,15 @@ variable MKGRIDMAP_FLAVOR ?= 'glite';
 
 # Batch system and CE Job manager.
 # For Torque must be 'pbs'.
-variable CE_BATCH_SYS ?= if (exists(CE_BATCH_NAME) && is_defined(CE_BATCH_NAME) && match(CE_BATCH_NAME, '^torque[12]?$')) {
-    'pbs';
-} else {
-    if (is_defined(CE_BATCH_NAME) && CE_BATCH_NAME == 'condor') {
-        'condor';
+variable CE_BATCH_SYS ?= {
+    if (exists(CE_BATCH_NAME) && is_defined(CE_BATCH_NAME) && match(CE_BATCH_NAME, '^torque[12]?$')) {
+        'pbs';
     } else {
-        undef;
+        if (is_defined(CE_BATCH_NAME) && CE_BATCH_NAME == 'condor') {
+            'condor';
+        } else {
+            undef;
+        };
     };
 };
 variable CE_JM_TYPE ?= CE_BATCH_SYS;
@@ -473,10 +475,12 @@ variable CE_TORQUE ?= exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(
 # (backward compatibility) but it is recommended to set it to true in any
 # case as cache mode protect over MAUI not responding properly to
 # commands under heavy loads.
-variable GIP_CE_USE_CACHE ?= if (is_defined(CE_HOSTS) && ((length(CE_HOSTS) > 1) || (CE_HOSTS[0] != LRMS_SERVER_HOST))) {
-    true;
-} else {
-    false;
+variable GIP_CE_USE_CACHE ?= {
+    if (is_defined(CE_HOSTS) && ((length(CE_HOSTS) > 1) || (CE_HOSTS[0] != LRMS_SERVER_HOST))) {
+        true;
+    } else {
+        false;
+    };
 };
 variable GIP_CE_USE_MAUI ?= true;
 variable GIP_CE_MAUI_CACHE_FILE ?= undef;      # Default should be appropriate
@@ -520,7 +524,7 @@ variable CE_CLOSE_SE_LIST ?= if (exists(SE_HOST_DEFAULT) && is_defined(SE_HOST_D
 } else {
     if (exists(SE_HOSTS) && is_defined(SE_HOSTS) && (length(SE_HOSTS) > 0)) {
         se_list = SELF;
-        foreach (name;params;SE_HOSTS) {
+        foreach (name; params; SE_HOSTS) {
             se_list = append(name);
         };
         se_list;
@@ -607,7 +611,7 @@ variable CE_LOCAL_QUEUES ?= undef;
 # It is valid not having a close SE defined, there may be several
 # close SE per VO.
 variable CE_VO_CLOSE_SE = {
-    foreach (i;vo;VOS) {
+    foreach (i; vo; VOS) {
         close_se = undef;
 
         if (exists(CE_CLOSE_SE_LIST) && is_defined(CE_CLOSE_SE_LIST)) {
@@ -699,7 +703,7 @@ variable CE_DEFAULT_SE = {
 #  1- CE_DEFAULT_SE which at this point can only be CE_CLOSE_SE_LIST['DEFAULT']
 # It is valid not having a default SE defined.
 variable CE_VO_DEFAULT_SE = {
-    foreach (i;vo;VOS) {
+    foreach (i; vo; VOS) {
         se_default = undef;
 
         if (exists(CE_DEFAULT_SE_LIST) && is_defined(CE_DEFAULT_SE_LIST)) {
@@ -746,10 +750,12 @@ variable GRIDMAPDIR_SHARED_PROTOCOL ?= 'nfs';
 
 # Host serving the shared gridmapdir, if any.
 # No default, required if GRIDMAPDIR_SHARED_PATH is defined.
-variable GRIDMAPDIR_SHARED_SERVER ?= if (is_defined(GRIDMAPDIR_SHARED_PATH) && match(to_lowercase(GRIDMAPDIR_SHARED_PROTOCOL), '^nfs')) {
-    error('GRIDMAPDIR_SHARED_SERVER must be defined if GRIDMAPDIR_SHARED_PATH is defined and GRIDMAPDIR_SHARED_PROTOCOL is NFS');
-} else {
-    undef;
+variable GRIDMAPDIR_SHARED_SERVER ?= {
+    if (is_defined(GRIDMAPDIR_SHARED_PATH) && match(to_lowercase(GRIDMAPDIR_SHARED_PROTOCOL), '^nfs')) {
+        error('GRIDMAPDIR_SHARED_SERVER must be defined if GRIDMAPDIR_SHARED_PATH is defined and GRIDMAPDIR_SHARED_PROTOCOL is NFS');
+    } else {
+        undef;
+    };
 };
 
 # Variable allowing to restrict the nodes using the shared gridmapdir.
@@ -865,7 +871,7 @@ variable NFS_CLIENT_ENABLED = NFS_CLIENT_ENABLED_TMP;
 # Export options for CE hosts.
 # NFS_CE_HOSTS is a dict where the key must be the escaped host name.
 variable NFS_CE_HOSTS ?= {
-    ce_def_right = '(rw, no_root_squash)';
+    ce_def_right = '(rw,no_root_squash)';
     if (exists(SITE_CE_HOSTS) && is_defined(SITE_CE_HOSTS)) {
         if (is_string(SITE_CE_HOSTS)) {
             ce_hosts = list(SITE_CE_HOSTS);
@@ -877,7 +883,7 @@ variable NFS_CE_HOSTS ?= {
     };
     # If this is already a dict, just use it
     if (is_list(ce_hosts)) {
-        foreach (i;host;ce_hosts) {
+        foreach (i; host; ce_hosts) {
             SELF[escape(host)] =  ce_def_right;
         };
         SELF;
@@ -913,11 +919,11 @@ variable NFS_CLIENT_HOSTS = {
     if (!exists(SELF['DEFAULT']) || !is_defined(SELF['DEFAULT'])) {
         host_lists = list(NFS_CE_HOSTS, NFS_WN_HOSTS, NFS_LOCAL_CLIENTS);
         SELF['DEFAULT'] = dict();
-        foreach (i;host_list;host_lists) {
+        foreach (i; host_list; host_lists) {
             if (is_string(host_list)) {
                 SELF['DEFAULT'][escape(host_list)] = undef;
             } else if (is_list(host_list)) {
-                foreach (j;host;host_list) {
+                foreach (j; host; host_list) {
                     SELF['DEFAULT'][escape(host)] = undef;
                 }
             } else if (is_dict(host_list)) {
@@ -1010,9 +1016,9 @@ variable NFS_DEFAULT_MOUNT_OPTIONS ?= "rw,noatime";
 # according to VO_SW_AREAS_USE_SWMGR.
 #
 # For example:
-# variable VO_SW_AREAS ?= dict(
-#                                  "alice", "/home/alicesgm",
-#                                  "atlas", "/home/atlassgm",
+#variable VO_SW_AREAS ?= dict(
+#    "alice", "/home/alicesgm",
+#    "atlas", "/home/atlassgm",
 #);
 #
 # For backward compatibility, defaults to WN_AREA if defined.
@@ -1036,9 +1042,9 @@ variable VO_SW_AREAS ?= WN_AREA;
 # VO in VO_SWMGR_HOMES.
 #
 # Example : use /home/voname for all VOs except ALICE and Atlas
-# variable VO_HOMES ?= dict("DEFAULT", "/home/@VONAME@",
-#                            "alice", "/home2/@VONAME@",
-#                            "atlas", "/home3",
+#variable VO_HOMES ?= dict("DEFAULT", "/home/@VONAME@",
+#    "alice", "/home2/@VONAME@",
+#    "atlas", "/home3",
 #);
 #
 
@@ -1096,7 +1102,7 @@ variable MATLAB_INSTALL_DIR ?= undef;
 variable CE_RUNTIMEENV = {
     ce_runtimeenv = SELF;
     if (is_dict(MATLAB_INSTALL_DIR)) {
-        foreach (version_e;path;MATLAB_INSTALL_DIR) {
+        foreach (version_e; path; MATLAB_INSTALL_DIR) {
             if (version_e != 'DEFAULT') {
                 tag = 'MATLAB_' + to_uppercase(unescape(version_e));
                 if (index(tag, SELF) < 0) {
@@ -1139,7 +1145,7 @@ variable FTS_SERVER_TRANSFER_SERVICE_PATH ?= '/glite-data-transfer-fts';
 variable WORKER_NODES ?= undef;
 variable WORKER_NODES_DICT = {
     if (exists(WORKER_NODES) && is_defined(WORKER_NODES) && (length(WORKER_NODES) > 0)) {
-        foreach (i;wn;WORKER_NODES) {
+        foreach (i; wn; WORKER_NODES) {
             SELF[wn] = '';
         };
         SELF;
@@ -1159,8 +1165,8 @@ variable WORKER_NODES_DICT = {
 # If the following variables are undefined, WN_CPU_CONFIG will be used.
 variable WN_CPUS_DEF ?= 1;     # Assume any CPU as at least one core...
 #variable WN_CPUS = dict(
-#  "grid15."+SITE_DOMAIN, 2,
-#  "grid16."+SITE_DOMAIN, 2,
+#    "grid15." + SITE_DOMAIN, 2,
+#    "grid16." + SITE_DOMAIN, 2,
 #);
 
 
@@ -1169,7 +1175,7 @@ variable WN_CPUS_DEF ?= 1;     # Assume any CPU as at least one core...
 # This can be used to force all nodes to drain.
 # Each entry value must be a dict.
 #variable WN_ATTRS = dict(
-#  "DEFAULT",    dict("state", "offline"),
+#    "DEFAULT", dict("state", "offline"),
 #);
 
 # On the CE, get information about CPU/core configuration of each WN.
@@ -1184,7 +1190,7 @@ variable WN_CPU_CONFIG = {
         return(undef);
     };
 
-    foreach (i;wn;WORKER_NODES) {
+    foreach (i; wn; WORKER_NODES) {
         if (exists(DB_MACHINE[escape(wn)])) {
             wn_hw = create(DB_MACHINE[escape(wn)]);
         } else {
@@ -1202,7 +1208,7 @@ variable WN_CPU_CONFIG = {
                 slot_num = core_num;
 
                 # Take SMT into account when calculating slots
-                if (is_defined(wn_hw['cpu'][0]['max_threads']) && wn_hw['cpu'][0]['max_threads']) {
+                if (is_defined(wn_hw['cpu'][0]['max_threads']) && wn_hw['cpu'][0]['max_threads'] > 0) {
                     # TODO: Only apply this if SMT is enabled system-wide
                     slot_num = cpu_num * wn_hw['cpu'][0]['max_threads'];
                 } else if (is_defined(wn_hw['cpu'][0]['hyperthreading']) && wn_hw['cpu'][0]['hyperthreading']) {
@@ -1217,9 +1223,9 @@ variable WN_CPU_CONFIG = {
             'cpus', cpu_num,
             'cores', core_num,
             'slots', slot_num,
-);
+        );
     };
 
-    debug('WN_CPU_CONFIG='+to_string(SELF));
+    debug('WN_CPU_CONFIG=' + to_string(SELF));
     SELF;
 };
