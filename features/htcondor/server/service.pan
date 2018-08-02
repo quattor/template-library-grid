@@ -16,6 +16,10 @@ variable CONDOR_CONFIG = {
         file_list[length(file_list)] = 'ganglia';
     };
 
+    if (is_defined(SELF['had']) && SELF['had']) {
+        file_list[length(file_list)] = 'had';
+    };
+
     foreach (i; file; file_list) {
         num = length( SELF['cfgfiles']);
         SELF['cfgfiles'][num] = dict(

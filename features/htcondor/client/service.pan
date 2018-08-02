@@ -10,11 +10,9 @@ variable CONDOR_CONFIG = {
     # global & security mandatory
     file_list = list('global', 'security');
     foreach (i; file; file_list) {
-        SELF['cfgfiles'] = append(
-            dict(
-                'name', file,
-                'contents', 'features/htcondor/templ/' + file
-            )
+        SELF['cfgfiles'][length(SELF['cfgfiles'])] = dict(
+           'name', file,
+           'contents', 'features/htcondor/templ/' + file
         );
     };
 

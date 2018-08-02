@@ -121,5 +121,6 @@ prefix '/software/components/filecopy/services';
 include 'components/spma/config';
 
 # Needed as the matching script depends on it
-'/software/packages' = pkg_repl('voms-clients3');
+variable VOMS_CLIENTS_PACKAGE ?= 'voms-clients3';
+'/software/packages' = pkg_repl(VOMS_CLIENTS_PACKAGE);
 

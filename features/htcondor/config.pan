@@ -31,7 +31,8 @@ include 'components/filecopy/config';
     # Put the cluster Key file
     SELF[escape(CONDOR_CONFIG['pwd_file'] + '.encoded')] = dict(
         'config', CONDOR_CONFIG['pwd_hash'],
-        'restart', 'base64 -d ' + CONDOR_CONFIG['pwd_file'] + '.encoded >' + CONDOR_CONFIG['pwd_file'],
+        'restart', 'base64 -d ' + CONDOR_CONFIG['pwd_file'] + '.encoded >' + CONDOR_CONFIG['pwd_file'] +
+                   ';chmod 400 ' + CONDOR_CONFIG['pwd_file'],
         'perms', '0400',
     );
     # Put the config files
