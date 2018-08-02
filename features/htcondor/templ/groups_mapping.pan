@@ -15,8 +15,8 @@ structure template features/htcondor/templ/groups_mapping;
             txt = txt + '<tag match="' + regexp['match'] + '" result="' + regexp['result'] + '"/>' + "\n";
         };
     };
-    txt = txt +  '<tag match=".*" result="ALL"/>' + "\n";
+    txt = txt + '<tag match=".*" result="ALL"/>' + "\n";
 
-    txt = txt  + "</group-mapping>\n";
+    txt = txt + "</group-mapping>\n";
     txt;
 };
