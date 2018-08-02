@@ -69,7 +69,8 @@ variable CONDOR_CONFIG = {
         };
 
         if (!is_defined(file['path'])) {
-            file['path'] = SELF['cfgdir'] + '/config.d/' + SELF['cfgprefix'] + '.' + to_string(i) + '.' + file['name'] + '.conf';
+            file['path'] = SELF['cfgdir'] + '/config.d/' + SELF['cfgprefix'] + '.' + to_string(i) +
+                '.' + file['name'] + '.conf';
         };
 
         if (!is_defined(file['contents'])) {

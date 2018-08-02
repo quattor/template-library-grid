@@ -51,7 +51,7 @@ EOF
     };
 
     if(is_defined(CONDOR_CONFIG['start_custom'])){
-        txt = txt + "START_CUSTOM = "+CONDOR_CONFIG['start_custom'] + "\n\n";
+        txt = txt + "START_CUSTOM = " + CONDOR_CONFIG['start_custom'] + "\n\n";
     }else{
         txt = txt + "START_CUSTOM = true\n\n";
     };

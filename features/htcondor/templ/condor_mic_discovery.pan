@@ -1,7 +1,7 @@
 structure template features/htcondor/templ/condor_mic_discovery;
 
 'text' = {
-  txt = <<EOF;
+    txt = <<EOF;
 #! /usr/bin/perl
 
 use strict;
@@ -23,5 +23,5 @@ print 'DetectedPhis="'.join(', ',@cards).'"'."\n";
 
 EOF
 
-  txt;
+    txt;
 };

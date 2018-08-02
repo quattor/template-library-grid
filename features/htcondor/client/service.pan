@@ -11,8 +11,8 @@ variable CONDOR_CONFIG = {
     file_list = list('global', 'security');
     foreach (i; file; file_list) {
         SELF['cfgfiles'][length(SELF['cfgfiles'])] = dict(
-           'name', file,
-           'contents', 'features/htcondor/templ/' + file
+            'name', file,
+            'contents', 'features/htcondor/templ/' + file
         );
     };
 

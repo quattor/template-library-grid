@@ -2,17 +2,17 @@ structure template features/htcondor/templ/defrag;
 
 'text' = {
 
-    config=dict(
-        'DEFRAG_DRAINING_MACHINES_PER_HOUR','30.0',
-        'DEFRAG_MAX_CONCURRENT_DRAINING','60',
-        'DEFRAG_MAX_WHOLE_MACHINES','300',
-        'DEFRAG_INTERVAL','600',
+    config = dict(
+        'DEFRAG_DRAINING_MACHINES_PER_HOUR', '30.0',
+        'DEFRAG_MAX_CONCURRENT_DRAINING', '60',
+        'DEFRAG_MAX_WHOLE_MACHINES', '300',
+        'DEFRAG_INTERVAL', '600',
     );
 
     if(is_defined(CONDOR_CONFIG['defrag'])){
-        foreach(par;val;config){
+        foreach(par; val; config){
             if(is_defined(CONDOR_CONFIG['defrag'][par])){
-                config[par]=CONDOR_CONFIG['defrag'][par];
+                config[par] = CONDOR_CONFIG['defrag'][par];
             };
         };
     };
@@ -21,7 +21,7 @@ structure template features/htcondor/templ/defrag;
 DAEMON_LIST = $(DAEMON_LIST) DEFRAG
 
 EOF
-    foreach(par;val;config){
+    foreach(par; val; config){
         txt = txt + par + " = " + val + "\n";
     };
     txt = txt + <<EOF;

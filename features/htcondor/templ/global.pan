@@ -1,7 +1,7 @@
 structure template features/htcondor/templ/global;
 
 'text' = {
- 
+
 #Parameters validation
 
     if(!is_defined(CONDOR_CONFIG)){
@@ -18,7 +18,7 @@ structure template features/htcondor/templ/global;
 # See features/htcondor/templ/cluster_conf in your quattor config.
 EOF
 
-    txt = txt + "UID_DOMAIN = " + CONDOR_CONFIG['domain'];    
+    txt = txt + "UID_DOMAIN = " + CONDOR_CONFIG['domain'];
 
     txt = txt + <<EOF;
 
@@ -34,9 +34,9 @@ CONDOR_ADMIN = root@$(FULL_HOSTNAME)
 
 EOF
 
-    hosts='';
-    foreach(i;h;CONDOR_CONFIG['hosts']){
-        hosts=hosts+" "+h;
+    hosts = '';
+    foreach(i; h; CONDOR_CONFIG['hosts']){
+        hosts = hosts + " " + h;
     };
 
     txt = txt + "CONDOR_HOST =" + hosts;
@@ -50,11 +50,11 @@ DAEMON_LIST = MASTER
 EOF
 
     if(is_defined(CONDOR_CONFIG['shared_port'])){
-        flag='FALSE';
+        flag = 'FALSE';
         if(!CONDOR_CONFIG['shared_port']){
-            flag='TRUE';
+            flag = 'TRUE';
         };
-        txt = txt + 'USE_SHARED_PORT = '+flag + "\n";
+        txt = txt + 'USE_SHARED_PORT = ' + flag + "\n";
     };
     if(is_defined(CONDOR_CONFIG['collector_port'])){
         txt = txt + 'COLLECTOR_PORT = ' + to_string(CONDOR_CONFIG['collector_port']) + "\n";

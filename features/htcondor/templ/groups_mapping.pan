@@ -9,7 +9,7 @@ structure template features/htcondor/templ/groups_mapping;
     foreach(i; regexp; CONDOR_CONFIG['policies_regexps']){
         txt = txt + '<policy match="' + regexp['match'] + '" result="' + regexp['result'] + '"/>' + "\n";
     };
-       
+
     if(is_defined(CONDOR_CONFIG['tags_regexps'])){
         foreach(i; regexp; CONDOR_CONFIG['tags_regexps']){
             txt = txt + '<tag match="' + regexp['match'] + '" result="' + regexp['result'] + '"/>' + "\n";
