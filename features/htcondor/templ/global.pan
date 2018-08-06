@@ -54,14 +54,14 @@ EOF
         if(!CONDOR_CONFIG['shared_port']){
             flag = 'TRUE';
         };
-        txt = txt + 'USE_SHARED_PORT = ' + flag + "\n";
+        txt = txt + format("USE_SHARED_PORT = %s\n", flag);
     };
     if(is_defined(CONDOR_CONFIG['collector_port'])){
-        txt = txt + 'COLLECTOR_PORT = ' + to_string(CONDOR_CONFIG['collector_port']) + "\n";
+        txt = txt + format("COLLECTOR_PORT = %s\n", to_string(CONDOR_CONFIG['collector_port']));
     };
 
     if(is_defined(CONDOR_CONFIG['schedd_host'])){
-        txt = txt + 'SCHEDD_HOST = ' + CONDOR_CONFIG['schedd_host'] + "\n";
+        txt = txt + format("SCHEDD_HOST = %s\n", CONDOR_CONFIG['schedd_host']);
     };
 
     txt;

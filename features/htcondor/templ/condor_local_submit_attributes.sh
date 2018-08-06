@@ -12,7 +12,7 @@ QUEUE=$(echo $SUDO_COMMAND|grep -P -o '\-q \S+'|grep -P -o '[a-z]\S+')
 FQAN=$(voms-proxy-info --fqan|head -1);
 SUBJECT=$(voms-proxy-info --acsubject);
 VO_NAME=$(voms-proxy-info --vo);
-VO_NAME_FORMATTED=$(echo $VO_NAME|tr '.' '_'|tr '-' '_');
+VO_NAME_FORMATTED=$(echo $VO_NAME|tr '.-' '_');
 
 IdentityString='('$VO_NAME_FORMATTED','$FQAN','$SUBJECT','$QUEUE')'
 
