@@ -4,13 +4,13 @@
 
 unique template features/blparser/init;
 
-# Define default log level (normal=1,debug=2).
+# Define default log level (normal=1, debug=2).
 # It is possible to define one specific level per parser and a default
 # level. If a default level is not yet defined, the minimum level will
 # be used as default.
 variable BLPARSER_LOG_LEVEL = {
-  SELF['DEFAULT'] = 1;
-  SELF;
+    SELF['DEFAULT'] = 1;
+    SELF;
 };
 
 # blparser log directory
@@ -28,15 +28,15 @@ variable BLAH_JOBID_PREFIX ?= 'cream_';
 # BLAH new parser (BLParser-less) configuration
 variable BLAH_PURGE_INTERVAL ?= 5000000;   # About 2months
 
-variable BLAH_UPDATER ?= nlist(
-  'lsf', GLITE_LOCATION+'/bin/BUpdaterLSF',
-  'pbs', GLITE_LOCATION+'/bin/BUpdaterPBS',
-  'condor', '/usr/libexec/condor/glite/bin/BUpdaterCondor',
+variable BLAH_UPDATER ?= dict(
+    'lsf', GLITE_LOCATION + '/bin/BUpdaterLSF',
+    'pbs', GLITE_LOCATION + '/bin/BUpdaterPBS',
+    'condor', '/usr/libexec/condor/glite/bin/BUpdaterCondor',
 );
-variable BLAH_NOTIFIER ?= nlist(
-  'lsf', GLITE_LOCATION+'/bin/BNotifier',
-  'pbs', GLITE_LOCATION+'/bin/BNotifier',
-  'condor', '/usr/libexec/condor/glite/bin/BNotifier',
+variable BLAH_NOTIFIER ?= dict(
+    'lsf', GLITE_LOCATION + '/bin/BNotifier',
+    'pbs', GLITE_LOCATION + '/bin/BNotifier',
+    'condor', '/usr/libexec/condor/glite/bin/BNotifier',
 );
 variable BLAH_UPDATER_DEBUG_LEVEL ?= 2;
 variable BLAH_NOTIFIER_DEBUG_LEVEL ?= 2;
@@ -53,72 +53,77 @@ variable BLAH_LOG_DIR = '/var/log/accounting';
 variable BLAH_LOG_FILE = 'blahp.log';
 
 variable LRMS_CONFIG_DIR ?= {
-  if (  CE_BATCH_SYS == 'pbs' ) {
-    TORQUE_CONFIG_DIR;
-  } else if ( CE_BATCH_SYS == 'condor' ) {
-    '/var/lib/condor';
-  } else {
-    error(format('BLParser configuration: unsupported batch system (%s)',to_string(CE_BATCH_SYS)));
-  };
+    if (CE_BATCH_SYS == 'pbs') {
+        TORQUE_CONFIG_DIR;
+    } else if (CE_BATCH_SYS == 'condor') {
+        '/var/lib/condor';
+    } else {
+        error(format('BLParser configuration: unsupported batch system (%s)', to_string(CE_BATCH_SYS)));
+    };
 };
 
 # Which LRMS to enable in blparser
 # BLPARSER_LRMS_PARMAS must contain one entry per supported LRMS.
 # Support for a particular LRMS should be disabled by default.
 variable BLPARSER_LRMS_PARAMS ?= {
-  SELF['lsf'] = nlist('enabled', 'no',
-                      'logFile', 'glite-blparser-lsf.log',
-                      'port', 33333,
-                      'creamPort', 56566,
-                      'numOfDaemons', 1,
-                      'configDir',LRMS_CONFIG_DIR,
-                     );
-  SELF['pbs'] = nlist('enabled', 'no',
-                      'logFile', 'glite-blparser-pbs.log',
-                      'port', 33332,
-                      'creamPort', 56565,
-                      'numOfDaemons', 1,
-                      'configDir',LRMS_CONFIG_DIR,
-                      );
-  SELF['condor'] = nlist('enabled', 'no',
-                         'logFile', 'glite-blparser-htcondor.log',
-                         'port', 33331,
-                         'creamPort', 56564,
-                         'numOfDaemons', 1,
-                         'configDir','/var/lib/condor',
-                        );
-  SELF;
+    SELF['lsf'] = dict(
+        'enabled', 'no',
+        'logFile', 'glite-blparser-lsf.log',
+        'port', 33333,
+        'creamPort', 56566,
+        'numOfDaemons', 1,
+        'configDir', LRMS_CONFIG_DIR,
+    );
+    SELF['pbs'] = dict(
+        'enabled', 'no',
+        'logFile', 'glite-blparser-pbs.log',
+        'port', 33332,
+        'creamPort', 56565,
+        'numOfDaemons', 1,
+        'configDir', LRMS_CONFIG_DIR,
+    );
+    SELF['condor'] = dict(
+        'enabled', 'no',
+        'logFile', 'glite-blparser-htcondor.log',
+        'port', 33331,
+        'creamPort', 56564,
+        'numOfDaemons', 1,
+        'configDir', '/var/lib/condor',
+    );
+
+    SELF;
 };
 
 # Define batch system name based on CREAM one if defined. Else handle
 # special cases like 'lcgpbs'
-variable BLPARSER_BATCH_SYS ?= if ( is_defined(CREAM_BATCH_SYS) ) {
-                                 CREAM_BATCH_SYS;
-                               } else if ( CE_BATCH_SYS == 'lcgpbs' ) {
-                                 'pbs';
-                               } else {
-                                 CE_BATCH_SYS;
-                               };
-
-variable BLPARSER_LRMS_PARAMS = {
-  if ( is_defined(SELF[BLPARSER_BATCH_SYS]) ) {
-    SELF[BLPARSER_BATCH_SYS]['enabled'] = 'yes';
-  } else {
-    error("LRMS '"+BLPARSER_BATCH_SYS+"' is not supported by BLParser");
-  };
-
-  # Define blparser log level
-  foreach (lrms;params;SELF) {
-    if ( is_defined(BLPARSER_LOG_LEVEL[BLPARSER_BATCH_SYS]) ) {
-      params['logLevel'] = BLPARSER_LOG_LEVEL[BLPARSER_BATCH_SYS];
+variable BLPARSER_BATCH_SYS ?= {
+    if (is_defined(CREAM_BATCH_SYS)) {
+        CREAM_BATCH_SYS;
+    } else if (CE_BATCH_SYS == 'lcgpbs') {
+        'pbs';
     } else {
-      params['logLevel'] = BLPARSER_LOG_LEVEL['DEFAULT'];
+        CE_BATCH_SYS;
     };
-  };
-
-  debug('BLPARSER_LRMS_PARAMS: '+to_string(SELF));
-
-  SELF;
 };
 
+variable BLPARSER_LRMS_PARAMS = {
+    if (is_defined(SELF[BLPARSER_BATCH_SYS])) {
+        SELF[BLPARSER_BATCH_SYS]['enabled'] = 'yes';
+    } else {
+        error("LRMS '" + BLPARSER_BATCH_SYS + "' is not supported by BLParser");
+    };
+
+    # Define blparser log level
+    foreach (lrms; params; SELF) {
+        if (is_defined(BLPARSER_LOG_LEVEL[BLPARSER_BATCH_SYS])) {
+            params['logLevel'] = BLPARSER_LOG_LEVEL[BLPARSER_BATCH_SYS];
+        } else {
+            params['logLevel'] = BLPARSER_LOG_LEVEL['DEFAULT'];
+        };
+    };
+
+    debug('BLPARSER_LRMS_PARAMS: ' + to_string(SELF));
+
+    SELF;
+};
 
