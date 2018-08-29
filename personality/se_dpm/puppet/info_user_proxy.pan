@@ -22,7 +22,14 @@ include 'components/cron/config';
 variable DPM_HOSTPROXY_CRON = SEDPM_INFO_USER + "-hostproxy";
 variable DPM_HOSTPROXY_TMP = GLITE_LOCATION_VAR + "/dpm/hostproxy.$$";
 variable DPM_HOSTPROXY_FILE = GLITE_LOCATION_VAR + "/dpm/hostproxy." + SEDPM_INFO_USER;
-variable DPM_HOSTPROXY_CMD = "mkdir -p /var/lib/ldap/.globus && /bin/cp /etc/grid-security/hostcert.pem /var/lib/ldap/.globus/usercert.pem && /bin/cp /etc/grid-security/hostkey.pem /var/lib/ldap/.globus/userkey.pem && chown -R " + SEDPM_INFO_USER + " /var/lib/ldap/.globus";
+variable DPM_HOSTPROXY_CMD = {
+    command = "mkdir -p /var/lib/ldap/.globus && ";
+    command = command + "/bin/cp /etc/grid-security/hostcert.pem /var/lib/ldap/.globus/usercert.pem && ";
+    command = command + "/bin/cp /etc/grid-security/hostkey.pem /var/lib/ldap/.globus/userkey.pem && ";
+    command = command + "chown -R " + SEDPM_INFO_USER + " /var/lib/ldap/.globus";
+    command;
+};
+
 "/software/components/cron/entries" = push(
     dict(
         "name", DPM_HOSTPROXY_CRON,
@@ -60,7 +67,6 @@ variable DPM_HOSTPROXY_STARTUP_CONTENTS = {
         SELF['dependencies']['pre'][length(SELF['dependencies']['pre'])] = 'filecopy';
     };
     SELF['service'][DPM_HOSTPROXY_CRON]['on'] = "";
-
     SELF;
 };
 
@@ -78,6 +84,8 @@ include 'components/altlogrotate/config';
         "frequency", "monthly",
         "create", true,
         "ifempty", true,
-        "rotate", 2);
+        "rotate", 2
+    );
     SELF;
 };
+
