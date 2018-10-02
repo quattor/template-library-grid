@@ -22,21 +22,34 @@ include 'components/cron/config';
 variable DPM_HOSTPROXY_CRON = SEDPM_INFO_USER + "-hostproxy";
 variable DPM_HOSTPROXY_TMP = GLITE_LOCATION_VAR + "/dpm/hostproxy.$$";
 variable DPM_HOSTPROXY_FILE = GLITE_LOCATION_VAR + "/dpm/hostproxy." + SEDPM_INFO_USER;
-variable DPM_HOSTPROXY_CMD = "mkdir -p /var/lib/ldap/.globus && /bin/cp /etc/grid-security/hostcert.pem /var/lib/ldap/.globus/usercert.pem && /bin/cp /etc/grid-security/hostkey.pem /var/lib/ldap/.globus/userkey.pem && chown -R " + SEDPM_INFO_USER + " /var/lib/ldap/.globus";
-"/software/components/cron/entries" = {
-    push(dict(
+variable DPM_HOSTPROXY_CMD = {
+    "mkdir -p /var/lib/ldap/.globus && " +
+    "/bin/cp /etc/grid-security/hostcert.pem /var/lib/ldap/.globus/usercert.pem && " +
+    "/bin/cp /etc/grid-security/hostkey.pem /var/lib/ldap/.globus/userkey.pem && " +
+    "chown -R " + SEDPM_INFO_USER + " /var/lib/ldap/.globus";
+};
+
+"/software/components/cron/entries" = push(
+    dict(
         "name", DPM_HOSTPROXY_CRON,
         "user", "root",
         "frequency", "AUTO 2,8,14,20 * * *",
-        "command", DPM_HOSTPROXY_CMD)
-    );
-};
+        "command", DPM_HOSTPROXY_CMD
+    )
+);
 
 # Startup script to ensure a valid proxy at boot time (or when the command to generate it is changed
 include 'components/filecopy/config';
 include 'components/chkconfig/config';
 variable DPM_HOSTPROXY_STARTUP = '/etc/init.d/' + DPM_HOSTPROXY_CRON;
-variable DPM_HOSTPROXY_STARTUP_CONTENTS = "#!/bin/sh\n" + "#\n" + "# chkconfig: - 92 5\n" + "# description: BDII Service\n" + DPM_HOSTPROXY_CMD;
+variable DPM_HOSTPROXY_STARTUP_CONTENTS = {
+    "#!/bin/sh\n" +
+    "#\n" +
+    "# chkconfig: - 92 5\n" +
+    "# description: BDII Service\n" +
+    DPM_HOSTPROXY_CMD
+};
+
 '/software/components/filecopy/services' = {
     SELF[escape(DPM_HOSTPROXY_STARTUP)] = dict(
         'config', DPM_HOSTPROXY_STARTUP_CONTENTS,
@@ -46,6 +59,7 @@ variable DPM_HOSTPROXY_STARTUP_CONTENTS = "#!/bin/sh\n" + "#\n" + "# chkconfig: 
     );
     SELF;
 };
+
 '/software/components/chkconfig' = {
     if ( index('filecopy', SELF['dependencies']['pre']) < 0 ) {
         SELF['dependencies']['pre'][length(SELF['dependencies']['pre'])] = 'filecopy';

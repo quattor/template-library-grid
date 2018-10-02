@@ -26,7 +26,7 @@ variable DPM_HEAD_LOG_LEVEL ?= DPM_LOG_LEVEL;
 '/software/components/puppet/modules' ?= dict();
 
 '/software/components/puppet/modules' = {
-    if(DPM_PUPPET_MODULE != 'NONE'){
+    if (DPM_PUPPET_MODULE != 'NONE') {
         SELF[escape(DPM_PUPPET_MODULE)] = dict('version', DPM_PUPPET_MODULE_VERSION);
     };
     SELF;
@@ -47,7 +47,7 @@ prefix '/software/components/puppet/hieradata';
 '{dpm::params::dpmmgr_gid}' = DPMMGR_GID;
 '{dmlite::disk::log_level}' = DPM_DISK_LOG_LEVEL;
 '{dmlite::head::log_level}' = DPM_HEAD_LOG_LEVEL;
-'{dpm::params::host_dn}' = if(is_defined(DPM_HOST_DN)) DPM_HOST_DN else null;
+'{dpm::params::host_dn}' = if (is_defined(DPM_HOST_DN)) DPM_HOST_DN else null;
 
 # supported vos
 '{dpm::params::volist}' = VOS;
@@ -81,5 +81,5 @@ prefix '/software/components/puppet/hieradata';
 '{dpm::params::new_installation}' = 'no';
 '{fetchcrl::manage_carepo}' = 'no';
 '{fetchcrl::runboot}' = 'no';
-'{fetchcrl::capkgs}' = if(is_defined(FETCHCRL_CAPKGS)) FETCHCRL_CAPKGS else null;
+'{fetchcrl::capkgs}' = if (is_defined(FETCHCRL_CAPKGS)) FETCHCRL_CAPKGS else null;
 

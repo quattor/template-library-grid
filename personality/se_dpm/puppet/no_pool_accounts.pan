@@ -3,8 +3,8 @@ unique template personality/se_dpm/puppet/no_pool_accounts;
 include 'components/accounts/config';
 
 '/software/components/accounts/users' = {
-    foreach(i; user; SELF){
-        if(is_defined(user["poolSize"]) && (user["poolSize"]>1)){
+    foreach(i; user; SELF) {
+        if (is_defined(user["poolSize"]) && (user["poolSize"]>1)) {
             user["poolSize"] = null;
             user["poolDigits"] = null;
             user["poolStart"] = null;
@@ -14,16 +14,16 @@ include 'components/accounts/config';
 };
 
 '/system/vo' = {
-    foreach(i; vo; SELF){
-        foreach(j; auth; vo['auth']){
+    foreach(i; vo; SELF) {
+        foreach(j; auth; vo['auth']) {
             simple_user = matches(auth['user'], '^\.(\S+)$');
-            if(length(simple_user) > 1 ){
+            if (length(simple_user) > 1) {
                 auth['user'] = simple_user[1];
             };
         };
-        foreach(j; role; vo['voms']){
+        foreach(j; role; vo['voms']) {
             simple_role = matches(role['user'], '^\.(\S+)$');
-            if(length(simple_role) > 1 ){
+            if (length(simple_role) > 1) {
                 role['user'] = simple_role[1];
             };
         };
