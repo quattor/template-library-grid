@@ -70,7 +70,7 @@ variable CONDOR_CONFIG = {
 
         if (!is_defined(file['path'])) {
             file['path'] = format(
-                "%s/config.d/%s.%s.%s.conf", 
+                "%s/config.d/%s.%s.%s.conf",
                 SELF['cfgdir'], SELF['cfgprefix'], to_string(i), file['name']
             );
         };

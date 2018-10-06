@@ -38,7 +38,7 @@ structure template features/htcondor/templ/had;
 
     text = text + 'REPLICATION_LIST = ';
 
-    foreach(i;h;CONDOR_CONFIG['hosts']){
+    foreach(i; h; CONDOR_CONFIG['hosts']){
         text = text + h + ':$(REPLICATION_PORT) ';
     };
 

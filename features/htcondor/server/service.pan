@@ -9,23 +9,22 @@ variable CONDOR_CONFIG = {
     file_list = list('global', 'security', 'params', 'head');
 
     if (is_defined(SELF['multicore']) && SELF['multicore']) {
-        file_list[length(file_list)] = 'defrag';
+        file_list = append(file_list, 'defrag');
     };
 
     if (is_defined(SELF['ganglia']) && SELF['ganglia']) {
-        file_list[length(file_list)] = 'ganglia';
+        file_list = append(file_list, 'ganglia');
     };
 
     if (is_defined(SELF['had']) && SELF['had']) {
-        file_list[length(file_list)] = 'had';
+        file_list = append(file_list, 'had');
     };
 
     foreach (i; file; file_list) {
-        num = length( SELF['cfgfiles']);
-        SELF['cfgfiles'][num] = dict(
+        SELF['cfgfiles'] = append(SELF['cfgfiles'], dict(
             'name', file,
             'contents', 'features/htcondor/templ/' + file
-        );
+        ));
     };
 
     if (!is_defined(SELF['options']['head'])) {

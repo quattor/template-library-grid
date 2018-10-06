@@ -42,8 +42,8 @@ EOF
         if(!is_defined(CONDOR_CONFIG["default_all_tag"]) || CONDOR_CONFIG["default_all_tag"]){
             txt = txt + '(WNTag == "ALL")||';
         };
-        foreach(i;tag;WN_ATTRS[FULL_HOSTNAME]['tags']){
-            txt = txt + '(WNTag == "'+tag+'")||';
+        foreach(i; tag; WN_ATTRS[FULL_HOSTNAME]['tags']){
+            txt = txt + '(WNTag == "' + tag + '")||';
         };
         txt = txt + " false)\n\n";
     }else{
@@ -54,6 +54,11 @@ EOF
         txt = txt + "START_CUSTOM = " + CONDOR_CONFIG['start_custom'] + "\n\n";
     }else{
         txt = txt + "START_CUSTOM = true\n\n";
+    };
+
+    if(is_defined(CONDOR_CONFIG['user_wrapper']) &&
+       is_defined(CONDOR_CONFIG['user_wrapper']['path'])){
+       txt = txt + "USER_JOB_WRAPPER = " +  CONDOR_CONFIG['user_wrapper']['path'] + "\n\n";
     };
 
     txt = txt + file_contents('features/htcondor/templ/worker-default');

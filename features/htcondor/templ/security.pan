@@ -20,13 +20,13 @@ structure template features/htcondor/templ/security;
     if(is_defined(CONDOR_CONFIG['sec_client_authentication_method'])){
         sec_client_authentication_method = CONDOR_CONFIG['sec_client_authentication_method'];
     }else{
-       sec_client_authentication_method = 'password,fs,gsi';
+        sec_client_authentication_method = 'password,fs,gsi';
     };
 
     if(is_defined(CONDOR_CONFIG['sec_daemon_authentication_method'])){
-       sec_daemon_authentication_method = CONDOR_CONFIG['sec_daemon_authentication_method'];
+        sec_daemon_authentication_method = CONDOR_CONFIG['sec_daemon_authentication_method'];
     }else{
-       sec_daemon_authentication_method = 'password';
+        sec_daemon_authentication_method = 'password';
     };
 
     #building the string
@@ -56,6 +56,6 @@ EOF
             txt = txt +  opt['name'] + ' = ' + opt['value'] + "\n";
         };
     };
-	
+
     txt;
 };
