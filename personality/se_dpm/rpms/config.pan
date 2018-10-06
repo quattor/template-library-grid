@@ -44,10 +44,8 @@ variable DMLITE_MEMCACHE_ENABLED ?= false;
         pkg_repl('dpm-srm-server-mysql');
         pkg_repl('dmlite-plugins-mysql');
         pkg_repl('glite-info-provider-service');
-        # Not available yet on EL7 (21/1/2016)
-        #pkg_repl('dpm-contrib-admintools');
-        # FIXME: not yet available in UMD4 (21/1/2016)
-        #pkg_repl('argus-pep-api-c');
+        pkg_repl('dpm-contrib-admintools');
+        pkg_repl('argus-pep-api-c');
         # memcache is useless on disk servers
         if ( DMLITE_MEMCACHE_ENABLED ) {
             pkg_repl('dmlite-plugins-memcache');
