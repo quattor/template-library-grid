@@ -1,5 +1,7 @@
 unique template features/htcondor/client/ce;
 
+variable CONDOR_FIX_QUEUE_SUPER_USERS ?= false;
+
 variable CONDOR_CONFIG = {
     if (FULL_HOSTNAME == LRMS_SERVER_HOST) {
         file_list = list('submit');
@@ -14,6 +16,10 @@ variable CONDOR_CONFIG = {
 
     if (!is_defined(SELF['options']['submit'])) {
         SELF['options']['submit'] = dict();
+    };
+
+    if(!is_defined(SELF['queue_superusers_list'])){
+        SELF['queue_superusers_list'] = 'tomcat';
     };
 
     SELF;
@@ -32,11 +38,8 @@ variable CE_QUEUES ?= dict(
 );
 
 # Fixme: a bug in the blah RPM
-include 'components/filecopy/config';
-
-prefix '/software/components/filecopy/services/{/usr/libexec/condor_status.sh}';
-'source' = '/usr/libexec/condor_status.sh.save';
-'perms' = '0755';
+variable HTCONDOR_FIX_BLAH ?= true;
+include if(HTCONDOR_FIX_BLAH) 'features/htcondor/client/fix-blah';
 
 include 'components/dirperm/config';
 

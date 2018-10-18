@@ -9,6 +9,10 @@ ROTATE_HISTORY_DAILY = true
 MAX_HISTORY_ROTATIONS = 1000
 
 EOF
+    if(is_defined(CONDOR_CONFIG['queue_superusers_list'])){
+        txt = txt + 'QUEUE_SUPER_USERS = ' + CONDOR_CONFIG['queue_superusers_list'];
+    };
+
     foreach (i; opt; CONDOR_CONFIG['options']['submit']) {
         txt = txt +  opt['name'] + ' = ' + opt['value'] + "\n";
     };

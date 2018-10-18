@@ -9,11 +9,17 @@ endif
 
 # Default drain configuration
 if $(DRAIN)
-    START = ( x509UserProxyVOName == "ops" )
+    START_DRAIN = ( x509UserProxyVOName == "ops" )
+else
+    START_DRAIN = true
 endif
 
 # Default offline configuration
 if $(OFFLINE)
-    START = false
+    START_OFFLINE = false
+else
+    START_OFFLINE = true
 endif
+
+START = $(START_DRAIN) && $(START_OFFLINE) && $(START_TAG) && $(START_CUSTOM)
 
