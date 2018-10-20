@@ -87,13 +87,17 @@ variable CONDOR_CONFIG = {
         );
     };
 
+    if(!is_defined(SELF['local_submit_attributes'])){
+        SELF['local_submit_attributes'] = 'features/htcondor/templ/condor_local_submit_attributes.sh';
+    };
+
     SELF;
 };
 
 include 'components/filecopy/config';
 prefix '/software/components/filecopy/services';
 '{/usr/libexec/condor_local_submit_attributes.sh}' = {
-    SELF['config'] = file_contents('features/htcondor/templ/condor_local_submit_attributes.sh');
+    SELF['config'] = file_contents(CONDOR_CONFIG['local_submit_attributes']);
     SELF['perms'] = '0755';
     SELF;
 };
