@@ -17,6 +17,13 @@ structure template features/htcondor/templ/groups_mapping;
     };
     txt = txt +  '<tag match=".*" result="ALL"/>' + "\n";
 
+    if(is_defined(CONDOR_CONFIG['concurrency']) && is_defined(CONDOR_CONFIG['concurrency']['regexps'])){
+        foreach(i; regexp; CONDOR_CONFIG['concurrency']['regexps']){
+            txt = txt + format("<limit match='%s' result='%s'/>\n", regexp['match'], regexp['result']);
+        };
+    };
+    txt = txt +  '<limit match=".*" result="NONE"/>' + "\n";
+
     txt = txt  + "</group-mapping>\n";
     txt;
 };

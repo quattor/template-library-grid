@@ -20,10 +20,17 @@ IdentityString='('$VO_NAME_FORMATTED','$FQAN','$SUBJECT','$QUEUE')'
 AcctGroup=$(/usr/libexec/matching_regexps "$IdentityString" /etc/condor/groups_mapping.xml group 2>/dev/null)
 PolicyGroup=$(/usr/libexec/matching_regexps "$IdentityString" /etc/condor/groups_mapping.xml policy 2>/dev/null)
 WNTag=$(/usr/libexec/matching_regexps "$IdentityString" /etc/condor/groups_mapping.xml tag 2>/dev/null)
+Concurrenclimits=$(/usr/libexec/matching_regexps "$IdentityString" /etc/condor/groups_mapping.xml limit 2>/dev/null)
+
 
 echo 'accounting_group='$AcctGroup
 
 echo 'accounting_group_user='$(whoami)
+
+if [[ "xConcurrenclimits" != "xNONE" ]];
+then
+    echo 'concurrency_limits_expr='$Concurrenclimits
+fi
 
 echo '+CreamQueue="'$QUEUE'"'
 

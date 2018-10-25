@@ -25,8 +25,14 @@ NEGOTIATOR_POST_JOB_RANK = \
 
 
 EOF
+    if(is_defined(CONDOR_CONFIG['concurrency']) && is_defined(CONDOR_CONFIG['concurrency']['limits'])){
+        foreach (name; limit; CONDOR_CONFIG['concurrency']['limits']) {
+            txt = txt +  name + '_LIMIT = ' + to_string(limit) + "\n";
+        };
+    };
+
     foreach (i; opt; CONDOR_CONFIG['options']['head']) {
-        txt = txt +  opt['name'] + ' = ' + opt['value'] + "\n";
+        txt = txt +  opt['name'] + ' = ' + to_string(opt['value']) + "\n";
     };
     txt;
 };
