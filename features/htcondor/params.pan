@@ -6,8 +6,16 @@ desc = CONDOR_CONFIG is used to manage configuration information about HTCondor
 
 variable CONDOR_CONFIG = {
     # Default Central Manager is LRMS_SERVER_HOST
-    if (!is_defined(SELF['host'])) {
-        SELF['host'] = LRMS_SERVER_HOST;
+    if (is_defined(SELF['host'])) {
+        SELF['hosts'] = list(SELF['host']);
+    };
+
+    if (!is_defined(SELF['hosts'])) {
+        SELF['hosts'] = list(LRMS_SERVER_HOST);
+    };
+
+    if (!is_list(SELF['host'])) {
+        SELF['host'] = SELF['hosts'][0];
     };
 
     # Default domain name is grid
@@ -61,7 +69,10 @@ variable CONDOR_CONFIG = {
         };
 
         if (!is_defined(file['path'])) {
-            file['path'] = SELF['cfgdir'] + '/config.d/' + SELF['cfgprefix'] + '.' + to_string(i) + '.' + file['name'] + '.conf';
+            file['path'] = format(
+                "%s/config.d/%s.%s.%s.conf",
+                SELF['cfgdir'], SELF['cfgprefix'], to_string(i), file['name']
+            );
         };
 
         if (!is_defined(file['contents'])) {

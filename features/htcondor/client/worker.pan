@@ -10,6 +10,21 @@ variable CONDOR_CONFIG = {
         append(file_list, 'mic')
     };
 
+    if (is_defined(SELF['user_wrapper'])){
+        if(!is_defined(SELF['user_wrapper']['path'])){
+            SELF['user_wrapper']['path'] = '/etc/condor/user_wrapper.sh';
+        };
+
+        if(!is_defined(SELF['user_wrapper']['templ'])){
+            SELF['user_wrapper']['templ'] = 'features/htcondor/client/user_wrapper.sh';
+        };
+
+        if(!is_defined(SELF['user_wrapper']['contents'])){
+            SELF['user_wrapper']['contents'] = file_contents(SELF['user_wrapper']['templ']);
+        };
+    };
+
+
     foreach (i; file; file_list) {
         num = length( SELF['cfgfiles']);
         SELF['cfgfiles'][num] = dict(
@@ -25,3 +40,13 @@ variable CONDOR_CONFIG = {
     SELF;
 };
 
+include 'components/filecopy/config';
+'/software/components/filecopy/services' = {
+    if(is_defined(CONDOR_CONFIG['user_wrapper'])){
+        SELF[escape(CONDOR_CONFIG['user_wrapper']['path'])] = dict(
+             'config', CONDOR_CONFIG['user_wrapper']['contents'],
+             'perms', '0755',
+        );
+    };
+    SELF;
+};

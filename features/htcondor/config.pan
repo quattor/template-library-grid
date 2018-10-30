@@ -31,7 +31,7 @@ include 'components/filecopy/config';
     # Put the cluster Key file
     SELF[escape(CONDOR_CONFIG['pwd_file'] + '.encoded')] = dict(
         'config', CONDOR_CONFIG['pwd_hash'],
-        'restart', 'base64 -d ' + CONDOR_CONFIG['pwd_file'] + '.encoded >' + CONDOR_CONFIG['pwd_file'],
+        'restart', format('base64 -d %1$s.encoded >%1$s;chmod 400 %1$s', CONDOR_CONFIG['pwd_file']),
         'perms', '0400',
     );
     # Put the config files
@@ -61,8 +61,11 @@ include 'components/filecopy/config';
     };
 
     if (CONDOR_CONFIG['intel_mic']){
+        if (!is_defined(CONDOR_CONFIG['intel_mic_discovery'])){
+            CONDOR_CONFIG['intel_mic_discovery'] = file_contents('features/htcondor/templ/condor_mic_discovery');
+        };
         SELF[escape('/usr/libexec/condor/condor_mic_discovery')] = dict(
-            'config', file_contents('features/htcondor/templ/condor_mic_discovery'),
+            'config', CONDOR_CONFIG['intel_mic_discovery'],
             'backup', false,
             'perms', '0775',
         );
