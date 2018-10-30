@@ -1,0 +1,115 @@
+#!/bin/bash
+#
+# mjf		Create /etc/machinefeatures files
+#
+# chkconfig: 345 92 08
+# description: Create /etc/machinefeatures files following the Machine/Job Features specification in HSF-TN-2016-02
+
+# Source function library.
+. /etc/init.d/functions
+
+#
+# Set the following variables in the configuration files
+# to set/override them when populating /etc/machinfeatures
+# - total_cpu
+# - hs06
+# - shutdowntime
+# - grace_secs
+# - db12
+#
+
+# Persistent configuration goes in sysconfig
+if [ -f /etc/sysconfig/mjf ] ; then
+  . /etc/sysconfig/mjf
+fi
+
+# Transient configuration goes in run - for example shutdowntime
+# Files put in mjf get deleted when the machine boots up!
+if [ -f /var/run/mjf ] ; then
+  . /var/run/mjf
+fi
+
+start() {
+	[ "$EUID" != "0" ] && exit 1
+
+        # Create new files in temporary directory
+        echo -n $"Set up /etc/machinefeatures: "
+
+        /bin/rm -Rf /etc/machinefeatures.tmp
+        mkdir -p /etc/machinefeatures.tmp
+
+        if [ "$total_cpu" == "" ] ; then
+          # If not explicitly configured then try to get it from the batch system
+          if [ -x /usr/sbin/mjf-get-total-cpu ] ; then
+            total_cpu=`/usr/sbin/mjf-get-total-cpu`
+          fi
+        
+          # If still not explicitly configured then get it from /etc/db12 if available
+          if [ "$total_cpu" == "" -a -f /etc/db12/total_cpu ] ; then
+            total_cpu=`cat /etc/db12/total_cpu`
+          fi
+
+          # If still not explicitly configured then it get from the OS
+          if [ "$total_cpu" == "" ] ; then
+            total_cpu=`grep '^processor[[:space:]]*:' /proc/cpuinfo | wc --lines`
+          fi
+        fi
+        echo -n "$total_cpu" > /etc/machinefeatures.tmp/total_cpu
+        
+        if [ "$hs06" != "" ] ; then
+          echo -n "$hs06" > /etc/machinefeatures.tmp/hs06
+        fi
+        
+        # If not explicitly configured then get from /etc/db12
+        if [ "$db12" == "" -a -f /etc/db12/db12 ] ; then
+          db12=`cat /etc/db12/db12`
+        fi
+
+        if [ "$db12" != "" ] ; then
+          echo -n "$db12" > /etc/machinefeatures.tmp/db12
+        fi
+        
+        if [ "$shutdowntime" != "" ] ; then
+          echo -n "$shutdowntime" > /etc/machinefeatures.tmp/shutdowntime
+        fi
+        
+        if [ "$grace_secs" != "" ] ; then
+          echo -n "$grace_secs" > /etc/machinefeatures.tmp/grace_secs
+        fi
+
+        # Remove any existing directory and move new version into place
+        /bin/rm -Rf /etc/machinefeatures
+        /bin/mv -f /etc/machinefeatures.tmp /etc/machinefeatures
+
+        echo_success
+        echo
+	return 0
+}
+
+stop() {
+	[ "$EUID" != "0" ] && exit 3
+
+        # Remove /etc/machinefeatures in case of future upgrades
+        echo -n $"Clean up machinefeatures: "
+        rm -Rf /etc/machinefeatures
+        echo_success
+        echo
+	return 0
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|force-reload|reload)
+        stop
+	start
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|restart|force-reload|reload}"
+	exit 4
+esac
+

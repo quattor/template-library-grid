@@ -9,6 +9,22 @@ variable MACHINE_FEATURES_LIST ?= list(
     'total_cpu',
 );
 
+variable MACHINE_FEATURES_SCRIPT ?= 'mjf';
+variable MACHINE_FEATURES_STARTUP = '/etc/init.d/' + MACHINE_FEATURES_SCRIPT;
+'/software/components/filecopy/services' = {
+    SELF[escape(MACHINE_FEATURES_STARTUP)] = dict(
+        'config', file_contents('personality/wn/templ/mjf.init'),
+        'perms', '0755',
+        'owner', 'root',
+        'restart', MACHINE_FEATURES_STARTUP
+    );
+    SELF;
+};
+
+prefix '/software/components/chkconfig';
+'dependencies/pre' = append('filecopy');
+'service' = {SELF[MACHINE_FEATURES_SCRIPT]['on'] = ''; SELF;};
+
 # Machine features can be defined through a structure template
 variable MACHINE_FEATURES ?= {
     this = dict();
@@ -82,9 +98,11 @@ include 'components/filecopy/config';
                     'group', 'root',
                     'perms', '0644',
                     'backup', false,
+                    'restart', MACHINE_FEATURES_STARTUP
                 );
             };
         };
     };
     SELF;
 };
+

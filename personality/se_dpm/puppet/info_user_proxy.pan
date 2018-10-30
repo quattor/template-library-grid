@@ -65,7 +65,6 @@ variable DPM_HOSTPROXY_STARTUP_CONTENTS = {
         SELF['dependencies']['pre'][length(SELF['dependencies']['pre'])] = 'filecopy';
     };
     SELF['service'][DPM_HOSTPROXY_CRON]['on'] = "";
-
     SELF;
 };
 
@@ -83,6 +82,8 @@ include 'components/altlogrotate/config';
         "frequency", "monthly",
         "create", true,
         "ifempty", true,
-        "rotate", 2);
+        "rotate", 2
+    );
     SELF;
 };
+

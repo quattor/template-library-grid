@@ -23,7 +23,7 @@ include 'personality/se_dpm/puppet/no_pool_accounts';
 #CMS Federation
 include 'personality/se_dpm/puppet/federations';
 
-include if(FULL_HOSTNAME == DPM_HOSTS['dpm'][0]){XROOTD_FEDERATION_SITE_CONFIG};
+include if (FULL_HOSTNAME == DPM_HOSTS['dpm'][0]) XROOTD_FEDERATION_SITE_CONFIG;
 
 #Puppet configuration
 include 'features/puppet/config';
@@ -32,21 +32,33 @@ include 'personality/se_dpm/puppet/puppetconf';
 include 'personality/se_dpm/rpms/config';
 
 '/software/packages' = {
-    if(SEDPM_IS_HEAD_NODE){
-        if( match(OS_VERSION_PARAMS['major'], '[es]l[56]')){
+    if (SEDPM_IS_HEAD_NODE) {
+        if (match(OS_VERSION_PARAMS['major'], '[es]l[56]')) {
             pkg_repl('mysql-server');
-        }else{
+        } else {
             pkg_repl('mariadb-server');
         };
     };
     SELF;
 };
 
-'/software/packages/{dmlite-plugins-memcache}' = if(SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED){dict()}else{null};
+'/software/packages/{dmlite-plugins-memcache}' = {
+    if (SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED) {
+        dict();
+    } else {
+        null
+    };
+};
 
-'/software/packages/{memcached}' = if(SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED){dict()}else{null};
+'/software/packages/{memcached}' = {
+    if (SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED) {
+        dict();
+    } else {
+        null;
+    };
+};
 
-include if(FULL_HOSTNAME == DPM_HOSTS['dpm'][0]){'personality/se_dpm/puppet/bdii'};
+include if (FULL_HOSTNAME == DPM_HOSTS['dpm'][0]) 'personality/se_dpm/puppet/bdii';
 
 include 'components/profile/config';
 
