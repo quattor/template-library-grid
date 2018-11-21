@@ -7,8 +7,8 @@ include 'components/puppet/config';
 include 'quattor/functions/package';
 
 #Including the needed modules
-variable DPM_PUPPET_MODULE_VERSION ?= '0.5.8';
-variable DPM_PUPPET_MODULE ?= 'lcgdm-dpm';
+variable DPM_PUPPET_RELEASE_MODULES ?= false;
+variable DPM_PUPPET_FORGE_MODULES ?= !DPM_PUPPET_RELEASE_MODULES;
 
 #Fixing some default values
 variable GRIDFTP_REDIR_ENABLED ?= false;
@@ -23,17 +23,11 @@ variable DPM_LOG_LEVEL ?= 0;
 variable DPM_DISK_LOG_LEVEL ?= DPM_LOG_LEVEL;
 variable DPM_HEAD_LOG_LEVEL ?= DPM_LOG_LEVEL;
 
-'/software/components/puppet/modules' ?= dict();
-
-'/software/components/puppet/modules' = {
-    if (DPM_PUPPET_MODULE != 'NONE') {
-        SELF[escape(DPM_PUPPET_MODULE)] = dict('version', DPM_PUPPET_MODULE_VERSION);
-    };
-    SELF;
-};
-
 variable DPMMGR_UID ?= 970;
 variable DPMMGR_GID ?= 970;
+
+include if (DPM_PUPPET_FORGE_MODULES) 'personality/se_dpm/puppet/forge_modules';
+include if (DPM_PUPPET_RELEASE_MODULES) 'personality/se_dpm/puppet/release_modules';
 
 prefix '/software/components/puppet/hieradata';
 
