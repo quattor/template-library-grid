@@ -2,11 +2,7 @@
 
 unique template features/torque2/server/service;
 
-variable TORQUE_VERSION ?= if(OS_VERSION_PARAMS['major'] == 'sl5'){
-                                '2.5.9-1.cri';
-                           }else{
-                                '2.5.9-1.cri.el6';
-                           };
+variable TORQUE_VERSION ?= '2.5.9-1.cri';
 
 variable TORQUE_PBSWEBMON_ENABLED ?= false;
 
