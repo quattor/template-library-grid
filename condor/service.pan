@@ -41,3 +41,15 @@ include 'features/arc-ce/condor/schedd';
     'on', '',
     'startstop', true,
 );
+
+include 'features/arc-ce/container-images';
+
+variable HTCONDOR_DOCKER_IMAGES ?= dict();
+
+'/software/components/filecopy/services/{/etc/condor/config.d/67job-transform-docker.config}' = dict(
+    'config', substitute(file_contents('features/arc-ce/condor/job-transform-docker.config'), HTCONDOR_DOCKER_IMAGES),
+    'backup', false,
+    'owner', 'root:root',
+    'perms', '0644',
+    'restart', 'condor_reconfig'
+);
