@@ -1,0 +1,33 @@
+#!/bin/sh
+
+if [ "x$1" = "x0" ]; then
+  # Set environment variable containing queue name
+  env_idx=0
+  env_var="joboption_env_$env_idx"
+  while [ -n "${!env_var}" ]; do
+     env_idx=$((env_idx+1))
+     env_var="joboption_env_$env_idx"
+  done
+  export RUNTIME_ENABLE_MULTICORE_SCRATCH=1
+  eval joboption_env_$env_idx="NORDUGRID_ARC_QUEUE=$joboption_queue"
+fi
+
+if [ "x$1" = "x1" ]; then
+  # Set grid environment
+  if [ -e /etc/profile.d/env.sh ]; then
+     source /etc/profile.d/env.sh
+  fi
+  if [ -e /etc/profile.d/zz-env.sh ]; then
+     source /etc/profile.d/zz-env.sh
+  fi
+  export LD_LIBRARY_PATH=/opt/xrootd/lib
+
+  # Set basic environment variables
+  export GLOBUS_LOCATION=/usr
+  HOME=`pwd`
+  export HOME
+  USER=`whoami`
+  export USER
+  HOSTNAME=`hostname -f`
+  export HOSTNAME
+fi

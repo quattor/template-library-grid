@@ -1,0 +1,5 @@
+#!/bin/bash
+export VO_ATLAS_SW_DIR=/cvmfs/atlas.cern.ch/repo/sw
+export LD_LIBRARY_PATH=/opt/xrootd/lib
+export ATLAS_CGROUPS_BASE=/cgroup/memory
+#export CSEC_TRACE=3
