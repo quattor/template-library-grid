@@ -27,6 +27,13 @@ include 'features/arc-ce/condor/schedd';
 # Increase the ephemeral port range
 '/software/components/sysctl/variables/net.ipv4.ip_local_port_range' = '30000 65535';
 
+# Increase number of open files & processes
+'/software/components/filecopy/services/{/etc/security/limits.d/91-condor.conf}' = dict(
+    'config', file_contents('features/arc-ce/condor/limits.conf'),
+    'owner', 'root:root',
+    'perms', '0644',
+);
+
 # Directory for storing all condor history files
 # really needed? - only for condor-history-to-mysql
 '/software/components/dirperm/paths' = append(SELF, dict(
