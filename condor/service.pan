@@ -21,6 +21,14 @@ variable CONDOR_ARCH ?= 'x86_64';
     pkg_repl('condor-procd', CONDOR_VERSION, CONDOR_ARCH);
 };
 
+'/software/components/filecopy/services/{/etc/condor/config.d/12resourcelimits.config}' = dict(
+    'config', file_contents('features/arc-ce/condor/resourcelimits.config'),
+    'backup', false,
+    'owner', 'root:root',
+    'perms', '0644',
+    'restart', '/usr/sbin/condor_reconfig -daemon schedd',
+);
+
 ## Configure as schedd
 include 'features/arc-ce/condor/schedd';
 
