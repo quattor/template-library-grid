@@ -7,14 +7,17 @@ unique template features/mysql/server;
 # ----------------------------------------------------------------------------
 # chkconfig
 # ----------------------------------------------------------------------------
-include { 'components/chkconfig/config' };
+include 'components/chkconfig/config';
 
 
 # ----------------------------------------------------------------------------
 # Enable and start MySQL service
 # ----------------------------------------------------------------------------
-"/software/components/chkconfig/service/mariadbd/on" = "";
-"/software/components/chkconfig/service/mariadbd/startstop" = true;
+variable DAEMON_MYSQL ?= "mariadb";
+"/software/components/chkconfig/service/" = npush(DAEMON_MYSQL , dict(
+    'on', '',
+    'startstop', true,
+));
 
 
 # ----------------------------------------------------------------------------
@@ -31,12 +34,12 @@ include { 'components/chkconfig/config' };
 # ----------------------------------------------------------------------------
 # etcservices
 # ----------------------------------------------------------------------------
-include { 'components/etcservices/config' };
+include 'components/etcservices/config';
 
 "/software/components/etcservices/entries" =
-  push("mariadb 3306/tcp");
+    push("mariadb 3306/tcp");
 "/software/components/etcservices/entries" =
-  push("mariadb 3306/udp");
+    push("mariadb 3306/udp");
 
 
 # ----------------------------------------------------------------------------
