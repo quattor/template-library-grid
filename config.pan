@@ -106,6 +106,9 @@ include 'features/arc-ce/largefiles';
 # Filebeat
 include 'features/arc-ce/filebeat';
 
+# Process history files and forward to accounting database
+include 'features/arc-ce/accounting';
+
 # Running fetch-crl every 6 hours (the default) doesn't seem to be enough -
 # CRLs have expired twice between fetch-crl runs
 include 'features/arc-ce/fetch-crl';
