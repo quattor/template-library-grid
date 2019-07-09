@@ -21,6 +21,9 @@ variable CONDOR_ARCH ?= 'x86_64';
     pkg_repl('condor-procd', CONDOR_VERSION, CONDOR_ARCH);
 };
 
+## Configure as schedd
+include 'features/arc-ce/condor/schedd';
+
 # Increase the ephemeral port range
 '/software/components/sysctl/variables/net.ipv4.ip_local_port_range' = '30000 65535';
 
