@@ -42,6 +42,30 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+variable VOS ?= list(
+    'alice',
+    'atlas',
+    'cms',
+    'lhcb',
+    'biomed',
+    'geant4',
+    'hyperk.org',
+    'mice',
+    'na62.vo.gridpp.ac.uk',
+    'snoplus.snolab.ca',
+    'lsst',
+    't2k.org',
+    'enmr.eu',
+    'ilc',
+    'pheno',
+    'glast.org',
+    'gridpp',
+    'osg',
+    'dteam',
+    'ops',
+    'skatelescope.eu',
+    'dune',
+);
 
 variable CONDOR_VERSION ?= '8.6.13-1.el6';
 variable CONDOR_ARCH ?= 'x86_64';
