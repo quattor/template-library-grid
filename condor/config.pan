@@ -26,6 +26,16 @@ include 'features/arc-ce/condor/shared-port';
     'restart', '/usr/sbin/condor_reconfig',
 );
 
+'/software/components/filecopy/services/{/etc/condor/condor_config.local}' = dict(
+    'config', "CONDOR_ADMIN = root@gridpp.rl.ac.uk\n",
+    'backup', false,
+    'owner', 'root:root',
+    'perms', '0644',
+);
+
+# Use per-job condor history files
+include 'features/arc-ce/condor/perjobhistory';
+
 # Ensure condor_q behaves the old way in HTCondor 8.6.x
 # still needed ? - 30 Jan 2019 - cc34
 include 'features/arc-ce/condor/new-condor-arc-fix';
