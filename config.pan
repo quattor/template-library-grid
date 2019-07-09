@@ -70,6 +70,7 @@ variable VOS ?= list(
 variable CONDOR_VERSION ?= '8.6.13-1.el6';
 variable CONDOR_ARCH ?= 'x86_64';
 variable ARC_VERSION ?= '5.4.3-1.el6';
+variable VO_SW_AREAS_USE_SWMGR ?= false;
 
 include 'features/arc-ce/rpms';
 
