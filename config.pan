@@ -24,6 +24,9 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+# Plugins
+include 'features/arc-ce/plugins/config';
+
 # Local changes
 include 'features/arc-ce/changes';
 
