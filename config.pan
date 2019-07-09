@@ -24,6 +24,9 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+# Filebeat
+include 'features/arc-ce/filebeat';
+
 # Running fetch-crl every 6 hours (the default) doesn't seem to be enough -
 # CRLs have expired twice between fetch-crl runs
 include 'features/arc-ce/fetch-crl';

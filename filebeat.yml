@@ -1,0 +1,19 @@
+---
+filebeat:
+  prospectors:
+  - document_type: arc
+    input_type: log
+    paths:
+    - /var/log/arc/gm-jobs.log
+  - document_type: condor_schedd
+    input_type: log
+    paths:
+    - /var/lib/condor/spool/history
+  registry_file: /var/lib/filebeat/registry
+logging:
+  to_syslog: true
+output:
+  logstash:
+    hosts:
+    - logstash-ingestor01.gridpp.rl.ac.uk:5001
+    - logstash-ingestor02.gridpp.rl.ac.uk:5001
