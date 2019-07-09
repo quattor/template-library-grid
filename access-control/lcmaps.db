@@ -1,0 +1,20 @@
+# default lookup path for modules
+path = /usr/lib64/lcmaps
+
+verify_proxy = "lcmaps_verify_proxy.mod"
+                    "-certdir /etc/grid-security/certificates"
+                    "--discard_private_key_absence"
+                    "--allow-limited-proxy"
+
+pepc = "lcmaps_c_pep.mod"
+            "--pep-daemon-endpoint-url https://%s:8154/authz"
+            "--resourceid http://authz-interop.org/xacml/resource/resource-type/arc"
+            "--actionid http://glite.org/xacml/action/execute"
+            "--capath /etc/grid-security/certificates/"
+            "--certificate /etc/grid-security/hostcert.pem"
+            "--key /etc/grid-security/hostkey.pem"
+
+
+# Policies:
+arc:
+verify_proxy -> pepc
