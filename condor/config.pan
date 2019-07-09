@@ -8,3 +8,6 @@ include 'features/arc-ce/condor/security';
 
 # Jobs requiring xrootd access to Echo must specify this
 include 'features/arc-ce/condor/echo-gateway';
+
+# configure accounting groups
+include 'features/arc-ce/condor/accounting-groups';
