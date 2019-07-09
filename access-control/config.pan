@@ -10,3 +10,6 @@ prefix '/software/components/filecopy/services';
 '{/usr/etc/lcas/ban_users.db}/config' = file_contents('features/arc-ce/access-control/ban_users.db');
 '{/usr/etc/lcas/lcas.db}/config' = file_contents('features/arc-ce/lcas.db');
 '{/usr/etc/lcmaps/lcmaps.db}/config' = format(file_contents('features/arc-ce/access-control/lcmaps.db'), RAL_ARGUS_SERVER);
+
+# empty local-grid-mapfile-ral file
+'{/etc/grid-security/local-grid-mapfile-ral}/config' = '';
