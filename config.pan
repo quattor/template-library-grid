@@ -24,6 +24,8 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+include 'features/arc-ce/service';
+
 # Setup required directories
 include 'features/arc-ce/setup';
 
