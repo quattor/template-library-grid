@@ -13,3 +13,6 @@ prefix '/software/components/filecopy/services';
 
 # empty local-grid-mapfile-ral file
 '{/etc/grid-security/local-grid-mapfile-ral}/config' = '';
+
+# empty grid-mapfile file - is it needed??
+'{/etc/grid-security/grid-mapfile}/config' = '';
