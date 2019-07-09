@@ -24,6 +24,9 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+# Create files containing number of running & idle jobs by VO
+include 'features/arc-ce/jobs';
+
 # Additional log rotations
 include 'features/arc-ce/logrotations';
 
