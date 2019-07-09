@@ -24,6 +24,9 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+# Replace large files with warning messages
+include 'features/arc-ce/largefiles';
+
 # Filebeat
 include 'features/arc-ce/filebeat';
 
