@@ -24,6 +24,9 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+# Local changes
+include 'features/arc-ce/changes';
+
 # Delete old archived accounting records
 include 'features/arc-ce/cleaning';
 
