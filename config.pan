@@ -42,6 +42,11 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+
+variable CONDOR_VERSION ?= '8.6.13-1.el6';
+variable CONDOR_ARCH ?= 'x86_64';
+variable ARC_VERSION ?= '5.4.3-1.el6';
+
 include 'features/arc-ce/rpms';
 
 include 'features/arc-ce/service';
