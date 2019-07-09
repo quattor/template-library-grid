@@ -9,6 +9,9 @@ include 'features/arc-ce/condor/security';
 # Jobs requiring xrootd access to Echo must specify this
 include 'features/arc-ce/condor/echo-gateway';
 
+# Common Condor configuration
+include 'features/arc-ce/condor/service';
+
 # use shared port
 include 'features/arc-ce/condor/shared-port';
 
