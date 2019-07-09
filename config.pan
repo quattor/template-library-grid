@@ -24,6 +24,9 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+# Additional log rotations
+include 'features/arc-ce/logrotations';
+
 # Replace large files with warning messages
 include 'features/arc-ce/largefiles';
 
