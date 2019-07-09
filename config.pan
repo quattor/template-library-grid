@@ -3,6 +3,24 @@ template features/arc-ce/config;
 include 'components/chkconfig/config';
 
 
+'/software/repositories' = append(create('repository/EMI-UMD4_updates_x86_64'));
+'/software/repositories' = append(create('repository/nordugrid_centos_el6_x86_64'));
+'/software/repositories' = append(create('repository/xrootd/el6-x86_64'));
+
+
+# GIIS configuration
+variable IS_UK_GIIS = (FULL_HOSTNAME == 'arc-ce01.gridpp.rl.ac.uk' || FULL_HOSTNAME == 'arc-ce02.gridpp.rl.ac.uk');
+
+variable GIIS_INDEX = if (IS_UK_GIIS) {
+    if (FULL_HOSTNAME == 'arc-ce01.gridpp.rl.ac.uk') 'index1.gridpp.rl.ac.uk'
+    else 'index2.gridpp.rl.ac.uk';
+}
+else {
+    '';
+};
+
+variable ARC_CONF_GIIS ?= file_contents('features/arc-ce/giis.conf');
+
 # Make sure the appropriate services are running
 prefix '/software/components/chkconfig/service';
 
@@ -23,6 +41,8 @@ prefix '/software/components/chkconfig/service';
     'on', '',
     'startstop', true,
 ) else null;
+
+include 'features/arc-ce/rpms';
 
 include 'features/arc-ce/service';
 
