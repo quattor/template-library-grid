@@ -24,6 +24,9 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+# Delete old archived accounting records
+include 'features/arc-ce/cleaning';
+
 # Create files containing number of running & idle jobs by VO
 include 'features/arc-ce/jobs';
 
