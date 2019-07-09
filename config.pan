@@ -27,6 +27,9 @@ prefix '/software/components/chkconfig/service';
 # Access control - LCAS LCMAPS etc.
 include 'features/arc-ce/access-control/config';
 
+# vomses and vomsdir (/opt/glite/etc/vomses)
+include 'features/arc-ce/vomsdir';
+
 # Plugins
 include 'features/arc-ce/plugins/config';
 
