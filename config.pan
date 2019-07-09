@@ -24,6 +24,9 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+# Setup required directories
+include 'features/arc-ce/setup';
+
 # Access control - LCAS LCMAPS etc.
 include 'features/arc-ce/access-control/config';
 
