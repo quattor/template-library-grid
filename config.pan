@@ -24,6 +24,9 @@ prefix '/software/components/chkconfig/service';
     'startstop', true,
 ) else null;
 
+# Access control - LCAS LCMAPS etc.
+include 'features/arc-ce/access-control/config';
+
 # Plugins
 include 'features/arc-ce/plugins/config';
 
