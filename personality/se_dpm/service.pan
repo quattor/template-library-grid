@@ -12,7 +12,15 @@ include 'features/security/host_certs';
 include 'features/ldconf/config';
 
 # EDG, LCG, and Globus sysconfig files and environment variables
-include 'features/globus/sysconfig';
+variable GLOBUS_SYSCONFIG_INCLUDE ?= {
+    if (DPM_USE_PUPPET_CONFIG) {
+        'features/globus/env';
+    } else {
+        'features/globus/sysconfig';
+    };
+};
+
+include GLOBUS_SYSCONFIG_INCLUDE;
 include 'features/grid/env';
 
 
