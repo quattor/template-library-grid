@@ -28,7 +28,6 @@ variable DMLITE_MEMCACHE_ENABLED ?= false;
     pkg_repl('dpm-devel');
     pkg_repl('dpm-dsi');
     pkg_repl('dpm-perl');
-    pkg_repl('dpm-python');
     pkg_repl('dpm-rfio-server');
     pkg_repl('dmlite-plugins-adapter');
     pkg_repl('edg-mkgridmap');
@@ -58,6 +57,12 @@ variable DMLITE_MEMCACHE_ENABLED ?= false;
         }else{
             pkg_repl('dmlite-dpmdisk');
         };
+    };
+
+    if (pkg_compare_version(DPM_VERSION, '1.12.0') == PKG_VERSION_LESS) {
+        pkg_repl('dpm-python');
+    } else {
+        pkg_repl('python2-dpm');
     };
 
     SELF;
