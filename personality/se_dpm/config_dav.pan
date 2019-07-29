@@ -61,7 +61,7 @@ include 'components/filecopy/config';
 #
 # Patch /etc/httpd/conf/httpd.conf
 #
-variable contents = {
+variable PATCH_FILE_CONTENTS = {
     "#!/bin/bash\n" +
     'sed -i "s/User .*/User ' + DPM_USER + '/g" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n" +
     'sed -i "s/Group .*/Group ' + DPM_GROUP + '/g" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n" +
@@ -75,7 +75,7 @@ variable contents = {
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = if (is_boolean(DPM_DAV_ENABLED) && DPM_DAV_ENABLED) {
     SELF[escape('/usr/local/quattor/sbin/dpm-dav_httpd.conf_patch.sh')] = dict(
-        'config', contents,
+        'config', PATCH_FILE_CONTENTS,
         'owner', 'root',
         'group', 'root',
         'perms', '0755',
