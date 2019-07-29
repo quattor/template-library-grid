@@ -172,9 +172,11 @@ variable XROOTD_PARAMS = {
 ###############################################################################
 
 include 'components/filecopy/config';
+
+variable DPM_XROOT_SYSCONFIG_TEMPLATE ?= 'personality/se_dpm/xrootd.dpm-templ';
 '/software/components/filecopy/services' = {
     SELF[escape(DPM_XROOTD_SYSCONFIG_FILE + '.templ-quattor')] = dict(
-        'config', file_contents('personality/se_dpm/xrootd.dpm-templ'),
+        'config', file_contents(DPM_XROOT_SYSCONFIG_TEMPLATE),
         'owner', 'root:root',
         'perms', '0644',
         'restart', 'cp ' + DPM_XROOTD_SYSCONFIG_FILE + '.templ-quattor ' + DPM_XROOTD_SYSCONFIG_FILE,
