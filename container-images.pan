@@ -6,11 +6,11 @@ variable HTCONDOR_DOCKER_IMAGES = {
     images = dict(
         'el6', dict(
             'repository', 'stfc/grid-workernode-c6',
-            'tag', '2019-04-09.1',
+            'tag', '2019-07-02.1',
         ),
         'el7', dict(
             'repository', 'stfc/grid-workernode-c7',
-            'tag', '2019-04-09.1',
+            'tag', '2019-07-02.1',
         ),
     );
 
