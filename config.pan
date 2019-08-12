@@ -115,3 +115,6 @@ include 'features/arc-ce/fetch-crl';
 
 # Configure HTCondor (schedd)
 include 'features/arc-ce/condor/config';
+
+# Runtime environments
+include 'features/arc-ce/runtime-environments/config';
