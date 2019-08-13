@@ -287,7 +287,8 @@ function add_vo_infos = {
                     to_string(previous_mapping) + " which uses the same account suffix (" +
                     mapping['suffix'] + ")"
                 );
-                voms_mappings[previous_mapping]['fqan'][length(voms_mappings[previous_mapping]['fqan'])] = mapping['fqan'];
+                previous_mapping_idx = length(voms_mappings[previous_mapping]['fqan']);
+                voms_mappings[previous_mapping]['fqan'][previous_mapping_idx] = mapping['fqan'];
                 add_mapping = false;
             } else {
                 mapping_fqan = list(mapping['fqan']);
@@ -1417,7 +1418,7 @@ function combine_vo_env = {
 
     vo_areas = ARGV[1];
     default_se_list = ARGV[2];
-    if (ARGC>3 && is_defined(ARGV[3])) {
+    if (ARGC > 3 && is_defined(ARGV[3])) {
         default_se_sc3 = ARGV[3];
     };
 
@@ -1592,6 +1593,11 @@ function vo_get_dir_attrs = {
                     debug(mnt_point + ' is not a NFS-served FS or is not served by ' + FULL_HOSTNAME);
                     result['create'] = false;
                 };
+            } else if (dir_not_home && is_boolean(CVMFS_CLIENT_ENABLED) && CVMFS_CLIENT_ENABLED && match(e_mnt_point, 'cvmfs')) {
+                debug(mnt_point +' is a CVMFS file system');
+                ok = false;
+                result['shared'] = true;
+                result['create'] = false;
             } else {
                 toks = matches(mnt_point, '(.+)/([\w\.\-]+)');
                 if ( length(toks) >= 2 ) {

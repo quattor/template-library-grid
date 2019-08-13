@@ -10,7 +10,7 @@ include 'rpms/scientific-libraries';
 include 'features/wlcg/config';
 
 # Add UI RPMs
-include 'personality/ui/rpms/config' };
+include 'personality/ui/rpms/config';
 
 # Modify the loadable library path.
 include 'features/ldconf/config';
