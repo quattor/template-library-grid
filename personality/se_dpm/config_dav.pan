@@ -61,17 +61,24 @@ include 'components/filecopy/config';
 #
 # Patch /etc/httpd/conf/httpd.conf
 #
-variable PATCH_FILE_CONTENTS = {
+variable PATCH_FILE_CONTENTS = format(
     "#!/bin/bash\n" +
-    'sed -i "s/User .*/User ' + DPM_USER + '/g" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n" +
-    'sed -i "s/Group .*/Group ' + DPM_GROUP + '/g" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n" +
-    'sed -i "s/#*ServerName .*/ServerName ' + FULL_HOSTNAME + '/g" ' +  HTTPD_CONF_DIR + "/conf/httpd.conf\n" +
-    'sed -i "s/^LoadModule dav_module \(.*\)/#LoadModule dav_module \1/g" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n" +
-    'sed -i "s/^LoadModule dav_fs_module \(.*\)/#LoadModule dav_fs_module \1/g" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n" +
-    'sed -i "s/^[# ]*KeepAlive .*/KeepAlive On/" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n" +
-    'sed -i "s/^MaxRequestsPerChild\s*0/MaxRequestsPerChild  ' + to_string(DPM_DAV_MAXREQUESTSPERCHILD) + '/" ' + HTTPD_CONF_DIR + "/conf/httpd.conf\n";
+    "sed -i 's/User .*/User %s/g' %s/conf/httpd.conf\n" +
+    "sed -i 's/Group .*/Group %s/g' %s/conf/httpd.conf\n" +
+    "sed -i 's/#*ServerName .*/ServerName %s/g' %s/conf/httpd.conf\n" +
+    "sed -i 's/^LoadModule dav_module \\(.*\\)/#LoadModule dav_module \\1/g' %s/conf/httpd.conf\n" +
+    "sed -i 's/^LoadModule dav_fs_module \\(.*\\)/#LoadModule dav_fs_module \\1/g' %s/conf/httpd.conf\n" +
+    "sed -i 's/^[# ]*KeepAlive .*/KeepAlive On/' %s/conf/httpd.conf\n" +
+    "sed -i 's/^MaxRequestsPerChild\\s*0/MaxRequestsPerChild  %s/' %s/conf/httpd.conf\n",
+    DPM_USER, HTTPD_CONF_DIR,
+    DPM_GROUP, HTTPD_CONF_DIR,
+    FULL_HOSTNAME, HTTPD_CONF_DIR,
+    HTTPD_CONF_DIR,
+    HTTPD_CONF_DIR,
+    HTTPD_CONF_DIR,
+    to_string(DPM_DAV_MAXREQUESTSPERCHILD), HTTPD_CONF_DIR,
+);
 
-};
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = if (is_boolean(DPM_DAV_ENABLED) && DPM_DAV_ENABLED) {
     SELF[escape('/usr/local/quattor/sbin/dpm-dav_httpd.conf_patch.sh')] = dict(
