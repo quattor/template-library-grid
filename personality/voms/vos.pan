@@ -35,7 +35,7 @@ variable CONTENTS = {
                 substitute("--core-port ${port}", params),
                 substitute("--dbname ${dbName}", params),
                 if (exists(params['timeout'])) {
-                    substitute('--timeout ${timeout}', params),
+                    substitute('--timeout ${timeout}', params);
                 },
                 '--csrf-log-only',
                 substitute("--mail-from ${adminEmail}", params)
