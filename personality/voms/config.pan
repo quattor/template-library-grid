@@ -1,34 +1,37 @@
 unique template personality/voms/config;
 
-include { 'personality/voms/variables' };
+include 'components/chkconfig/config';
+include 'components/filecopy/config';
 
-include { 'personality/voms/mysql' };
-include { 'personality/voms/vos' };
-include { 'features/gip/base' };
+include 'personality/voms/mysql';
+include 'personality/voms/variables';
+include 'personality/voms/vos';
 
-include { 'components/filecopy/config' };
+include 'features/gip/base';
+
 prefix '/software/components/filecopy/services';
-'{/etc/sysconfig/voms}'=
-  nlist(
+
+'{/etc/sysconfig/voms}' = dict(
     'config', file_contents('personality/voms/files/voms.sysconfig'),
     'owner', 'root:root',
     'perms', '0644',
 );
 
-'{/etc/sysconfig/voms-admin}' =
-  nlist(
-    'config', format(file_contents('personality/voms/files/voms-admin.sysconfig'),
-                     VOMS_TOMCAT_MS,
-                     VOMS_TOMCAT_MX,
-                     VOMS_TOMCAT_MAXPERMSIZE
-                     ),
+'{/etc/sysconfig/voms-admin}' = dict(
+    'config', format(
+        file_contents('personality/voms/files/voms-admin.sysconfig'),
+        VOMS_TOMCAT_MS,
+        VOMS_TOMCAT_MX,
+        VOMS_TOMCAT_MAXPERMSIZE
+    ),
     'owner', 'root:root',
     'perms', '0644',
 );
 
-include { 'components/chkconfig/config' };
+prefix "/software/components/chkconfig/service";
 
- "/software/components/chkconfig/service/voms/on" = "";
- "/software/components/chkconfig/service/voms/startstop" = true;
- "/software/components/chkconfig/service/voms-admin/on" = "";
- "/software/components/chkconfig/service/voms-admin/startstop" = true;
+"voms/on" = "";
+"voms/startstop" = true;
+
+"voms-admin/on" = "";
+"voms-admin/startstop" = true;
