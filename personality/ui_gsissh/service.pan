@@ -5,7 +5,6 @@ template personality/ui_gsissh/service;
 include 'personality/ui/service';
 
 # Configure Globus sysconfig variables
-# TODO : check if EDG/LCG sysconfig really needed on a UI...
 include 'features/globus/sysconfig';
 
 # Ensure that the host certificates have the correct permissions.
