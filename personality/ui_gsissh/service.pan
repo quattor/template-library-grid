@@ -4,9 +4,6 @@ template personality/ui_gsissh/service;
 # Add base UI
 include 'personality/ui/service';
 
-# Add RPMs specific to GSISSH UI
-#include 'personality/ui_gsissh/rpms/config';
-
 # Configure Globus sysconfig variables
 # TODO : check if EDG/LCG sysconfig really needed on a UI...
 include 'features/globus/sysconfig';
