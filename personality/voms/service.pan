@@ -10,12 +10,7 @@ variable VOMS_DB_SERVER ?= FULL_HOSTNAME;
 '/software/packages' = pkg_repl('emi-voms-mysql');
 
 # Add site specific configuration (mandatory)
-variable VOMS_CONFIG_SITE = if (exists(VOMS_CONFIG_SITE) && is_defined(VOMS_CONFIG_SITE)) {
-    SELF;
-} else {
-    error("VOMS_CONFIG_SITE must be defined (VOMS server configuration)");
-};
-
+variable VOMS_CONFIG_SITE ?= error("VOMS_CONFIG_SITE must be defined (VOMS server configuration)");
 include VOMS_CONFIG_SITE;
 
 # Add glite user
