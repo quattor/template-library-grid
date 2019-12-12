@@ -38,7 +38,7 @@ variable CONTENTS = {
                     substitute('--timeout ${timeout}', params);
                 },
                 '--csrf-log-only',
-                substitute("--mail-from ${adminEmail}", params)
+                substitute("--mail-from ${adminEmail}", params),
                 format('--smtp-host %s', VOMS_ADMIN_SMTP_HOST),
             );
             cmds = append(cmds, join(' ', cmd));
