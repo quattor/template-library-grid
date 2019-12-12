@@ -22,9 +22,7 @@ include 'features/lcmaps/base';
 # Configuration for LCAS.
 include 'features/lcas/base';
 
-#
 # Include gsissh server
-#
 include 'components/iptables/config';
 include 'features/gsissh/server/config';
 
