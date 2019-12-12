@@ -37,7 +37,7 @@ prefix '/software/components/symlink';
         "target", "/usr/share/java/log4j.jar",
         "replace", dict("all", "yes"),
     ),
-);
+));
 
 prefix '/software/components/filecopy';
 
