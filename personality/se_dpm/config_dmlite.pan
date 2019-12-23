@@ -26,7 +26,7 @@ variable library = if (PKG_ARCH_DEFAULT == 'x86_64') {
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
     this = "LoadPlugin plugin_config /usr/" + library + "/dmlite/plugin_config.so\n";
-    if ( (DPM_VERSION >= '1.9') || (DPM_VERSION == '1.8.9') || match(DPM_VERSION, '^1\.8\.1\d$') ) {
+    if (pkg_compare_version(DPM_VERSION, '1.8.8') == PKG_VERSION_GREATER) {
         this = this + 'LogLevel ' + DMLITE_LOGLEVEL + "\n";
     };
     this = this + "Include /etc/dmlite.conf.d/*.conf\n";

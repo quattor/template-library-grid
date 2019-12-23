@@ -81,8 +81,8 @@ variable XROOTD_SERVER_ROLES = {
 
 # DPM/Xrootd expot path root
 variable DPM_XROOTD_EXPORT_PATH_ROOT ?= {
-    domain = replace('^[\w\-]+\.', '', DPM_HOSTS['dpm'][0]);
-    '/dpm/' + domain + '/home';
+    path_root = '/dpm/' + replace('^[\w\-]+\.', '', DPM_HOSTS['dpm'][0]) + '/home';
+    path_root;
 };
 
 
@@ -111,7 +111,11 @@ variable XROOTD_TOKEN_AUTH_PARAMS = {
                 first(SELF['exportedVOs'], vo, params);
                 SELF['mappedFQANs'] = list('/' + vo);
             } else {
-                error("XROOTD_TOKEN_AUTH_PARAMS['mappedFQANs'] must be specified when multiple VOs are exported with token-based authz");
+                error(
+                    "XROOTD_TOKEN_AUTH_PARAMS['mappedFQANs'] must be " +
+                    "specified when multiple VOs are exported with " +
+                    "token-based authz"
+                );
             };
         } else {
             if ( !is_list(SELF['mappedFQANs']) ) {
@@ -123,7 +127,11 @@ variable XROOTD_TOKEN_AUTH_PARAMS = {
                 first(XROOTD_TOKEN_AUTH_PARAMS['exportedVOs'], vo, params);
                 SELF['authorizedPaths'] = list(DPM_XROOTD_EXPORT_PATH_ROOT + '/' + vo);
             } else {
-                error("XROOTD_TOKEN_AUTH_PARAMS['authorizedPaths'] must be specified when multiple VOs are exported with token-based authz");
+                error(
+                    "XROOTD_TOKEN_AUTH_PARAMS['authorizedPaths'] must be " +
+                    "specified when multiple VOs are exported with " +
+                    "token-based authz"
+                );
             };
         };
         SELF['exportedPathRoot'] = DPM_XROOTD_EXPORT_PATH_ROOT;
@@ -172,9 +180,11 @@ variable XROOTD_PARAMS = {
 ###############################################################################
 
 include 'components/filecopy/config';
+
+variable DPM_XROOT_SYSCONFIG_TEMPLATE ?= 'personality/se_dpm/xrootd.dpm-templ';
 '/software/components/filecopy/services' = {
     SELF[escape(DPM_XROOTD_SYSCONFIG_FILE + '.templ-quattor')] = dict(
-        'config', file_contents('personality/se_dpm/xrootd.dpm-templ'),
+        'config', file_contents(DPM_XROOT_SYSCONFIG_TEMPLATE),
         'owner', 'root:root',
         'perms', '0644',
         'restart', 'cp ' + DPM_XROOTD_SYSCONFIG_FILE + '.templ-quattor ' + DPM_XROOTD_SYSCONFIG_FILE,
