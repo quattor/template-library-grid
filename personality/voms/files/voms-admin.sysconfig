@@ -1,0 +1,19 @@
+#
+# Managed by Quattor
+#
+# The prefix for the VOMS Admin installation
+PREFIX=/
+
+# The path where VOMS Admin configuration files are located
+# Do not change this unless you know exactly what you are doing
+CONF_DIR=/etc/voms-admin
+
+# The user under which the VOMS Admin process will run
+VOMS_USER=voms
+
+# Oracle library path
+ORACLE_LIBRARY_PATH=/usr/lib64/oracle/11.2.0.3.0/client/lib64
+
+# Default oracle tnsnames.ora location
+TNS_ADMIN=/etc/voms
+VOMS_JAVA_OPTS="-Xms%s -Xmx%s -XX:MaxPermSize=%s"
