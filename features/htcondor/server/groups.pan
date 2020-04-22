@@ -55,6 +55,11 @@ variable CONDOR_CONFIG = {
         SELF['group_defaults']['quota'] = 0.1;
     };
 
+    # By default, we let GROUP_SORT_EXPR as defined
+    if (!is_defined(SELF['group_defaults']['boost_multicore'])) {
+      SELF['group_defaults']['boost_multicore'] = false;
+    };
+
     # Now build the groups structure
     foreach (i; group; SELF['groups']) {
         if (!is_defined(group['static'])) {

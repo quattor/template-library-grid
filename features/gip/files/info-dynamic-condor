@@ -19,8 +19,9 @@ class InfoDynamicCondor(object):
         self.version = htcondor.version()[16:22]
         self.cpus = 0
         self.free = 0
+        self.processors = 0
         self.vo = {}
-        # TODO: This value should be compute
+        # TODO: This value should be computed
         self.max_waiting = 2000
         self.max_memory = 2048
         self.max_slot_per_job = 8
@@ -39,12 +40,21 @@ class InfoDynamicCondor(object):
         worker_nodes = collector.query(htcondor.AdTypes.Startd)
         self.total_cpus(worker_nodes)
         self.total_free(worker_nodes)
+        self.total_machines(worker_nodes)
 
         # Scheduler provide information about jobs
         scheduler_address = collector.locate(htcondor.DaemonTypes.Schedd, self.scheduler_address)
         scheduler = htcondor.Schedd(scheduler_address)
         jobs = scheduler.query()
         self.per_vo_jobs(jobs)
+
+    def total_machines(self, worker_nodes):
+        """
+        just count the number of processors (assuming machines are all bi proc)
+        """
+        for worker_node in worker_nodes:
+            if not ('DynamicSlot' in worker_node):
+                self.processors += 2
 
     def total_cpus(self, worker_nodes):
         """
@@ -87,17 +97,20 @@ class InfoDynamicCondor(object):
             # We only considere Running and Idle job, we ignore any other state (completed, ...)
             if job['JobStatus'] == 1 or job['JobStatus'] == 2:
                 # If this is the first job for this VO we create a empty entry
-                if job['x509UserProxyVOName'] not in self.vo:
-                    self.vo[job['x509UserProxyVOName']] = {'total': 0,
-                                                           'running': 0,
-                                                           'waiting': 0
-                                                           }
-                # TODO: Is it really useful ?
-                self.vo[job['x509UserProxyVOName']]['total'] += 1
-                if job['JobStatus'] == 1:
-                    self.vo[job['x509UserProxyVOName']]['waiting'] += 1
-                else:
-                    self.vo[job['x509UserProxyVOName']]['running'] += 1
+                try:
+                    if job['x509UserProxyVOName'] not in self.vo:
+                        self.vo[job['x509UserProxyVOName']] = {'total': 0,
+                                                               'running': 0,
+                                                               'waiting': 0
+                                                               }
+                    # TODO: Is it really useful ?
+                    self.vo[job['x509UserProxyVOName']]['total'] += 1
+                    if job['JobStatus'] == 1:
+                        self.vo[job['x509UserProxyVOName']]['waiting'] += 1
+                    else:
+                        self.vo[job['x509UserProxyVOName']]['running'] += 1
+                except KeyError:
+                    pass
 
 
 class ConsoleView(object):
@@ -121,6 +134,7 @@ class Glue1View(object):
     def display(dynamic_information, glue1_ldif):
         options = dynamic_information.__dict__
         options['waiting'] = dynamic_information.total_waiting()
+        options['serving_status'] = options['status'].lower()
         file = open(glue1_ldif, "r")
         for line in file:
             if line.startswith('dn: GlueCEUniqueID='):
@@ -133,7 +147,7 @@ class Glue1View(object):
                       "GlueCEPolicyMaxRunningJobs: {cpus}\n" \
                       "GlueCEPolicyMaxWallClockTime: {max_wall_clock_time}\n" \
                       "GlueCEPolicyMaxCPUTime: {max_cpu_time}\n" \
-                      "GlueCEStateStatus: {status}\n" \
+                      "GLUE2ComputingShareServingState: {serving_status}\n" \
                       "GlueCEInfoLRMSVersion: {version}\n" \
                       "GlueCEInfoLRMSType: {name}".format(**options)
         file.close()
@@ -144,12 +158,15 @@ class Glue2View(object):
     Class to display into GLUE2 information
     """
     @staticmethod
-    def display(dynamic_information, glue2_ldif):
+    def display(dynamic_information, glue2_ldif, ee_ldif):
         # TODO: Make a per-vo output instead of global output
         options = dynamic_information.__dict__
         options['waiting'] = dynamic_information.total_waiting()
         options['max_total'] = dynamic_information.max_waiting + dynamic_information.cpus
-        options['current_date'] = datetime.datetime.now().isoformat()
+        options['current_date'] = datetime.datetime.now().isoformat().split('.')[0]
+        options['serving_status'] = options['status'].lower()
+        options['pcpus']=str(round(options['cpus']/2,0)).split('.')[0]
+        options['cores']=str(round(options['cpus']/options['processors'],0)).split('.')[0]
         file = open(glue2_ldif, "r")
         for line in file:
             if line.startswith('dn: GLUE2ShareID'):
@@ -159,7 +176,6 @@ class Glue2View(object):
                              "GLUE2ComputingShareMaxWaitingJobs: {max_waiting}\n" \
                              "GLUE2ComputingShareMaxTotalJobs: {max_total}\n" \
                              "GLUE2ComputingShareServingState: {status}\n" \
-                             "GLUE2ComputingShareWaitingJobs: {waiting}\n" \
                              "GLUE2EntityCreationTime: {current_date}\n" \
                              "GLUE2ComputingShareMaxWallTime: {max_wall_clock_time}\n" \
                              "GLUE2ComputingShareDefaultWallTime: {max_wall_clock_time}\n" \
@@ -170,7 +186,19 @@ class Glue2View(object):
                              "GLUE2ComputingShareMaxVirtualMemory: {max_virtual_memory}" \
                              "".format(**options)
         file.close()
-
+        file = open(ee_ldif, "r")
+        for line in file:
+            if line.startswith('dn: GLUE2ResourceID'):
+                print line + "" \
+                             "GLUE2ExecutionEnvironmentLogicalCPUs: {cpus}\n" \
+                             "GLUE2ExecutionEnvironmentPhysicalCPUs: {processors}\n" \
+                             "GLUE2ExecutionEnvironmentTotalInstances: {pcpus}\n" \
+                             "GLUE2ExecutionEnvironmentCPUClockSpeed: 2400\n" \
+                             "GLUE2ExecutionEnvironmentMainMemorySize: {max_memory}\n" \
+                             "GLUE2ExecutionEnvironmentVirtualMemorySize: {max_virtual_memory}\n" \
+                             "GLUE2EntityOtherInfo: Cores={cores}" \
+                             "".format(**options)
+        file.close()
 
 def main():
     """
@@ -184,6 +212,7 @@ def main():
     parser.add_argument('--scheduler', dest='scheduler', help='Address of scheduler')
     parser.add_argument('--glue1-ldif', dest='glue1_ldif', help='Path to GLUE1 ldif file')
     parser.add_argument('--glue2-ldif', dest='glue2_ldif', help='Path to GLUE2 ldif file')
+    parser.add_argument('--ee-ldif', dest='ee_ldif', help='Path to GLUE2 ExecEnv ldif file')
     options = parser.parse_args()
 
     ##############################################
@@ -199,8 +228,8 @@ def main():
     # ConsoleView.display(dynamic_information)
     if options.glue1_ldif is not None:
         Glue1View.display(dynamic_information, options.glue1_ldif)
-    if options.glue2_ldif is not None:
-        Glue2View.display(dynamic_information, options.glue2_ldif)
+    if (options.glue2_ldif is not None) and (options.ee_ldif is not None):
+        Glue2View.display(dynamic_information, options.glue2_ldif, options.ee_ldif)
 
 if __name__ == '__main__':
     main()
