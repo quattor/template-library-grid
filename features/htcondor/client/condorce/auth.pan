@@ -2,6 +2,8 @@ unique template features/htcondor/client/condorce/auth;
 
 variable GLITE_GROUP = 'condor';
 
+variable GRIDMAPDIR_FILES_PERMS = true;
+
 include 'features/security/host_certs';
 
 include 'security/cas';
@@ -68,3 +70,22 @@ prefix '/software/components/lcmaps/config/0';
         "vomspoolaccount -> good|bad",
     ),
 ));
+
+include 'components/dirperm/config';
+
+prefix '/software/components/dirperm/';
+
+'paths' = push(
+    dict('path', '/var/log/glexec',
+        'owner', 'condor:condor',
+        'perm', '0775',
+        'type', 'd'
+    )
+);
+
+include 'components/filecopy/config';
+
+prefix '/software/components/filecopy/services/{/etc/grid-security/gsi-authz.conf}';
+
+'config' = 'globus_mapping /usr/lib64/liblcas_lcmaps_gt4_mapping.so lcmaps_callout' + "\n";
+'restart' = 'service condor-ce restart';

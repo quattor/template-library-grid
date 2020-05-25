@@ -15,12 +15,15 @@ variable CONDOR_CONFIG = {
     if(!is_defined(SELF['mapping']))
         SELF['mapping'] = dict();
 
+    if(!is_defined(SELF['cert_dns']) || !is_defined(SELF['cert_dns'][FULL_HOSTNAME]))
+        error("Missing certificate DN for " + FULL_HOSTNAME + ": CONDOR_CONFIG['cert_dns']['" + FULL_HOSTNAME + "']");
+
     # implement some default mapping rules.
     # Note that the rules are written in the file in the lexicographic order
     mapping_defaults = dict(
         '10_daemon', dict(
              'type', 'GSI', 
-             'regex', '"^/O=GRID-FR/C=FR/O=CNRS/OU=.*/CN=' + FULL_HOSTNAME + '$"',
+             'regex', '"^' + SELF['cert_dns'][FULL_HOSTNAME] + '$"',
              'result', FULL_HOSTNAME + '@daemon.htcondor.org'
         ),
 

@@ -60,18 +60,16 @@ def mapping(rules, tag, target, depth=0):
 
     raise ValueError("target %s with tag %s cannot be matched by rules %s" % (target, tag, rules))
 
-
-logging.basicConfig(
-    format='%(asctime)s;%(message)s',
-    filename='/var/log/hook.log',
-    level=logging.INFO
-)
+# Uncomment this if you want to have logging for debug.
+#logging.basicConfig(
+#    format='%(asctime)s;%(message)s',
+#    filename='/var/tmp/hook.log',
+#    level=logging.INFO
+#)
 
 MAPPER = load_mapper('/etc/condor/groups_mapping.xml')
 
 CLASSADS = get_classads()
-
-CLASSADS['CreamQueue'] = '"gridq"'
 
 CLASSADS['x509UserProxyVOName_Fmt'] = CLASSADS['x509UserProxyVOName']\
                                       .replace('.', '_').replace('-', '_')
@@ -79,7 +77,7 @@ CLASSADS['x509UserProxyVOName_Fmt'] = CLASSADS['x509UserProxyVOName']\
 MATCH_FMT = '(%(x509UserProxyVOName_Fmt)s,'
 MATCH_FMT += '%(x509UserProxyFirstFQAN)s,'
 MATCH_FMT += '%(x509UserProxyFirstFQAN)s,'
-MATCH_FMT += '%(CreamQueue)s)'
+MATCH_FMT += 'condorce)'
 
 MATCH = MATCH_FMT % CLASSADS
 

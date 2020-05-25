@@ -616,13 +616,9 @@ variable GIP_CE_LDIF_PARAMS = {
                 jobmanager=CE_JM_TYPE;
                 lrms = jobmanager;
             };
-            foreach (i; ce; CE_HOSTS) {
-                if ( index(ce,CE_HOSTS_CREAM) >= 0 ) {
-                    ce_flavor = 'cream';
-                } else {
-                    error(format('Non CREAM CE found (%s): only CREAM CE are supported', ce));
-                };
-        
+            foreach (i; ce; CE_HOSTS_CREAM) {
+
+                ce_flavor = 'cream'; 
                 if ( ce_flavor == 'cream' ) {
                     # CREAM CE doesn't know about all LCG CE job manager variants...
                     jobmanager = lrms;
@@ -730,7 +726,7 @@ variable GIP_CE_LDIF_PARAMS = {
             # FIXME: cache mode should not be specific to Torque/MAUI...
             # FIXME: cluster mode (distinct CEs and LRMS master) validation with LRMS other than Torque/MAUI 
             if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) { ##Changed LRMS_SERVER_HOST->GIP_CLUSTER_PUBLISHER_HOST
-                ce_list = CE_HOSTS;
+                ce_list = merge(CE_HOSTS_LCG, CE_HOSTS_CREAM);
                 # Create only if necessary to avoid creating a useless emtpy file
                 # FIXME: when lcg-info-dynamic-scheduler is fixed to allow publishing GlueCE/GlueVOView on the CE,
                 #        initialize all_ce_entries_g1[lrms] only if GIP_CE_USE_CACHE is true.
@@ -1142,7 +1138,7 @@ variable GIP_CE_LDIF_PARAMS = {
             glue2_var_prefix + 'Benchmarks', list(
                 format('(hep-spec06 %s)', to_string(hepspec06)),
                 format('(specfp2000 %s)', to_string(CE_SF00)),
-                format('(specint2000 %s)',to_string(CE)),
+                format('(specint2000 %s)',to_string(CE_SI00)),
             ),
             glue2_var_prefix + 'Cores', list(to_string(average_core_num)),
        );

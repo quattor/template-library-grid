@@ -13,7 +13,7 @@ variable EMI_LOCATION ?= "";
 variable EMI_LOCATION_LOG ?= "/var/log/emi";
 variable EMI_LOCATION_VAR ?= "/var/emi";
 variable EMI_LOCATION_TMP ?= "/var/spool/emi";
-
+variable CE_TYPE ?= 'cream';
 
 
 # If defined, use CE_TORQUE_CONFIG_SITE for backward compatibility
@@ -36,7 +36,7 @@ variable CONFIGURE_VOS = true;
 variable CREATE_HOME ?= undef;
 variable NODE_VO_GRIDMAPDIR_CONFIG ?= true;
 variable NODE_VO_INFO_DIR = true;
-
+variable CE_FLAVOR ?= 'cream';
 
 #
 # Configure NFS-served file systems in WN_SHARED_AREAS, if any
@@ -53,7 +53,15 @@ include { 'machine-types/grid/base' };
 # CREAM CE configuration
 # If CE uses Torque, do Torque configuration too
 #
-include { 'personality/cream_ce/service' };
+include if(CE_FLAVOR == 'cream'){
+    'personality/cream_ce/service';
+}else if(CE_FLAVOR == 'condorce'){
+
+    'features/htcondor/condorce';
+
+}else{
+    error("Unrecognized CE_TYPE " + CE_TYPE);
+};
 
 
 # Add local customization to standard configuration, if any

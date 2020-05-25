@@ -12,5 +12,12 @@ EOF
 
     txt = txt + "MyHook_HOOK_TRANSLATE_JOB = " + CONDOR_CONFIG['ce_cfgdir'] + '/hook.py' + "\n";
 
+    hosts = '';
+    foreach(i; h; CONDOR_CONFIG['hosts']){
+        hosts = hosts + " " + h + ":9618";
+    };
+
+    txt = txt + "JOB_ROUTER_SCHEDD2_POOL =" + hosts;
+
     txt;
 };
