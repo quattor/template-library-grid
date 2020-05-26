@@ -6,7 +6,7 @@ the general set of rules '/etc/condor/groups_mapping.xml'.
 
 import fileinput
 import re
-import logging
+#import logging
 import xml.etree.ElementTree as ET
 
 MAX_CHAIN_DEPTH = 5
@@ -85,10 +85,14 @@ MATCH = MATCH.replace('"', '')
 
 LIMIT = mapping(MAPPER, 'limit', MATCH)
 
+ACCGRP = mapping(MAPPER, 'group', MATCH)
+
+OWNER = CLASSADS['Owner'].replace('"', '')
+
 if LIMIT != 'NONE':
     CLASSADS['ConcurrencyLimits'] = "\"%s\"" % LIMIT
-CLASSADS['AcctGroup'] = "\"%s\"" % mapping(MAPPER, 'group', MATCH)
-CLASSADS['AccountingGroup'] = CLASSADS['AcctGroup']
+CLASSADS['AcctGroup'] = "\"%s\"" % ACCGRP
+CLASSADS['AccountingGroup'] = "\"%s.%s\"" % (ACCGRP, OWNER)
 CLASSADS['AcctGroupUser'] = CLASSADS['Owner']
 CLASSADS['WNTag'] = "\"%s\"" % mapping(MAPPER, 'tag', MATCH)
 CLASSADS['PolicyGroup'] = "\"%s\"" % mapping(MAPPER, 'policy', MATCH)
