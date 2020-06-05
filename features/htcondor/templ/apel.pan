@@ -12,8 +12,8 @@ APEL_CE_ID = $(APEL_CE_HOST):$(PORT)/$(APEL_BATCH_HOST)-condor
 
 EOF
 
-   txt = txt + 'APEL_OUTPUT_DIR = ' + CONDOR_CONFIG['apel_output_dir'] + "\n";
-   txt = txt + <<EOF;
+    txt = txt + 'APEL_OUTPUT_DIR = ' + CONDOR_CONFIG['apel_output_dir'] + "\n";
+    txt = txt + <<EOF;
 
 # This is cheating ...
 APEL_SCALING_ATTR = 1

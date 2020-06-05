@@ -14,7 +14,7 @@ variable CONDOR_CONFIG = {
             SELF['job-transform'] = dict();
         };
 
-        SELF['job-transform']['LeaveInQueue'] = format(CONDOR_REMOVE_REMOVED_FUNCTION, CONDOR_REMOVE_REMOVED_DELAY); 
+        SELF['job-transform']['LeaveInQueue'] = format(CONDOR_REMOVE_REMOVED_FUNCTION, CONDOR_REMOVE_REMOVED_DELAY);
 
     };
 

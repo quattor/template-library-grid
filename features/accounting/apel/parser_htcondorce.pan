@@ -49,7 +49,7 @@ prefix '/software/components/metaconfig/services';
         ),
 
         'batch', dict(
-	    'enabled', 'true',
+            'enabled', 'true',
             'reparse', 'false',
             'type', APEL_BATCH_TYPE,
             'parallel', to_string(APEL_MULTICORE_ENABLED),

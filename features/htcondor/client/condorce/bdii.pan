@@ -6,13 +6,13 @@ include 'components/spma/config';
 
 variable CONDOR_CONFIG = {
 
-   # Adding the condor bdii config
-   SELF['cfgfiles'] = append(SELF['cfgfiles'], dict(
-            'name', 'bdii',
-            'contents', 'features/htcondor/templ/bdii',
-        ));
+    # Adding the condor bdii config
+    SELF['cfgfiles'] = append(SELF['cfgfiles'], dict(
+        'name', 'bdii',
+        'contents', 'features/htcondor/templ/bdii',
+    ));
 
-   SELF;
+    SELF;
 };
 
 

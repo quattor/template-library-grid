@@ -15,7 +15,7 @@ variable MKGRIDMAP_DEF_CONF ?= MKGRIDMAP_CONF_DIR + '/edg-mkgridmap.conf';
 
 # Update gridmap file every 30mn on a UI as it relies only on gridmap file
 # Run every 3 hours on services relying mainly on VOMS
-variable MKGRIDMAP_REFRESH_INTERVAL = if ( 
+variable MKGRIDMAP_REFRESH_INTERVAL = if (
     exists(GSISSH_SERVER_ENABLED) &&
     is_defined(GSISSH_SERVER_ENABLED) &&
     GSISSH_SERVER_ENABLED ) {
@@ -35,17 +35,17 @@ variable MKGRIDMAP_REFRESH_INTERVAL = if (
 #----------------------------------------------------------------------------
 include 'components/gridmapdir/config';
 
-"/software/components/gridmapdir/" = {
+"/software/components/gridmapdir" = {
 
     SELF['gridmapdir'] = SITE_DEF_GRIDMAPDIR;
-    
+
     # Shared gridmapdir, if enabled, is configured only on listed clients,
     # if a list is defined. If gridmapdir is NFS-shared, do not configure
     # the sharedGridmapdir property on the machine serving it.
     if ( is_defined(GRIDMAPDIR_SHARED_PATH) ) {
-        if ( 
+        if (
             ((GRIDMAPDIR_SHARED_SERVER != FULL_HOSTNAME) || !match(to_lowercase(GRIDMAPDIR_SHARED_PROTOCOL), '^nfs')) &&
-            (!is_defined(GRIDMAPDIR_SHARED_CLIENTS) || (index(FULL_HOSTNAME,GRIDMAPDIR_SHARED_CLIENTS) >= 0) )
+            (!is_defined(GRIDMAPDIR_SHARED_CLIENTS) || (index(FULL_HOSTNAME, GRIDMAPDIR_SHARED_CLIENTS) >= 0) )
         ) {
             SELF['sharedGridmapdir'] = GRIDMAPDIR_SHARED_PATH;
         };
@@ -69,12 +69,12 @@ include 'components/filecopy/config';
 
 '/software/components/filecopy/services' = {
     if(GRIDMAPDIR_FILES_PERMS){
-       
+
         script_name = '/etc/grid-security/mapdir-perms.sh';
-        
-        script = "#! /bin/bash\n" + 
-                 "chown root:" + GLITE_GROUP + " " + SITE_DEF_GRIDMAPDIR + "/*\n" +
-                 "chmod 660 " + SITE_DEF_GRIDMAPDIR + "/*\n";  
+
+        script = "#! /bin/bash\n" +
+            "chown root:" + GLITE_GROUP + " " + SITE_DEF_GRIDMAPDIR + "/*\n" +
+            "chmod 660 " + SITE_DEF_GRIDMAPDIR + "/*\n";
 
         SELF[escape(script_name)] = dict(
             'config', script,
@@ -90,8 +90,9 @@ include 'components/filecopy/config';
 '/software/components/gridmapdir/dependencies' = {
 
     if(GRIDMAPDIR_FILES_PERMS){
-         SELF['pre'] = append(SELF['pre'], 'filecopy');
+        SELF['pre'] = append(SELF['pre'], 'filecopy');
     };
+
     SELF;
 };
 
@@ -111,11 +112,14 @@ include GRIDMAPDIR_SHARED_NFS_INCLUDE;
 
 # Subscribe to NFS client configuration as a pre dependency
 variable NFS_CLIENT_PREDEP_SUBSCRIBERS = {
-    if ( is_defined(GRIDMAPDIR_SHARED_NFS_INCLUDE) &&
-       (GRIDMAPDIR_SHARED_SERVER != FULL_HOSTNAME) ) {
+    if (
+        is_defined(GRIDMAPDIR_SHARED_NFS_INCLUDE) &&
+        (GRIDMAPDIR_SHARED_SERVER != FULL_HOSTNAME)
+    ) {
 
-       SELF[length(SELF)] = 'gridmapdir';
+        SELF[length(SELF)] = 'gridmapdir';
     };
+
     SELF;
 };
 

@@ -50,9 +50,9 @@ include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
     if(is_defined(CONDOR_CONFIG['user_wrapper']))
         SELF[escape(CONDOR_CONFIG['user_wrapper']['path'])] = dict(
-             'config', CONDOR_CONFIG['user_wrapper']['contents'],
-             'perms', '0755',
+            'config', CONDOR_CONFIG['user_wrapper']['contents'],
+            'perms', '0755',
         );
-    
+
     SELF;
 };

@@ -48,7 +48,8 @@ structure template features/htcondor/templ/security;
     txt = txt + "SEC_DAEMON_AUTHENTICATION_METHODS = " + sec_daemon_authentication_method + "\n";
     txt = txt + "SEC_CLIENT_AUTHENTICATION_METHODS = " + sec_client_authentication_method + "\n\n";
     if(! is_null(delegate_job_gsi_credentials_lifetime)) {
-      txt = txt + "delegate_job_GSI_credentials_lifetime = " + to_string(delegate_job_gsi_credentials_lifetime) + "\n\n";
+        txt = txt + "delegate_job_GSI_credentials_lifetime = " +
+            to_string(delegate_job_gsi_credentials_lifetime) + "\n\n";
     };
 
     txt = txt + "SEC_PASSWORD_FILE = " + CONDOR_CONFIG['pwd_file'];

@@ -4,21 +4,21 @@ include 'features/htcondor/client/condorce/params';
 
 variable CONDOR_CONFIG = {
 
-   # Adding the file router configuration
-   SELF['cfgfiles'] = append(SELF['cfgfiles'], dict( 
-            'name', 'router', 
-            'contents', 'features/htcondor/templ/router',
-            'base_path', SELF['ce_cfgdir'],
-        ));
+    # Adding the file router configuration
+    SELF['cfgfiles'] = append(SELF['cfgfiles'], dict(
+        'name', 'router',
+        'contents', 'features/htcondor/templ/router',
+        'base_path', SELF['ce_cfgdir'],
+    ));
 
-   # The bdii publication point(s)
-   SELF['bdii_active'] = (
-       (!is_defined(SELF['resource_bdii'])) ||
-       (index(FULL_HOSTNAME, SELF['resource_bdii']) >= 0)
-   ); 
+    # The bdii publication point(s)
+    SELF['bdii_active'] = (
+        (!is_defined(SELF['resource_bdii'])) ||
+        (index(FULL_HOSTNAME, SELF['resource_bdii']) >= 0)
+    );
 
-    
-   SELF;
+
+    SELF;
 };
 
 
@@ -26,7 +26,7 @@ variable CONDOR_CONFIG = {
 include 'components/filecopy/config';
 '/software/components/filecopy/services' = {
 
-# ... the file router hook 
+# ... the file router hook
     SELF[escape(CONDOR_CONFIG['ce_cfgdir'] + '/hook.py')] = dict(
 
         'config', file_contents(CONDOR_CONFIG['router_hook']),
@@ -42,7 +42,7 @@ include 'components/filecopy/config';
         'config', content['text'],
         'perms', '0644',
         'restart', 'service condor-ce restart',
-    );        
+    );
 
     SELF;
 };

@@ -18,10 +18,10 @@ variable CE_TYPE ?= 'cream';
 
 # If defined, use CE_TORQUE_CONFIG_SITE for backward compatibility
 variable CE_CONFIG_SITE ?= if ( exists(CE_TORQUE_CONFIG_SITE) && is_defined(CE_TORQUE_CONFIG_SITE) ) {
-                             return(CE_TORQUE_CONFIG_SITE);
-                           } else {
-                             return(null);
-                           };
+    return(CE_TORQUE_CONFIG_SITE);
+} else {
+    return(null);
+};
 
 
 # Do actual NFS configuration after gLite configuration instead of during the OS
@@ -46,7 +46,7 @@ variable NFS_CLIENT_ENABLED ?= undef;
 
 # Include base configuration of a gLite node
 #
-include { 'machine-types/grid/base' };
+include 'machine-types/grid/base';
 
 
 #
@@ -55,6 +55,7 @@ include { 'machine-types/grid/base' };
 #
 include if(CE_FLAVOR == 'cream'){
     'personality/cream_ce/service';
+
 }else if(CE_FLAVOR == 'condorce'){
 
     'features/htcondor/condorce';
@@ -65,32 +66,33 @@ include if(CE_FLAVOR == 'cream'){
 
 
 # Add local customization to standard configuration, if any
-include { return(CE_CONFIG_SITE) };
+include return(CE_CONFIG_SITE);
 
 
 #
 # Configure NFS if necessary
 #
-include { if ( NFS_SERVER_ENABLED ) 'features/nfs/server/config' };
-include { if ( NFS_CLIENT_ENABLED ) 'features/nfs/client/config' };
+include if ( NFS_SERVER_ENABLED ) 'features/nfs/server/config';
+include if ( NFS_CLIENT_ENABLED ) 'features/nfs/client/config';
 
 
 #
 #lemon monitoring specific for CEs
 #
 variable LEMON_AGENT_NODE_SPECIFIC = if ( LEMON_CONFIGURE_AGENT ) {
-                         return("monitoring/lemon/client/ce/config");
-                       } else {
-                         return(null);
-                       };
-include { LEMON_AGENT_NODE_SPECIFIC };
+    return("monitoring/lemon/client/ce/config");
+} else {
+    return(null);
+};
+
+include LEMON_AGENT_NODE_SPECIFIC;
 
 #
 # middleware updates
 #
-include { if_exists('update/config') };
+include if_exists('update/config');
 
 # Do any final configuration needed for some reasons (e.g. : run gLite 3.0 on SL4)
 # Should be done at the very end of machine configuration
 #
-include { if_exists(GLITE_OS_POSTCONFIG) };
+include if_exists(GLITE_OS_POSTCONFIG);

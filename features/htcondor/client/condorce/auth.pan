@@ -40,22 +40,22 @@ prefix '/software/components/lcmaps/config/0';
 
 'module/vomspoolaccount' = dict(
     "path", "lcmaps_voms_poolaccount.mod",
-    "args", "-gridmapfile /etc/lcmaps/gridmapfile " + 
-            "-gridmapdir /etc/grid-security/gridmapdir " + 
+    "args", "-gridmapfile /etc/lcmaps/gridmapfile " +
+            "-gridmapdir /etc/grid-security/gridmapdir " +
             "-override_inconsistency " +
             "--add-primary-gid-from-mapped-account "
 );
 
 'module/vomslocalgroup' = dict(
     "path", "lcmaps_voms_localgroup.mod",
-    "args", "-groupmapfile /etc/lcmaps/groupmapfile " + 
-            "-mapmin 0 " + 
+    "args", "-groupmapfile /etc/lcmaps/groupmapfile " +
+            "-mapmin 0 " +
             "--map-to-secondary-groups",
 );
 
 'module/vomslocalaccount' = dict(
     "path", "lcmaps_voms_localaccount.mod",
-    "args", "-gridmapfile /etc/lcmaps/gridmapfile", 
+    "args", "-gridmapfile /etc/lcmaps/gridmapfile",
 );
 
 'module/good' = dict("path", "lcmaps_dummy_good.mod");
@@ -73,7 +73,7 @@ prefix '/software/components/lcmaps/config/0';
 
 include 'components/dirperm/config';
 
-prefix '/software/components/dirperm/';
+prefix '/software/components/dirperm';
 
 'paths' = push(
     dict('path', '/var/log/glexec',

@@ -1,15 +1,17 @@
 unique template features/accounting/apel/hostingcluster_fix;
 
-include { 'features/accounting/apel/base' };
+include 'features/accounting/apel/base';
 
 #need to know the MONBOX HOST
-variable MON_HOST ?= error("Error : in order to fix the MON Box database, we need to know what is the host hosting this database...\n"
-	+ "Please define the following variable : 'MON_HOST'\n");
+variable MON_HOST ?= error(
+    "Error : in order to fix the MON Box database, we need to know what is the host hosting this database...\n" +
+    "Please define the following variable : 'MON_HOST'\n"
+);
 
-include { 'components/filecopy/config' };
+include 'components/filecopy/config';
 
 #copy a script that will query the information system, and update the accounting database
-variable CONTENTS=<<EOF;
+variable CONTENTS = <<EOF;
 #!/bin/bash
 
 TMP_FILE=`mktemp`
@@ -25,7 +27,8 @@ EOF
 
 # Add LDAP command with site-specific information
 variable CONTENTS = CONTENTS + "ldapsearch -x -h " + TOP_BDII_HOST + ":2170 -LLL -b mds-vo-name=" + SITE_NAME +
-                         ",mds-vo-name=local,o=grid '(objectClass=GlueCE)' GlueCEInfoHostName GlueCEHostingCluster 2>/dev/null > $TMP_FILE\n";
+    ",mds-vo-name=local,o=grid '(objectClass=GlueCE)' GlueCEInfoHostName GlueCEHostingCluster" +
+    "2>/dev/null > $TMP_FILE\n";
 
 variable CONTENTS = CONTENTS + <<EOF;
 
@@ -45,7 +48,7 @@ for i in $HOSTED_CE_LIST; do
 EOF
 
 variable CONTENTS = CONTENTS + '    echo "$SQL_QUERY" | /usr/bin/mysql $MYSQL_DEBUG -u ' +
-                      APEL_DB_USER + ' --password=`cat ' + APEL_DB_PWD_CACHE  + '` -h ' + MON_HOST + " " + APEL_DB_NAME + "\n" ;
+    APEL_DB_USER + ' --password=`cat ' + APEL_DB_PWD_CACHE  + '` -h ' + MON_HOST + " " + APEL_DB_NAME + "\n";
 
 variable CONTENTS = CONTENTS + <<EOF;
 done
@@ -56,30 +59,36 @@ exit 0
 EOF
 
 
-variable SCRIPT="/root/apel_hostingcluster_specrecords_fix.sh";
-"/software/components/filecopy/services" =
-  npush(escape(SCRIPT),
-        nlist("config",CONTENTS,
-              "owner","root",
-              "perms","0755"));
+variable SCRIPT = "/root/apel_hostingcluster_specrecords_fix.sh";
+
+"/software/components/filecopy/services" = npush(
+    escape(SCRIPT),
+    dict(
+        "config", CONTENTS,
+        "owner", "root",
+        "perms", "0755"
+    )
+);
 
 #Create CRONTAB
-include { 'components/cron/config' };
-"/software/components/cron/entries" =
-  push(nlist(
-    "name","apel_hostingcluster_specrecords_fix",
-    "user","root",
-    "frequency", "5 0 * * *", #run right after midnight
-    "command", SCRIPT));
+include 'components/cron/config';
 
-include { 'components/altlogrotate/config' };
-"/software/components/altlogrotate/entries/apel_hostingcluster_specrecords_fix" =
-  nlist("pattern", "/var/log/apel_hostingcluster_specrecords_fix.ncm-cron.log",
-        "compress", true,
-        "missingok", true,
-        "size", '1M',
-        "create", true,
-        "ifempty", true,
-        "copytruncate", true,
-        "rotate", 10,
-       );
+"/software/components/cron/entries" = push(dict(
+    "name", "apel_hostingcluster_specrecords_fix",
+    "user", "root",
+    "frequency", "5 0 * * *", #run right after midnight
+    "command", SCRIPT
+));
+
+include 'components/altlogrotate/config';
+
+"/software/components/altlogrotate/entries/apel_hostingcluster_specrecords_fix" = dict(
+    "pattern", "/var/log/apel_hostingcluster_specrecords_fix.ncm-cron.log",
+    "compress", true,
+    "missingok", true,
+    "size", '1M',
+    "create", true,
+    "ifempty", true,
+    "copytruncate", true,
+    "rotate", 10,
+);

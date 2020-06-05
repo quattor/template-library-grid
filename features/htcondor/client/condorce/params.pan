@@ -22,33 +22,33 @@ variable CONDOR_CONFIG = {
     # Note that the rules are written in the file in the lexicographic order
     mapping_defaults = dict(
         '10_daemon', dict(
-             'type', 'GSI', 
-             'regex', '"^' + SELF['cert_dns'][FULL_HOSTNAME] + '$"',
-             'result', FULL_HOSTNAME + '@daemon.htcondor.org'
+            'type', 'GSI',
+            'regex', '"^' + SELF['cert_dns'][FULL_HOSTNAME] + '$"',
+            'result', FULL_HOSTNAME + '@daemon.htcondor.org'
         ),
 
         '20_mapping', dict(
-             'type', 'GSI', 
-             'regex', '(.*)',
-             'result', 'GSS_ASSIST_GRIDMAP'
+            'type', 'GSI',
+            'regex', '(.*)',
+            'result', 'GSS_ASSIST_GRIDMAP'
         ),
 
         '30_unampped', dict(
-             'type', 'GSI',
-             'regex', '"(/CN=[-.A-Za-z0-9/= ]+)"',
-             'result', '\1@unamapped.htcondor.org'
+            'type', 'GSI',
+            'regex', '"(/CN=[-.A-Za-z0-9/= ]+)"',
+            'result', '\1@unamapped.htcondor.org'
         ),
 
         '40_anon', dict(
-             'type', 'CLAIMTOBE',
-             'regex', '.*',
-             'result', 'anonymous@claimtobe'
+            'type', 'CLAIMTOBE',
+            'regex', '.*',
+            'result', 'anonymous@claimtobe'
         ),
 
         '50_fs', dict(
-             'type', 'FS',
-             'regex', '(.*)',
-             'result', '\1'
+            'type', 'FS',
+            'regex', '(.*)',
+            'result', '\1'
         ),
 
     );
@@ -56,6 +56,6 @@ variable CONDOR_CONFIG = {
     foreach(i; rule; mapping_defaults)
         if(!is_defined(SELF['mapping'][i]))
             SELF['mapping'][i] = rule;
-       
+
     SELF;
 };

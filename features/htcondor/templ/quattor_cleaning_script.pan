@@ -22,10 +22,11 @@ EOF
     cfg_glob = '';
 
     if(is_defined(CONDOR_CONFIG['cfgdir']))
-         cfg_glob = CONDOR_CONFIG['cfgdir'] + '/config.d/' + CONDOR_CONFIG['cfgprefix'] + '.*.conf';
+        cfg_glob = CONDOR_CONFIG['cfgdir'] + '/config.d/' + CONDOR_CONFIG['cfgprefix'] + '.*.conf';
 
     if(is_defined(CONDOR_CONFIG['ce_cfgdir']))
-         cfg_glob = cfg_glob + ' ' + CONDOR_CONFIG['ce_cfgdir'] + '/config.d/' + CONDOR_CONFIG['cfgprefix'] + '.*.conf ';
+        cfg_glob = cfg_glob + ' ' + CONDOR_CONFIG['ce_cfgdir'] + '/config.d/' +
+            CONDOR_CONFIG['cfgprefix'] + '.*.conf ';
 
     txt = txt + 'FILESLIST=$(ls ' + cfg_glob + ' 2>/dev/null)' + "\n";
 

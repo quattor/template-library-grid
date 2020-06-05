@@ -1,8 +1,9 @@
 unique template features/accounting/apel/parser_condor;
 
-variable NEW_CONDOR_APEL_PARSER?=false;
+variable NEW_CONDOR_APEL_PARSER ?= false;
 
 include 'features/accounting/apel/base';
+
 # Fixme: Just to avoid full rewritting
 variable LRMS_CONFIG_DIR ?= if (exists(TORQUE_CONFIG_DIR)) {
     TORQUE_CONFIG_DIR;
@@ -11,7 +12,6 @@ variable LRMS_CONFIG_DIR ?= if (exists(TORQUE_CONFIG_DIR)) {
 };
 
 
-#
 # Allow user to customize cron startup hour
 # ATTENTION: start after 3am to be sure that blah logs are rotated
 variable APEL_PARSER_TIME_HOUR ?= '3';
@@ -31,7 +31,7 @@ include 'components/filecopy/config';
 
 '/software/components/filecopy/services/{/usr/bin/condor-accounting-fix}' = dict(
     'config', file_contents(CONDOR_ACCOUNTING_FIX),
-    'perms', '0755',                                         
+    'perms', '0755',
 );
 
 include 'components/spma/config';
@@ -42,6 +42,7 @@ include 'components/spma/config';
 # cron
 #
 include 'components/cron/config';
+
 '/software/components/cron/entries' = {
     push_if(APEL_ENABLED, dict(
         'name', APEL_PARSE_CRON_NAME,
@@ -59,21 +60,21 @@ include 'components/cron/config';
 #
 # altlogrotate
 #
-include 'components/altlogrotate/config'; 
-'/software/components/altlogrotate/entries/' = {
-    SELF[ APEL_PARSE_CRON_NAME ]= dict(
-        'pattern', '/var/log/'+APEL_PARSE_CRON_NAME+'.ncm-cron.log',
+include 'components/altlogrotate/config';
+'/software/components/altlogrotate/entries' = {
+    SELF[ APEL_PARSE_CRON_NAME ] = dict(
+        'pattern', '/var/log/' + APEL_PARSE_CRON_NAME + '.ncm-cron.log',
         'compress', true,
         'missingok', true,
         'frequency', 'weekly',
         'create', true,
         'createparams', dict(
-	    'mode', '0644',
+            'mode', '0644',
             'owner', 'root',
             'group', 'root',
-         ),
-         'ifempty', true,
-         'rotate', 2,
+        ),
+        'ifempty', true,
+        'rotate', 2,
     );
     SELF;
 };
@@ -108,11 +109,15 @@ include 'components/metaconfig/config';
             'subdirs', 'false',
         ),
         'batch', dict(
-	    'enabled', to_string((index(FULL_HOSTNAME, CE_HOSTS) >= 0)),
+            'enabled', to_string((index(FULL_HOSTNAME, CE_HOSTS) >= 0)),
             'reparse', 'false',
             'type', if(NEW_CONDOR_APEL_PARSER){'HTCondor'}else{'PBS'},
             'parallel', to_string(APEL_MULTICORE_ENABLED),
-            'dir', if(NEW_CONDOR_APEL_PARSER){LRMS_CONFIG_DIR+'/accounting'}else{LRMS_CONFIG_DIR+'/server_priv/accounting'},
+            'dir', if(NEW_CONDOR_APEL_PARSER){
+                LRMS_CONFIG_DIR + '/accounting'
+            }else{
+                LRMS_CONFIG_DIR + '/server_priv/accounting'
+            },
             'filename_prefix', if(NEW_CONDOR_APEL_PARSER){'parsable.'}else{'20'},
             'subdirs', 'false',
         ),
@@ -131,9 +136,13 @@ include 'components/dirperm/config';
 '/software/components/dirperm/paths' = if(NEW_CONDOR_APEL_PARSER){
     push(dict(
         "owner", "root:root",
-        "path", if(NEW_CONDOR_APEL_PARSER){LRMS_CONFIG_DIR+'/accounting'}else{LRMS_CONFIG_DIR+'/server_priv/accounting'},
+        "path", if(NEW_CONDOR_APEL_PARSER){
+            LRMS_CONFIG_DIR + '/accounting'
+        }else{
+            LRMS_CONFIG_DIR + '/server_priv/accounting'
+        },
         "perm", '755',
-        "type", "d"  
+        "type", "d"
     ));
 }else{
     SELF;
