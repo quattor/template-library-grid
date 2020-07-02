@@ -62,10 +62,13 @@ include 'components/filecopy/config';
 
     if (CONDOR_CONFIG['intel_mic']){
         if (!is_defined(CONDOR_CONFIG['intel_mic_discovery'])){
-            CONDOR_CONFIG['intel_mic_discovery'] = file_contents('features/htcondor/templ/condor_mic_discovery');
+            intel_mic_discovery = file_contents('features/htcondor/templ/condor_mic_discovery');
+        }else{
+            intel_mic_discovery = CONDOR_CONFIG['intel_mic_discovery'];
         };
+
         SELF[escape('/usr/libexec/condor/condor_mic_discovery')] = dict(
-            'config', CONDOR_CONFIG['intel_mic_discovery'],
+            'config', intel_mic_discovery,
             'backup', false,
             'perms', '0775',
         );

@@ -1,112 +1,210 @@
-#!/usr/bin/env perl
+#!/usr/bin/env python
+# coding: utf8
 
-use strict;
-use warnings;
-use FileHandle;
-use POSIX qw(strftime);
-
-# Parse the command line
-my ($PATH, $LDIF_FILE, $MANAGER) = @ARGV;
-unless ($PATH && $LDIF_FILE)
-{
-    print "Usage: $0 <condor path> <ldif file> [central manager]\n";
-
-    exit 1;
-}
-
-my $fh = new FileHandle $LDIF_FILE
-    or die "Can't open static ldif file: $LDIF_FILE\n";
-my @dns = grep /dn:\s+GlueCEUniqueID=/, <$fh>;
-
-# All the dynamic info goes in here
-my %glue;
-$glue{GlueCEInfoLRMSType} = "condor";
-
-# Figure out the correct central manager
-chomp(my $central_manager = $MANAGER ? $MANAGER : `$PATH/condor_config_val CONDOR_HOST`);
-
-# Condor version
-# Note: this is only the version of this node -- there's probably a
-# whole bunch of different versions running on the pool
-my ($version) = map { /(\d+\.\d+\.\d+)/; $1 }
-    grep /CondorVersion:/, `$PATH/condor_version`;
-$glue{GlueCEInfoLRMSVersion} = $version;
-
-# CPU stats
-# For our purposes CPU := VM
-# It's fine if you have 100 cpus free, but who cares if that can only
-# run one job at a time.  The official definition is:
-#    Number of free CPUs available to a scheduler
-# So I don't think that's entirely wrong.
-my $startd_status = `$PATH/condor_status -pool $central_manager`;
-my ($total_vms, $owner_vms, $idle_vms) =
-    $startd_status =~ /Total\s+(\d+)\s+(\d+)\s+\d+\s+(\d+)/;
-$glue{GlueCEInfoTotalCPUs} = $total_vms;
-$glue{GlueCEPolicyAssignedJobSlots} = $total_vms;
-$glue{GlueCEStateFreeCPUs} = $idle_vms;
-$glue{GlueCEStateFreeJobSlots} = $idle_vms;
-$glue{GlueCEPolicyMaxRunningJobs} = $total_vms;
-$glue{GlueCEPolicyMaxWallClockTime} = '2160'; #To be fixed!! shoud recover the max wct from some policy file
-$glue{GlueCEPolicyMaxCPUTime} = '2160'; #To be fixed!! shoud recover the max cput from some policy file
-$glue{GlueCEStateStatus} = 'Production'; #To be fixed!! shoud recover this frmo conf
-
-# Job stats
-# Held jobs are included as "waiting" since the definition is:
-#    Number of jobs that are in a state different than running
-#my $schedd_status = `$PATH/condor_status -pool $central_manager -schedd`;
-#my ($running_jobs, $idle_jobs, $held_jobs) =
-#    $schedd_status =~ /Total\s+(\d+)\s+(\d+)\s+(\d+)/;
-#$glue{GlueCEStateWaitingJobs} = $idle_jobs + $held_jobs;
-#$glue{GlueCEStateRunningJobs} = $running_jobs;
-#$glue{GlueCEStateTotalJobs} = $idle_jobs + $running_jobs + $held_jobs;
+import htcondor
+import argparse
+import datetime
 
 
-#GlueCEPolicyMaxRunningJobs: 1590
-#GlueCEPolicyMaxWallClockTime: 2160
-#GlueCEPolicyMaxCPUTime: 1440
-#GlueCEStateStatus: Production
+class InfoDynamicCondor(object):
+    """
+    InfoDynamicCondor is a object to store usefull data
+    """
+    def __init__(self, scheduler_address):
+        """
+        Initialize InfoDynamicCondor
+        """
+        self.name = "condor"
+        self.scheduler_address = scheduler_address
+        self.version = htcondor.version()[16:22]
+        self.cpus = 0
+        self.free = 0
+        self.vo = {}
+        # TODO: This value should be compute
+        self.max_waiting = 2000
+        self.max_memory = 2048
+        self.max_slot_per_job = 8
+        self.max_virtual_memory = 3072
+        self.max_wall_clock_time = 2160
+        self.max_cpu_time = 2160
+        self.status = 'Production'
+
+    def load(self):
+        """
+        Retrieve information from HTCondor and populate object with it
+        """
+        collector = htcondor.Collector()
+
+        # Collector provide information about worker node state
+        worker_nodes = collector.query(htcondor.AdTypes.Startd)
+        self.total_cpus(worker_nodes)
+        self.total_free(worker_nodes)
+
+        # Scheduler provide information about jobs
+        scheduler_address = collector.locate(htcondor.DaemonTypes.Schedd, self.scheduler_address)
+        scheduler = htcondor.Schedd(scheduler_address)
+        jobs = scheduler.query()
+        self.per_vo_jobs(jobs)
+
+    def total_cpus(self, worker_nodes):
+        """
+        cpus is just a addition of Cpus find on all Worker Node
+        """
+        for worker_node in worker_nodes:
+            self.cpus += worker_node['Cpus']
+
+    def total_free(self, worker_nodes):
+        """
+        Each Cpus in worker node unclaimed is considered free
+        """
+        for worker_node in worker_nodes:
+            if worker_node['State'] == "Unclaimed":
+                self.free += worker_node['Cpus']
+
+    def total_running(self):
+        """
+        Running job is a addition of all job running for each vo
+        """
+        running = 0
+        for vo in self.vo:
+            running += self.vo[vo]['running']
+        return running
+
+    def total_waiting(self):
+        """
+        Waiting job is a addition of all job waiting for each vo
+        """
+        waiting = 0
+        for vo in self.vo:
+            waiting += self.vo[vo]['waiting']
+        return waiting
+
+    def per_vo_jobs(self, jobs):
+        """
+        Compute information about job for each VO
+        """
+        for job in jobs:
+            # We only considere Running and Idle job, we ignore any other state (completed, ...)
+            if job['JobStatus'] == 1 or job['JobStatus'] == 2:
+                # If this is the first job for this VO we create a empty entry
+                try:
+                    if job['x509UserProxyVOName'] not in self.vo:
+                        self.vo[job['x509UserProxyVOName']] = {'total': 0,
+                                                               'running': 0,
+                                                               'waiting': 0
+                                                               }
+                    # TODO: Is it really useful ?
+                    self.vo[job['x509UserProxyVOName']]['total'] += 1
+                    if job['JobStatus'] == 1:
+                        self.vo[job['x509UserProxyVOName']]['waiting'] += 1
+                    else:
+                        self.vo[job['x509UserProxyVOName']]['running'] += 1
+                except KeyError:
+                    pass
 
 
-# Time stuff
-# WorstResponseTime is impossible to determine and a reasonable estimate
-#   would required lots of time (15 minutes+) on active pools.
-# EstimatedResponseTime is equally impossible.  Anything here would just
-#   be garbage so it's best if people put it in their static file.
-
-# Output the info
-foreach my $dn (@dns)
-{
-    print "$dn\n";
-    print map { "$_: $glue{$_}\n" } keys %glue;
-}
-
-#Managing the Glue2 stuff
-
-my $fh = new FileHandle '/var/lib/bdii/gip/ldif/ComputingShare.ldif'
-    or die "Can't open static Shares file: /var/lib/bdii/gip/ldif/ComputingShare.ldif\n";
-my @dns2 = grep /dn: GLUE2ShareID=/, <$fh>;
-
-my %glue2;
+class ConsoleView(object):
+    """
+    Class to display a human reading format of status
+    """
+    @staticmethod
+    def display(dynamic_information):
+        print("Cpus: %s" % dynamic_information.cpus)
+        print("Free: %s" % dynamic_information.free)
+        print("Waiting: %s" % dynamic_information.total_waiting())
+        print("Running: %s" % dynamic_information.total_running())
+        print("Per-VO: %s" % dynamic_information.vo)
 
 
-$glue2{GLUE2ComputingShareFreeSlots}= $idle_vms;
-$glue2{GLUE2ComputingShareMaxRunningJobs}= $total_vms;
-$glue2{GLUE2ComputingShareMaxWaitingJobs}= $total_vms*2;
-$glue2{GLUE2ComputingShareMaxTotalJobs}= $total_vms*3;
-$glue2{GLUE2ComputingShareServingState}= 'Production';
-$glue2{GLUE2EntityCreationTime}= strftime '%FT%TZ', gmtime();
-$glue2{GLUE2ComputingShareMaxWallTime}= 2160;   #TO be fixed. All this should be taken from some conf.
-$glue2{GLUE2ComputingShareDefaultWallTime}= 2160;
-$glue2{GLUE2ComputingShareMaxCPUTime}= 1440;
-$glue2{GLUE2ComputingShareDefaultCPUTime}= 1440;
-$glue2{GLUE2ComputingShareMaxSlotsPerJob}= 1;
-$glue2{GLUE2ComputingShareMaxMainMemory}= 2000;
-$glue2{GLUE2ComputingShareMaxVirtualMemory}= 20000;
+class Glue1View(object):
+    """
+    Class to display into GLUE1 information
+    """
+    @staticmethod
+    def display(dynamic_information, glue1_ldif):
+        options = dynamic_information.__dict__
+        options['waiting'] = dynamic_information.total_waiting()
+        options['serving_status'] = options['status'].lower()
+        file = open(glue1_ldif, "r")
+        for line in file:
+            if line.startswith('dn: GlueCEUniqueID='):
+                print line + "" \
+                      "GlueCEInfoTotalCPUs: {cpus}\n" \
+                      "GlueCEPolicyAssignedJobSlots: {cpus}\n" \
+                      "GlueCEStateWaitingJobs: {waiting}\n" \
+                      "GlueCEStateFreeCPUs: {free}\n" \
+                      "GlueCEStateFreeJobSlots: {free}\n" \
+                      "GlueCEPolicyMaxRunningJobs: {cpus}\n" \
+                      "GlueCEPolicyMaxWallClockTime: {max_wall_clock_time}\n" \
+                      "GlueCEPolicyMaxCPUTime: {max_cpu_time}\n" \
+                      "GLUE2ComputingShareServingState: {serving_status}\n" \
+                      "GlueCEInfoLRMSVersion: {version}\n" \
+                      "GlueCEInfoLRMSType: {name}".format(**options)
+        file.close()
 
-foreach my $dn (@dns2)
-{
-    print "\n$dn\n";
-    print map { "$_: $glue2{$_}\n" } keys %glue2;
-}
+
+class Glue2View(object):
+    """
+    Class to display into GLUE2 information
+    """
+    @staticmethod
+    def display(dynamic_information, glue2_ldif):
+        # TODO: Make a per-vo output instead of global output
+        options = dynamic_information.__dict__
+        options['waiting'] = dynamic_information.total_waiting()
+        options['max_total'] = dynamic_information.max_waiting + dynamic_information.cpus
+        options['current_date'] = datetime.datetime.now().isoformat().split('.')[0]
+        options['serving_status'] = options['status'].lower()
+        file = open(glue2_ldif, "r")
+        for line in file:
+            if line.startswith('dn: GLUE2ShareID'):
+                print line + "" \
+                             "GLUE2ComputingShareFreeSlots: {free}\n" \
+                             "GLUE2ComputingShareMaxRunningJobs: {cpus}\n" \
+                             "GLUE2ComputingShareMaxWaitingJobs: {max_waiting}\n" \
+                             "GLUE2ComputingShareMaxTotalJobs: {max_total}\n" \
+                             "GLUE2ComputingShareServingState: {status}\n" \
+                             "GLUE2EntityCreationTime: {current_date}\n" \
+                             "GLUE2ComputingShareMaxWallTime: {max_wall_clock_time}\n" \
+                             "GLUE2ComputingShareDefaultWallTime: {max_wall_clock_time}\n" \
+                             "GLUE2ComputingShareMaxCPUTime: {max_cpu_time}\n" \
+                             "GLUE2ComputingShareDefaultCPUTime: {max_cpu_time}\n" \
+                             "GLUE2ComputingShareMaxSlotsPerJob: {max_slot_per_job}\n" \
+                             "GLUE2ComputingShareMaxMainMemory: {max_memory}\n" \
+                             "GLUE2ComputingShareMaxVirtualMemory: {max_virtual_memory}" \
+                             "".format(**options)
+        file.close()
 
 
+def main():
+    """
+    Main function for info-dynamic-condor
+    """
+    ###################
+    # Argument parser #
+    ###################
+    parser = argparse.ArgumentParser(description="info-dynamic-condor return a GLUE1 / GLUE2 output"
+                                                 "of condor scheduler state")
+    parser.add_argument('--scheduler', dest='scheduler', help='Address of scheduler')
+    parser.add_argument('--glue1-ldif', dest='glue1_ldif', help='Path to GLUE1 ldif file')
+    parser.add_argument('--glue2-ldif', dest='glue2_ldif', help='Path to GLUE2 ldif file')
+    options = parser.parse_args()
+
+    ##############################################
+    # Retrieve dynamic information from HTCondor #
+    ##############################################
+    dynamic_information = InfoDynamicCondor(options.scheduler)
+    dynamic_information.load()
+
+    #######################
+    # Display information #
+    #######################
+    # print "ConsoleView"
+    # ConsoleView.display(dynamic_information)
+    if options.glue1_ldif is not None:
+        Glue1View.display(dynamic_information, options.glue1_ldif)
+    if options.glue2_ldif is not None:
+        Glue2View.display(dynamic_information, options.glue2_ldif)
+
+if __name__ == '__main__':
+    main()

@@ -29,6 +29,12 @@ structure template features/htcondor/templ/security;
         sec_daemon_authentication_method = 'password';
     };
 
+    if(is_defined(CONDOR_CONFIG['delegate_job_gsi_credentials_lifetime'])){
+        delegate_job_gsi_credentials_lifetime = CONDOR_CONFIG['delegate_job_gsi_credentials_lifetime'];
+    }else{
+        delegate_job_gsi_credentials_lifetime = null;
+    };
+
     #building the string
     txt = "\nALLOW_WRITE = " + CONDOR_CONFIG['allow'] + "\n";
 
@@ -41,8 +47,13 @@ structure template features/htcondor/templ/security;
     txt = txt + "SEC_DAEMON_AUTHENTICATION = " + sec_daemon_authentication + "\n";
     txt = txt + "SEC_DAEMON_AUTHENTICATION_METHODS = " + sec_daemon_authentication_method + "\n";
     txt = txt + "SEC_CLIENT_AUTHENTICATION_METHODS = " + sec_client_authentication_method + "\n\n";
+    if(! is_null(delegate_job_gsi_credentials_lifetime)) {
+        txt = txt + "delegate_job_GSI_credentials_lifetime = " +
+            to_string(delegate_job_gsi_credentials_lifetime) + "\n\n";
+    };
 
     txt = txt + "SEC_PASSWORD_FILE = " + CONDOR_CONFIG['pwd_file'];
+
 
     txt = txt + <<EOF;
 
