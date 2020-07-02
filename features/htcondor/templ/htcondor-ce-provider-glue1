@@ -1,0 +1,283 @@
+#!/usr/bin/env python
+
+"""
+GLUE1 GIP provider for htcondor-CE.
+Minimal version with only static info
+"""
+
+# we cannot change the name of the script.
+# pylint: disable=invalid-name
+
+
+from __future__ import print_function
+import sys
+import os
+import time
+from socket import gethostname
+import htcondor
+import classad as ca
+
+
+GLUE1_CE_STATIC_LDIF = """
+dn: GlueCEUniqueID={endpointid}:9619/{central_manager}-condor,Mds-Vo-name=resource,o=grid
+GlueCEStateStatus: Production
+GlueCEPolicyPriority: 1
+GlueCEInfoJobManager: condor
+GlueCEInfoHostName: {endpointid}
+GlueCEUniqueID: {endpointid}:9619/{central_manager}-condor 
+GlueForeignKey: GlueClusterUniqueID=llrcream.in2p3.fr
+GlueCEInfoLRMSType: condor
+GlueCEImplementationName: HTCONDORCE
+GlueCEInfoGatekeeperPort: 9619
+GlueCECapability: CPUScalingReferenceSI00={si00}
+GlueSchemaVersionMajor: 1
+GlueCEInfoDataDir: unset
+{vos}GlueCEInfoContactString: {endpointid}:9619/{central_manager}-condor
+GlueSchemaVersionMinor: 3
+GlueCEPolicyPreemption: 0
+GlueInformationServiceURL: ldap://{endpointid}:2170/mds-vo-name=resource,
+ o=grid
+GlueCEHostingCluster: {endpointid}
+GlueCEInfoLRMSVersion: {condor_version}
+objectClass: GlueCETop
+objectClass: GlueCE
+objectClass: GlueCEAccessControlBase
+objectClass: GlueCEInfo
+objectClass: GlueCEPolicy
+objectClass: GlueCEState
+objectClass: GlueInformationService
+objectClass: GlueKey
+objectClass: GlueSchemaVersion
+GlueCEImplementationVersion: {ce_version}
+GlueCEPolicyMaxObtainableCPUTime: 0
+GlueCEInfoTotalCPUs: {cores}
+GlueCEPolicyMaxRunningJobs: {cores}
+GlueCEPolicyAssignedJobSlots
+GlueCEStateTotalJobs: 0
+GlueCEStateEstimatedResponseTime: 43200
+GlueCEStateFreeCPUs: {cores}
+GlueCEStateRunningJobs: 0
+GlueCEStateWaitingJobs: 0
+GlueCEStateWorstResponseTime: 259200
+GlueCEStateFreeJobSlots: 0
+
+"""
+
+GLUE1_CE_DYNAMIC_LDIF = """
+GlueCEStateTotalJobs: {jobs}
+GlueCEStateEstimatedResponseTime: 43200
+GlueCEStateFreeCPUs: {free}
+GlueCEStateRunningJobs: {running}
+GlueCEStateWaitingJobs: {idle}
+GlueCEStateWorstResponseTime: 259200
+GlueCEStateFreeJobSlots: {free}
+"""
+
+
+GLUE1_CLUSTER_LDIF = """
+dn: GlueClusterUniqueID={endpointid},Mds-Vo-name=resource,o=grid
+objectClass: GlueClusterTop
+objectClass: GlueCluster
+objectClass: GlueInformationService
+objectClass: GlueKey
+objectClass: GlueSchemaVersion
+GlueClusterService: {endpointid}:9619/{central_manager}-condor
+GlueSchemaVersionMinor: 3
+GlueForeignKey: GlueSiteUniqueID={site}
+GlueSchemaVersionMajor: 1
+GlueClusterName: {endpointid}
+GlueInformationServiceURL: ldap://{endpointid}:2170/mds-vo-name=resource,
+ o=grid
+GlueClusterUniqueID: {endpointid}
+
+"""
+
+# We have one subcluster per machine OS/arch
+GLUE1_SUBCLUSTER_LDIF = """
+dn: GlueSubClusterUniqueID={scname},
+  GlueClusterUniqueID={endpointid},Mds-Vo-name=resource,o=grid
+GlueSubClusterName: {scname}
+GlueHostOperatingSystemName: {name}
+GlueHostOperatingSystemRelease: {version}
+GlueChunkKey: GlueClusterUniqueID={endpointid}
+GlueHostArchitecturePlatformType: {arch}
+GlueHostBenchmarkSI00: {si00}
+GlueHostMainMemoryVirtualSize: {memory}
+GlueHostBenchmarkSF00: {sf00}
+GlueHostNetworkAdapterInboundIP: FALSE
+GlueSubClusterWNTmpDir: /tmp
+GlueSchemaVersionMajor: 1
+GlueSubClusterTmpDir: /tmp
+GlueHostNetworkAdapterOutboundIP: TRUE
+GlueSchemaVersionMinor: 3
+GlueInformationServiceURL: ldap://{endpointid}:2170/mds-vo-name=resource,
+ o=grid
+objectClass: GlueClusterTop
+objectClass: GlueSubCluster
+objectClass: GlueHostApplicationSoftware
+objectClass: GlueHostArchitecture
+objectClass: GlueHostBenchmark
+objectClass: GlueHostMainMemory
+objectClass: GlueHostOperatingSystem
+objectClass: GlueHostProcessor
+objectClass: GlueInformationService
+objectClass: GlueKey
+objectClass: GlueSchemaVersion
+GlueHostMainMemoryRAMSize: {memory}
+GlueSubClusterUniqueID: {scname}
+GlueHostArchitectureSMPSize: 2
+GlueSubClusterPhysicalCPUs: {cpus}
+GlueSubClusterLogicalCPUs: {cores}
+GlueHostProcessorOtherDescription: Cores={cpm},Benchmark={hep-spec06}-HEP-SPEC06
+
+"""
+
+GLUE1_LIFETIME = 100
+GLUE1_CACHE = '/var/tmp/htcondor-ce-provider-glue1-cache'
+
+def cache_expired(cache):
+    """
+    Test if a cache is expired (or missing)
+    :cache: cache file
+    """
+
+    if not os.path.exists(cache):
+        return True
+
+
+    max_age = htcondor.param.get('HTCONDORCE_GLUE1_LIFETIME') or GLUE1_LIFETIME
+    age = time.time() - os.path.getmtime(cache)
+
+    return age > max_age
+
+def static_ldif():
+    """
+    Get the static data about the cluster
+    """
+
+    # central manager (take the primary in case of HA)
+    central_manager = htcondor.param.get('COLLECTOR_HOST').split(' ')[0]
+
+    # site name
+    site = htcondor.param.get('GLUE2DomainID')
+    if not site:
+        sys.stderr.write("Error: GLUE2DomainID: not set\n")
+        sys.exit(1)
+
+    # Get VO Names
+    vonames = htcondor.param.get('HTCONDORCE_VONames')
+    if not vonames:
+        sys.stderr.write("Error: HTCONDORCE_VONames not set\n")
+        sys.exit(1)
+    vonames = vonames.split(',')
+
+
+    # Query collector for the machines availables
+    coll = htcondor.Collector()
+    machines = {}
+    subclusters = {}
+    specs = ca.ClassAd(htcondor.param.get('HTCONDORCE_SPEC')) or []
+    vos = ''
+    for vo in vonames:
+        vos += "GlueCEAccessControlBaseRule: VO:%s\n" % vo
+
+    totals = {
+        'site': site,
+        'central_manager': central_manager,
+        'endpointid': gethostname(),
+        'machines': 0,
+        'cores': 0,
+        'si00': specs['specint2000'],
+        'vos': vos,
+        'condor_version': '8.8.8',
+        'ce_version': '3.4.0'
+    }
+
+ 
+    for classad in coll.query(
+            htcondor.AdTypes.Startd, 'State=!="Owner"', [
+                'Arch', 'OpSys', 'OpSysMajorVer', 'OpSysName',
+                'DetectedCpus', 'DetectedMemory', 'Machine'
+            ]
+        ):
+
+        if (not classad.get('Machine')) or (classad['Machine'] in machines):
+            continue  # skip malformed ads and machines already counted
+
+        machines[classad['Machine']] = 1
+
+        try:
+            scname = "%s_%s_%s_%s" % (
+                gethostname(),
+                classad['OpSysName'],
+                classad['OpSysMajorVer'],
+                classad['Arch'].lower()
+            )
+
+            if scname not in subclusters:
+                subclusters[scname] = {
+                    'scname': scname,
+                    'arch': classad['Arch'].lower(),
+                    'name': classad['OpSysName'],
+                    'version': classad['OpSysMajorVer'],
+                    'endpointid': gethostname(),
+                    'machines': 0,
+                    'cpus': 0,
+                    'cores': 0,
+                    'totmemory': 0,
+                    'sf00': specs['specfp2000'],
+                    'si00': specs['specint2000'],
+                    'hep-spec06': specs['hep_spec06'],
+                }
+
+            subclusters[scname]['machines'] += 1
+            subclusters[scname]['cpus'] += 2 # Todo: do not assume 2 cpu per machine
+            subclusters[scname]['cores'] += classad['DetectedCpus']
+            subclusters[scname]['totmemory'] += classad['DetectedMemory']
+            totals['machines'] += 1
+            totals['cores'] += classad['DetectedCpus']
+
+        except KeyError, exc:
+            msg = "Malformed machine ad: Missing '{0}' attribute for {1}"\
+                   .format(exc, classad['Machine'])
+            sys.stderr.write(msg)
+
+    ldif_cache = GLUE1_CE_STATIC_LDIF.format(**totals) +\
+        GLUE1_CLUSTER_LDIF.format(**totals)
+
+    for scname, scluster in subclusters.items():
+        scluster['cpm'] = scluster['cores']/scluster['machines']
+        scluster['memory'] = scluster['totmemory']/scluster['cores']
+
+        ldif_cache += GLUE1_SUBCLUSTER_LDIF.format(**scluster)
+
+    return ldif_cache
+
+def write_cache(cache):
+    """
+    Write the cache file
+    """
+    ldif_cache = static_ldif()
+
+    with open(cache, 'w') as cachefh:
+        cachefh.write(ldif_cache)
+
+
+def main():
+    """
+    Main provider routine.
+    """
+
+    # Static data is cached.
+    cache = htcondor.param.get('HTCONDORCE_GLUE1_CACHE') or GLUE1_CACHE
+
+    if cache_expired(cache):
+        write_cache(cache)
+
+    with open(cache, 'r') as cachefh:
+        ldif = cachefh.read()
+
+    print(ldif)
+
+if __name__ == '__main__':
+    main()

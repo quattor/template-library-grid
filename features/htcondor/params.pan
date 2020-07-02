@@ -68,10 +68,13 @@ variable CONDOR_CONFIG = {
             error('No attribute "name" defined for CONDOR_CONFIG["cfgfiles"]["' + to_string(i) + '"]');
         };
 
+        if (!is_defined(file['base_path']))
+            file['base_path'] = SELF['cfgdir'];
+
         if (!is_defined(file['path'])) {
             file['path'] = format(
                 "%s/config.d/%s.%s.%s.conf",
-                SELF['cfgdir'], SELF['cfgprefix'], to_string(i), file['name']
+                file['base_path'], SELF['cfgprefix'], to_string(i), file['name']
             );
         };
 

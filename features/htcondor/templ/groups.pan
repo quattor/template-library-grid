@@ -50,6 +50,12 @@ structure template features/htcondor/templ/groups;
     };
     txt = txt + "\n";
 
+    if (CONDOR_CONFIG['group_defaults']['boost_multicore']) {
+        txt = txt + 'GROUP_SORT_EXPR = ifThenElse(AccountingGroup=?="<none>", 3.4e+38, ';
+        txt = txt + '  ifThenElse(RequestCpus == 8,ifThenElse(GroupQuota > 0,-2+GroupResourcesInUse/GroupQuota,-1), ';
+        txt = txt + '  ifThenElse(GroupQuota > 0, GroupResourcesInUse/GroupQuota, 3.3e+38)))';
+    };
+
     txt;
 };
 

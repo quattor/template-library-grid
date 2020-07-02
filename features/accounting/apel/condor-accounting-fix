@@ -70,7 +70,7 @@ def condorToPBS(file,outFile):
    print "opening ",file," for reading"
 
    # Read in XML output from condor_history
-   p = subprocess.Popen(["condor_history", "-xml", "-f", file], stdout=subprocess.PIPE)
+   p = subprocess.Popen(["condor_history", "-xml", "-file", file], stdout=subprocess.PIPE)
    output, err = p.communicate()
    document = ElementTree.fromstring(output)
 
@@ -113,7 +113,10 @@ def condorToPBS(file,outFile):
          mem = "%skb" % data['ResidentSetSize_RAW']
          vmem = "%skb" % data['ImageSize_RAW']
 
-         host = (data['LastRemoteHost'].split('@'))[1]
+         try:
+            host = (data['LastRemoteHost'].split('@'))[1]
+         except:
+            host = data['LastRemoteHost']
 
          exec_host = ""
          for i in range(int(data['RequestCpus'])):

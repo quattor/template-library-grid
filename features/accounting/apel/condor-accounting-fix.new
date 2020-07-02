@@ -1,0 +1,123 @@
+#!/usr/bin/python
+# re-write blah logs with hostname included with job id
+# convert condor history file to PBS style accounting log file for consumption by APEL parser
+#
+# Author: sartiran@llr.in2p3.fr
+#
+# Minimal modification of an original script by Andrew Lahiff
+#
+# https://github.com/alahiff/cream-for-htcondor
+#
+
+from xml.etree import ElementTree
+import sys
+import subprocess
+import glob
+import grp, pwd
+from datetime import datetime, timedelta
+import socket
+import time
+import re
+import argparse
+import os
+
+#for file in files:
+
+
+#This adds the hostname to the job ids in the blah file
+def fixBlahFile(file,outFile):
+   fi = open(file, 'r')
+   lines = fi.readlines()
+
+   #llrcream.in2p3.fr#7479916.0#1534723226
+   job_id_pattern = re.compile('(\S+)#(\d+)\.*\d*#\d+')
+
+   #outFile = '/var/apel/accounting/'+((file.split('/'))[len(file.split('/'))-1])
+   f = open(outFile,'w')
+   print 'Writing to ',outFile
+
+   LINE_EXPR = re.compile(r'\"|\"_\"')
+
+   for line in lines:
+      parts = [x.split('=',1) for x in [y for y in LINE_EXPR.split(line) if len(y) > 1]]
+      record = ''
+      for part in parts:
+         if part[0] == 'lrmsID':
+            match = job_id_pattern.match(part[1])
+            if match:
+                part[1] = "%s.%s" % (match.group(2), match.group(1))
+            else:
+                part[1] = "%s.%s" % (part[1], socket.gethostname())
+         if len(record) > 2:
+            record = record + ' '
+         record = record + '"' + part[0] + '=' + part[1] + '"'
+      record = record + "\n"
+      f.write(record)
+
+   f.close()
+   fi.close()
+
+
+usedate = datetime.now() - timedelta(days=1)
+
+parser = argparse.ArgumentParser(description='Process Condor history files for accounting purpose. Also fix blah accounting files.')
+parser.add_argument('--history-files-pattern', default='/var/lib/condor/spool/history.*',
+                   help='history logs pattern (default is /var/lib/condor/spool/history.*)')
+parser.add_argument('--parsable-dir', default='/var/lib/condor/accounting/',
+                   help='directory of the processed history logs (default is /var/lib/condor/accounting/)')
+parser.add_argument('--parsable-file-prefix', default='parsable.',
+                   help='prefix of the parsable files (default is parsable.)')
+parser.add_argument('--blah-files-pattern', default='/var/log/accounting/blahp.log-*',
+                   help='blah accounting files pattern (default is /var/log/accounting/blahp.log-*)')
+parser.add_argument('--fixed-blah-dir', default='/var/apel/accounting/',
+                   help='directory of the processed blah files (default is /var/apel/accounting/)')
+parser.add_argument('--fixed-blah-file-prefix', default='',
+                   help='prefix of fixed blah files (default is black.)')
+
+args = parser.parse_args()
+condor_history=[
+  'condor_history',
+  '-constraint', 'JobStartDate > 0',
+  '-format','%s.'+socket.getfqdn()+'|','ClusterId',
+  '-format','%s|','Owner',
+  '-format','%d|','RemoteWallClockTime',
+  '-format','%d|','RemoteUserCpu',
+  '-format','%d|','RemoteSysCpu',
+  '-format','%d|','JobStartDate',
+  '-format','%d|','EnteredCurrentStatus',
+  '-format','%d|','IfThenElse(ResidentSetSize_RAW=!=NULL,ResidentSetSize_RAW,0)',
+  '-format','%d|','IfThenElse(ImageSize_RAW=!=NULL,ImageSize_RAW,0)',
+  '-format','%d\n','RequestCpus',
+  '-file'
+]
+
+print "Processing history files"
+
+files = glob.glob(args.history_files_pattern)
+files.sort(key=lambda x: os.stat(x).st_mtime)
+for file in files:
+   outFile=args.parsable_dir+args.parsable_file_prefix+os.path.basename(file)
+   if os.path.isfile(outFile) :
+     print "Skipping file (already Processed): ",file
+   else:
+     print "Processing file: ",file
+     command_line=list(condor_history)
+     command_line.append(file)
+     p = subprocess.Popen(command_line,stdout=subprocess.PIPE)
+     output, err = p.communicate()
+     f = open(outFile,'w')
+     print 'Writing to ',outFile
+     f.write(output)
+
+print "Processing blah files"
+
+files = glob.glob(args.blah_files_pattern)
+files.sort(key=lambda x: os.stat(x).st_mtime)
+files.pop()
+for file in files:
+   outFile=args.fixed_blah_dir+args.fixed_blah_file_prefix+os.path.basename(file)
+   if os.path.isfile(outFile) :
+     print "Skipping file (already Processed): ",file
+   else:
+     print "Processing file: ",file
+     fixBlahFile(file,outFile)

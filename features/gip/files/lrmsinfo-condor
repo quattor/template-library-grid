@@ -1,116 +1,98 @@
-#! /usr/bin/perl
+#!/usr/bin/env python
+# coding: utf8
 
-use strict;
-use warnings;
-use Data::Dumper;
-use Switch;
+import time
+import htcondor
+import argparse
+import datetime
 
-open(CONDOR_STATUS,"/usr/bin/condor_status -startd -long|") or die "cannot execute condor_status";
 
-my $totals={
-    'nactive' => 0,
-    'nfree'   => 0,
-    'now'     => time(),
-    'schedCycle' => 26
-};
+collector = htcondor.Collector()
 
-my $res_info={};
+workers=collector.query(htcondor.AdTypes.Startd)
 
-while(<CONDOR_STATUS>){
-    if(/^$/){
-        addResInfo($res_info,$totals);
-        $res_info={};
-        next;
-    }elsif(/^(\S+) = (.+)$/){
-        $res_info->{$1}=$2
-    }else{
-        die "unrecognized classadd def";
-    }
-}
+class StartdInfo(object):
+    """
+    Startd is a object to store usefull data
+    """
+    def __init__(self,collector):
+        """
+        Initialize StartdInfo
+        """
+        self.totals={
+            'nactive' : 0,
+            'nfree'   : 0,
+            'now'     : "%d" % time.time(),
+            'schedCycle' : 26
+        }
+        for wn in collector.query(htcondor.AdTypes.Startd):
+            self.totals['nactive']+=wn['Cpus']
+            if wn['State'] == '"Claimed"':
+               self.totals['nfree']+=wn['Cpus']
 
-$res_info={};
+    def printAll(self):
+        print """
+nactive\t{nactive}
+nfree\t{nfree}
+now\t{now}
+schedCycle\t{schedCycle}
+""".format(**self.totals)
 
-close CONDOR_STATUS;
 
-printTotals($totals);
+class ScheddInfo(object):
+    """
+    Startd is a object to store usefull data
+    """
+    def __init__(self,collector):
+        """
+        Initialize ScheddInfo
+        """
+        self.scheduler=htcondor.Schedd(collector.locateAll(htcondor.DaemonTypes.Schedd)[0])
 
-open(CONDOR_Q,"/usr/bin/condor_q -global -long|") or die "cannot execute condor_q";
+    def printAll(self):
+        for jobca in self.scheduler.query():
 
-my $job_info={};
+            # This is a kludge: jobca is a classad object and it
+            # seems to give some problem when adding fields. 
+            # copying it into simple dictionary does teh job.
+            job = {}
 
-while(<CONDOR_Q>){
-   if(/^$/){
-       printJobInfo($job_info);
-       $job_info={};
-       next;
-   }elsif(/^(\S+) = (.+)$/){
-       $job_info->{$1}=$2
-   }else{
-       $job_info={};
-   }
-}
+            for x in jobca.keys():
+                job[x] = jobca[x]
 
-close CONDOR_Q;
+            (job['user'], job['queue']) = job['User'].split('@')
+            try:
+                job['group'] = job['x509UserProxyVOName'].split('"')[0]
+            except:
+                job['group'] = "no-group"
 
-sub addResInfo {
-    my $info=shift;
-    my $tot=shift;
+            if job['JobStatus'] == 0 or job['JobStatus'] == 1:
+                job['status'] = 'queued'
+            elif job['JobStatus'] == 2:
+                job['status'] = 'running'
+            else:
+                continue
 
-#    print "DBP1:",Dumper($info),"\n";
-#    print "DBP1:",Dumper($tot),"\n";
+            if 'JobStartDate' in job.keys():
+                job['walltime'] = ("%d" % (time.time()-job['JobStartDate']))
+            else:
+                job['walltime'] = 0.0
+                job['JobStartDate'] = job['QDate']
 
-    $tot->{nactive} = $tot->{nactive} + $info->{Cpus};
-    $tot->{nfree} = $tot->{nfree} + $info->{Cpus} unless($info->{State} eq '"Claimed"');
+            if job['status'] == 'queued' and (time.time() - job['QDate']) < 3600:
+                continue
 
-}
+            try:
+                job['CreamQueue'] = job['CreamQueue'].split('"')[0]
+            except:
+                job['CreamQueue'] = 'no-cream-queue'
 
-sub printTotals{
-    my $tot=shift;
-    foreach my $key (keys(%{$tot})){
-        print "$key\t$tot->{$key}\n"
-    }
+            jobstr = "'group': '{group}', 'name': 'condor_{ClusterId}', 'qtime': {QDate}, 'jobid': {ClusterId}, 'queue': '{CreamQueue}', 'start': {JobStartDate}," \
+                  " 'state': '{status}', 'cpucount': {RequestCpus}, 'user': '{User}', 'maxwalltime': 129600, 'startAnchor': 'start_time', 'walltime': {walltime}"\
+                  "".format(**job)
+            print "{%s}" % jobstr
 
-}
+StartdInfo(htcondor.Collector()).printAll()
 
-sub printJobInfo {
-    my $info=shift;
+ScheddInfo(htcondor.Collector()).printAll()
 
-    $info->{User}=~/"(\S+)@(\S+)"/;
-    $info->{user}=$1;
-    $info->{queue}=$2;
-
-    $info->{x509UserProxyVOName}=~/"(\S+)"/;
-    $info->{group}=$1;
-
-    switch($info->{JobStatus}){
-        case [0,1]{$info->{status}='queued'}
-        case 2 {$info->{status}='running'}
-        else {return};
-    };
-
-    if(defined($info->{JobStartDate})){
-        $info->{walltime}=time()-$info->{JobStartDate};
-    }else{
-        $info->{JobStartDate} = $info->{QDate};
-        $info->{walltime}=0.0;
-    }
-
-    $info->{CreamQueue}=~/([^"]+)/;
-    $info->{CreamQueue}=$1;
-
-    print "{'group': '".$info->{group}."', ";
-    print "'name': 'condor_".$info->{ClusterId}."', ";
-    print "'qtime': ".$info->{QDate}.", ";
-    print "'jobid': '".$info->{ClusterId}."', ";
-    print "'queue': '".$info->{CreamQueue}."', ";
-    #print "'queue': 'default',";
-    print "'start': ".$info->{JobStartDate}.", ";
-    print "'state': '".$info->{status}."', ";
-    print "'cpucount': ".$info->{RequestCpus}.", ";
-    print "'user': '".$info->{user}."', ";
-    print "'maxwalltime': 129600,"; #to be fixed
-    print "'startAnchor': 'start_time',";
-    print "'walltime': ".$info->{walltime}." ";
-
-    print "}\n";
-}
