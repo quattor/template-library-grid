@@ -9,7 +9,11 @@ include 'personality/se_dpm/server/config';
 # Configure and enable MySQL server
 variable DPM_MYSQL_INCLUDE = {
     if ( SEDPM_DB_TYPE == 'mysql' ) {
-        'features/mysql/server';
+        if (OS_VERSION_PARAMS['major'] == 'el7') {
+            'features/mariadb/server';
+        } else {
+            'features/mysql/server';
+        };
     } else {
         null;
     };
