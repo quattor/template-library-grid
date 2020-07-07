@@ -2,7 +2,6 @@ template features/puppet/defaults_6+;
 
 include 'components/puppet/config';
 
-variable PUPPET_PACKAGE_NAME ?= 'puppet-agent';
 variable PUPPET_MODULE_PATH ?= '/etc/puppetlabs/code/environments/production/modules';
 variable HIERADATA_DIR ?= '/etc/puppetlabs/code/environments/production/hieradata';
 variable HIERADATA_FILENAME ?= 'quattor.yaml';
