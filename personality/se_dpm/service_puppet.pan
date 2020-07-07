@@ -8,6 +8,8 @@ variable SEDPM_MONITORING_ENABLED ?= false;
 variable XROOT_ENABLED ?= true;
 variable HTTPS_ENABLED ?= false;
 variable DPM_MEMCACHED_ENABLED ?= false;
+variable DPM_MYSQL_SERVER ?= FULL_HOSTNAME;
+variable DPM_USER ?= 'dpmmgr';
 
 variable VOMS_XROOTD_EXTENSION_ENABLED ?= true;
 
@@ -31,16 +33,15 @@ include 'personality/se_dpm/puppet/puppetconf';
 
 include 'personality/se_dpm/rpms/config';
 
-'/software/packages' = {
-    if (SEDPM_IS_HEAD_NODE) {
-        if (match(OS_VERSION_PARAMS['major'], '[es]l[56]')) {
-            pkg_repl('mysql-server');
-        } else {
-            pkg_repl('mariadb-server');
-        };
+# Configure and enable MySQL server
+variable DPM_MYSQL_INCLUDE = {
+    if (SEDPM_IS_HEAD_NODE && (FULL_HOSTNAME == DPM_MYSQL_SERVER)) {
+        'personality/se_dpm/puppet/mysql';
+    } else {
+        null;
     };
-    SELF;
 };
+include DPM_MYSQL_INCLUDE;
 
 '/software/packages/{dmlite-plugins-memcache}' = {
     if (SEDPM_IS_HEAD_NODE && DPM_MEMCACHED_ENABLED) {
