@@ -4,14 +4,12 @@ include 'components/chkconfig/config';
 include 'components/etcservices/config';
 
 # Include RPMs for MySQL server
-'/software/packages' = pkg_repl('mariadb-server');
+'/software/packages' = pkg_repl('mysql-server');
 
 # Enable and start MySQL service
-variable DAEMON_MYSQL ?= "mariadb";
-
 "/software/components/chkconfig/service" ?= dict();
 "/software/components/chkconfig/service" = merge(SELF, dict(
-    DAEMON_MYSQL, dict(
+    mysqld, dict(
         'on', '',
         'startstop', true,
     ),
