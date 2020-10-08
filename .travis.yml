@@ -1,9 +1,3 @@
-language: bash
-
-script:
-  - ./.travis-scripts/test-library
-  - ./.travis-scripts/panlint
-
 language: python
 
 python:
@@ -12,4 +6,6 @@ python:
 install:
   - pip install -q colorama prettytable
 
-sudo: false
+script:
+  - ./.travis-scripts/test-library
+  - ./.travis-scripts/panlint
