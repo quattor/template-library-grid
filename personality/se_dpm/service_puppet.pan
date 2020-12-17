@@ -10,6 +10,7 @@ variable HTTPS_ENABLED ?= false;
 variable DPM_MEMCACHED_ENABLED ?= false;
 variable DPM_MYSQL_SERVER ?= FULL_HOSTNAME;
 variable DPM_USER ?= 'dpmmgr';
+variable DPM_CONFIGURE_MYSQL ?= false;
 
 variable VOMS_XROOTD_EXTENSION_ENABLED ?= true;
 
@@ -35,7 +36,7 @@ include 'personality/se_dpm/rpms/config';
 
 # Configure and enable MySQL server
 variable DPM_MYSQL_INCLUDE = {
-    if (SEDPM_IS_HEAD_NODE && (FULL_HOSTNAME == DPM_MYSQL_SERVER)) {
+    if (DPM_CONFIGURE_MYSQL && SEDPM_IS_HEAD_NODE && (FULL_HOSTNAME == DPM_MYSQL_SERVER)) {
         'personality/se_dpm/puppet/mysql';
     } else {
         null;
