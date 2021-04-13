@@ -16,7 +16,7 @@ include 'components/symlink/config';
 #   - SOURCE the environment before starting the server
 
 "/software/components/filecopy/services/{/opt/globus/sbin/SXXsshd}" = dict(
-    "config", replace('/GSISSH_PORT/', GSISSH_PORT, file_contents('personality/ui_gsissh/SXXsshd.sh')),
+    "config", replace('/GSISSH_PORT/', to_string(GSISSH_PORT), file_contents('personality/ui_gsissh/SXXsshd.sh')),
     "owner", "root:root",
     "perms", "0744"
 );
