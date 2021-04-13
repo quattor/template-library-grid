@@ -1,5 +1,10 @@
 unique template personality/ui_gsissh/config;
 
+include 'components/chkconfig/config';
+include 'components/filecopy/config';
+include 'components/gsissh/config';
+include 'components/symlink/config';
+
 #base configuration
 
 "/software/components/chkconfig/service/gsisshd/on" = "";
