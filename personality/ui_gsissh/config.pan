@@ -1,5 +1,10 @@
 unique template personality/ui_gsissh/config;
 
+include 'components/chkconfig/config';
+include 'components/filecopy/config';
+include 'components/gsissh/config';
+include 'components/symlink/config';
+
 #base configuration
 
 "/software/components/chkconfig/service/gsisshd/on" = "";
@@ -11,7 +16,7 @@ unique template personality/ui_gsissh/config;
 #   - SOURCE the environment before starting the server
 
 "/software/components/filecopy/services/{/opt/globus/sbin/SXXsshd}" = dict(
-    "config", replace('/GSISSH_PORT/', GSISSH_PORT, file_contents('personality/ui_gsissh/SXXsshd.sh')),
+    "config", replace('/GSISSH_PORT/', to_string(GSISSH_PORT), file_contents('personality/ui_gsissh/SXXsshd.sh')),
     "owner", "root:root",
     "perms", "0744"
 );
