@@ -2,7 +2,7 @@ unique template personality/se_dpm/puppet/release_modules;
 
 include 'components/spma/config';
 
-'/software/packages/' = pkg_repl('dmlite-puppet-dpm');
+'/software/packages' = pkg_repl('dmlite-puppet-dpm');
 
 include 'components/puppet/config';
 

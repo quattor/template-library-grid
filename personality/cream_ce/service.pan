@@ -47,7 +47,14 @@ include 'personality/bdii/service';
 include 'features/classads/config';
 
 # Add MySQL server.
-include 'features/mysql/server';
+variable MYSQL_INCLUDE = {
+    if (OS_VERSION_PARAMS['major'] == 'el7') {
+        'features/mariadb/server';
+    } else {
+        'features/mysql/server';
+    };
+};
+include MYSQL_INCLUDE;
 
 # Configure LRMS if one specified and LRMS server is running on the CE.
 # When using MAUI, postpone configuration of maui-monitoring after GIP configuration.
@@ -61,15 +68,16 @@ variable LRMS_SERVER_INCLUDE = {
         };
 
         if ( LRMS_SERVER_HOST == FULL_HOSTNAME ) {
-            "features/" + batch_dir + "/server/service";
+            server_include  = "features/" + batch_dir + "/server/service";
         } else {
             client_include = if_exists("features/" + batch_dir + "/client/client-only");
             if ( is_defined(client_include) ) {
                 client_include;
             } else {
-                "features/" + batch_dir + "/client/service"
+                server_include = "features/" + batch_dir + "/client/service"
             };
         };
+        server_include;
     } else {
         null;
     };
@@ -113,9 +121,6 @@ include 'features/lcas/base';
 
 # Configure Tomcat.
 include 'features/tomcat/config';
-
-# Configure lb-locallogger
-include 'features/lb/locallogger';
 
 # CREAM CE specific tasks
 include 'personality/cream_ce/config';
