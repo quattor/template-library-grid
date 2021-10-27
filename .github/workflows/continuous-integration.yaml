@@ -1,0 +1,40 @@
+name: Run Tests
+
+on: [push, pull_request]
+
+jobs:
+  test-library:
+    runs-on: ubuntu-latest
+    container: centos:7
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install dependencies
+      run: yum -y install wget subversion git
+    - name: Setup Java JDK
+      uses: actions/setup-java@v2.0.0
+      with:
+        java-version: 11
+        distribution: adopt
+    - name: run tests
+      run: .ci-scripts/test-library
+      env:
+        TRAVIS_BUILD_DIR: "$GITHUB_WORKSPACE"
+        TRAVIS_REPO_SLUG: "$GITHUB_REPOSITORY"
+        TRAVIS_BRANCH: "${GITHUB_HEAD_REF:-master}"
+  panlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          # we need the full repo or HEAD^ does not work
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+      - name: Install dependencies
+        run: pip install colorama prettytable six
+      - name: run panlint
+        run: .ci-scripts/panlint
