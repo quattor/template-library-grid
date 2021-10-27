@@ -23,7 +23,7 @@ variable MACHINE_FEATURES_STARTUP = '/etc/init.d/' + MACHINE_FEATURES_SCRIPT;
 
 prefix '/software/components/chkconfig';
 'dependencies/pre' = append('filecopy');
-'service' = {SELF[MACHINE_FEATURES_SCRIPT]['on'] = ''; SELF;};
+'service' = {SELF[MACHINE_FEATURES_SCRIPT]['on'] = ''; SELF; };
 
 # Machine features can be defined through a structure template
 variable MACHINE_FEATURES ?= {

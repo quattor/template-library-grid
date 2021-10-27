@@ -41,53 +41,49 @@ variable ENABLE_MPI ?= false;
 #
 # Include base configuration of a gLite node
 #
-include { 'machine-types/grid/base' };
+include 'machine-types/grid/base';
 
 
 # Include UI GSISSH site parameters if GSISSH is configured
 variable UI_GSISSH_SITE_INCLUDE = if ( GSISSH_SERVER_ENABLED ) {
-                                    UI_GSISSH_CONFIG_SITE;
-                                  } else {
-                                    null;
-                                  };
-include { UI_GSISSH_SITE_INCLUDE };
+    UI_GSISSH_CONFIG_SITE;
+} else {
+    null;
+};
+include UI_GSISSH_SITE_INCLUDE;
 
 
 # UI configuration
 #
 variable UI_INCLUDE = if ( GSISSH_SERVER_ENABLED ) {
-                        return('personality/ui_gsissh/service');
-                      } else {
-                        return('personality/ui/service');
-                      };
-include { UI_INCLUDE };
+    'personality/ui_gsissh/service';
+} else {
+    'personality/ui/service';
+};
+include UI_INCLUDE;
 
 #
 # Add local users, if any
 #
 variable UI_USERS_INCLUDE = if (  GSISSH_SERVER_ENABLED ) {
-                              return(null);
-                            } else {
-                              inc_file = if_exists('site/config/local_users');
-                              if ( ! is_defined(inc_file) ) {
-                                inc_file = if_exists('pro_site_local_users');
-                              };
-                              return(inc_file);
-                            };
-include { UI_USERS_INCLUDE };
+    null;
+} else {
+    if_exists('site/config/local_users');
+};
+include UI_USERS_INCLUDE;
 
 #
 # Add site specific configuration, if any
-include { return(UI_CONFIG_SITE) };
+include UI_CONFIG_SITE;
 
 
 #
 # middleware updates
 #
-include { if_exists('update/config') };
+include if_exists('update/config');
 
 
 # Do any final configuration needed for some reasons (e.g. : run gLite 3.0 on SL4)
 # Should be done at the very end of machine configuration
 #
-include { if_exists(GLITE_OS_POSTCONFIG) };
+include if_exists(GLITE_OS_POSTCONFIG);
