@@ -25,20 +25,19 @@ variable NODE_VO_GRIDMAPDIR_CONFIG ?= true;
 #
 # Include base configuration of a gLite node
 #
-include { 'machine-types/grid/base' };
+include 'machine-types/grid/base';
 
 
 # Include DPM server configuration
-include { 'personality/se_dpm/service' };
-
+include 'personality/se_dpm/service';
 
 #
 # middleware updates
 #
-include { if_exists('update/config') };
+include if_exists('update/config');
 
 
 # Do any final configuration needed for some reasons (e.g. : run gLite3 on SL4)
 # Should be done at the very end of machine configuration
 #
-include { if_exists(GLITE_OS_POSTCONFIG) };
+include if_exists(GLITE_OS_POSTCONFIG);

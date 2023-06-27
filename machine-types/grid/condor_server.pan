@@ -3,7 +3,6 @@ template machine-types/grid/condor_server;
 variable CONDOR_SERVER_CONFIG_SITE ?= undef;
 
 
-
 # CREATE_HOME must be defined as undef
 ##variable CREATE_HOME ?= undef;
 
@@ -30,32 +29,32 @@ variable VO_GRIDMAPFILE_MAP_VOMS_ROLES ?= true;
 # Include base configuration of a gLite node.
 # This includes configure NFS service.
 #
-include { 'machine-types/grid/base' };
+include 'machine-types/grid/base';
 
 
 # Configure Condor server and associated services
-include { 'personality/condor_server/service' };
+include 'personality/condor_server/service';
 
 
 #
 # Configure NFS if necessary
 #
-include { if ( NFS_SERVER_ENABLED ) 'features/nfs/server/config' };
-include { if ( NFS_CLIENT_ENABLED ) 'features/nfs/client/config' };
+include if ( NFS_SERVER_ENABLED ) 'features/nfs/server/config';
+include if ( NFS_CLIENT_ENABLED ) 'features/nfs/client/config';
 
 
 
 #
 # Add site specific configuration, if any
-include { return(CONDOR_SERVER_CONFIG_SITE) };
+include CONDOR_SERVER_CONFIG_SITE;
 
 #
 # middleware updates
 #
-include { if_exists('update/config') };
+include if_exists('update/config');
 
 
 # Do any final configuration needed for some reasons (e.g. : run gLite 3.0 on SL4)
 # Should be done at the very end of machine configuration
 #
-include { if_exists(GLITE_OS_POSTCONFIG) };
+include if_exists(GLITE_OS_POSTCONFIG);
