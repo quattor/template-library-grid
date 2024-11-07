@@ -8,4 +8,4 @@ rm -f /tmp/create-vanilla-SCDB.sh
 wget -q https://raw.githubusercontent.com/quattor/scdb/master/utils/scdb/create-vanilla-SCDB.sh -O /tmp/create-vanilla-SCDB.sh
 chmod u+x /tmp/create-vanilla-SCDB.sh
 
-/tmp/create-vanilla-SCDB.sh -F --debug --continuous-integration HEAD
+/tmp/create-vanilla-SCDB.sh -F --continuous-integration HEAD
