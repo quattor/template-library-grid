@@ -9,7 +9,7 @@ include 'components/etcservices/config';
 # Enable and start MySQL service
 "/software/components/chkconfig/service" ?= dict();
 "/software/components/chkconfig/service" = merge(SELF, dict(
-    mysqld, dict(
+    'mysqld', dict(
         'on', '',
         'startstop', true,
     ),
