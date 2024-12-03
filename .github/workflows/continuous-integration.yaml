@@ -48,5 +48,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3
+      - name: Install dependencies
+        run: pip install colorama
       - name: run indent checker
         run: .ci-scripts/indent
