@@ -1,5 +1,5 @@
 # Template doing configuration common to Torque client and server,
-# mainly pbsknownhosts and ssh config.
+# mainly ssh config.
 
 unique template features/torque2/config;
 
