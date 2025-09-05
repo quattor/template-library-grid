@@ -109,11 +109,6 @@ variable YAIM_GROUPSCONF_CFGFILE ?= null;
 variable NODE_TYPE_LIST ?= null;
 "/software/components/yaim" = yaim_mapping(NODE_TYPE_LIST);
 
-# set queue ACLs and VO views - if applicable
-variable TORQUE_QUEUE_ACCESS ?= nlist();
-variable VO_VIEW ?= list();
-"/software/components/yaim" = yaim_set_queue_access(TORQUE_QUEUE_ACCESS);
-
 variable QUEUE_SE_LIST ?= null;
 "/software/components/yaim" = yaim_set_queue_close_se_list(QUEUE_SE_LIST);
 

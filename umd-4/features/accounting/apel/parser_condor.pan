@@ -4,13 +4,7 @@ variable NEW_CONDOR_APEL_PARSER ?= false;
 
 include 'features/accounting/apel/base';
 
-# Fixme: Just to avoid full rewritting
-variable LRMS_CONFIG_DIR ?= if (exists(TORQUE_CONFIG_DIR)) {
-    TORQUE_CONFIG_DIR;
-} else {
-    '/var/lib/condor';
-};
-
+variable LRMS_CONFIG_DIR ?= '/var/lib/condor';
 
 # Allow user to customize cron startup hour
 # ATTENTION: start after 3am to be sure that blah logs are rotated
@@ -111,14 +105,14 @@ include 'components/metaconfig/config';
         'batch', dict(
             'enabled', to_string((index(FULL_HOSTNAME, CE_HOSTS) >= 0)),
             'reparse', 'false',
-            'type', if(NEW_CONDOR_APEL_PARSER){'HTCondor'}else{'PBS'},
+            'type', if (NEW_CONDOR_APEL_PARSER) {'HTCondor'} else error('The old APEL parser is no longer supported.'),
             'parallel', to_string(APEL_MULTICORE_ENABLED),
-            'dir', if(NEW_CONDOR_APEL_PARSER){
+            'dir', if (NEW_CONDOR_APEL_PARSER) {
                 LRMS_CONFIG_DIR + '/accounting'
-            }else{
+            } else {
                 LRMS_CONFIG_DIR + '/server_priv/accounting'
             },
-            'filename_prefix', if(NEW_CONDOR_APEL_PARSER){'parsable.'}else{'20'},
+            'filename_prefix', if (NEW_CONDOR_APEL_PARSER) {'parsable.'} else {'20'},
             'subdirs', 'false',
         ),
         'logging', dict(
@@ -138,12 +132,12 @@ include 'components/dirperm/config';
         "owner", "root:root",
         "path", if(NEW_CONDOR_APEL_PARSER){
             LRMS_CONFIG_DIR + '/accounting'
-        }else{
+        } else {
             LRMS_CONFIG_DIR + '/server_priv/accounting'
         },
         "perm", '755',
         "type", "d"
     ));
-}else{
+} else {
     SELF;
 };

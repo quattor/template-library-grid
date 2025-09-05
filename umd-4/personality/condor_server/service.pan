@@ -15,19 +15,16 @@ variable BDII_TYPE ?= 'resource';
 # Ensure that the host certificates have the correct permissions.
 include 'features/security/host_certs';
 
-# Do base configuration for GIP before configuring Torque/MAUI
+# Do base configuration for GIP before configuring batch system
 include 'features/gip/base';
 
 # Set permissions on key directories, in particular log directory
 include 'features/grid/dirperms';
 
 
-# When using MAUI, postpone configuration of maui-monitoring after GIP configuration.
-variable MAUI_MONITORING_POSTPONED = true;
 include 'features/htcondor/server/service';
 
-
-# Configure GIP plugin for Torque/MAUI
+# Configure GIP plugin
 include 'features/gip/ce';
 
 # Include a resource BDII
@@ -57,6 +54,5 @@ include 'features/mkgridmap/standard';
 # their run time tags.
 include 'features/gridftp/service';
 
-# PBS accounting.
+# Batch system accounting.
 include 'features/accounting/apel/parser_condor';
-

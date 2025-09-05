@@ -26,8 +26,6 @@ variable GIP_CE_GLUE2_LDIF_FILES = dict(
     'storage', 'ToStorageService.ldif',
 );
 
-variable GIP_CE_MAUI_PLUGIN_DEFAULTS_FILE ?= '/etc/lrms/lcg-info-dynamic-maui.defaults';
-
 # Must be lower case according to EGI profile
 variable CE_OS_FAMILY ?= 'linux';
 
@@ -91,43 +89,6 @@ variable GLUE_FAKE_JOB_VALUE ?= 444444;
 # Default: LRMS master node.
 variable GIP_CLUSTER_PUBLISHER_HOST ?= LRMS_SERVER_HOST;
 variable LRMS_PRIMARY_SERVER_HOST ?= LRMS_SERVER_HOST;
-
-# Variables related to MAUI-based GIP plugin.
-# Enable/disable its use instead of Torque-based plugin. Default: enabled.
-# Ignored if the LRMS is not pbs.
-variable GIP_CE_USE_MAUI ?= true;
-
-
-variable PKG_ARCH_TORQUE_MAUI ?= PKG_ARCH_GLITE;
-
-# File for caching GIP plugin output when it is run independenly of the GIP. This is particularly useful
-# when running multiple CEs in front of the same cluster. In this case, the GIP plugins are generally run as
-# part of maui-monitoring script (run as a cron job on the MAUI server). Enabled with variable GIP_CE_USE_CACHE.
-# As this file must normally be shared by several machines if there are several CEs, place it in the dteam
-# SW area if explicitly defined else at the root of the default SW area location.
-# There are 2 entries in GIP_CE_CACHE_FILE : 1 for the 'dynamic-ce' plugin, 1 for the 'dynamic-scheduler'
-# plugin. There must be at least one entry for each one present in GIP_CE_PLUGIN_COMMAND.
-# NOTE: this feature is currently implemented only for MAUI-based plugins.
-variable GIP_CE_CACHE_FILE ?= if ( GIP_CE_USE_CACHE ) {
-    if ( ( length(CE_HOSTS) == 1 ) && ( LRMS_SERVER_HOST == CE_HOSTS[0] ) ) {
-        SELF['ce'] = '/tmp/gip-ce-dynamic-info-maui.cache';
-        SELF['scheduler'] = '/tmp/gip-ce-dynamic-info-scheduler.cache';
-    } else {
-        if ( is_defined(VO_SW_AREAS['dteam']) ) {
-            SELF['ce'] = VO_SW_AREAS['dteam'] + '/gip-ce-dynamic-info-maui.cache';
-            SELF['scheduler'] = VO_SW_AREAS['dteam'] + '/gip-ce-dynamic-info-scheduler.cache';
-        } else if ( is_defined(VO_SW_AREAS['DEFAULT']) ) {
-            SELF['ce'] = VO_SW_AREAS['DEFAULT'] + '/gip-ce-dynamic-info-maui.cache';
-            SELF['scheduler'] = VO_SW_AREAS['DEFAULT'] + '/gip-ce-dynamic-info-scheduler.cache';
-        } else {
-            error("Unabled to compute default value for GIP_CE_CACHE_FILE. Define explicitly");
-        };
-    };
-    SELF;
-} else {
-    undef;
-};
-
 
 # CE close SE list
 variable CE_CLOSE_SE_LIST ?= undef;
@@ -224,10 +185,6 @@ variable GIP_CE_SERVICE_PARAMS = dict(
 '/software/packages' = {
     pkg_repl('glite-ce-cream-utils');
     pkg_repl('glite-info-provider-service');
-    if(CE_BATCH_SYS == 'pbs' || CE_BATCH_SYS == 'torque'){
-        pkg_repl('lcg-info-dynamic-scheduler-pbs');
-        if ( GIP_CE_USE_MAUI ) pkg_repl('lcg-info-dynamic-maui');
-    };
     if(CE_BATCH_SYS == 'condor'){ pkg_repl('dynsched-generic'); };
     SELF;
 };
@@ -288,7 +245,7 @@ variable CE_QUEUES ?= {
 # to use another one.
 # The batch system list is a dict where keys are batch systems (job managers) as specified
 # in the configuration and the value the corresponding generic batch system name
-# (ex: 'pbs' for 'lcgpbs'). For most batch systems, the key and the value are equal.
+# (ex: 'condor' for 'CONDOR'). For most batch systems, the key and the value are equal.
 variable CE_BATCH_SYS_LIST ?= {
     SELF[CE_BATCH_SYS] = CE_BATCH_SYS;
 
@@ -303,9 +260,7 @@ variable CE_BATCH_SYS_LIST ?= {
 
     # Update value for some specific job managers
     foreach (jobmanager; lrms; SELF) {
-        if ( match(lrms, 'lcgpbs|torque') ) {
-            SELF[jobmanager] = 'pbs';
-        } else if ( lrms == 'CONDOR' ) {
+        if ( lrms == 'CONDOR' ) {
             SELF[jobmanager] = 'condor';
         };
     };
@@ -339,75 +294,6 @@ variable CE_CPU_CONFIG = {
     SELF;
 };
 
-# Build the command to use to run the MAUI-based GIP plugins. Depending if it is run directly by the GIP or
-# used in cache mode, this wrapper will be configured as a GIP plugin or as a script to be run by some other
-# scripts (generally maui-monitoring).
-# There are 2 entries in GIP_CE_PLUGIN_COMMAND : 1 for the 'dynamic-ce' plugin, 1 for the 'dynamic-scheduler'
-# plugin.
-# NOTE: this feature is currently implemented only for MAUI-based plugins.
-# FIXME: generalize this feature for all batch systems
-variable GIP_CE_PLUGIN_COMMAND = {
-    # If using the standard Torque-based plugin, do nothing
-    if ( GIP_CE_USE_MAUI ) {
-        # MAUI-based plugin requires an architecture-dependent python module.
-        # To allow Torque 32-bit on an OS 64-bit, select python version to use
-        # explictly in the wrapper. Assume /opt/glite/bin/python2 is configured properly to
-        # launch the 32-bit version on a 64-bit OS.
-        if ( (PKG_ARCH_DEFAULT == 'x86_64') && (PKG_ARCH_TORQUE_MAUI == 'i386') ) {
-            pythonbin = EMI_LOCATION + '/bin/python2';
-        } else {
-            pythonbin = 'python'
-        };
-        gip_script_options = format(
-            "--max-normal-slots %d --defaults %s",
-            CE_CPU_CONFIG['slots'],
-            GIP_CE_MAUI_PLUGIN_DEFAULTS_FILE
-        );
-        SELF['ce'] = pythonbin + ' ' + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-maui --host " +
-            LRMS_SERVER_HOST + " " + gip_script_options;
-        # FIXME: lcg-info-dynamic-scheduler doesn't allow to use a LDIF file in a non standard location...
-        # Update to whatever is appropriate in cache mode when this is fixed.
-        if ( GIP_CE_USE_CACHE ) {
-            SELF['ce'] = SELF['ce'] + format(
-                ' --ce-ldif %s --share-ldif %s',
-                GIP_LDIF_DIR + '/static-file-all-CE-pbs.ldif',
-                GIP_LDIF_DIR + '/' + GIP_CE_GLUE2_LDIF_FILES['shares']
-            );
-        } else {
-            SELF['ce'] = SELF['ce'] + format(
-                ' --ce-ldif %s --share-ldif %s',
-                GIP_LDIF_DIR + '/static-file-all-CE-pbs.ldif',
-                GIP_LDIF_DIR + '/' + GIP_CE_GLUE2_LDIF_FILES['shares']
-            );
-        };
-    };
-
-    # Define only if using cache mode
-    if ( GIP_CE_USE_CACHE ) {
-        SELF['scheduler'] = '';
-        foreach (jobmanager; lrms; CE_BATCH_SYS_LIST) {
-            # The pipe is a workaround to allow GLUE2ComputingShareFreeSlots
-            # to be computing by lcg-info-dynamic-maui rather than
-            # lcg-info-dynamic-scheduler
-            if ( (lrms == 'pbs') && GIP_CE_USE_MAUI ) {
-                remove_free_slots_cmd = '| grep -v GLUE2ComputingShareFreeSlots';
-            } else {
-                remove_free_slots_cmd = '';
-            };
-            SELF['scheduler'] = SELF['scheduler'] + format(
-                '%s/lcg-info-dynamic-scheduler -c %s/lcg-info-dynamic-scheduler-%s.conf %s',
-                LCG_INFO_SCRIPTS_DIR,
-                GIP_SCRIPTS_CONF_DIR,
-                lrms,
-                remove_free_slots_cmd,
-            );
-        };
-    };
-
-    SELF;
-};
-
-
 # ----------------------------------------------------------------------------
 # Configure GIP plugins used to update dynamic information
 # ----------------------------------------------------------------------------
@@ -440,29 +326,6 @@ variable GIP_CE_PLUGIN_COMMAND = {
                 contents = contents + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-lsf /usr/local/lsf/bin/ " +
                             GIP_LDIF_DIR + "/static-file-CE-" + lrms + ".ldif" + "\n";
 
-            } else if ( lrms == "remotepbs" ) {
-                contents = contents + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-remotepbs " + REMOTEPBS_REMOTE_HOST +
-                                                                            " " + REMOTEPBS_REMOTE_PORT + "\n";
-            } else if ( lrms == "pbs" ) {
-                # When using MAUI-based GIP plugin, GIP wrapper runs the plugin directly if not using the cache mode
-                # or just read the cache file if used in cache mode.
-                if ( GIP_CE_USE_MAUI ) {
-                    if ( GIP_CE_USE_CACHE ) {
-                        # Just display the content. If the file doesn't exist, error will be detected/reported by GIP.
-                        contents = contents + 'cat ' + GIP_CE_CACHE_FILE['ce'];
-                    } else {
-                        contents = contents + "export PYTHONPATH=$PYTHONPATH:/usr/lib/python\n" +
-                            GIP_CE_PLUGIN_COMMAND['ce'];
-                    };
-                } else {
-                    if ( is_defined(LRMS_SERVER_HOST) ) {
-                        contents = contents + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-pbs " + GIP_LDIF_DIR +
-                                    "/static-file-CE-" + lrms + ".ldif " + LRMS_SERVER_HOST + "\n";
-                    } else {
-                        contents = contents + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-pbs " + GIP_LDIF_DIR +
-                                    "/static-file-CE-" + lrms + ".ldif " + CE_HOST + "\n";
-                    };
-                };
             } else {
                 error("unrecognized batch system (" + lrms + "); can't configure gip CE information");
             };
@@ -483,29 +346,12 @@ variable GIP_CE_PLUGIN_COMMAND = {
         contents = "#!/bin/sh\n";
 
         foreach (jobmanager; lrms; CE_BATCH_SYS_LIST) {
-            if ( lrms == "remotepbs" ) {
-                contents = contents + LCG_INFO_SCRIPTS_DIR + "/lcg-info-dynamic-remotepbs " +
-                            REMOTEPBS_REMOTE_HOST + " " + REMOTEPBS_REMOTE_PORT_SCHED + "\n";
-            } else if ( (lrms == 'pbs') && (is_defined(GIP_CE_PLUGIN_COMMAND['scheduler'])) && GIP_CE_USE_CACHE ) {
-                # Just display the content of cache file if cache mode is used. 
-                # If the file doesn't exist, error will be detected/reported by GIP.
-                contents = contents + 'cat ' + GIP_CE_CACHE_FILE['scheduler'];
-            } else {
-                # The pipe is a workaround to allow GLUE2ComputingShareFreeSlots to be computing 
-                # by lcg-info-dynamic-maui rather than lcg-info-dynamic-scheduler
-                if ( (lrms == 'pbs') && GIP_CE_USE_MAUI ) {
-                    remove_free_slots_cmd = '| grep -v GLUE2ComputingShareFreeSlots';
-                } else {
-                    remove_free_slots_cmd = '';
-                };
-                contents = contents + format(
-                    '%s/lcg-info-dynamic-scheduler -c %s/lcg-info-dynamic-scheduler-%s.conf %s',
-                    LCG_INFO_SCRIPTS_DIR,
-                    GIP_SCRIPTS_CONF_DIR,
-                    lrms,
-                    remove_free_slots_cmd,
-                );
-            };
+            contents = contents + format(
+                '%s/lcg-info-dynamic-scheduler -c %s/lcg-info-dynamic-scheduler-%s.conf',
+                LCG_INFO_SCRIPTS_DIR,
+                GIP_SCRIPTS_CONF_DIR,
+                lrms,
+            );
         };
 
         SELF['lcg-info-dynamic-scheduler-wrapper'] = contents;
@@ -539,31 +385,7 @@ variable GIP_CE_VOMAP ?= {
     # iterate over supported batch systems
     if ( is_defined(CE_BATCH_SYS_LIST) ) {
         foreach (jobmanager; lrms; CE_BATCH_SYS_LIST) {
-            if ( lrms == "pbs" ) {
-                if ( GIP_CE_USE_CACHE ) {
-                    static_ldif_dir = GIP_VAR_DIR;
-                } else {
-                    static_ldif_dir = GIP_LDIF_DIR;
-                };
-                ldif_file = format("%s/static-file-all-CE-pbs.ldif\n", static_ldif_dir);
-                ldif_file_glue2 = format("%s/%s\n", static_ldif_dir, GIP_CE_GLUE2_LDIF_FILES['shares']);
-                contents = "[Main]\n" + "static_ldif_file: " + ldif_file +
-                            "static_glue2_ldif_file_computingshare: " + ldif_file_glue2 +
-                            "vomap : \n";
-
-                foreach (k; vo; GIP_CE_VOMAP) {
-                    contents = contents + "  " + k + ":" + vo + "\n";
-                };
-
-                contents = contents +
-                            "module_search_path : ../lrms:../ett\n" +
-                            "[LRMS]\n" +
-                            "lrms_backend_cmd: " + LCG_INFO_SCRIPTS_DIR + "/lrmsinfo-pbs\n" +
-                            "[Scheduler]\n" +
-                            "cycle_time : 0\n" +
-                            "vo_max_jobs_cmd: " + LCG_INFO_SCRIPTS_DIR + "/vomaxjobs-maui\n";
-
-            } else if ( lrms == "condor" ) {
+            if ( lrms == "condor" ) {
                 contents = "[Main]\n" +
                             "static_ldif_file: " + GIP_LDIF_DIR + "/static-file-all-CE-" + lrms + ".ldif\n" +
                             "vomap : \n";
@@ -715,7 +537,6 @@ variable GIP_CE_LDIF_PARAMS = {
     # server, a second LDIF file is produced with the entries for all
     # CEs to be used as input by GIP plugin run in cache mode on the LRMS server.
     # All CEs are assumed to share the same configuration for queue state, default SE...
-    # Cache mode is currently supported only for Torque/MAUI.
     # iterate over all defined queues (there is one GlueCE object per queue)
     if ( is_defined(CE_QUEUES['vos']) ) {
         # GLUE1: host_entries_g1 and all_ce_entries_g1 contain the VOView/CE DN list per LRMS
@@ -738,8 +559,6 @@ variable GIP_CE_LDIF_PARAMS = {
             #if ( GIP_CE_USE_CACHE && !is_dict(host_entries_g1[lrms]) ) host_entries_g1[lrms] = dict();
             if ( !is_dict(host_entries_g1[lrms]) ) host_entries_g1[lrms] = dict();
 
-            # FIXME: cache mode should not be specific to Torque/MAUI...
-            # FIXME: cluster mode (distinct CEs and LRMS master) validation with LRMS other than Torque/MAUI
             if ( FULL_HOSTNAME == GIP_CLUSTER_PUBLISHER_HOST ) { ##Changed LRMS_SERVER_HOST->GIP_CLUSTER_PUBLISHER_HOST
                 ce_list = merge(CE_HOSTS_LCG, CE_HOSTS_CREAM);
                 # Create only if necessary to avoid creating a useless emtpy file
@@ -770,27 +589,6 @@ variable GIP_CE_LDIF_PARAMS = {
                 # Try to set up initial GlueCEStateStatus according to defined
                 # queue state, else assume default. Assume the same state on all CEs.
                 # Will be updated by GIP to reflect the exact status.
-
-                if ( exists('/software/components/pbsserver/queue/queuelist') ) {
-                    queuelist = value('/software/components/pbsserver/queue/queuelist');
-                    if ( is_defined(queuelist[queue]['attlist']['enabled']) &&
-                        is_defined(queuelist[queue]['attlist']['started']) ) {
-                        if ( queuelist[queue]['attlist']['enabled'] && queuelist[queue]['attlist']['started'] ) {
-                            queue_status = 'Production';
-                        }else if( queuelist[queue]['attlist']['enabled'] && !queuelist[queue]['attlist']['started']){
-                            queue_status = 'Queueing';
-                        }else if( queuelist[queue]['attlist']['started'] && !queuelist[queue]['attlist']['enabled']){
-                            queue_status = 'Draining';
-                        }else{
-                            queue_status = 'Closed';
-                        };
-                    } else {
-                        queue_status = CE_STATUS;
-                    };
-                } else {
-                    queue_status = CE_STATUS;
-                };
-
                 entries_g1 = dict();
                 entries_g2 = dict();
                 foreach (k; vo; vos) {
@@ -937,7 +735,7 @@ variable GIP_CE_LDIF_PARAMS = {
         };             # end of iteration over queues
 
         # Create LDIF configuration entries describing CE queues (GlueCE and GlueVOView).
-        # FIXME: restore original behaviour when lcg-info-dynamic-scheduler is fixed 
+        # FIXME: restore original behaviour when lcg-info-dynamic-scheduler is fixed
         # (https://ggus.eu/index.php?mode=ticket_info&ticket_id=110336).
         #        See other related section at the beginning of this block.
         # Due to a problem in lcg-info-dynamic-scheduler not allowing anymore to redefine
@@ -1278,10 +1076,6 @@ variable GIP_CE_LDIF_PARAMS = {
     SELF;
 };
 
-
-# Create the file defining default values for some queue attributes if using
-# lcg-info-dynamic-maui.
-include if ( GIP_CE_USE_MAUI && (FULL_HOSTNAME == LRMS_SERVER_HOST) ) 'features/gip/ce-maui-plugin-defaults';
 
 # Define permissions/owner for some key directories
 include 'components/dirperm/config';

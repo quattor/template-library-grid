@@ -38,8 +38,7 @@ function yaim_mapping = {
     x['conf']['FUNCTIONS_DIR'] = YAIM_FUNCTIONS_DIR;
     x['conf']['YAIM_VERSION'] = YAIM_VERSION;
 
-    x['conf']['TORQUE_SERVER'] = TORQUE_SERVER;     # TODO: obsoleted by BATCH_SERVER
-    x['conf']['BATCH_SERVER'] = TORQUE_SERVER;
+    x['conf']['BATCH_SERVER'] = '';
 
     x['conf']['CE_HOST'] = CE_HOST;
     x['conf']['CLASSIC_HOST'] = CLASSIC_HOST;
@@ -136,7 +135,7 @@ function yaim_mapping = {
         # Base dir for VO software installation
         x['conf']['VO_SW_DIR'] = VO_SW_DIR;
 
-        x['extra']['MAUI_KEYFILE'] = MAUI_KEYFILE;
+        x['extra']['MAUI_KEYFILE'] = '';
         x['extra']['CONFIG_MAUI'] = "no";
     };
 
@@ -254,7 +253,7 @@ function yaim_mapping = {
         x['conf']['MYSQL_PASSWORD'] = MYSQL_PASSWORD;
         x['conf']['FTS_SERVER_URL'] = FTS_SERVER_URL;
     };
-    if ( exists(nodetypes['MON']) || exists(nodetypes['TORQUE_utils']) ) {
+    if ( exists(nodetypes['MON']) ) {
         # APEL disabled
         x['conf']['APEL_DB_PASSWORD'] = APEL_DB_PASSWORD;
     };
@@ -367,4 +366,3 @@ function yaim_mapping = {
 
     return(x);
 };
-

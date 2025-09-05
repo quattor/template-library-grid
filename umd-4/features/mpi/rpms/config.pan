@@ -2,8 +2,6 @@ unique template features/mpi/rpms/config;
 
 include { 'features/mpi/vars' };
 
-variable CE_TORQUE ?= true;
-
 include {
     if(MPI_USE_MPICH) {
         "features/mpi/rpms/mpich";

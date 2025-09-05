@@ -423,18 +423,12 @@ variable CREAM_SANDBOX_MPOINTS ?= undef;
 variable CE_USE_SSH ?= undef;
 
 # Define batch system to use. Currently supported values are :
-#   - torque1 : Torque v1 with MAUI
-#   - torque2 : Torque v2 with MAUI
 #   - condor : HTCondor
-# Default is torque1 if CE_BATCH_SYS is defined to pbs (backward compatibility)
-variable CE_BATCH_NAME ?= if (exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(CE_BATCH_SYS, "^(lcg)?pbs$")) {
-    'torque1';
+# Default is condor if CE_BATCH_SYS is defined as condor
+variable CE_BATCH_NAME ?= if (is_defined(CE_BATCH_SYS) && (CE_BATCH_SYS == "condor")) {
+    'condor';
 } else {
-    if (is_defined(CE_BATCH_SYS) && (CE_BATCH_SYS == "condor")) {
-            'condor';
-    } else {
-            undef;
-    };
+    undef;
 };
 
 # LCAS/LCMAPS PARAMETERS --------------------------------------------------
@@ -446,45 +440,13 @@ variable MKGRIDMAP_FLAVOR ?= 'glite';
 
 
 # Batch system and CE Job manager.
-# For Torque must be 'pbs'.
-variable CE_BATCH_SYS ?= {
-    if (exists(CE_BATCH_NAME) && is_defined(CE_BATCH_NAME) && match(CE_BATCH_NAME, '^torque[12]?$')) {
-        'pbs';
-    } else {
-        if (is_defined(CE_BATCH_NAME) && CE_BATCH_NAME == 'condor') {
-            'condor';
-        } else {
-            undef;
-        };
-    };
+variable CE_BATCH_SYS ?= if (is_defined(CE_BATCH_NAME) && CE_BATCH_NAME == 'condor') {
+    'condor';
+} else {
+    undef;
 };
 variable CE_JM_TYPE ?= CE_BATCH_SYS;
 
-# Used by several templates to trig install of Torque/MAUI components
-# Should not be redefined in normal circumstances
-variable CE_TORQUE ?= exists(CE_BATCH_SYS) && is_defined(CE_BATCH_SYS) && match(CE_BATCH_SYS, "^(lcg)?pbs$");
-
-# Set GIP_CE_USE_MAUI to true if you want to use MAUI to collect data about CE usage,
-# instead of Torque. Required to support advanced MAUI features like
-# standing reservations.
-# When using MAUI-based GIP, it is possible to run GIP plugins on the
-# Torque/MAUI server and cache the output for later retrieval by GIP.
-# This is particularly  useful when running multiple CEs sharing the same
-# Torque/MAUI cluster as not all of them can have access to MAUI information.
-# Default for GIP_CE_USE_CACHE is false when there is only 1 CE
-# (backward compatibility) but it is recommended to set it to true in any
-# case as cache mode protect over MAUI not responding properly to
-# commands under heavy loads.
-variable GIP_CE_USE_CACHE ?= {
-    if (is_defined(CE_HOSTS) && ((length(CE_HOSTS) > 1) || (CE_HOSTS[0] != LRMS_SERVER_HOST))) {
-        true;
-    } else {
-        false;
-    };
-};
-variable GIP_CE_USE_MAUI ?= true;
-variable GIP_CE_MAUI_CACHE_FILE ?= undef;      # Default should be appropriate
-variable GIP_CE_MAUI_CACHE_REFRESH ?= undef;   # Default should be appropriate
 
 # The following information is indicative of the minimum values available
 # on a site.  These are published into the information system.  ALL VALUES
@@ -1156,7 +1118,7 @@ variable WORKER_NODES_DICT = {
 
 
 # Define number of process slots per CPU.
-# Should be 2 to accomodate MAUI SRs if using LAL configuration
+# Should be 2 if using LAL configuration
 # variable WN_CPU_SLOTS = 2;
 
 
