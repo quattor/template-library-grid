@@ -2,8 +2,6 @@
 
 unique template features/ssh/ce;
 
-variable CE_PBS_KNOWNHOSTS ?= INSTALL_ROOT+'/etc/edg-pbs-knownhosts.conf';
-
 # ----------------------------------------------------------------------------
 # Control variables initialization
 # -----------------------------------------------------------------------------
@@ -110,17 +108,6 @@ variable HOSTS_EQUIV_LIST = {
 
 
 # ----------------------------------------------------------------------------
-# pbsknownhosts
-# -----------------------------------------------------------------------------
-include { 'components/pbsknownhosts/config' };
-"/software/components/pbsknownhosts/configFile" = CE_PBS_KNOWNHOSTS;
-
-# Add CE explicitly as it is not a PBS node
-"/software/components/pbsknownhosts/nodes" = CE_HOST_LIST;
-"/software/components/pbsknownhosts/targets" = list("knownhosts");
-
-
-# ----------------------------------------------------------------------------
 # Build SSH client configuration
 # ----------------------------------------------------------------------------
 include { 'components/filecopy/config' };
@@ -199,32 +186,3 @@ include { 'components/ssh/config' };
   } else {
     return(SELF);
   };
-
-
-# ----------------------------------------------------------------------------
-# cron
-# ----------------------------------------------------------------------------
-include { 'components/cron/config' };
-
-"/software/components/cron/entries" =
-  push(nlist(
-    "name","edg-pbs-knownhosts",
-    "user","root",
-    "frequency", "33 */2 * * *",
-    "command","/usr/sbin/edg-pbs-knownhosts"));
-
-
-# ----------------------------------------------------------------------------
-# altlogrotate
-# ----------------------------------------------------------------------------
-include { 'components/altlogrotate/config' };
-
-"/software/components/altlogrotate/entries/edg-pbs-knownhosts" =
-  nlist("pattern", "/var/log/edg-pbs-knownhosts.ncm-cron.log",
-        "compress", true,
-        "missingok", true,
-        "frequency", "weekly",
-        "create", true,
-        "ifempty", true,
-        "rotate", 1);
-
