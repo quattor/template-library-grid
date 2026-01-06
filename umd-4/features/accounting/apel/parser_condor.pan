@@ -15,10 +15,10 @@ variable APEL_PARSE_CRON_NAME ?= 'apel-condor-log-parser';
 #
 #Script for fixing the condor accounting
 #
-variable CONDOR_ACCOUNTING_FIX = if(NEW_CONDOR_APEL_PARSER){
+variable CONDOR_ACCOUNTING_FIX = if (NEW_CONDOR_APEL_PARSER){
     'features/accounting/apel/condor-accounting-fix.new'
-}else{
-    'features/accounting/apel/condor-accounting-fix'
+} else {
+    error('The old APEL parser is no longer supported.');
 };
 
 include 'components/filecopy/config';
@@ -105,14 +105,10 @@ include 'components/metaconfig/config';
         'batch', dict(
             'enabled', to_string((index(FULL_HOSTNAME, CE_HOSTS) >= 0)),
             'reparse', 'false',
-            'type', if (NEW_CONDOR_APEL_PARSER) {'HTCondor'} else error('The old APEL parser is no longer supported.'),
+            'type', 'HTCondor',
             'parallel', to_string(APEL_MULTICORE_ENABLED),
-            'dir', if (NEW_CONDOR_APEL_PARSER) {
-                LRMS_CONFIG_DIR + '/accounting'
-            } else {
-                LRMS_CONFIG_DIR + '/server_priv/accounting'
-            },
-            'filename_prefix', if (NEW_CONDOR_APEL_PARSER) {'parsable.'} else {'20'},
+            'dir', LRMS_CONFIG_DIR + '/accounting',
+            'filename_prefix', 'parsable.',
             'subdirs', 'false',
         ),
         'logging', dict(
@@ -127,17 +123,9 @@ include 'components/metaconfig/config';
 include 'components/dirperm/config';
 
 
-'/software/components/dirperm/paths' = if(NEW_CONDOR_APEL_PARSER){
-    push(dict(
-        "owner", "root:root",
-        "path", if(NEW_CONDOR_APEL_PARSER){
-            LRMS_CONFIG_DIR + '/accounting'
-        } else {
-            LRMS_CONFIG_DIR + '/server_priv/accounting'
-        },
-        "perm", '755',
-        "type", "d"
-    ));
-} else {
-    SELF;
-};
+'/software/components/dirperm/paths' = push(dict(
+    "owner", "root:root",
+    "path", LRMS_CONFIG_DIR + '/accounting',
+    "perm", '755',
+    "type", "d"
+));
