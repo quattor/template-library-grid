@@ -1,21 +1,21 @@
 unique template features/mpi/rpms/config;
 
-include { 'features/mpi/vars' };
+include 'features/mpi/vars';
 
 include {
-    if(MPI_USE_MPICH) {
+    if (MPI_USE_MPICH) {
         "features/mpi/rpms/mpich";
     };
 };
 
 include {
-    if(MPI_USE_MPICH2) {
+    if (MPI_USE_MPICH2) {
         "features/mpi/rpms/mpich2";
     };
 };
 
 include {
-    if(MPI_USE_LAM) {
+    if (MPI_USE_LAM) {
         if(MPI_LAM_MULTIPLE) {
             "features/mpi/rpms/lam-multiple";
         } else {
@@ -25,10 +25,10 @@ include {
 };
 
 include {
-    if(MPI_USE_OPENMPI) {
+    if (MPI_USE_OPENMPI) {
         "features/mpi/rpms/openmpi";
     };
 };
 
 # mpi-start script to ease use of MPI
-'/software/packages/{mpi-start}' ?= nlist();
+'/software/packages/{mpi-start}' ?= dict();

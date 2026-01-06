@@ -1,6 +1,7 @@
 unique template features/yaim/config;
 
-include { 'components/yaim/config' };
+include 'components/filecopy/config';
+include 'components/yaim/config';
 
 
 # to prevent the implicit construction of the latter if YAIM_VO_CONFIG == false
@@ -15,7 +16,7 @@ include { 'components/yaim/config' };
 
 # poor man's attempt to define all variables that are used
 # in the Yaim mapping function
-include { 'features/yaim/init-variables' };
+include 'features/yaim/init-variables';
 
 # Contents of config files; needs the locations defined above
 variable YAIM_CONFIG_SITE ?= null;
@@ -24,7 +25,7 @@ include { return(YAIM_CONFIG_SITE); };
 variable YAIM_VERSION ?= "4.0";
 variable YAIM_FUNCTIONS_DIR ?= "/opt/glite/yaim/functions";
 
-include { 'features/yaim/mapping_functions' };
+include 'features/yaim/mapping_functions';
 
 #
 # load Yaim configuration
@@ -32,7 +33,7 @@ include { 'features/yaim/mapping_functions' };
 
 variable WNLIST_CONFIG_SITE ?= undef;
 variable YAIM_WNLIST_CFGFILE ?= null;
-include { WNLIST_CONFIG_SITE };
+include WNLIST_CONFIG_SITE;
 
 # populate WN list
 variable YAIM_WNLIST = {
@@ -48,9 +49,9 @@ variable YAIM_WNLIST = {
 
 # default: diffent pool accounts per VO and/or group
 variable USE_DYNAMIC_POOL_ACCOUNTS ?= false;
-variable DYNAMIC_USER ?= nlist(
-    'account',  'dyn00000',
-    'group',    list('dynamic'),
+variable DYNAMIC_USER ?= dict(
+    'account', 'dyn00000',
+    'group', list('dynamic'),
 );
 
 # populate users.conf from VO_CONFIG
@@ -94,13 +95,13 @@ variable YAIM_GROUPSCONF_CFGFILE ?= null;
 "/software/components/filecopy/services" = {
     x = SELF;
     if ( is_defined(YAIM_USERSCONF_CFGFILE) && is_defined( YAIM_USERSCONF ) ) {
-        x[escape(YAIM_USERSCONF_CFGFILE)] = nlist("config",YAIM_USERSCONF, "perms","0644");
+        x[escape(YAIM_USERSCONF_CFGFILE)] = dict("config", YAIM_USERSCONF, "perms", "0644");
     };
     if ( is_defined(YAIM_GROUPSCONF_CFGFILE) && is_defined( YAIM_GROUPSCONF ) ) {
-        x[escape(YAIM_GROUPSCONF_CFGFILE)] = nlist("config",YAIM_GROUPSCONF, "perms","0644");
+        x[escape(YAIM_GROUPSCONF_CFGFILE)] = dict("config", YAIM_GROUPSCONF, "perms", "0644");
     };
     if ( is_defined(YAIM_WNLIST_CFGFILE) && is_defined( YAIM_WNLIST ) ) {
-        x[escape(YAIM_WNLIST_CFGFILE)] = nlist("config",YAIM_WNLIST, "perms","0644");
+        x[escape(YAIM_WNLIST_CFGFILE)] = dict("config", YAIM_WNLIST, "perms", "0644");
     };
     x;
 };
@@ -114,5 +115,4 @@ variable QUEUE_SE_LIST ?= null;
 
 # Yaim component setup
 "/software/components/yaim/configure" = true;
-"/software/components/yaim/dependencies/pre" =
-	list("spma", "filecopy", "ssh", "autofs", "accounts", "dirperm");
+"/software/components/yaim/dependencies/pre" = list("spma", "filecopy", "ssh", "autofs", "accounts", "dirperm");

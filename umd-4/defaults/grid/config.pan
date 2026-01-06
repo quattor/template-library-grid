@@ -205,7 +205,7 @@ variable SE_HOST_NAMES = if (is_defined(SE_HOSTS) && is_list(SE_HOSTS)) {
                 SELF[v] = dict('type', SE_TYPES[v]);
             };
         } else {
-            error(format('SE_HOSTS deprecated format : missing entry index %d in SE_TYPES', i));
+            error('SE_HOSTS deprecated format : missing entry index %d in SE_TYPES', i);
         };
         if (exists(SE_ACCESS[v]) && is_defined(SE_ACCESS[v])) {
             SELF[v]['accessPoint'] = SE_ACCESS[v];
@@ -583,7 +583,11 @@ variable CE_VO_CLOSE_SE = {
                 if (exists(CE_CLOSE_SE_LIST[vo]) && is_defined(CE_CLOSE_SE_LIST[vo])) {
                     close_se = CE_CLOSE_SE_LIST[vo];
                 };
-                if (!is_defined(close_se) && exists(CE_CLOSE_SE_LIST['DEFAULT']) && is_defined(CE_CLOSE_SE_LIST['DEFAULT'])) {
+                if (
+                    !is_defined(close_se) &&
+                    exists(CE_CLOSE_SE_LIST['DEFAULT']) &&
+                    is_defined(CE_CLOSE_SE_LIST['DEFAULT'])
+                ) {
                     close_se = CE_CLOSE_SE_LIST['DEFAULT'];
                 };
             } else {
@@ -597,7 +601,7 @@ variable CE_VO_CLOSE_SE = {
             } else if (is_list(close_se)) {
                 SELF[vo] = close_se;
             } else {
-                error(format('Invalid close SE for VO %s : must be a string or list', vo));
+                error('Invalid close SE for VO %s : must be a string or list', vo);
             };
         } else {
             SELF[vo] = undef;
@@ -634,7 +638,11 @@ variable CE_DEFAULT_SE = {
                 ce_default_se = CE_CLOSE_SE_LIST;
             };
         } else if (is_dict(CE_CLOSE_SE_LIST)) {
-            if (exists(CE_CLOSE_SE_LIST['DEFAULT']) && is_defined(CE_CLOSE_SE_LIST['DEFAULT']) && (length(CE_CLOSE_SE_LIST['DEFAULT']) > 0)) {
+            if (
+                exists(CE_CLOSE_SE_LIST['DEFAULT']) &&
+                is_defined(CE_CLOSE_SE_LIST['DEFAULT']) &&
+                (length(CE_CLOSE_SE_LIST['DEFAULT']) > 0)
+            ) {
                 ce_default_se = CE_CLOSE_SE_LIST['DEFAULT'];
             };
         } else {

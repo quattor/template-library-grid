@@ -1,6 +1,6 @@
 declaration template features/yaim/mapping_functions;
 
-include { 'features/yaim/functions' };
+include 'features/yaim/functions';
 
 #
 # yaim_mapping:     Map a predefined set of variables to Yaim's config
@@ -18,8 +18,8 @@ function yaim_mapping = {
 
     # set node type
     x['nodetype'] = ARGV[0];
-    nodetypes = nlist();
-    foreach (i;nt;ARGV[0]) {
+    nodetypes = dict();
+    foreach (i; nt; ARGV[0]) {
         nodetypes[nt] = true;
     };
 
@@ -189,7 +189,7 @@ function yaim_mapping = {
     if ( exists(nodetypes['BDII_site']) ) {
         x['conf']['BDII_REGIONS'] = "";
         ul = BDII_URLS;
-        ok = first(ul,k,v);
+        ok = first(ul, k, v);
         while ( ok ) {
             if (length(x['conf']['BDII_REGIONS']) > 0) {
                 x['conf']['BDII_REGIONS'] = x['conf']['BDII_REGIONS'] + " " + k;
@@ -197,8 +197,8 @@ function yaim_mapping = {
             else {
                 x['conf']['BDII_REGIONS'] = k;
             };
-            x['conf']['BDII_'+k+'_URL'] = v;
-            ok = next(ul,k,v);
+            x['conf']['BDII_' + k + '_URL'] = v;
+            ok = next(ul, k, v);
         };
     };
 
@@ -212,7 +212,7 @@ function yaim_mapping = {
 
     # DPM
     if ( exists(nodetypes['SE_dpm_mysql']) ||
-         exists(nodetypes['SE_dpm_disk']) ) {
+        exists(nodetypes['SE_dpm_disk']) ) {
         x['conf']['DPMPOOL'] = DPMPOOL;
         x['conf']['DPMFSIZE'] = DPMFSIZE;
         x['conf']['DPM_FILESYSTEMS'] = DPM_FILESYSTEMS;
@@ -319,13 +319,13 @@ function yaim_mapping = {
         x['extra']['NAGIOS_NSCA_PASS'] =            NSCA_PASSWORD;
     };
 
-	# NRPE
-	if ( exists(nodetypes['NRPE']) ) {
-		x['extra']['NAGIOS_HOST'] =                 NAGIOS_HOST;
-		x['extra']['NAGIOS_TIMEOUT'] =              NAGIOS_TIMEOUT;
-		x['extra']['NAGIOS_NSCA_PASS'] =            NSCA_PASSWORD;
-		x['extra']['NCG_NRPE_UI'] =                 NCG_NRPE_UI;
-	};
+    # NRPE
+    if ( exists(nodetypes['NRPE']) ) {
+        x['extra']['NAGIOS_HOST'] =                 NAGIOS_HOST;
+        x['extra']['NAGIOS_TIMEOUT'] =              NAGIOS_TIMEOUT;
+        x['extra']['NAGIOS_NSCA_PASS'] =            NSCA_PASSWORD;
+        x['extra']['NCG_NRPE_UI'] =                 NCG_NRPE_UI;
+    };
 
     # Kerberos authentication
     x['conf']['GSSKLOG'] = GSSKLOG;
