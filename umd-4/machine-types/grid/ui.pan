@@ -33,8 +33,7 @@ variable VO_ACCOUNT_SHELL ?= '/bin/bash';
 
 variable VOMSES_DIR ?= '/etc/vomses';
 #
-# Make sure CE_TORQUE is false, so that torque based
-# MPI rpms don't get installed.
+# Make sure ENABLE_MPI is false, so that MPI rpms don't get installed.
 #
 variable ENABLE_MPI ?= false;
 

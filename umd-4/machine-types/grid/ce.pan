@@ -1,11 +1,4 @@
-############################################################
-#
-# object template machine-types/grid/cream_ce
-#
-# Defines a CREAM CE, with an optional LRMS
-#
-############################################################
-
+@{ Defines a CE, with an optional LRMS }
 template machine-types/grid/ce;
 
 #TO_BE_FIXED: defined variables here... maybe not the best place
@@ -13,15 +6,8 @@ variable EMI_LOCATION ?= "";
 variable EMI_LOCATION_LOG ?= "/var/log/emi";
 variable EMI_LOCATION_VAR ?= "/var/emi";
 variable EMI_LOCATION_TMP ?= "/var/spool/emi";
-variable CE_TYPE ?= 'cream';
 
-
-# If defined, use CE_TORQUE_CONFIG_SITE for backward compatibility
-variable CE_CONFIG_SITE ?= if ( exists(CE_TORQUE_CONFIG_SITE) && is_defined(CE_TORQUE_CONFIG_SITE) ) {
-    return(CE_TORQUE_CONFIG_SITE);
-} else {
-    return(null);
-};
+variable CE_CONFIG_SITE ?= null;
 
 
 # Do actual NFS configuration after gLite configuration instead of during the OS
@@ -36,7 +22,7 @@ variable CONFIGURE_VOS = true;
 variable CREATE_HOME ?= undef;
 variable NODE_VO_GRIDMAPDIR_CONFIG ?= true;
 variable NODE_VO_INFO_DIR = true;
-variable CE_FLAVOR ?= 'cream';
+variable CE_FLAVOR ?= 'condorce';
 
 #
 # Configure NFS-served file systems in WN_SHARED_AREAS, if any
@@ -50,18 +36,12 @@ include 'machine-types/grid/base';
 
 
 #
-# CREAM CE configuration
-# If CE uses Torque, do Torque configuration too
+# CE configuration
 #
-include if(CE_FLAVOR == 'cream'){
-    'personality/cream_ce/service';
-
-}else if(CE_FLAVOR == 'condorce'){
-
+include if (CE_FLAVOR == 'condorce'){
     'features/htcondor/condorce';
-
-}else{
-    error("Unrecognized CE_TYPE " + CE_TYPE);
+} else {
+    error("Unrecognized CE_FLAVOR " + CE_TYPE);
 };
 
 

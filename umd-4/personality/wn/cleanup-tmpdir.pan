@@ -1,14 +1,10 @@
 unique template personality/wn/cleanup-tmpdir;
 
-include { 'components/cron/config' };
+include 'components/cron/config';
 
 variable CLEANUP_MAX_DAY ?= '+10';
 variable CLEANUP_TMPDIR ?= {
-  if (is_defined(TORQUE_TMPDIR)) {
-    TORQUE_TMPDIR;
-  } else {
     '/var/lib/condor/execute';
-  };
 };
 
 variable CLEANUP_PRINT ?= true;
@@ -19,11 +15,16 @@ variable CLEANUP_PRINT_STRING ?= if ( CLEANUP_PRINT ) {
     '';
 };
 
-variable CLEANUP_SCRIPT ?= 'find '+CLEANUP_TMPDIR+' -maxdepth 1 -mindepth 1 -type d -mtime '+CLEANUP_MAX_DAY+' '+CLEANUP_PRINT_STRING+' -exec rm -rf {} \;';
+variable CLEANUP_SCRIPT ?= format(
+    'find %s -maxdepth 1 -mindepth 1 -type d -mtime %s %s -exec rm -rf {} \;',
+    CLEANUP_TMPDIR,
+    CLEANUP_MAX_DAY,
+    CLEANUP_PRINT_STRING,
+);
 
-"/software/components/cron/entries" = push(nlist(
-    "name","cleanup-tmpdir",
-    "user","root",
+"/software/components/cron/entries" = push(dict(
+    "name", "cleanup-tmpdir",
+    "user", "root",
     "frequency", "1 0 * * *",
     "command", CLEANUP_SCRIPT,
 ));

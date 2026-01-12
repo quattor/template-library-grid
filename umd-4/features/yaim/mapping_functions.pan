@@ -1,6 +1,6 @@
 declaration template features/yaim/mapping_functions;
 
-include { 'features/yaim/functions' };
+include 'features/yaim/functions';
 
 #
 # yaim_mapping:     Map a predefined set of variables to Yaim's config
@@ -18,8 +18,8 @@ function yaim_mapping = {
 
     # set node type
     x['nodetype'] = ARGV[0];
-    nodetypes = nlist();
-    foreach (i;nt;ARGV[0]) {
+    nodetypes = dict();
+    foreach (i; nt; ARGV[0]) {
         nodetypes[nt] = true;
     };
 
@@ -38,8 +38,7 @@ function yaim_mapping = {
     x['conf']['FUNCTIONS_DIR'] = YAIM_FUNCTIONS_DIR;
     x['conf']['YAIM_VERSION'] = YAIM_VERSION;
 
-    x['conf']['TORQUE_SERVER'] = TORQUE_SERVER;     # TODO: obsoleted by BATCH_SERVER
-    x['conf']['BATCH_SERVER'] = TORQUE_SERVER;
+    x['conf']['BATCH_SERVER'] = '';
 
     x['conf']['CE_HOST'] = CE_HOST;
     x['conf']['CLASSIC_HOST'] = CLASSIC_HOST;
@@ -136,7 +135,7 @@ function yaim_mapping = {
         # Base dir for VO software installation
         x['conf']['VO_SW_DIR'] = VO_SW_DIR;
 
-        x['extra']['MAUI_KEYFILE'] = MAUI_KEYFILE;
+        x['extra']['MAUI_KEYFILE'] = '';
         x['extra']['CONFIG_MAUI'] = "no";
     };
 
@@ -190,7 +189,7 @@ function yaim_mapping = {
     if ( exists(nodetypes['BDII_site']) ) {
         x['conf']['BDII_REGIONS'] = "";
         ul = BDII_URLS;
-        ok = first(ul,k,v);
+        ok = first(ul, k, v);
         while ( ok ) {
             if (length(x['conf']['BDII_REGIONS']) > 0) {
                 x['conf']['BDII_REGIONS'] = x['conf']['BDII_REGIONS'] + " " + k;
@@ -198,8 +197,8 @@ function yaim_mapping = {
             else {
                 x['conf']['BDII_REGIONS'] = k;
             };
-            x['conf']['BDII_'+k+'_URL'] = v;
-            ok = next(ul,k,v);
+            x['conf']['BDII_' + k + '_URL'] = v;
+            ok = next(ul, k, v);
         };
     };
 
@@ -213,7 +212,7 @@ function yaim_mapping = {
 
     # DPM
     if ( exists(nodetypes['SE_dpm_mysql']) ||
-         exists(nodetypes['SE_dpm_disk']) ) {
+        exists(nodetypes['SE_dpm_disk']) ) {
         x['conf']['DPMPOOL'] = DPMPOOL;
         x['conf']['DPMFSIZE'] = DPMFSIZE;
         x['conf']['DPM_FILESYSTEMS'] = DPM_FILESYSTEMS;
@@ -254,7 +253,7 @@ function yaim_mapping = {
         x['conf']['MYSQL_PASSWORD'] = MYSQL_PASSWORD;
         x['conf']['FTS_SERVER_URL'] = FTS_SERVER_URL;
     };
-    if ( exists(nodetypes['MON']) || exists(nodetypes['TORQUE_utils']) ) {
+    if ( exists(nodetypes['MON']) ) {
         # APEL disabled
         x['conf']['APEL_DB_PASSWORD'] = APEL_DB_PASSWORD;
     };
@@ -320,13 +319,13 @@ function yaim_mapping = {
         x['extra']['NAGIOS_NSCA_PASS'] =            NSCA_PASSWORD;
     };
 
-	# NRPE
-	if ( exists(nodetypes['NRPE']) ) {
-		x['extra']['NAGIOS_HOST'] =                 NAGIOS_HOST;
-		x['extra']['NAGIOS_TIMEOUT'] =              NAGIOS_TIMEOUT;
-		x['extra']['NAGIOS_NSCA_PASS'] =            NSCA_PASSWORD;
-		x['extra']['NCG_NRPE_UI'] =                 NCG_NRPE_UI;
-	};
+    # NRPE
+    if ( exists(nodetypes['NRPE']) ) {
+        x['extra']['NAGIOS_HOST'] =                 NAGIOS_HOST;
+        x['extra']['NAGIOS_TIMEOUT'] =              NAGIOS_TIMEOUT;
+        x['extra']['NAGIOS_NSCA_PASS'] =            NSCA_PASSWORD;
+        x['extra']['NCG_NRPE_UI'] =                 NCG_NRPE_UI;
+    };
 
     # Kerberos authentication
     x['conf']['GSSKLOG'] = GSSKLOG;
@@ -348,15 +347,15 @@ function yaim_mapping = {
         x['MPI']['MPI_MPICH2_ENABLE'] =       MPI_MPICH2_ENABLE;
         x['MPI']['MPI_OPENMPI_ENABLE'] =      MPI_OPENMPI_ENABLE;
         x['MPI']['MPI_LAM_ENABLE'] =          MPI_LAM_ENABLE;
-#        x['MPI']['MPI_MPICH_PATH'] =          MPI_MPICH_PATH;
-#        x['MPI']['MPI_MPICH_VERSION'] =       MPI_MPICH_VERSION;
-#        x['MPI']['MPI_MPICH2_PATH'] =         MPI_MPICH2_PATH;
-#        x['MPI']['MPI_MPICH2_VERSION'] =      MPI_MPICH2_VERSION;
+        # x['MPI']['MPI_MPICH_PATH'] =          MPI_MPICH_PATH;
+        # x['MPI']['MPI_MPICH_VERSION'] =       MPI_MPICH_VERSION;
+        # x['MPI']['MPI_MPICH2_PATH'] =         MPI_MPICH2_PATH;
+        # x['MPI']['MPI_MPICH2_VERSION'] =      MPI_MPICH2_VERSION;
         x['MPI']['MPI_OPENMPI_PATH'] =        MPI_OPENMPI_PATH;
         x['MPI']['MPI_OPENMPI_VERSION'] =     MPI_OPENMPI_VERSION;
-#        x['MPI']['MPI_LAM_VERSION'] =         MPI_LAM_VERSION;
-#        x['MPI']['MPI_MPICH_MPIEXEC'] =       MPI_MPICH_MPIEXEC;
-#        x['MPI']['MPI_MPICH2_MPIEXEC'] =      MPI_MPICH2_MPIEXEC;
+        # x['MPI']['MPI_LAM_VERSION'] =         MPI_LAM_VERSION;
+        # x['MPI']['MPI_MPICH_MPIEXEC'] =       MPI_MPICH_MPIEXEC;
+        # x['MPI']['MPI_MPICH2_MPIEXEC'] =      MPI_MPICH2_MPIEXEC;
         x['MPI']['MPI_OPENMPI_MPIEXEC'] =     MPI_OPENMPI_MPIEXEC;
         x['MPI']['MPI_SHARED_HOME'] =         MPI_SHARED_HOME;
         x['MPI']['MPI_SSH_HOST_BASED_AUTH'] = MPI_SSH_HOST_BASED_AUTH;
@@ -367,4 +366,3 @@ function yaim_mapping = {
 
     return(x);
 };
-

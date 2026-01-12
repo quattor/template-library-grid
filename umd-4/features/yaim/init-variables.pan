@@ -159,7 +159,6 @@ variable NSCA_PASSWORD ?= null;
 variable MYSQL_ADMIN ?= null;
 variable GLITE_USER ?= null;
 variable BATCH_LOG_DIR ?= null;
-variable MAUI_KEYFILE ?= null;
 
 #MPI variables
 variable MPI_MPICH_ENABLE ?= null;
